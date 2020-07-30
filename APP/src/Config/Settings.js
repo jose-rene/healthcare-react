@@ -1,0 +1,2 @@
+export const OAUTH_CLIENT_ID = 1
+export const OAUTH_CLIENT_SECRET = 'EboMd7UoynLIWMA3Yo3ZSfDncQEKQUfFYZMNg3ym'

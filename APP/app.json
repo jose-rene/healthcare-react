@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "DME-CG",
+    "slug": "dme-cg",
+    "privacy": "unlisted",    
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/images/splash.png",
+    "scheme": "orbi",
+    "splash": {
+      "image": "./src/assets/images/gryphon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "web": {
+      "favicon": "./src/assets/images/favicon.png"
+    }
+  }
+}

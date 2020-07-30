@@ -1,0 +1,24 @@
+{
+  "name": "dme-global",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "yarn api:stop; yarn api:dev; yarn api:queue; yarn app:start",
+    "start+monit": "yarn start; pm2 monit",
+    "full:install": "yarn install; yarn api:install; yarn app:install",
+    "full:update": "yarn api:update; yarn app:update",
+    "api:update": "sh -c 'cd API && composer do:upgrade'",
+    "api:install": "sh -c 'cd API && composer do:install'",
+    "api:queue": "sh -c 'pm2 start -s --only=api:queue'",
+    "api:dev": "sh -c 'pm2 start -s --only=api:serve'",
+    "api:stop": "pm2 delete api:queue; pm2 delete api:serve",
+    "app:start": "xterm  -geometry 127x45 -e 'cd APP; yarn start' &",
+    "app:update": "sh -c 'cd APP && yarn upgrade'",
+    "app:install": "sh -c 'cd APP && yarn install'"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "pm2": "^4.4.0"
+  },
+  "dependencies": {}
+}
