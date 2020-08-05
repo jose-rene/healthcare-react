@@ -18,8 +18,6 @@ const defaults = {
     max_memory_restart: '1G',
     kill_timeout: 2000,
     listen_timeout: 1000,
-    // start script
-    script: './node_modules/.bin/nuxt',
     env: {
         NODE_ENV: 'development'
     },
@@ -61,6 +59,26 @@ module.exports = {
             env: {
             },
         },
+        {
+            // script name
+            name: 'web:start',
+            cwd: './web',
+            // import defaults
+            ...defaults,
+            script: 'node_modules/react-scripts/scripts/start.js',
+            args: `${defaultArgs}`,
+
+            node_args: `--inspect`,
+            // while developing more than one cluster breaks things.
+            exec_mode: "fork",
+            instances: '1',
+            // nuxt dev watches for changes already
+            watch: false,
+
+            env: {
+                // Inject env vars here
+            },
+        }
     ],
 
     // deploy: {
