@@ -20,8 +20,6 @@ class LoginController extends Controller
     {
         $credentials = $request->only(['email', 'password']);
 
-        logger()->info(print_r($credentials, true));
-
         if (!auth()->attempt($credentials)) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
