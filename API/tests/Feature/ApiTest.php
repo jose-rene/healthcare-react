@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Phone;
+// use App\Models\Phone;
 use App\Models\User;
 use Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -70,7 +70,6 @@ class ApiTest extends TestCase
             ->assertStatus(401)
             ->assertJsonStructure(['message'])
             ->assertJson(['message' => 'Unauthorized']);
-
     }
 
     /**
@@ -86,11 +85,12 @@ class ApiTest extends TestCase
         /** @var User $user */
         $this->user = factory(User::class)->create();
 
-        factory(User::class, 1000000)->make()->each(function ($user) {
+        // this is an example of how to make multiple
+        /*factory(User::class, 1000000)->make()->each(function ($user) {
 
             $user->phone->create(factory(Phone::class)->make()->toArray());
 
             $user->save();
-        });
+        });*/
     }
 }
