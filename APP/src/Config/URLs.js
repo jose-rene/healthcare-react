@@ -1,4 +1,9 @@
-const BASE_URL = 'http://192.168.1.21:8061'
+const {
+    API_HOST = '192.168.1.21',
+    API_PORT = '8061',
+} = process.env;
+
+const BASE_URL = `http://${API_HOST}:${API_PORT}`
 export const API_URL = BASE_URL + '/api'
 export const LOGIN_URL = BASE_URL + '/oauth/token'
 export const USER_URL = API_URL + '/user'

@@ -22,7 +22,6 @@ class UserSeeder extends Seeder
             'last_name'         => 'admin',
             'password'          => bcrypt('admin'),
             'dob'               => new Carbon('-20 years'),
-            'notification_type' => ['now'],
         ]);
 
         $admin->markEmailAsVerified();

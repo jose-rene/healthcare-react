@@ -1,8 +1,8 @@
 require('dotenv').config();
 
 const {
-    HOST = '0.0.0.0',
-    PORT = 8061,
+    API_HOST = '0.0.0.0',
+    API_PORT = 8061,
 } = process.env;
 
 const defaultArgs = ``;
@@ -18,9 +18,6 @@ const defaults = {
     max_memory_restart: '1G',
     kill_timeout: 2000,
     listen_timeout: 1000,
-    env: {
-        NODE_ENV: 'development'
-    },
     watch: true,
     ignore_watch: [
         '.git',
@@ -36,7 +33,7 @@ module.exports = {
             ...defaults,
 
             script: 'artisan',
-            args: `serve --host=${HOST} --port=${PORT}`,
+            args: `serve --host=${API_HOST} --port=${API_PORT}`,
             interpreter: 'php',
             exec_mode: 'fork',
             cwd: './API',

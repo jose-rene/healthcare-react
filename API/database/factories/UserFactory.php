@@ -31,6 +31,5 @@ $factory->define(User::class, function (Faker $faker) {
         'email'             => $faker->unique()->safeEmail,
         'dob'               => new Carbon\Carbon($faker->dateTimeBetween('-50 years', '-15 Years')),
         'password'          => bcrypt('password'),
-        'notification_type' => $faker->randomElements($notification_types, count($notification_types)),
     ];
 });

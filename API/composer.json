@@ -13,7 +13,7 @@
     ],
     "license": "proprietary",
     "require": {
-        "php": "^7.2.5",
+        "php": "^7.4",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
@@ -62,15 +62,18 @@
             "yarn upgrade",
             "@composer upgrade",
             "@php artisan migrate --seed",
-            "@generate:ide-helper",
+            "@composer ide:helper",
             "@composer test"
         ],
         "do:install": [
             "yarn install",
             "@composer install",
             "php artisan migrate --seed",
-            "@generate:ide-helper",
             "@composer test"
+        ],
+        "ide:helper": [
+            "php artisan ide-helper:generate",
+            "php artisan ide-helper:eloquent"
         ],
         "test": [
             "@php artisan test"
