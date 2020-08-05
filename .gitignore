@@ -1,4 +1,5 @@
 # Don't track phpstorm files
 .idea
-
+# VS Code settings
+.vscode/
 /node_modules/
