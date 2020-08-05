@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "yarn api:stop; yarn api:dev; yarn api:queue; yarn app:start",
+    "start": "yarn api:stop; yarn api:dev; yarn api:queue; yarn app:start; yarn web:start",
+    "start:web": "yarn api:stop; yarn api:dev; yarn queue; yarn web:start",
     "start+monit": "yarn start; pm2 monit",
-    "full:install": "yarn install; yarn api:install; yarn app:install",
+    "full:install": "yarn install; yarn api:install; yarn app:install; yarn web:install",
     "full:update": "yarn api:update; yarn app:update",
     "api:update": "sh -c 'cd API && composer do:upgrade'",
     "api:install": "sh -c 'cd API && composer do:install'",
@@ -14,7 +15,9 @@
     "api:stop": "pm2 delete api:queue; pm2 delete api:serve",
     "app:start": "xterm  -geometry 127x45 -e 'cd APP; yarn start' &",
     "app:update": "sh -c 'cd APP && yarn upgrade'",
-    "app:install": "sh -c 'cd APP && yarn install'"
+    "app:install": "sh -c 'cd APP && yarn install'",
+    "web:install": "sh -c 'cd web && yarn install'",
+    "web:start": "sh -c 'pm2 start -s --only=web:start'"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
