@@ -10,15 +10,23 @@ import Button from '../components/Elements/Button';
 import Input from '../components/Elements/Inputs/TextInput';
 import Logo from '../components/Logo';
 
-const Login = ({ navigation, restoreToken, restoreTokenResponse }) => {
+const Login = ({ restoreToken, localAuth }) => {
   const [{ data, loading, error }, doFetch] = useApiCall();
-  const [{ authed }, { setAuth }] = useAuth();
+  const [{ authed, isLoading, token }, { setAuth, loadAuth }] = useAuth();
 
   const [state, setState] = useState({
     email: '',
     password: '',
     hidePassword: true,
   });
+
+  // load local storage token
+  useEffect(() => {
+    loadAuth();
+    // set token in the redux store if there is one loaded from local storage
+    // if not authed still update state to toggle isLoading
+    restoreToken(authed ? token : null);
+  }, []);
 
   useEffect(() => {
     if (data.access_token) {
@@ -75,8 +83,8 @@ const Login = ({ navigation, restoreToken, restoreTokenResponse }) => {
   );
 };
 
-const mapStateToProps = ({ restoreTokenReducer }) => ({
-  restoreTokenResponse: restoreTokenReducer,
+const mapStateToProps = ({ auth }) => ({
+  localAuth: auth,
 });
 
 const mapDispatchToProps = {
