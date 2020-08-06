@@ -1,42 +1,65 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default () => {
-    const [authed, setAuthed] = useState(false);
+  const [authState, setAuthed] = useState({
+    authed: false,
+    isLoading: true,
+    token: null,
+  });
 
-    const doLogout = () => {
-        const logoutProcess = async () => {
-            await AsyncStorage.removeItem('@dme.login.access_token');
-            await AsyncStorage.removeItem('@dme.login.token_type');
-            await AsyncStorage.removeItem('@dme.login.expires_at');
+  const doLogout = () => {
+    const logoutProcess = async () => {
+      await AsyncStorage.removeItem('@dme.login.access_token');
+      await AsyncStorage.removeItem('@dme.login.token_type');
+      await AsyncStorage.removeItem('@dme.login.expires_at');
 
-            setAuthed(false);
-        }
-
-        logoutProcess().then();
+      setAuthed((prevState) => ({
+        ...prevState,
+        authed: false,
+        isLoading: false,
+        token: null,
+      }));
     };
 
-    const setAuth = (access_token, token_type, expires_at) => {
-        const setAuthProcess = async () => {
-            await AsyncStorage.setItem('@dme.login.access_token', access_token);
-            await AsyncStorage.setItem('@dme.login.token_type', token_type);
-            await AsyncStorage.setItem('@dme.login.expires_at', expires_at);
+    logoutProcess().then();
+  };
 
-            setAuthed(true);
-        }
+  const setAuth = (access_token, token_type, expires_at) => {
+    const setAuthProcess = async () => {
+      await AsyncStorage.setItem('@dme.login.access_token', access_token);
+      await AsyncStorage.setItem('@dme.login.token_type', token_type);
+      await AsyncStorage.setItem('@dme.login.expires_at', expires_at);
 
-        setAuthProcess().then();
-    }
+      setAuthed((prevState) => ({
+        ...prevState,
+        authed: true,
+        isLoading: false,
+        token: access_token,
+      }));
+    };
 
-    useEffect(() => {
-        const load = async () => {
-            const result = await AsyncStorage.getItem('@dme.login.access_token');
+    setAuthProcess().then();
+  };
 
-            setAuthed(!!result);
-        };
+  const loadAuth = () => {
+    const load = async () => {
+      let result = null;
+      try {
+        result = await AsyncStorage.getItem('@dme.login.access_token');
+      } catch (error) {
+        result = null;
+      }
+      setAuthed((prevState) => ({
+        ...prevState,
+        authed: !!result,
+        isLoading: false,
+        token: result ? result : null,
+      }));
+    };
 
-        load().then();
-    });
+    load().then();
+  };
 
-    return [{authed}, {setAuth, doLogout}];
-}
+  return [authState, { loadAuth, setAuth, doLogout }];
+};
