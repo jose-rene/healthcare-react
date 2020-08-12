@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-community/async-storage";
-import { API_URL, GET } from "../config/URLs";
+import {API_URL, GET} from "../config/URLs";
 
 export default ({
   initialMethod = GET,
@@ -18,6 +18,12 @@ export default ({
 
   useEffect(() => {
     const fetchData = async () => {
+      const {
+        REACT_APP_API_ID: ClientId = undefined,
+        REACT_APP_API_SECRET: ClientSecret = undefined,
+      } = process.env;
+
+
       setError(null);
       setLoading(true);
 
@@ -30,6 +36,8 @@ export default ({
 
           headers: {
             "content-type": "application/json",
+            ClientId,
+            ClientSecret,
             ...headers,
           },
 
