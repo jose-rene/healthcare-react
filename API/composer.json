@@ -61,14 +61,14 @@
         "do:upgrade": [
             "yarn upgrade",
             "@composer upgrade",
-            "@php artisan migrate --seed",
+            "@php artisan migrate",
             "@composer ide:helper",
             "@composer test"
         ],
         "do:install": [
             "yarn install",
             "@composer install",
-            "php artisan migrate --seed",
+            "php artisan migrate",
             "@composer test"
         ],
         "ide:helper": [

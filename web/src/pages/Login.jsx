@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
-import { connect } from "react-redux";
-import { Alert, Form, Button } from "react-bootstrap";
+import React, {useEffect, useState} from "react";
+import {Redirect} from "react-router-dom";
+import {connect} from "react-redux";
+import {Alert, Button, Form} from "react-bootstrap";
 import useApiCall from "../hooks/useApiCall";
-import { POST } from "../config/URLs";
+import {POST} from "../config/URLs";
 import useAuth from "../hooks/useAuth";
-import { restoreToken } from "../actions/restoreAction";
+import {restoreToken} from "../actions/restoreAction";
 import "../App.css";
 import logo from "../assets/images/splash.png";
 
-const Login = ({ localAuth, restoreToken }) => {
-  const [{ data, loading, error }, callApi] = useApiCall();
-  const [{ authed, isLoading, token }, { setAuth, loadAuth }] = useAuth();
+const Login = ({localAuth, restoreToken}) => {
+  const [{data, loading, error}, callApi] = useApiCall();
+  const [{authed, isLoading, token}, {setAuth, loadAuth}] = useAuth();
 
   const [state, setState] = useState({
     email: "",
@@ -45,35 +45,36 @@ const Login = ({ localAuth, restoreToken }) => {
 
   if (localAuth.userToken) {
     // @todo, use history to redirect to previous path before login
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/dashboard"/>;
   }
 
   const onChange = (name, value) => {
-    setState({ ...state, [name]: value });
+    setState({...state, [name]: value});
   };
 
-  const onSubmit = async () => {
-    callApi("login", { params: { ...state }, method: POST });
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    callApi("login", {params: {...state}, method: POST});
   };
 
   return (
-    <div className="App">
-      <Alert key="0" variant="success" style={{ marginBottom: 0 }}>
-        Web App Login
-      </Alert>
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Form className="mt-3" onSubmit={(e) => e.preventDefault()}>
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Enter email"
-              autoComplete="username"
-              onChange={(e) => onChange("email", e.target.value)}
-              value={state.email}
-            />
-            <Form.Text className="text-muted">
+      <div className="App">
+        <Alert key="0" variant="success" style={{marginBottom: 0}}>
+          Web App Login
+        </Alert>
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo"/>
+          <Form className="mt-3" onSubmit={onSubmit}>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control
+                  type="email"
+                  placeholder="Enter email"
+                  autoComplete="username"
+                  onChange={(e) => onChange("email", e.target.value)}
+                  value={state.email}
+              />
+              <Form.Text className="text-muted">
               Your registered email address.
             </Form.Text>
           </Form.Group>
@@ -90,10 +91,10 @@ const Login = ({ localAuth, restoreToken }) => {
           </Form.Group>
           {error ? <Alert variant="warning">{error}</Alert> : null}
           <Button
-            variant="primary"
-            onClick={onSubmit}
-            title="Login"
-            loading={loading.toString()}
+              type="submit"
+              variant="primary"
+              title="Login"
+              loading={loading.toString()}
           >
             Log In
           </Button>
