@@ -3,6 +3,10 @@ require('dotenv').config();
 const {
     API_HOST = '0.0.0.0',
     API_PORT = 8061,
+    API_ID = 1,
+    // required for api communications. You should see some notes about this in the
+    // root of the project .env.example file
+    API_SECRET,
 } = process.env;
 
 const defaultArgs = ``;
@@ -39,7 +43,10 @@ module.exports = {
             cwd: './API',
             instances: 1,
 
-            env: {},
+            env: {
+                // Pass all env variables along
+                ...process.env || {}
+            },
         },
         {
             name: 'api:queue',
@@ -54,6 +61,8 @@ module.exports = {
             args: `queue:work --tries 3 `,
             instances: 1,
             env: {
+                // Pass all env variables along
+                ...process.env || {}
             },
         },
         {
@@ -73,7 +82,11 @@ module.exports = {
             watch: false,
 
             env: {
-                // Inject env vars here
+                // Inject env vars here. Just make sure to prefix them with REACT_APP
+                REACT_APP_API_HOST: API_HOST,
+                REACT_APP_API_PORT: API_PORT,
+                REACT_APP_API_ID: API_ID,
+                REACT_APP_API_SECRET: API_SECRET,
             },
         }
     ],
