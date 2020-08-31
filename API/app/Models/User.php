@@ -32,6 +32,8 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected $appends = ['full_name'];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -60,5 +62,15 @@ class User extends Authenticatable
     public function phones()
     {
         return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    /**
+     * Returns the full name of the user.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return sprintf('%s %s', $this->first_name, $this->last_name);
     }
 }

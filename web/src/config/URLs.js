@@ -1,4 +1,7 @@
-const {REACT_APP_API_HOST = "0.0.0.0", REACT_APP_API_PORT = "8000"} = process.env;
+const {
+  REACT_APP_API_HOST = "127.0.0.1",
+  REACT_APP_API_PORT = "8000",
+} = process.env;
 
 const BASE_URL = `http://${REACT_APP_API_HOST}:${REACT_APP_API_PORT}`;
 export const API_URL = `${BASE_URL}/api`;

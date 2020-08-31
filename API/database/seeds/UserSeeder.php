@@ -29,6 +29,6 @@ class UserSeeder extends Seeder
         // TODO :: make sure the admin has admin abilities
 //        $admin->assign('admin');
 
-        factory(User::class, random_int(100, 500))->create();
+//        factory(User::class, random_int(100, 500))->create();
     }
 }

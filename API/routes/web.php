@@ -18,3 +18,6 @@ Route::get('/', 'HomeController@welcome');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('test', 'TestController@test');
+Route::get('test/{questionnaire}', 'TestController@show');

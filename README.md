@@ -45,8 +45,6 @@ xterm should exist on macs and linux systems but might break in windows.
 
 ### APP
 
-install axios and implement it in the action for logging in
-
 ## Useful Links
 * https://github.com/JosephSilber/bouncer
 * https://github.com/VentureCraft/revisionable

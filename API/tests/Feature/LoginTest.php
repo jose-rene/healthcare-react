@@ -9,10 +9,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
- * Class ApiTest
- * @package Tests\Feature
+ * Class ApiTest.
  */
-class ApiTest extends TestCase
+class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -23,7 +22,7 @@ class ApiTest extends TestCase
 
     /**
      * Make sure I login and make sure the correct user
-     * is returned using the bearer token
+     * is returned using the bearer token.
      *
      * @return void
      */
@@ -51,11 +50,14 @@ class ApiTest extends TestCase
             ->assertOk()
             ->assertJsonStructure(['first_name', 'last_name', 'email']);
 
-        self::assertEquals($this->user->email, $response->json('email'));
+        $this->assertEquals($this->user->email, $response->json('email'));
+
+        // test attribute full name
+        $this->assertEquals(sprintf('%s %s', $this->user->first_name, $this->user->last_name), $response->json('full_name'));
     }
 
     /**
-     * Make sure I can't login with a badpas sword and I get an expected response
+     * Make sure I can't login with a bad password and I get an expected response.
      *
      * @return void
      */
@@ -73,7 +75,7 @@ class ApiTest extends TestCase
     }
 
     /**
-     * Before running these tests install passport to make sure the tokens exists
+     * Before running these tests install passport to make sure the tokens exists.
      */
     protected function setUp(): void
     {
@@ -82,7 +84,7 @@ class ApiTest extends TestCase
         Artisan::call('passport:install');
 
         // this will store a new user with random attributes in the database.
-        /** @var User $user */
+        /* @var User $user */
         $this->user = factory(User::class)->create();
 
         // this is an example of how to make multiple
