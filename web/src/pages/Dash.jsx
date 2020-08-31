@@ -1,26 +1,31 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Alert } from "react-bootstrap";
+import DashLayout from "../layouts/dashLayout";
 import { signOut } from "../actions/restoreAction";
 import useAuth from "../hooks/useAuth";
 import logo from "../assets/images/splash.png";
 
-const Dash = ({ signOut }) => {
+const Dash = ({ email, full_name, signOut }) => {
   // eslint-disable-next-line no-unused-vars
   const [authState, { doLogout }] = useAuth();
   const logOut = (e) => {
     e.preventDefault();
-    doLogout();
-    signOut();
+    doLogout()
+      .then(() => {
+        signOut();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
+
   return (
-    <div className="App">
-      <Alert key="0" variant="info" style={{ marginBottom: 0 }}>
-        Welcome to the Gryphon Dashboard
-      </Alert>
+    <DashLayout>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello World!</p>
+        <p>
+          Hello World! {email} {full_name}
+        </p>
         <a
           className="App-link"
           href="https://reactjs.org"
@@ -31,12 +36,14 @@ const Dash = ({ signOut }) => {
           Log out
         </a>
       </header>
-    </div>
+    </DashLayout>
   );
 };
 
-const mapStateToProps = ({ auth }) => ({
+const mapStateToProps = ({ auth, user: { email, full_name } }) => ({
   localAuth: auth,
+  email,
+  full_name,
 });
 
 const mapDispatchToProps = {

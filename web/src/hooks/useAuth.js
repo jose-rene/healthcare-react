@@ -8,21 +8,21 @@ const useAuth = () => {
     token: null,
   });
 
-  const doLogout = () => {
-    const logoutProcess = async () => {
-      await AsyncStorage.removeItem("@dme.login.access_token");
-      await AsyncStorage.removeItem("@dme.login.token_type");
-      await AsyncStorage.removeItem("@dme.login.expires_at");
+  const doLogout = async () => {
+    // const logoutProcess = async () => {
+    await AsyncStorage.removeItem("@dme.login.access_token");
+    await AsyncStorage.removeItem("@dme.login.token_type");
+    await AsyncStorage.removeItem("@dme.login.expires_at");
 
-      setAuthed((prevState) => ({
-        ...prevState,
-        authed: false,
-        isLoading: false,
-        token: null,
-      }));
-    };
+    setAuthed((prevState) => ({
+      ...prevState,
+      authed: false,
+      isLoading: false,
+      token: null,
+    }));
+    // };
 
-    logoutProcess().then();
+    // logoutProcess().then();
   };
 
   const setAuth = async (access_token, token_type, expires_at) => {

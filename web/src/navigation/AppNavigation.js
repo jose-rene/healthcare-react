@@ -5,9 +5,31 @@ import PrivateRoute from "../route/PrivateRoute";
 import Login from "../pages/Login";
 import Error from "../pages/NotFound";
 import Dash from "../pages/Dash";
+// import userService from "../services/userService";
 import { restoreToken } from "../actions/restoreAction";
+import { setUser } from "../actions/userAction";
 
-const AppNavigation = ({ localAuth }) => {
+const AppNavigation = ({ setUser, localAuth, user }) => {
+  /* useEffect(() => {
+    let isMounted = true;
+    if (!user.email && localAuth.userToken) {
+      userService
+        .getUserInfo()
+        .then(({ email, full_name }) => {
+          if (isMounted) {
+            setUser(email, full_name);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localAuth]);
+*/
   return (
     <BrowserRouter>
       <Switch>
@@ -24,11 +46,13 @@ const AppNavigation = ({ localAuth }) => {
 const mapStateToProps = (state) => {
   return {
     localAuth: state.auth,
+    user: state.user,
   };
 };
 
 const mapDispatchToProps = {
   restoreToken,
+  setUser,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppNavigation);

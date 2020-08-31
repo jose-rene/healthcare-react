@@ -15,13 +15,15 @@ use Illuminate\Support\Facades\Route;
 */
 Route::middleware('auth:api')->group(function ($router) {
     $router->get('/user', 'UserController@profile');
-
     $router->get('logout', 'LoginController@logout');
+    // protected crud routes
+    Route::apiResource('questionnaire', 'QuestionnaireController');
 });
 
 Route::post('/login', 'LoginController@login');
-Route::post('/register', 'LoginController@login');
-Route::post('/register/create', 'RegisterController@store');
+// @note uncomment to make registration routes publically available
+/*Route::post('/register', 'LoginController@login');
+Route::post('/register/create', 'RegisterController@store');*/
 
 // add OPTIONS route to fire cors middleware for preflight
 Route::options('/{any}', function () {

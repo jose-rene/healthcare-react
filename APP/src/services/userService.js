@@ -1,5 +1,5 @@
 import base_service from "./base_service";
-import {POST} from "../Config/URLs";
+import { POST } from "../Config/URLs";
 
 export default new class extends base_service {
     register(params) {

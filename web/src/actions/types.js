@@ -1,6 +1,6 @@
 // Restore token
-export const SET_TOKEN = "SET_TOKEN";
-export const RESET_TOKEN = "RESET_TOKEN";
+export const SET_TOKEN = "set_token";
+export const RESET_TOKEN = "reset_token";
 
 // EVENTS
 export const EVENTS = "events";
