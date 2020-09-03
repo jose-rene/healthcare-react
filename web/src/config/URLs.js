@@ -7,6 +7,8 @@ const BASE_URL = `http://${REACT_APP_API_HOST}:${REACT_APP_API_PORT}`;
 export const API_URL = `${BASE_URL}/api`;
 export const LOGIN_URL = `${BASE_URL}/oauth/token`;
 export const USER_URL = `${API_URL}/user`;
+export const AUTH_TOKEN_NAME = "@dme.login.access_token";
+export const HTTP_TIMEOUT = 10000;
 
 export const POST = "post";
 export const PUT = "put";
