@@ -1,12 +1,55 @@
 import { useState } from "react";
 import AsyncStorage from "@react-native-community/async-storage";
+import httpService from "../services/httpService";
+import { POST, AUTH_TOKEN_NAME } from "../config/URLs";
 
 const useAuth = () => {
   const [authState, setAuthed] = useState({
-    authed: false,
-    isLoading: true,
-    token: null,
+    tokenLoading: true,
+    authToken: null,
+    loading: false,
+    error: "",
   });
+
+  const authUser = ({ email, password }) => {
+    const doAuth = async () => {
+      let response = null;
+      try {
+        response = await httpService("login", {
+          params: { email, password },
+          method: POST,
+        });
+      } catch (err) {
+        setAuthed((prevState) => ({
+          ...prevState,
+          tokenLoading: false,
+          authToken: null,
+          error: err,
+        }));
+      }
+
+      if (response) {
+        await AsyncStorage.setItem(AUTH_TOKEN_NAME, response.data.access_token);
+        await AsyncStorage.setItem(
+          "@dme.login.token_type",
+          response.data.token_type
+        );
+        await AsyncStorage.setItem(
+          "@dme.login.expires_at",
+          response.data.expires_at
+        );
+        // update state
+        setAuthed((prevState) => ({
+          ...prevState,
+          tokenLoading: false,
+          authToken: response.data.access_token,
+          loading: false,
+          error: "",
+        }));
+      }
+    };
+    doAuth().then();
+  };
 
   const doLogout = async () => {
     // const logoutProcess = async () => {
@@ -16,26 +59,11 @@ const useAuth = () => {
 
     setAuthed((prevState) => ({
       ...prevState,
-      authed: false,
-      isLoading: false,
-      token: null,
+      tokenLoading: false,
+      authToken: null,
     }));
     // };
-
     // logoutProcess().then();
-  };
-
-  const setAuth = async (access_token, token_type, expires_at) => {
-    await AsyncStorage.setItem("@dme.login.access_token", access_token);
-    await AsyncStorage.setItem("@dme.login.token_type", token_type);
-    await AsyncStorage.setItem("@dme.login.expires_at", expires_at);
-
-    setAuthed((prevState) => ({
-      ...prevState,
-      authed: true,
-      isLoading: false,
-      token: access_token,
-    }));
   };
 
   const loadAuth = () => {
@@ -49,16 +77,15 @@ const useAuth = () => {
       }
       setAuthed((prevState) => ({
         ...prevState,
-        authed: true,
-        isLoading: false,
-        token: result || null,
+        tokenLoading: false,
+        authToken: result || null,
       }));
     };
 
     load().then();
   };
 
-  return [authState, { loadAuth, setAuth, doLogout }];
+  return [authState, { loadAuth, authUser, doLogout }];
 };
 
 export default useAuth;
