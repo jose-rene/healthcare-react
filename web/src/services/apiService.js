@@ -2,7 +2,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-community/async-storage";
 import { API_URL, GET, AUTH_TOKEN_NAME, HTTP_TIMEOUT } from "../config/URLs";
 
-const httpService = async (
+const apiService = async (
   url,
   { headers = {}, params = {}, method = GET } = {}
 ) => {
@@ -26,11 +26,10 @@ const httpService = async (
   if (authToken) {
     config.headers.Authorization = `Bearer ${authToken}`;
   }
-  const onSuccess = (data) => {
+  const onSuccess = (response) => {
     // console.log(data);
-    return data;
+    return !("data" in response) ? {} : response.data;
   };
-
   const onError = (error) => {
     // console.log(error.response ? error.response : "", error.message);
     return Promise.reject(error.message);
@@ -39,4 +38,4 @@ const httpService = async (
   return axios(config).then(onSuccess).catch(onError);
 };
 
-export default httpService;
+export default apiService;

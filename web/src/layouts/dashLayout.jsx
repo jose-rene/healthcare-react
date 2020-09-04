@@ -12,7 +12,12 @@ const dashLayout = ({ full_name, email, children }) => {
         className="text-center"
         style={{ marginBottom: 0 }}
       >
-        Welcome to the Gryphon Dashboard {email} {full_name}
+        Welcome to the Gryphon Dashboard
+        {email ? (
+          <span data-testid="userinfo">
+            {email} {full_name}
+          </span>
+        ) : null}
       </Alert>
       {children}
     </div>
