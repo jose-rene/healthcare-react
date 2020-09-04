@@ -1,6 +1,6 @@
 import { useState } from "react";
 import AsyncStorage from "@react-native-community/async-storage";
-import httpService from "../services/httpService";
+import apiService from "../services/apiService";
 import { POST, AUTH_TOKEN_NAME } from "../config/URLs";
 
 const useAuth = () => {
@@ -13,9 +13,9 @@ const useAuth = () => {
 
   const authUser = ({ email, password }) => {
     const doAuth = async () => {
-      let response = null;
+      let data = null;
       try {
-        response = await httpService("login", {
+        data = await apiService("login", {
           params: { email, password },
           method: POST,
         });
@@ -24,27 +24,29 @@ const useAuth = () => {
           ...prevState,
           tokenLoading: false,
           authToken: null,
+          loading: false,
           error: err,
         }));
       }
 
-      if (response) {
-        await AsyncStorage.setItem(AUTH_TOKEN_NAME, response.data.access_token);
-        await AsyncStorage.setItem(
-          "@dme.login.token_type",
-          response.data.token_type
-        );
-        await AsyncStorage.setItem(
-          "@dme.login.expires_at",
-          response.data.expires_at
-        );
+      if (data && "access_token" in data) {
+        await AsyncStorage.setItem(AUTH_TOKEN_NAME, data.access_token);
+        await AsyncStorage.setItem("@dme.login.token_type", data.token_type);
+        await AsyncStorage.setItem("@dme.login.expires_at", data.expires_at);
         // update state
         setAuthed((prevState) => ({
           ...prevState,
           tokenLoading: false,
-          authToken: response.data.access_token,
+          authToken: data.access_token,
           loading: false,
           error: "",
+        }));
+      } else {
+        setAuthed((prevState) => ({
+          ...prevState,
+          tokenLoading: false,
+          authToken: null,
+          loading: false,
         }));
       }
     };
@@ -53,7 +55,7 @@ const useAuth = () => {
 
   const doLogout = async () => {
     // const logoutProcess = async () => {
-    await AsyncStorage.removeItem("@dme.login.access_token");
+    await AsyncStorage.removeItem(AUTH_TOKEN_NAME);
     await AsyncStorage.removeItem("@dme.login.token_type");
     await AsyncStorage.removeItem("@dme.login.expires_at");
 
@@ -61,6 +63,7 @@ const useAuth = () => {
       ...prevState,
       tokenLoading: false,
       authToken: null,
+      loading: false,
     }));
     // };
     // logoutProcess().then();
@@ -70,7 +73,7 @@ const useAuth = () => {
     const load = async () => {
       let result = null;
       try {
-        result = await AsyncStorage.getItem("@dme.login.access_token");
+        result = await AsyncStorage.getItem(AUTH_TOKEN_NAME);
       } catch (error) {
         // @todo can add error to state if it is needed
         result = null;
