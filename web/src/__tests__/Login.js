@@ -22,6 +22,10 @@ afterEach(() => {
 */
 
 describe("Login Page", () => {
+  // parameters used in test
+  const username = "admin@admin.com";
+  const password = generateRandomString(8);
+
   it("can render with redux state defaults", async () => {
     // render with redux
     render(<Login />, {
@@ -33,11 +37,7 @@ describe("Login Page", () => {
     // expect to see the page
     expect(screen.getByText("Web App Login")).toBeTruthy();
   });
-
-  it("form elements function correctly", async () => {
-    // parameters used in test
-    const username = "admin@admin.com";
-    const password = "admin";
+  it("renders form elements correctly", async () => {
     // render with redux
     render(<Login />, {
       userToken: null,
@@ -55,10 +55,47 @@ describe("Login Page", () => {
     fireEvent.change(passwordInput, { target: { value: password } });
     expect(passwordInput.value).toBe(password);
   });
+  it("validates email address", async () => {
+    // invalid user email
+    const user = generateRandomString(6);
+    // render with redux
+    render(<Login />, {
+      userToken: null,
+      isLoading: true,
+    });
+    // wait for the state changes
+    const button = await screen.findByRole("button", { name: /login/i });
+    const usernameInput = screen.getByPlaceholderText(/enter email/i);
+    const passwordInput = screen.getByPlaceholderText(/password/i);
+    fireEvent.change(usernameInput, { target: { value: user } });
+    fireEvent.change(passwordInput, { target: { value: password } });
+    fireEvent.click(button);
+    await wait(() =>
+      expect(screen.getByText(/enter a valid email address/i)).toBeTruthy()
+    );
+  });
+  it("validates password min characters", async () => {
+    // invalid password
+    const pass = generateRandomString(6);
+    // render with redux
+    render(<Login />, {
+      userToken: null,
+      isLoading: true,
+    });
+    // wait for the state changes
+    const button = await screen.findByRole("button", { name: /login/i });
+    const usernameInput = screen.getByPlaceholderText(/enter email/i);
+    const passwordInput = screen.getByPlaceholderText(/password/i);
+    fireEvent.change(usernameInput, { target: { value: username } });
+    fireEvent.change(passwordInput, { target: { value: pass } });
+    fireEvent.click(button);
+    await wait(() =>
+      expect(
+        screen.getByText(/password must be at least 8 characters/i)
+      ).toBeTruthy()
+    );
+  });
   it("shows error on login failure", async () => {
-    // parameters used in test
-    const username = "admin@admin.com";
-    const password = "admin";
     // mock login failure api response
     axiosMock().onPost(/login/).reply("401", { message: "Unauthorized" });
     // render with redux and router
@@ -68,7 +105,7 @@ describe("Login Page", () => {
     });
     // wait for the state changes
     const button = await screen.findByRole("button", { name: /login/i });
-    const usernameInput = await screen.getByPlaceholderText(/enter email/i);
+    const usernameInput = screen.getByPlaceholderText(/enter email/i);
     const passwordInput = screen.getByPlaceholderText(/password/i);
     // enter data and submit form
     fireEvent.change(usernameInput, { target: { value: username } });
@@ -78,9 +115,6 @@ describe("Login Page", () => {
     await wait(() => expect(screen.getByText(/error/i)).toBeTruthy());
   });
   it("logs user in", async () => {
-    // parameters used in test
-    const username = "admin@admin.com";
-    const password = "admin";
     // mock login successfuly api response
     const response = {
       access_token: generateRandomString({
@@ -98,7 +132,7 @@ describe("Login Page", () => {
     });
     // wait for the state changes
     const button = await screen.findByRole("button", { name: /login/i });
-    const usernameInput = await screen.getByPlaceholderText(/enter email/i);
+    const usernameInput = screen.getByPlaceholderText(/enter email/i);
     const passwordInput = screen.getByPlaceholderText(/password/i);
     // enter data and submit form
     fireEvent.change(usernameInput, { target: { value: username } });
