@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { Alert, Button, Form } from "react-bootstrap";
+import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";
 import { restoreToken } from "../actions/restoreAction";
 import "../App.css";
@@ -14,11 +15,7 @@ const Login = ({ localAuth, restoreToken }) => {
     { loadAuth, authUser },
   ] = useAuth();
 
-  const [state, setState] = useState({
-    email: "",
-    password: "",
-    // hidePassword: true,
-  });
+  const { register, handleSubmit, errors } = useForm();
 
   useEffect(() => {
     let isMounted = true;
@@ -43,13 +40,8 @@ const Login = ({ localAuth, restoreToken }) => {
     return <Redirect to="/dashboard" />;
   }
 
-  const onChange = (name, value) => {
-    setState({ ...state, [name]: value });
-  };
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    authUser({ ...state });
+  const onSubmit = (data) => {
+    authUser(data);
   };
 
   return (
@@ -59,19 +51,27 @@ const Login = ({ localAuth, restoreToken }) => {
       </Alert>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <Form className="mt-3" onSubmit={onSubmit}>
+        <Form className="mt-3" onSubmit={handleSubmit(onSubmit)}>
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
             <Form.Control
               type="email"
               placeholder="Enter email"
               autoComplete="username"
-              onChange={(e) => onChange("email", e.target.value)}
-              value={state.email}
+              name="email"
+              ref={register({
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Please enter a valid email address",
+                },
+              })}
             />
-            <Form.Text className="text-muted">
-              Your registered email address.
-            </Form.Text>
+            {errors.email && (
+              <Form.Text className="text-muted">
+                {errors.email.message}
+              </Form.Text>
+            )}
           </Form.Group>
 
           <Form.Group controlId="formBasicPassword">
@@ -80,9 +80,24 @@ const Login = ({ localAuth, restoreToken }) => {
               type="password"
               placeholder="Password"
               autoComplete="current-password"
-              onChange={(e) => onChange("password", e.target.value)}
-              value={state.password}
+              name="password"
+              ref={register({
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters",
+                },
+                maxLength: {
+                  value: 64,
+                  message: "Password must be less than 65 characters",
+                },
+              })}
             />
+            {errors.password && (
+              <Form.Text className="text-muted">
+                {errors.password.message}
+              </Form.Text>
+            )}
           </Form.Group>
           {error ? <Alert variant="warning">Error: {error}</Alert> : null}
           <Button

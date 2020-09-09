@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             'email'             => $admin_email,
             'first_name'        => 'admin',
             'last_name'         => 'admin',
-            'password'          => bcrypt('admin'),
+            'password'          => bcrypt('admin123'),
             'dob'               => new Carbon('-20 years'),
         ]);
 
