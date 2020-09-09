@@ -38,6 +38,7 @@ api:build:
 api:test:
   image: edbizarro/gitlab-ci-pipeline-php:7.4
   stage: test
+  needs: ["api:build"]
   only:
     changes:
       - "API/**/*"
@@ -65,6 +66,7 @@ web:build:
 
 web:test:
   stage: test
+  needs: ["web:build"]
   only:
     changes:
       - "web/**/*"
