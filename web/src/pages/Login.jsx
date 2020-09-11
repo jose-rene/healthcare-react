@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { Alert, Button, Form } from "react-bootstrap";
+import { Alert, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";
 import { restoreToken } from "../actions/restoreAction";
-import "../App.css";
-import logo from "../assets/images/splash.png";
+import InputText from "../components/inputs/InputText";
+
+// this rule wants both the htmlFor and label nested, should be either not both
+/* eslint-disable jsx-a11y/label-has-associated-control */
 
 const Login = ({ localAuth, restoreToken }) => {
   // tokenLoading is async storage, loading is http
@@ -45,71 +47,75 @@ const Login = ({ localAuth, restoreToken }) => {
   };
 
   return (
-    <div className="App">
-      <Alert key="0" variant="success" style={{ marginBottom: 0 }}>
-        Web App Login
-      </Alert>
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Form className="mt-3" onSubmit={handleSubmit(onSubmit)}>
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Enter email"
-              autoComplete="username"
-              name="email"
-              ref={register({
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Please enter a valid email address",
-                },
-              })}
-            />
-            {errors.email && (
-              <Form.Text className="text-muted">
-                {errors.email.message}
-              </Form.Text>
-            )}
-          </Form.Group>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-12 col-md-12 col-lg-6 col-no-padding">
+          <div className="container-login">
+            <div className="text-center text-lg-left">
+              <img alt="Logo" src="/images/logo.png" />
+            </div>
 
-          <Form.Group controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              autoComplete="current-password"
-              name="password"
-              ref={register({
-                required: "Password is required",
-                minLength: {
-                  value: 8,
-                  message: "Password must be at least 8 characters",
-                },
-                maxLength: {
-                  value: 64,
-                  message: "Password must be less than 65 characters",
-                },
-              })}
-            />
-            {errors.password && (
-              <Form.Text className="text-muted">
-                {errors.password.message}
-              </Form.Text>
-            )}
-          </Form.Group>
-          {error ? <Alert variant="warning">Error: {error}</Alert> : null}
-          <Button
-            type="submit"
-            variant="primary"
-            title="Login"
-            loading={loading.toString()}
-          >
-            Log In
-          </Button>
-        </Form>
-      </header>
+            <h1 className="sign-in-title">Sign In</h1>
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <InputText
+                label="Account"
+                name="email"
+                placeholder="Enter your email address"
+                errors={errors}
+                style={{ height: "56px" }}
+                ref={register({
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Please enter a valid email address",
+                  },
+                })}
+              />
+              <InputText
+                label="Password"
+                name="password"
+                type="password"
+                placeholder="Enter your password"
+                errors={errors}
+                style={{ height: "56px" }}
+                ref={register({
+                  required: "Password is required",
+                  minLength: {
+                    value: 8,
+                    message: "Password must be at least 8 characters",
+                  },
+                  maxLength: {
+                    value: 64,
+                    message: "Password must be less than 65 characters",
+                  },
+                })}
+              />
+              <div className="d-flex justify-content-between flex-wrap mt-3">
+                <a href="#" className="btn-forgot-password">
+                  Forgot my password
+                </a>
+              </div>
+              {error ? (
+                <Alert className="mt-3" variant="warning">
+                  Error: {error}
+                </Alert>
+              ) : null}
+              <Button
+                type="submit"
+                variant="primary"
+                title="Sign in"
+                className="btn-sign-in"
+                loading={loading.toString()}
+              >
+                Sign In
+              </Button>
+            </form>
+          </div>
+        </div>
+
+        <div className="d-none d-sm-none d-md-none d-lg-flex col-lg-6 login-bg col-no-padding" />
+      </div>
     </div>
   );
 };
