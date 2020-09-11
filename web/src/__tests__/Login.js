@@ -33,9 +33,12 @@ describe("Login Page", () => {
       isLoading: true,
     });
     // wait for the state changes
-    await screen.findByRole("button", { name: /login/i });
+    await screen.findByRole("button", { name: /sign in/i });
     // expect to see the page
-    expect(screen.getByText("Web App Login")).toBeTruthy();
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Sign In" })
+    ).toBeTruthy();
   });
   it("renders form elements correctly", async () => {
     // render with redux
@@ -44,9 +47,11 @@ describe("Login Page", () => {
       isLoading: true,
     });
     // wait for the state changes
-    const button = await screen.findByRole("button", { name: /login/i });
+    const button = await screen.findByRole("button", { name: /sign in/i });
     expect(button).toBeTruthy();
-    const usernameInput = await screen.getByPlaceholderText(/enter email/i);
+    const usernameInput = await screen.getByPlaceholderText(
+      /enter your email/i
+    );
     const passwordInput = screen.getByPlaceholderText(/password/i);
     expect(usernameInput).toBeTruthy();
     expect(passwordInput).toBeTruthy();
@@ -64,14 +69,14 @@ describe("Login Page", () => {
       isLoading: true,
     });
     // wait for the state changes
-    const button = await screen.findByRole("button", { name: /login/i });
-    const usernameInput = screen.getByPlaceholderText(/enter email/i);
+    const button = await screen.findByRole("button", { name: /sign in/i });
+    const usernameInput = screen.getByPlaceholderText(/enter your email/i);
     const passwordInput = screen.getByPlaceholderText(/password/i);
     fireEvent.change(usernameInput, { target: { value: user } });
     fireEvent.change(passwordInput, { target: { value: password } });
     fireEvent.click(button);
     await wait(() =>
-      expect(screen.getByText(/enter a valid email address/i)).toBeTruthy()
+      expect(screen.getByText(/enter a valid email/i)).toBeTruthy()
     );
   });
   it("validates password min characters", async () => {
@@ -83,8 +88,8 @@ describe("Login Page", () => {
       isLoading: true,
     });
     // wait for the state changes
-    const button = await screen.findByRole("button", { name: /login/i });
-    const usernameInput = screen.getByPlaceholderText(/enter email/i);
+    const button = await screen.findByRole("button", { name: /sign in/i });
+    const usernameInput = screen.getByPlaceholderText(/enter your email/i);
     const passwordInput = screen.getByPlaceholderText(/password/i);
     fireEvent.change(usernameInput, { target: { value: username } });
     fireEvent.change(passwordInput, { target: { value: pass } });
@@ -104,8 +109,8 @@ describe("Login Page", () => {
       isLoading: true,
     });
     // wait for the state changes
-    const button = await screen.findByRole("button", { name: /login/i });
-    const usernameInput = screen.getByPlaceholderText(/enter email/i);
+    const button = await screen.findByRole("button", { name: /sign in/i });
+    const usernameInput = screen.getByPlaceholderText(/enter your email/i);
     const passwordInput = screen.getByPlaceholderText(/password/i);
     // enter data and submit form
     fireEvent.change(usernameInput, { target: { value: username } });
@@ -131,8 +136,8 @@ describe("Login Page", () => {
       isLoading: true,
     });
     // wait for the state changes
-    const button = await screen.findByRole("button", { name: /login/i });
-    const usernameInput = screen.getByPlaceholderText(/enter email/i);
+    const button = await screen.findByRole("button", { name: /sign in/i });
+    const usernameInput = screen.getByPlaceholderText(/enter your email/i);
     const passwordInput = screen.getByPlaceholderText(/password/i);
     // enter data and submit form
     fireEvent.change(usernameInput, { target: { value: username } });
@@ -156,7 +161,7 @@ describe("Login Page", () => {
       isLoading: true,
     });
     // wait for the state changes
-    const button = await screen.findByRole("button", { name: /login/i });
+    const button = await screen.findByRole("button", { name: /sign in/i });
     expect(button).toBeTruthy();
     // wait for mocked redirect
     await wait(() => expect(screen.getByText("Dashboard Stub")).toBeTruthy());

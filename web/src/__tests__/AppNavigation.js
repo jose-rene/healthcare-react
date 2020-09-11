@@ -14,7 +14,7 @@ describe("App Navigation", () => {
       isLoading: false,
     });
     // wait for the state changes
-    const login = await screen.findByRole("button", { name: /login/i });
+    const login = await screen.findByRole("button", { name: /sign in/i });
     // expect to see the page
     expect(login).toBeTruthy();
   });
@@ -25,7 +25,7 @@ describe("App Navigation", () => {
       route: "/dashboard",
     });
     // wait for the state changes
-    const login = await screen.findByRole("button", { name: /login/i });
+    const login = await screen.findByRole("button", { name: /sign in/i });
     // expect to see the page
     expect(login).toBeTruthy();
   });
@@ -45,7 +45,7 @@ describe("App Navigation", () => {
       route: "/dashboard",
     });
     // wait for the state changes
-    const login = await screen.findByRole("button", { name: /login/i });
+    const login = await screen.findByRole("button", { name: /sign in/i });
     // expect to see the login page
     expect(login).toBeTruthy();
     // wait for the state changes
@@ -72,7 +72,7 @@ describe("App Navigation", () => {
       route: "/dashboard",
     });
     // wait for the state changes
-    const login = await screen.findByRole("button", { name: /login/i });
+    const login = await screen.findByRole("button", { name: /sign in/i });
     // expect to see the login page
     expect(login).toBeTruthy();
     // verify user data is present
