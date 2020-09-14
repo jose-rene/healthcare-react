@@ -6,6 +6,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
@@ -72,6 +73,72 @@ class LoginTest extends TestCase
             ->assertStatus(401)
             ->assertJsonStructure(['message'])
             ->assertJson(['message' => 'Unauthorized']);
+    }
+
+    /**
+     * Make sure email is validated before authentication.
+     *
+     * @return void
+     */
+    public function testEmailValidation()
+    {
+        $response = $this
+            ->withHeaders([
+                'Accept' => 'application/json',
+                'X-Requested-With' => 'XMLHttpRequest',
+            ])
+            ->post('/api/login', [
+                'email'    => 'somethingthatsnotanemail@',
+                'password' => 'password',
+            ]);
+
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure(['message'])
+            ->assertJson(['message' => 'The given data was invalid.'])
+            ->assertSee('Your email must be a valid email address.');
+    }
+
+    /**
+     * Make sure password is validated before authentication.
+     *
+     * @return void
+     */
+    public function testPasswordValidation()
+    {
+        // test too few characters
+        $response = $this
+            ->withHeaders([
+                'Accept' => 'application/json',
+                'X-Requested-With' => 'XMLHttpRequest',
+            ])
+            ->post('/api/login', [
+                'email'    => $this->user->email,
+                'password' => Str::random(5),
+            ]);
+
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure(['message'])
+            ->assertJson(['message' => 'The given data was invalid.'])
+            ->assertSee('Your password must be at least 8 characters.');
+
+        // too many characters
+        $response = $this
+            ->withHeaders([
+                'Accept' => 'application/json',
+                'X-Requested-With' => 'XMLHttpRequest',
+            ])
+            ->post('/api/login', [
+                'email'    => $this->user->email,
+                'password' => Str::random(80),
+            ]);
+
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure(['message'])
+            ->assertJson(['message' => 'The given data was invalid.'])
+            ->assertSee('Your password may not be greater than 64 characters.');
     }
 
     /**
