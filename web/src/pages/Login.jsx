@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import { Alert, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";
-import { restoreToken } from "../actions/restoreAction";
+import { restoreToken } from "../actions/authAction";
 import InputText from "../components/inputs/InputText";
 
 // this rule wants both the htmlFor and label nested, should be either not both
@@ -18,6 +18,8 @@ const Login = ({ localAuth, restoreToken }) => {
   ] = useAuth();
 
   const { register, handleSubmit, errors } = useForm();
+
+  const location = useLocation();
 
   useEffect(() => {
     let isMounted = true;
@@ -36,10 +38,16 @@ const Login = ({ localAuth, restoreToken }) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
-
   if (localAuth.userToken) {
-    // @todo, use history to redirect to previous path before login
-    return <Redirect to="/dashboard" />;
+    return (
+      <Redirect
+        to={
+          location.state && location.state.from
+            ? location.state.from
+            : "/dashboard"
+        }
+      />
+    );
   }
 
   const onSubmit = (data) => {

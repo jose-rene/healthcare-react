@@ -1,9 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Alert } from "react-bootstrap";
-import { signOut } from "../actions/restoreAction";
+import { signOut } from "../actions/authAction";
 
-const dashLayout = ({ full_name, email, children }) => {
+const DashLayout = ({ full_name, email, localAuth, signOut, children }) => {
+  const logOut = (e) => {
+    e.preventDefault();
+    signOut();
+  };
   return (
     <div className="App">
       <Alert
@@ -18,6 +22,11 @@ const dashLayout = ({ full_name, email, children }) => {
             {email} {full_name}
           </span>
         ) : null}
+        <span className="ml-2">
+          <a className="text-danger" href="/" onClick={logOut}>
+            Logout
+          </a>
+        </span>
       </Alert>
       {children}
     </div>
@@ -34,4 +43,4 @@ const mapDispatchToProps = {
   signOut,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(dashLayout);
+export default connect(mapStateToProps, mapDispatchToProps)(DashLayout);

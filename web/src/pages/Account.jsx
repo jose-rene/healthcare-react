@@ -4,15 +4,15 @@ import { Link } from "react-router-dom";
 import DashLayout from "../layouts/dashLayout";
 import logo from "../assets/images/splash.png";
 
-const Dash = ({ email, full_name }) => {
+const Account = ({ email, full_name }) => {
   return (
     <DashLayout>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Hello Dashboard! {email} {full_name}
+          My Account! {email} {full_name}
         </p>
-        <Link to="/account">My Account</Link>
+        <Link to="/dashboard">Dashboard</Link>
       </header>
     </DashLayout>
   );
@@ -24,4 +24,4 @@ const mapStateToProps = ({ auth, user: { email, full_name } }) => ({
   full_name,
 });
 
-export default connect(mapStateToProps)(Dash);
+export default connect(mapStateToProps)(Account);

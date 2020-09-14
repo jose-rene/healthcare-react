@@ -53,22 +53,6 @@ const useAuth = () => {
     doAuth().then();
   };
 
-  const doLogout = async () => {
-    // const logoutProcess = async () => {
-    await AsyncStorage.removeItem(AUTH_TOKEN_NAME);
-    await AsyncStorage.removeItem("@dme.login.token_type");
-    await AsyncStorage.removeItem("@dme.login.expires_at");
-
-    setAuthed((prevState) => ({
-      ...prevState,
-      tokenLoading: false,
-      authToken: null,
-      loading: false,
-    }));
-    // };
-    // logoutProcess().then();
-  };
-
   const loadAuth = () => {
     const load = async () => {
       let result = null;
@@ -88,7 +72,7 @@ const useAuth = () => {
     load().then();
   };
 
-  return [authState, { loadAuth, authUser, doLogout }];
+  return [authState, { loadAuth, authUser }];
 };
 
 export default useAuth;

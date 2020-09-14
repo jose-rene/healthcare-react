@@ -1,31 +1,31 @@
 import "@testing-library/jest-dom";
 import React from "react";
 import { generate as generateRandomString } from "randomstring";
-import { renderWithRouter, screen, fireEvent, wait } from "../testUtils";
-import Dash from "../pages/Dash";
+import { renderWithRouter, screen, fireEvent } from "../testUtils";
+import Account from "../pages/Account";
 
-describe("Dashboard Page", () => {
+describe("My Account Page", () => {
   it("can render with redux state defaults", async () => {
     // render with redux
-    renderWithRouter(<Dash />, {
+    renderWithRouter(<Account />, {
       userToken: generateRandomString({ length: 24, charset: "alphanumeric" }),
       isLoading: false,
     });
     // wait for the state changes
-    const welcome = await screen.getByText(/hello dashboard/i);
+    const account = await screen.getByText(/my account/i);
     // expect to see the page
-    expect(welcome).toBeTruthy();
+    expect(account).toBeTruthy();
   });
-  it("links to account page", async () => {
+  it("links to main dashboard", async () => {
     // render with redux
-    renderWithRouter(<Dash />, {
+    renderWithRouter(<Account />, {
       userToken: generateRandomString({ length: 24, charset: "alphanumeric" }),
       isLoading: false,
     });
     // wait for the state changes
-    const link = await screen.findByRole("link", { name: /account/i });
+    const link = await screen.findByRole("link", { name: /dashboard/i });
     expect(link).toBeTruthy();
     // expect link attribute
-    expect(link).toHaveAttribute("href", "/account");
+    expect(link).toHaveAttribute("href", "/dashboard");
   });
 });
