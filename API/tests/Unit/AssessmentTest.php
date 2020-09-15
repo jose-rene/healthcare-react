@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use App\Models\Assessment\Assessment;
 use App\Models\Assessment\Questionnaire;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AssessmentTest extends TestCase
 {
@@ -27,6 +27,6 @@ class AssessmentTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->assessment = factory(Assessment::class)->create();
+        $this->assessment = Assessment::factory()->create();
     }
 }

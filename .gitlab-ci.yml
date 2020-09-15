@@ -1,6 +1,10 @@
 default:
   image: mhart/alpine-node
 cache:
+  key:
+    files:
+      - API/composer.lock
+      - web/yarn.lock
   paths:
     - API/vendor/
     - API/node_modules/

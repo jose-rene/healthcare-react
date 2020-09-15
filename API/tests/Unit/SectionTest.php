@@ -2,12 +2,12 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Database\Eloquent\Collection;
-use App\Models\Assessment\Section;
 use App\Models\Assessment\Question;
+use App\Models\Assessment\Section;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class SectionTest extends TestCase
 {
@@ -34,7 +34,7 @@ class SectionTest extends TestCase
     public function testAttachQuestion()
     {
         $this->section->questions()->saveMany(
-            $questions = factory(Question::class, $number = $this->faker->randomDigitNot(0))->make()
+            $questions = Question::factory($number = $this->faker->randomDigitNot(0))->make()
         );
         // verify the questions were associated
         $this->assertInstanceOf(Collection::class, $this->section->questions);
@@ -54,10 +54,10 @@ class SectionTest extends TestCase
     {
         // parent and child sections
         $sectionParent = $this->section;
-        $sectionsChildren = factory(Section::class, $number = $this->faker->randomDigitNot(0))->create();
+        $sectionsChildren = Section::factory($number = $this->faker->randomDigitNot(0))->create();
         // recursive child
         $child = $sectionsChildren->first();
-        $sectionSubChild = factory(Section::class)->create();
+        $sectionSubChild = Section::factory()->create();
         $child->children()->save($sectionSubChild);
         $this->assertInstanceOf(Collection::class, $child->children);
         $this->assertEquals(1, $child->children->count());
@@ -80,6 +80,6 @@ class SectionTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->section = factory(Section::class)->create();
+        $this->section = Section::factory()->create();
     }
 }

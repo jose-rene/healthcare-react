@@ -2,12 +2,12 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use App\Models\Assessment\Question;
-use App\Models\Assessment\Valuelist\Valuelist;
 use App\Models\Assessment\Valuelist\Listitem;
+use App\Models\Assessment\Valuelist\Valuelist;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class QuestionTest extends TestCase
 {
@@ -23,8 +23,7 @@ class QuestionTest extends TestCase
      */
     public function testQuestion()
     {
-        $question = factory(Question::class)->create();
-        $this->assertInstanceOf(Question::class, $question);
+        $this->assertInstanceOf(Question::class, $this->question);
     }
 
     /**
@@ -32,7 +31,7 @@ class QuestionTest extends TestCase
      *
      * @return void
      */
-    public function testAddValuelist()
+    /*public function testAddValuelist()
     {
         $valuelist = factory(Valuelist::class)->create();
         $listitems = factory(Listitem::class, $number = $this->faker->randomDigitNot(0))->create();
@@ -44,11 +43,11 @@ class QuestionTest extends TestCase
         $this->assertEquals($listitems->first()->id, $this->question->valuelist->listitems->first()->id);
         // inverse relationship
         $this->assertEquals($this->question->id, $this->question->valuelist->questions->first()->id);
-    }
+    }*/
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->question = factory(Question::class)->create();
+        $this->question = Question::factory()->create();
     }
 }

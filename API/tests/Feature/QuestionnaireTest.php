@@ -85,9 +85,9 @@ class QuestionnaireTest extends TestCase
 
         // seed the PCA assessment
         Artisan::call('db:seed', [
-            '--class' => 'PcaSeeder',
+            '--class' => 'Database\Seeders\PcaSeeder',
         ]);
 
-        $this->user = factory(User::class)->create();
+        $this->user = User::factory()->create();
     }
 }
