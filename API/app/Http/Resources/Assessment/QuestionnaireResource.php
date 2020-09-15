@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Assessment;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -18,7 +18,7 @@ class QuestionnaireResource extends JsonResource
         return [
             'id'       => $this->id,
             'title'    => $this->title,
-            'sections' => new SectionsResource($this->sections),
+            'sections' => new SectionResourceCollection($this->sections),
         ];
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\QuestionnaireResource;
+use App\Http\Resources\Assessment\QuestionnaireResource;
 use App\Models\Assessment\Questionnaire;
 use Illuminate\Http\Request;
 

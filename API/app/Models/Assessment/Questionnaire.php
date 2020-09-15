@@ -35,38 +35,4 @@ class Questionnaire extends Model
     {
         return $this->hasMany(Assessment::class);
     }
-
-    /**
-     * Find questionnaire and return with relations populated.
-     *
-     * @param  int  $id
-     * @return App\Models\Assessment\Questionnaire
-     */
-    public static function fetch($id)
-    {
-        // find with relations
-        $questionnaire = self::find($id)->with([
-            'sections' => function ($query) {
-                $query->with([
-                    'childSections' => function ($query) {
-                        $query->with(['questions' => function ($query) {
-                            $query->with(['valuelist' => function ($query) {
-                                $query->with('listitems');
-                            }])->orderBy('listitem_id');
-                        }, // @note this has to be added to get the questions for the nested children
-                        'children' => function ($query) {
-                            $query->with(['questions' => function ($query) {
-                                $query->with(['valuelist' => function ($query) {
-                                    $query->with('listitems');
-                                }]);
-                            }]);
-                        },
-                        ]);
-                    },
-                ]);
-            },
-        ])->orderBy('questionnaire_section_position', 'asc')->first();
-        //dd($questionnaire->sections->offsetGet(2)->children->count());
-        return $questionnaire;
-    }
 }
