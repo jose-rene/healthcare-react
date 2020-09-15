@@ -5,8 +5,9 @@ import PrivateRoute from "../route/PrivateRoute";
 import Login from "../pages/Login";
 import Error from "../pages/NotFound";
 import Dash from "../pages/Dash";
+import Account from "../pages/Account";
 import apiService from "../services/apiService";
-import { restoreToken } from "../actions/restoreAction";
+import { restoreToken } from "../actions/authAction";
 import { setUser } from "../actions/userAction";
 
 const AppNavigation = ({ setUser, localAuth, user }) => {
@@ -20,7 +21,7 @@ const AppNavigation = ({ setUser, localAuth, user }) => {
           }
         })
         .catch((e) => {
-          // console.log(e);
+          console.log(e);
         });
     }
     return () => {
@@ -29,11 +30,16 @@ const AppNavigation = ({ setUser, localAuth, user }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localAuth]);
 
+  const authed = localAuth.userToken ? 1 : 0;
+
   return (
     <BrowserRouter>
       <Switch>
         <Route path="/" component={Login} exact />
-        <PrivateRoute path="/dashboard" authed={localAuth.userToken ? 1 : 0}>
+        <PrivateRoute path="/account" authed={authed}>
+          <Account />
+        </PrivateRoute>
+        <PrivateRoute path="/dashboard" authed={authed}>
           <Dash />
         </PrivateRoute>
         <Route component={Error} />

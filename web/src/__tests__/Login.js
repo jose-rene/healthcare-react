@@ -2,6 +2,7 @@ import React from "react";
 import AsyncStorage from "@react-native-community/async-storage";
 import { generate as generateRandomString } from "randomstring";
 import moment from "moment";
+import routeData from "react-router";
 import {
   render,
   renderWithRouter,
@@ -12,6 +13,17 @@ import {
 } from "../testUtils";
 import { AUTH_TOKEN_NAME } from "../config/URLs";
 import Login from "../pages/Login";
+
+// mock useLocation
+const mockLocation = {
+  pathname: "/dashboard",
+  hash: "",
+  search: "",
+  state: "",
+};
+beforeEach(() => {
+  jest.spyOn(routeData, "useLocation").mockReturnValue(mockLocation);
+});
 
 // @note using axios-mock-adapter instead of mocking axios, see ./testUtils.js
 /* 
@@ -28,7 +40,7 @@ describe("Login Page", () => {
 
   it("can render with redux state defaults", async () => {
     // render with redux
-    render(<Login />, {
+    renderWithRouter(<Login />, {
       userToken: null,
       isLoading: true,
     });
@@ -42,7 +54,7 @@ describe("Login Page", () => {
   });
   it("renders form elements correctly", async () => {
     // render with redux
-    render(<Login />, {
+    renderWithRouter(<Login />, {
       userToken: null,
       isLoading: true,
     });
@@ -64,7 +76,7 @@ describe("Login Page", () => {
     // invalid user email
     const user = generateRandomString(6);
     // render with redux
-    render(<Login />, {
+    renderWithRouter(<Login />, {
       userToken: null,
       isLoading: true,
     });
@@ -83,7 +95,7 @@ describe("Login Page", () => {
     // invalid password
     const pass = generateRandomString(6);
     // render with redux
-    render(<Login />, {
+    renderWithRouter(<Login />, {
       userToken: null,
       isLoading: true,
     });

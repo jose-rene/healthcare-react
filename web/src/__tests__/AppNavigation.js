@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import React from "react";
 import AsyncStorage from "@react-native-community/async-storage";
 import { generate as generateRandomString } from "randomstring";
-import { render, screen, axiosMock } from "../testUtils";
+import { render, screen, axiosMock, fireEvent, wait } from "../testUtils";
 import { AUTH_TOKEN_NAME } from "../config/URLs";
 import AppNavigation from "../navigation/AppNavigation";
 
@@ -78,5 +78,22 @@ describe("App Navigation", () => {
     // verify user data is present
     const userInfo = await screen.getByTestId("userinfo");
     expect(userInfo).toBeTruthy();
+  });
+  it("logs the user out", async () => {
+    // render with redux
+    render(<AppNavigation />, {
+      userToken: generateRandomString({ length: 24, charset: "alphanumeric" }),
+      isLoading: false,
+    });
+    // wait for the state changes
+    const link = await screen.findByRole("link", { name: /logout/i });
+    expect(link).toBeTruthy();
+    // click on logout
+    fireEvent.click(link);
+    await wait(async () =>
+      expect(
+        screen.getByRole("heading", { level: 1, name: "Sign In" })
+      ).toBeTruthy()
+    );
   });
 });
