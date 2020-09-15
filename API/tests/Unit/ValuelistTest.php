@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
+use App\Models\Assessment\Valuelist\Listitem;
+use App\Models\Assessment\Valuelist\Valuelist;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\Assessment\Valuelist\Valuelist;
-use App\Models\Assessment\Valuelist\Listitem;
-use Illuminate\Database\Eloquent\Collection;
 
 class ValuelistTest extends TestCase
 {
@@ -29,7 +29,7 @@ class ValuelistTest extends TestCase
      */
     public function testAttachItems()
     {
-        $this->valuelist->listitems()->save($listitem = factory(Listitem::class)->create());
+        $this->valuelist->listitems()->save($listitem = Listitem::factory()->create());
         $this->assertInstanceOf(Collection::class, $this->valuelist->listitems);
         $this->assertEquals($this->valuelist->listitems->first()->id, $listitem->id);
     }
@@ -37,6 +37,6 @@ class ValuelistTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->valuelist = factory(Valuelist::class)->create();
+        $this->valuelist = Valuelist::factory()->create();
     }
 }

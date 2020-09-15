@@ -1,11 +1,13 @@
 <?php
 
-use Illuminate\Database\Seeder;
-use App\Models\Assessment\Questionnaire;
+namespace Database\Seeders;
+
 use App\Models\Assessment\Question;
+use App\Models\Assessment\Questionnaire;
 use App\Models\Assessment\Section;
 use App\Models\Assessment\Valuelist\Valuelist;
 use Facades\App\Models\Assessment\Valuelist\Listitem as ListitemFacade;
+use Illuminate\Database\Seeder;
 
 class PcaSeeder extends Seeder
 {
@@ -79,14 +81,13 @@ class PcaSeeder extends Seeder
         // questions for walking section for n/a field to be added
         $walkingQuestions = [
             // logic for question type is handled by dependency field in other questions
-            'na' => ['props' =>
-                ['name' => 'na', 'title' => 'N/A', 'position' => 0, 'required' => false, 'ele_type' => 'checkbox', 'question_type' => 'section_control'],
+            'na' => ['props' => ['name' => 'na', 'title' => 'N/A', 'position' => 0, 'required' => false, 'ele_type' => 'checkbox', 'question_type' => 'section_control'],
             ],
             'comments' => ['props' => array_merge($questions['comments'], [
                 'position' => 1,
                 'required' => true,
                 'dependencies' => ['disabled' => ['na' => 1]],
-                'ele_type' => 'textarea'])
+                'ele_type' => 'textarea', ]),
             ],
             'functional' => [
                 'props' => array_merge($questions['functional'], ['position' => 2, 'required' => true, 'dependencies' => ['disabled' => ['na' => 1]], 'ele_type' => 'select']),
@@ -101,7 +102,7 @@ class PcaSeeder extends Seeder
                     'dependencies' => [
                         'disabled' => ['na' => 1],
                         // @note empty array indicates any value would cause this to be required
-                        'required' => ['considerations' => []]
+                        'required' => ['considerations' => []],
                     ],
                     'ele_type' => 'select',
                 ]),
@@ -127,7 +128,7 @@ class PcaSeeder extends Seeder
                 'title' => 'If yes, does person require assistance to perform the program?',
                 'position' => 2,
                 'ele_type' => 'select',
-                'dependencies' => json_encode(['visible' => ['prescribed_program' => 'Yes']])
+                'dependencies' => json_encode(['visible' => ['prescribed_program' => 'Yes']]),
             ]),
         ];
         // associate values lists
@@ -221,7 +222,7 @@ class PcaSeeder extends Seeder
             ],
             'dme_functional' => [
                 'name' => 'dme_functional',
-                'title' => 'DME ADL Functional Level Score'
+                'title' => 'DME ADL Functional Level Score',
             ],
             'considerations' => [
                 'name' => 'considerations',
@@ -241,10 +242,10 @@ class PcaSeeder extends Seeder
     }
 
     /**
-    * Create value lists used in this assessment.
-    *
-    * @return array of App\Valuelist
-    */
+     * Create value lists used in this assessment.
+     *
+     * @return array of App\Valuelist
+     */
     protected function createValueLists()
     {
         // create the function scores value list
@@ -305,13 +306,13 @@ class PcaSeeder extends Seeder
     protected function timesPerDayList($min, $max)
     {
         // check if the value list already exists
-        $key = 'times_per_day_' . $min . '_' . $max;
+        $key = 'times_per_day_'.$min.'_'.$max;
         if (!empty($this->valuelists[$key])) {
             return $this->valuelists[$key];
         }
         // create the new valuelist if it does not exist
         $this->valuelists[$key] = Valuelist::create([
-            'title' => 'Times per Day (' . $min . ' - ' . $max . ')',
+            'title' => 'Times per Day ('.$min.' - '.$max.')',
         ]);
         $values = [
             ['val' => '', 'title' => 'Choose One'],
@@ -319,6 +320,7 @@ class PcaSeeder extends Seeder
         $values = $this->addValueNumbers($values, $min, $max);
         $items = ListitemFacade::createMany($values);
         $this->valuelists[$key]->listitems()->saveMany($items['days_per_week']);
+
         return $this->valuelists[$key];
     }
 
@@ -386,6 +388,7 @@ class PcaSeeder extends Seeder
                 'position' => 11,
             ]),
         ];
+
         return $sections;
     }
 
@@ -448,6 +451,7 @@ class PcaSeeder extends Seeder
                 'position' => 9,
             ]),
         ];
+
         return $sections;
     }
 
@@ -480,7 +484,7 @@ class PcaSeeder extends Seeder
         $main['basic_activities']->children()->saveMany($sections['basic']);
         $main['summary']->children()->saveMany($sections['summary']);
         $main['instrumental_activities']->children()->saveMany($sections['instrumental']);
-        
+
         return $main;
     }
 
@@ -497,10 +501,11 @@ class PcaSeeder extends Seeder
                     dd($item);
                     throw new \RuntimeException('Question definitions must have properties');
                 }
-                $question = App\Models\Assessment\Question::create($item['props']);
+                $question = Question::create($item['props']);
                 if (isset($item['valuelist']) && $item['valuelist'] instanceof Valuelist) {
                     $question->valuelist()->associate($item['valuelist'])->save();
                 }
+
                 return $question;
             }, $defs)
         );
@@ -513,9 +518,10 @@ class PcaSeeder extends Seeder
      */
     protected function addValueNumbers($values, $start, $stop)
     {
-        for ($xx = $start; $xx<=$stop; $xx++) {
-            $values[] = ['val' => $xx, 'title' => $xx,];
+        for ($xx = $start; $xx <= $stop; $xx++) {
+            $values[] = ['val' => $xx, 'title' => $xx];
         }
+
         return $values;
     }
 }

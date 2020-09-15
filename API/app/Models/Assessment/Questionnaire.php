@@ -2,6 +2,7 @@
 
 namespace App\Models\Assessment;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Questionnaire extends Model
 {
+    use HasFactory;
+
     protected $guarded = [
         'id',
     ];
@@ -42,7 +45,7 @@ class Questionnaire extends Model
     public static function fetch($id)
     {
         // find with relations
-        $questionnaire = Questionnaire::find($id)->with([
+        $questionnaire = self::find($id)->with([
             'sections' => function ($query) {
                 $query->with([
                     'childSections' => function ($query) {
@@ -61,7 +64,7 @@ class Questionnaire extends Model
                         ]);
                     },
                 ]);
-            }
+            },
         ])->orderBy('questionnaire_section_position', 'asc')->first();
         //dd($questionnaire->sections->offsetGet(2)->children->count());
         return $questionnaire;

@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use App\Models\Assessment\Answer;
 use App\Models\Assessment\Question;
 use App\Models\Assessment\Valuelist\Listitem;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AnswerTest extends TestCase
 {
@@ -25,7 +25,7 @@ class AnswerTest extends TestCase
     }
 
     /**
-     * Test question relationship
+     * Test question relationship.
      *
      * @return void
      */
@@ -35,13 +35,13 @@ class AnswerTest extends TestCase
     }
 
     /**
-     * Test valuelist relationship
+     * Test valuelist relationship.
      *
      * @return void
      */
     public function testValuelist()
     {
-        $this->answer->listitem()->associate($listitem = factory(Listitem::class)->create())->save();
+        $this->answer->listitem()->associate($listitem = Listitem::factory()->create())->save();
         $this->assertInstanceOf(Listitem::class, $this->answer->listitem);
         $this->assertEquals($listitem->val, $this->answer->listitem->val);
     }
@@ -49,6 +49,6 @@ class AnswerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->answer = factory(Answer::class)->create();
+        $this->answer = Answer::factory()->create();
     }
 }

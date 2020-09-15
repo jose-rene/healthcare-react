@@ -29,7 +29,7 @@ class LoginTest extends TestCase
      */
     public function testApiLogin()
     {
-
+        $user = User::factory()->create();
         // Make sure I can login
         $response = $this->post('/api/login', [
             'email'    => $this->user->email,
@@ -149,10 +149,9 @@ class LoginTest extends TestCase
         parent::setUp();
 
         Artisan::call('passport:install');
-
         // this will store a new user with random attributes in the database.
         /* @var User $user */
-        $this->user = factory(User::class)->create();
+        $this->user = User::factory()->create();
 
         // this is an example of how to make multiple
         /*factory(User::class, 1000000)->make()->each(function ($user) {

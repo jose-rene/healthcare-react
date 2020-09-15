@@ -2,13 +2,16 @@
 
 namespace App\Models\Assessment;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Assessment\Section;
 use App\Models\Assessment\Valuelist\Valuelist;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Question extends Model
 {
-    protected $guarded = ['id',];
+    use HasFactory;
+
+    protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
     // dependencies json data to object
     protected $casts = [

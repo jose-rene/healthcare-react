@@ -2,11 +2,14 @@
 
 namespace App\Models\Assessment\Valuelist;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Listitem extends Model
 {
-    protected $guarded = ['id',];
+    use HasFactory;
+
+    protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
 
     /**
@@ -30,6 +33,7 @@ class Listitem extends Model
         foreach ($data as $item) {
             $listitems[] = $this->create($item);
         }
+
         return $this->newCollection($listitems);
     }
 }

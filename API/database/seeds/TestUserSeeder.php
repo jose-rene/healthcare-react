@@ -1,7 +1,9 @@
 <?php
 
-use Illuminate\Database\Seeder;
+namespace Database\Seeders;
+
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class TestUserSeeder extends Seeder
 {

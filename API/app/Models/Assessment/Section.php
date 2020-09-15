@@ -2,6 +2,7 @@
 
 namespace App\Models\Assessment;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -9,7 +10,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Section extends Model
 {
-    protected $guarded = ['id',];
+    use HasFactory;
+
+    protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
 
     /**
@@ -39,7 +42,7 @@ class Section extends Model
      */
     public function children()
     {
-        return $this->hasMany(Section::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     /**
@@ -49,6 +52,6 @@ class Section extends Model
      */
     public function childSections()
     {
-        return $this->hasMany(Section::class, 'parent_id')->with('children');
+        return $this->hasMany(self::class, 'parent_id')->with('children');
     }
 }

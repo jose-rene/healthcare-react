@@ -1,12 +1,14 @@
 <?php
 
-use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
-use App\Models\Assessment\Questionnaire;
+namespace Database\Seeders;
+
 use App\Models\Assessment\Question;
+use App\Models\Assessment\Questionnaire;
 use App\Models\Assessment\Section;
-use App\Models\Assessment\Valuelist\Valuelist;
 use App\Models\Assessment\Valuelist\Listitem;
+use App\Models\Assessment\Valuelist\Valuelist;
+use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class QuestionnaireSeeder extends Seeder
 {

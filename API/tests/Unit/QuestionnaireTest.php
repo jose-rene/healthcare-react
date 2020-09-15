@@ -2,12 +2,12 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Database\Eloquent\Collection;
 use App\Models\Assessment\Questionnaire;
 use App\Models\Assessment\Section;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class QuestionnaireTest extends TestCase
 {
@@ -34,7 +34,7 @@ class QuestionnaireTest extends TestCase
     public function testAttachSection()
     {
         $this->questionnaire->sections()->saveMany(
-            $sections = factory(Section::class, $number = $this->faker->randomDigitNot(0))->make()
+            $sections = Section::factory($number = $this->faker->randomDigitNot(0))->make()
         );
         // verify the sections were associated
         $this->assertInstanceOf(Collection::class, $this->questionnaire->sections);
@@ -48,6 +48,6 @@ class QuestionnaireTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->questionnaire = factory(Questionnaire::class)->create();
+        $this->questionnaire = Questionnaire::factory()->create();
     }
 }
