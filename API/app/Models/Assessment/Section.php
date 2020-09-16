@@ -13,7 +13,7 @@ class Section extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $casts = ['position' => 'integer'];
 
     /**
      * Relationship to questions.

@@ -19,13 +19,13 @@ class QuestionnaireTest extends TestCase
      */
     public function testIndexQuestionnaire()
     {
-        // $this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
         Passport::actingAs(
             $this->user
         );
         // get the questionnaire
         $response = $this->withHeaders([
-            'Accept' => 'application/json',
+            'Accept'           => 'application/json',
             'X-Requested-With' => 'XMLHttpRequest',
         ])->json('GET', 'api/questionnaire');
         // validate response code
@@ -34,11 +34,9 @@ class QuestionnaireTest extends TestCase
 
         // validate expected data structure
         $response->assertJsonStructure([
-            'data' => [
-                'id',
-                'title',
-                'sections',
-            ],
+            'id',
+            'title',
+            'sections' => [],
         ]);
         // validate expected data
         $response->assertSee('PCA Assessment');
@@ -57,7 +55,7 @@ class QuestionnaireTest extends TestCase
         );
         // get the questionnaire
         $response = $this->withHeaders([
-            'Accept' => 'application/json',
+            'Accept'           => 'application/json',
             'X-Requested-With' => 'XMLHttpRequest',
         ])->json('GET', 'api/questionnaire/1');
         // validate response code
@@ -65,16 +63,16 @@ class QuestionnaireTest extends TestCase
 
         // debug stuff
         // dd($response->getContent());
-        // file_put_contents('/usr/www/dme/pca_new.json', $response->getContent());
+        // file_put_contents('/usr/www/dme/pca_resource.json', $response->getContent());
 
         // validate expected data structure
         $response->assertJsonStructure([
-            'data' => [
-                'id',
-                'title',
-                'sections',
-            ],
+            'id',
+            'title',
+            'sections' => [],
         ]);
+        // contains questions
+        $response->assertJsonFragment(['questions' => []]);
         // validate expected data
         $response->assertSee('PCA Assessment');
     }

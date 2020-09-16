@@ -25,7 +25,7 @@ class AnswerFactory extends Factory
     {
         return [
             'question_id' => Question::factory()->create()->id,
-            'answer' => $this->faker->sentence(),
+            'answer'      => $this->faker->sentence(),
         ];
     }
 }
