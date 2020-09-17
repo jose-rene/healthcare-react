@@ -19,7 +19,7 @@ class Valuelist extends Model
      */
     public function listitems()
     {
-        return $this->hasMany(Listitem::class)->orderBy('listitem_id');
+        return $this->hasMany(Listitem::class)->orderBy('id');
     }
 
     /**
