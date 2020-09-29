@@ -1,5 +1,5 @@
 default:
-  image: mhart/alpine-node
+  image: gryphon/php-yarn:7.4
 cache:
   key:
     files:
@@ -12,13 +12,13 @@ cache:
 stages:
   - build
   - test
+  - deploy
 
 # sast jobs
 include:
   - template: Security/SAST.gitlab-ci.yml
 
 api:build:
-  image: edbizarro/gitlab-ci-pipeline-php:7.4
   stage: build
   only:
     changes:
@@ -27,8 +27,11 @@ api:build:
   script:
     - cd API
     # Install Composer and project dependencies.
-    - curl -sS https://getcomposer.org/installer | php
-    - php composer.phar install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+    # Composer already installed on image
+    # - curl -sS https://getcomposer.org/installer | php
+    # - php composer.phar install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+    # Install laravel app
+    - composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     # Environment
     - cp .env.testing .env
     # Generate an application key. Re-cache.
@@ -40,7 +43,6 @@ api:build:
     - php artisan passport:keys
 
 api:test:
-  image: edbizarro/gitlab-ci-pipeline-php:7.4
   stage: test
   needs: ["api:build"]
   only:
@@ -56,6 +58,31 @@ api:test:
     # set it in your package.json script
     # comment this out if you don't have a frontend test
     #- npm test
+
+api:deploy:
+  stage: deploy
+  # only for develop branch deploy to staging
+  only:
+    refs:
+      - develop
+    changes:
+      - "API/**/*"
+      - ".gitlab-ci.yml"
+  script:
+    # gitlab does not correctly parse certificate from textarea input on their ui, so has to be base64 encoded and decoded
+    - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY_64" | base64 -d)
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    # Envoy has been added to the image
+    # - curl -sS https://getcomposer.org/installer | php
+    # - php composer.phar global require laravel/envoy
+    - cd API
+    - ~/.composer/vendor/bin/envoy run deploy --commit="$CI_COMMIT_SHA"
+  environment:
+    name: staging
+    url: https://api-stage.dme-cg.com
 
 web:build:
   stage: build
