@@ -31,8 +31,8 @@ const apiService = async (
     return !("data" in response) ? {} : response.data;
   };
   const onError = (error) => {
-    // console.log(error.response ? error.response : "", error.message);
-    return Promise.reject(error.message);
+    // console.log(error);
+    return Promise.reject(error?.message ? error.message : "Network Error");
   };
 
   return axios(config).then(onSuccess).catch(onError);

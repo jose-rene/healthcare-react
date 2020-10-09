@@ -12,6 +12,8 @@ class QuestionnaireTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $user;
+
     /**
      * Test index questionnaires route.
      *

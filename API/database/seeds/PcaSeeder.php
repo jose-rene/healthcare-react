@@ -26,30 +26,30 @@ class PcaSeeder extends Seeder
         $this->createValueLists();
         // group common questions in an array with contexual properties
         $common = [
-            'comments' => ['props' => array_merge($questions['comments'], ['position' => 1, 'required' => true, 'ele_type' => 'textarea'])],
+            'comments'   => ['props' => array_merge($questions['comments'], ['position' => 1, 'required' => true, 'ele_type' => 'textarea'])],
             'functional' => [
-                'props' => array_merge($questions['functional'], ['position' => 2, 'required' => true, 'ele_type' => 'select']),
+                'props'     => array_merge($questions['functional'], ['position' => 2, 'required' => true, 'ele_type' => 'select']),
                 'valuelist' => $this->valuelists['functional_scores'],
             ],
-            'days_per_week' => ['props' => array_merge($questions['days_per_week'], ['position' => 3, 'required' => true, 'ele_type' => 'select'])],
+            'days_per_week'  => ['props' => array_merge($questions['days_per_week'], ['position' => 3, 'required' => true, 'ele_type' => 'select']), 'valuelist' => $this->valuelists['days_per_week']],
             'considerations' => ['props' => array_merge($questions['considerations'], ['position' => 4, 'ele_type' => 'textarea'])],
             'dme_functional' => [
-                'props' => array_merge($questions['dme_functional'], ['position' => 5, 'dependencies' => ['required' => ['considerations' => []]], 'ele_type' => 'select']),
+                'props'     => array_merge($questions['dme_functional'], ['position' => 5, 'dependencies' => ['required' => ['considerations' => []]], 'ele_type' => 'select']),
                 'valuelist' => $this->valuelists['functional_scores'],
             ],
         ];
         // these are used often too, sames as above with times per day
         $commonWithTimes = [
-            'comments' => ['props' => array_merge($questions['comments'], ['position' => 1, 'required' => true, 'ele_type' => 'textarea'])],
+            'comments'   => ['props' => array_merge($questions['comments'], ['position' => 1, 'required' => true, 'ele_type' => 'textarea'])],
             'functional' => [
-                'props' => array_merge($questions['functional'], ['position' => 2, 'required' => true, 'ele_type' => 'select']),
+                'props'     => array_merge($questions['functional'], ['position' => 2, 'required' => true, 'ele_type' => 'select']),
                 'valuelist' => $this->valuelists['functional_scores'],
             ],
-            'days_per_week' => ['props' => array_merge($questions['days_per_week'], ['position' => 3, 'required' => true, 'ele_type' => 'select'])],
-            'times_per_day' => ['props' => array_merge($questions['times_per_day'], ['position' => 4, 'required' => true, 'ele_type' => 'select'])],
+            'days_per_week'  => ['props' => array_merge($questions['days_per_week'], ['position' => 3, 'required' => true, 'ele_type' => 'select']), 'valuelist' => $this->valuelists['days_per_week']],
+            'times_per_day'  => ['props' => array_merge($questions['times_per_day'], ['position' => 4, 'required' => true, 'ele_type' => 'select']), 'valuelist' => $this->timesPerDayList(0, 5)],
             'considerations' => ['props' => array_merge($questions['considerations'], ['position' => 5, 'ele_type' => 'textarea'])],
             'dme_functional' => [
-                'props' => array_merge($questions['dme_functional'], ['position' => 6, 'dependencies' => ['required' => ['considerations' => []]], 'ele_type' => 'select']),
+                'props'     => array_merge($questions['dme_functional'], ['position' => 6, 'dependencies' => ['required' => ['considerations' => []]], 'ele_type' => 'select']),
                 'valuelist' => $this->valuelists['functional_scores'],
             ],
         ];
@@ -59,14 +59,14 @@ class PcaSeeder extends Seeder
         ];
         // this is used a few times no days per week
         $commonNoDays = [
-            'comments' => ['props' => array_merge($questions['comments'], ['position' => 1, 'required' => true, 'ele_type' => 'textarea'])],
+            'comments'   => ['props' => array_merge($questions['comments'], ['position' => 1, 'required' => true, 'ele_type' => 'textarea'])],
             'functional' => [
-                'props' => array_merge($questions['functional'], ['position' => 2, 'required' => true, 'ele_type' => 'select']),
+                'props'     => array_merge($questions['functional'], ['position' => 2, 'required' => true, 'ele_type' => 'select']),
                 'valuelist' => $this->valuelists['functional_scores'],
             ],
             'considerations' => ['props' => array_merge($questions['considerations'], ['position' => 3, 'ele_type' => 'textarea'])],
             'dme_functional' => [
-                'props' => array_merge($questions['dme_functional'], ['position' => 4, 'dependencies' => ['required' => ['considerations' => []]], 'ele_type' => 'select']),
+                'props'     => array_merge($questions['dme_functional'], ['position' => 4, 'dependencies' => ['required' => ['considerations' => []]], 'ele_type' => 'select']),
                 'valuelist' => $this->valuelists['functional_scores'],
             ],
         ];
@@ -84,21 +84,21 @@ class PcaSeeder extends Seeder
             'na' => ['props' => ['name' => 'na', 'title' => 'N/A', 'position' => 0, 'required' => false, 'ele_type' => 'checkbox', 'question_type' => 'section_control'],
             ],
             'comments' => ['props' => array_merge($questions['comments'], [
-                'position' => 1,
-                'required' => true,
+                'position'     => 1,
+                'required'     => true,
                 'dependencies' => ['disabled' => ['na' => 1]],
-                'ele_type' => 'textarea', ]),
+                'ele_type'     => 'textarea', ]),
             ],
             'functional' => [
-                'props' => array_merge($questions['functional'], ['position' => 2, 'required' => true, 'dependencies' => ['disabled' => ['na' => 1]], 'ele_type' => 'select']),
+                'props'     => array_merge($questions['functional'], ['position' => 2, 'required' => true, 'dependencies' => ['disabled' => ['na' => 1]], 'ele_type' => 'select']),
                 'valuelist' => $this->valuelists['functional_scores'],
             ],
-            'days_per_week' => ['props' => array_merge($questions['days_per_week'], ['position' => 3, 'required' => true, 'dependencies' => ['disabled' => ['na' => 1]], 'ele_type' => 'select'])],
-            'times_per_day' => ['props' => array_merge($questions['times_per_day'], ['position' => 4, 'required' => true, 'dependencies' => ['disabled' => ['na' => 1]], 'ele_type' => 'select'])],
+            'days_per_week'  => ['props' => array_merge($questions['days_per_week'], ['position' => 3, 'required' => true, 'dependencies' => ['disabled' => ['na' => 1]], 'ele_type' => 'select']), 'valuelist' => $this->valuelists['days_per_week']],
+            'times_per_day'  => ['props' => array_merge($questions['times_per_day'], ['position' => 4, 'required' => true, 'dependencies' => ['disabled' => ['na' => 1]], 'ele_type' => 'select']), 'valuelist' => $this->timesPerDayList(0, 5)],
             'considerations' => ['props' => array_merge($questions['considerations'], ['position' => 5, 'dependencies' => ['disabled' => ['na' => 1]], 'ele_type' => 'textarea'])],
             'dme_functional' => [
                 'props' => array_merge($questions['dme_functional'], [
-                    'position' => 6,
+                    'position'     => 6,
                     'dependencies' => [
                         'disabled' => ['na' => 1],
                         // @note empty array indicates any value would cause this to be required
@@ -118,16 +118,16 @@ class PcaSeeder extends Seeder
         // exercise questions and valuelists
         $exerciseQuestions = [
             'prescribed_program' => Question::create([
-                'name' => 'prescribed_program',
-                'title' => 'Is there a physician/therapist prescribed program?',
+                'name'     => 'prescribed_program',
+                'title'    => 'Is there a physician/therapist prescribed program?',
                 'position' => 1,
                 'ele_type' => 'select',
             ]),
             'require_assistance' => Question::create([
-            'name' => 'require_assistance',
-                'title' => 'If yes, does person require assistance to perform the program?',
-                'position' => 2,
-                'ele_type' => 'select',
+                'name'         => 'require_assistance',
+                'title'        => 'If yes, does person require assistance to perform the program?',
+                'position'     => 2,
+                'ele_type'     => 'select',
                 'dependencies' => json_encode(['visible' => ['prescribed_program' => 'Yes']]),
             ]),
         ];
@@ -150,24 +150,24 @@ class PcaSeeder extends Seeder
         $sections['instrumental']['supervision']->questions()->saveMany($this->toQuestion($comments));
         // single use laundry question set
         $laundryQuestions = [
-            'comments' => ['props' => array_merge($questions['comments'], ['position' => 1, 'required' => true, 'ele_type' => 'textarea'])],
+            'comments'     => ['props' => array_merge($questions['comments'], ['position' => 1, 'required' => true, 'ele_type' => 'textarea'])],
             'washer_dryer' => [
                 'props' => [
-                    'name' => 'washer_dryer',
-                    'title' => 'Washer and/or dryer in the home?',
+                    'name'     => 'washer_dryer',
+                    'title'    => 'Washer and/or dryer in the home?',
                     'position' => 2,
                     'ele_type' => 'select',
                 ],
                 'valuelist' => $this->valuelists['yes_no'],
             ],
             'functional' => [
-                'props' => array_merge($questions['functional'], ['position' => 3, 'ele_type' => 'select']),
+                'props'     => array_merge($questions['functional'], ['position' => 3, 'ele_type' => 'select']),
                 'valuelist' => $this->valuelists['functional_scores'],
             ],
             'loads_per_week' => [
                 'props' => [
-                    'name' => 'loads_per_week',
-                    'title' => 'Number of loads per week',
+                    'name'     => 'loads_per_week',
+                    'title'    => 'Number of loads per week',
                     'position' => 4,
                     'ele_type' => 'select',
                 ],
@@ -175,21 +175,20 @@ class PcaSeeder extends Seeder
             ],
             'considerations' => ['props' => array_merge($questions['considerations'], ['position' => 5, 'ele_type' => 'textarea'])],
             'dme_functional' => [
-                'props' => array_merge($questions['dme_functional'], ['position' => 6, 'ele_type' => 'select']),
+                'props'     => array_merge($questions['dme_functional'], ['position' => 6, 'ele_type' => 'select']),
                 'valuelist' => $this->valuelists['functional_scores'],
             ],
         ];
         // attach questions to laundry section
         $sections['instrumental']['housework_laundry']->questions()->saveMany($this->toQuestion($laundryQuestions));
         // create summary section, just one section
-        $sections['summary'] = [
-                'summary' => Section::create([
-                'name' => 'summary',
-                'title' => 'ASSESSMENT SUMMARY',
-                'position' => 1,
-            ]),
-        ];
-        $sections['summary']['summary']->questions()->saveMany($this->toQuestion($comments));
+
+        $sections['summary'] = Section::create([
+            'name'     => 'summary',
+            'title'    => 'ASSESSMENT SUMMARY',
+            'position' => 1,
+        ]);
+        $sections['summary']->questions()->saveMany($this->toQuestion($comments));
         // generate the main sections with the sub sections
         $main = $this->createMainSections($sections);
         // dd($main);
@@ -209,31 +208,31 @@ class PcaSeeder extends Seeder
     {
         $questions = collect([
             'na' => [
-                'name' => 'na',
+                'name'  => 'na',
                 'title' => 'N/A',
             ],
             'functional' => [
-                'name' => 'functional',
+                'name'  => 'functional',
                 'title' => 'ADL Functional Level Score',
             ],
             'comments' => [
-                'name' => 'comments',
+                'name'  => 'comments',
                 'title' => 'Comments',
             ],
             'dme_functional' => [
-                'name' => 'dme_functional',
+                'name'  => 'dme_functional',
                 'title' => 'DME ADL Functional Level Score',
             ],
             'considerations' => [
-                'name' => 'considerations',
+                'name'  => 'considerations',
                 'title' => 'Considerations',
             ],
             'days_per_week' => [
-                'name' => 'days_per_week',
+                'name'  => 'days_per_week',
                 'title' => 'Number days a week',
             ],
             'times_per_day' => [
-                'name' => 'times_per_day',
+                'name'  => 'times_per_day',
                 'title' => 'Number times a day',
             ],
         ]);
@@ -319,7 +318,7 @@ class PcaSeeder extends Seeder
         ];
         $values = $this->addValueNumbers($values, $min, $max);
         $items = ListitemFacade::createMany($values);
-        $this->valuelists[$key]->listitems()->saveMany($items['days_per_week']);
+        $this->valuelists[$key]->listitems()->saveMany($items);
 
         return $this->valuelists[$key];
     }
@@ -333,58 +332,58 @@ class PcaSeeder extends Seeder
     {
         $sections = [
             'bathing' => Section::create([
-                'name' => 'bathing',
-                'title' => '1. BATHING',
+                'name'     => 'bathing',
+                'title'    => '1. BATHING',
                 'position' => 1,
             ]),
             'personal_hygiene' => Section::create([
-                'name' => 'personal_hygiene',
-                'title' => '2. PERSONAL HYGIENE',
+                'name'     => 'personal_hygiene',
+                'title'    => '2. PERSONAL HYGIENE',
                 'position' => 2,
             ]),
             'dressing_upper_body' => Section::create([
-                'name' => 'dressing_upper_body',
-                'title' => '3. DRESSING UPPER BODY',
+                'name'     => 'dressing_upper_body',
+                'title'    => '3. DRESSING UPPER BODY',
                 'position' => 3,
             ]),
             'dressing_lower_body' => Section::create([
-                'name' => 'dressing_lower_body',
-                'title' => '4. DRESSING LOWER BODY',
+                'name'     => 'dressing_lower_body',
+                'title'    => '4. DRESSING LOWER BODY',
                 'position' => 4,
             ]),
             'walking' => Section::create([
-                'name' => 'walking',
-                'title' => '5. WALKING',
+                'name'     => 'walking',
+                'title'    => '5. WALKING',
                 'position' => 5,
             ]),
             'personal_mobility' => Section::create([
-                'name' => 'personal_mobility',
-                'title' => '6. PERSONAL MOBILITY',
+                'name'     => 'personal_mobility',
+                'title'    => '6. PERSONAL MOBILITY',
                 'position' => 6,
             ]),
             'exercise' => Section::create([
-                'name' => 'exercise',
-                'title' => '7. EXERCISE',
+                'name'     => 'exercise',
+                'title'    => '7. EXERCISE',
                 'position' => 7,
             ]),
             'toliet_transfer' => Section::create([
-                'name' => 'toliet_transfer',
-                'title' => '8. TOILET TRANSFER',
+                'name'     => 'toliet_transfer',
+                'title'    => '8. TOILET TRANSFER',
                 'position' => 8,
             ]),
             'toliet_use' => Section::create([
-                'name' => 'toliet_use',
-                'title' => '9. TOILET USE',
+                'name'     => 'toliet_use',
+                'title'    => '9. TOILET USE',
                 'position' => 9,
             ]),
             'bed_mobility' => Section::create([
-                'name' => 'bed_mobility',
-                'title' => '10. BED MOBILITY AND TRANSFERS',
+                'name'     => 'bed_mobility',
+                'title'    => '10. BED MOBILITY AND TRANSFERS',
                 'position' => 10,
             ]),
             'eating' => Section::create([
-                'name' => 'toliet_transfer',
-                'title' => '11. EATING',
+                'name'     => 'toliet_transfer',
+                'title'    => '11. EATING',
                 'position' => 11,
             ]),
         ];
@@ -401,53 +400,53 @@ class PcaSeeder extends Seeder
     {
         $sections = [
             'meal_preperation' => Section::create([
-                'name' => 'meal_preperation',
-                'title' => '12. MEAL PREPARATION',
+                'name'     => 'meal_preperation',
+                'title'    => '12. MEAL PREPARATION',
                 'position' => 1,
             ]),
             'housework_cleaning' => Section::create([
-                'name' => 'housework_cleaning',
-                'title' => '13. ORDINARY HOUSEWORK - CLEANING',
+                'name'     => 'housework_cleaning',
+                'title'    => '13. ORDINARY HOUSEWORK - CLEANING',
                 'position' => 2,
             ]),
             'housework_laundry' => Section::create([
-                'name' => 'housework_laundry',
-                'title' => '14. ORDINARY HOUSEWORK - LAUNDRY',
+                'name'     => 'housework_laundry',
+                'title'    => '14. ORDINARY HOUSEWORK - LAUNDRY',
                 'position' => 3,
             ]),
             'finances' => Section::create([
-                'name' => 'finances',
-                'title' => '15. MANAGING FINANCES',
+                'name'     => 'finances',
+                'title'    => '15. MANAGING FINANCES',
                 'position' => 4,
             ]),
             'medication' => Section::create([
-                'name' => 'medication',
-                'title' => '16. MEDICATION MANAGEMENT',
+                'name'     => 'medication',
+                'title'    => '16. MEDICATION MANAGEMENT',
                 'position' => 4,
             ]),
             'phone' => Section::create([
-                'name' => 'phone',
-                'title' => '17. PHONE USE',
+                'name'     => 'phone',
+                'title'    => '17. PHONE USE',
                 'position' => 5,
             ]),
             'stairs' => Section::create([
-                'name' => 'stairs',
-                'title' => '18. STAIRS',
+                'name'     => 'stairs',
+                'title'    => '18. STAIRS',
                 'position' => 6,
             ]),
             'shopping' => Section::create([
-                'name' => 'shopping',
-                'title' => '19. SHOPPING',
+                'name'     => 'shopping',
+                'title'    => '19. SHOPPING',
                 'position' => 7,
             ]),
             'transportation' => Section::create([
-                'name' => 'transportation',
-                'title' => '20. TRANSPORTATION',
+                'name'     => 'transportation',
+                'title'    => '20. TRANSPORTATION',
                 'position' => 8,
             ]),
             'supervision' => Section::create([
-                'name' => 'supervision',
-                'title' => '21. SUPERVISION',
+                'name'     => 'supervision',
+                'title'    => '21. SUPERVISION',
                 'position' => 9,
             ]),
         ];
@@ -465,24 +464,20 @@ class PcaSeeder extends Seeder
     protected function createMainSections(array $sections)
     {
         $main = [
-            'summary' => Section::create([
-                'name' => 'summary',
-                'title' => 'ASSESSMENT SUMMARY',
-                'position' => 1,
-            ]),
+            'summary'          => $sections['summary'], // child section is not needed
             'basic_activities' => Section::create([
-                'name' => 'basic_activities',
-                'title' => 'Part: 1. BASIC ACTIVITIES OF DAILY LIVING',
+                'name'     => 'basic_activities',
+                'title'    => 'Part: 1. BASIC ACTIVITIES OF DAILY LIVING',
                 'position' => 2,
             ]),
             'instrumental_activities' => Section::create([
-                'name' => 'instrumental_activities',
-                'title' => 'Part: 2. INSTRUMENTAL ACTIVITIES OF DAILY LIVING',
+                'name'     => 'instrumental_activities',
+                'title'    => 'Part: 2. INSTRUMENTAL ACTIVITIES OF DAILY LIVING',
                 'position' => 3,
             ]),
         ];
         $main['basic_activities']->children()->saveMany($sections['basic']);
-        $main['summary']->children()->saveMany($sections['summary']);
+        // $main['summary']->children()->saveMany($sections['summary']);
         $main['instrumental_activities']->children()->saveMany($sections['instrumental']);
 
         return $main;

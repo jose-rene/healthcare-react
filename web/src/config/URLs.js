@@ -1,6 +1,6 @@
 const {
-  REACT_APP_API_HOST = "https://api-test.dme-cg.com",
-  REACT_APP_API_PORT = "443",
+  REACT_APP_API_HOST = "127.0.0.1",
+  REACT_APP_API_PORT = "8000",
 } = process.env;
 
 const API_PROTOCOL = REACT_APP_API_HOST.indexOf("http") === 0 ? "" : "http://";
