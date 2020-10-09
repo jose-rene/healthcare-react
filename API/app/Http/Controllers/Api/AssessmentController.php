@@ -1,8 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Assessment\AssessmentRequest;
+use App\Http\Resources\Assessment\QuestionnaireResource;
+use App\Http\Resources\Assessment\QuestionResource;
 use App\Models\Assessment\Assessment;
+use App\Models\Assessment\Questionnaire;
 use Illuminate\Http\Request;
 
 class AssessmentController extends Controller
@@ -33,9 +38,16 @@ class AssessmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AssessmentRequest $request)
     {
-        //
+        if (!$request->has('questionnaire_id') || !ctype_digit($request['questionnaire_id'])) {
+            return response()->json(['message' => 'Invalid Questionnaire'], 422);
+        }
+
+        // will return 422 response if not valid
+        $data = $request->validated();
+        // @todo store answers and return success
+        return response()->json(['success' => 1, 'message' => 'Questionnaire Saved', 'data' => $data], 200);
     }
 
     /**

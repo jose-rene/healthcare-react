@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import axios from "axios";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import PrivateRoute from "../route/PrivateRoute";
@@ -6,11 +7,25 @@ import Login from "../pages/Login";
 import Error from "../pages/NotFound";
 import Dash from "../pages/Dash";
 import Account from "../pages/Account";
+import Questionnaire from "../pages/Questionnaire";
 import apiService from "../services/apiService";
-import { restoreToken } from "../actions/authAction";
 import { setUser } from "../actions/userAction";
+import { signOut } from "../actions/authAction";
 
-const AppNavigation = ({ setUser, localAuth, user }) => {
+const AppNavigation = ({ setUser, signOut, localAuth, user }) => {
+  // if the server returns unauthorized
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error?.response && error.response.status === 401) {
+        signOut();
+      }
+      return Promise.reject(error);
+    }
+  );
+
   useEffect(() => {
     let isMounted = true;
     if (!user.email && localAuth.userToken) {
@@ -42,6 +57,9 @@ const AppNavigation = ({ setUser, localAuth, user }) => {
         <PrivateRoute path="/dashboard" authed={authed}>
           <Dash />
         </PrivateRoute>
+        <PrivateRoute path="/questionnaire/:id" authed={authed}>
+          <Questionnaire />
+        </PrivateRoute>
         <Route component={Error} />
       </Switch>
     </BrowserRouter>
@@ -55,9 +73,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = {
-  restoreToken,
-  setUser,
-};
+const mapDispatchToProps = { setUser, signOut };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppNavigation);

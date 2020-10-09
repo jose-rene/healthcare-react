@@ -15,9 +15,12 @@ class QuestionResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'        => $this->id,
-            'title'     => $this->title ?? '',
-            'valuelist' => new Valuelist\ValuelistResource($this->valuelist),
+            'id'            => $this->id,
+            'title'         => $this->title ?? '',
+            'ele_type'      => $this->ele_type ?? 'text',
+            'question_type' => $this->question_type ?? '',
+            'required'      => (int) $this->required,
+            'valuelist'     => new Valuelist\ValuelistResource($this->valuelist),
         ];
     }
 }

@@ -41,11 +41,7 @@ const Login = ({ localAuth, restoreToken }) => {
   if (localAuth.userToken) {
     return (
       <Redirect
-        to={
-          location.state && location.state.from
-            ? location.state.from
-            : "/dashboard"
-        }
+        to={location.state?.from ? location.state.from : "/dashboard"}
       />
     );
   }

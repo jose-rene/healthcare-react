@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Input Components renders Checkbox input correctly 1`] = `
+<div
+  className="form-group"
+>
+  
+  <input
+    className="form-control  "
+    type="checkbox"
+  />
+</div>
+`;
+
+exports[`Input Components renders Select input correctly 1`] = `
+<div
+  className="form-group"
+>
+  
+  <select
+    className="form-control  "
+  />
+</div>
+`;
+
+exports[`Input Components renders Text input correctly 1`] = `
+<div
+  className="form-group"
+>
+  
+  <input
+    className="form-control  "
+    type="text"
+  />
+</div>
+`;
+
+exports[`Input Components renders Textarea input correctly 1`] = `
+<div
+  className="form-group"
+>
+  
+  <textarea
+    className="form-control  "
+    type="text"
+  />
+</div>
+`;

@@ -27,13 +27,13 @@ class QuestionnaireSeeder extends Seeder
         $values = [
             Listitem::create([
                 'title' => 'Select a Color',
-                'val' => '',
+                'val'   => '',
             ]),
         ];
         for ($xx = 0; $xx <= 5; $xx++) {
             $values[] = Listitem::create([
                 'title' => $color = $faker->unique()->colorName,
-                'val' => $color,
+                'val'   => $color,
             ]);
         }
         $colorlist->listitems()->saveMany($values);
@@ -44,43 +44,74 @@ class QuestionnaireSeeder extends Seeder
         $values = [
             Listitem::create([
                 'title' => 'Select a Number',
-                'val' => '',
+                'val'   => '',
             ]),
         ];
         for ($xx = 0; $xx <= 5; $xx++) {
             $values[] = Listitem::create([
                 'title' => $number = $faker->unique()->randomDigit,
-                'val' => $number,
+                'val'   => $number,
             ]);
         }
         $numberlist->listitems()->saveMany($values);
         // questions
+        $naQuestion = Question::create([
+            'title'         => 'N/A',
+            'name'          => 'fave_na',
+            'position'      => 0,
+            'required'      => false,
+            'ele_type'      => 'checkbox',
+            'question_type' => 'na_toggle',
+        ]);
         $colorQuestion = Question::create([
-            'title' => 'What is you favorite color?',
-            'name' => 'fave_color',
-            'position' => 1,
+            'title'    => 'What is your favorite color?',
+            'name'     => 'fave_color',
+            'position' => 2,
             'required' => true,
             'ele_type' => 'select',
-        ])->valuelist()->associate($colorlist)->save();
+        ]);
+        $colorQuestion->valuelist()->associate($colorlist)->save();
         // another question
         $numberQuestion = Question::create([
-            'title' => 'What is you favorite number?',
-            'name' => 'fave_number',
-            'position' => 1,
+            'title'    => 'What is your favorite number?',
+            'name'     => 'fave_number',
+            'position' => 3,
             'required' => true,
             'ele_type' => 'select',
-        ])->valuelist()->associate($numberlist)->save();
+        ]);
+        $numberQuestion->valuelist()->associate($numberlist)->save();
+        $nameQuestion = Question::create([
+            'title'    => 'What is your name?',
+            'name'     => 'name',
+            'position' => 1,
+            'required' => true,
+            'ele_type' => 'text',
+        ]);
         // create the section
         $section = Section::create([
-            'name' => 'favorites',
-            'title' => 'Your Favorites',
+            'name'     => 'favorites',
+            'title'    => 'Your Favorites',
+            'position' => 2,
+        ]);
+        $section->questions()->saveMany([$naQuestion, $colorQuestion, $numberQuestion, $nameQuestion]);
+        $sectionComments = Section::create([
+            'name'     => 'comments',
+            'title'    => 'Comments',
             'position' => 1,
         ]);
+        $comments = Question::create([
+            'title'    => 'Comments',
+            'name'     => 'comments',
+            'position' => 1,
+            'required' => false,
+            'ele_type' => 'textarea',
+        ]);
+        $sectionComments->questions()->save($comments);
         // create questionnaire
         $questionnaire = Questionnaire::create([
             'title' => 'Favorites Assessment',
         ]);
         // save sections
-        $questionnaire->sections()->saveMany([$section]);
+        $questionnaire->sections()->saveMany([$section, $sectionComments]);
     }
 }

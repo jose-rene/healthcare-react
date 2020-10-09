@@ -18,6 +18,7 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->get('logout', 'LoginController@logout');
     // protected crud routes
     Route::apiResource('questionnaire', 'QuestionnaireController');
+    Route::apiResource('assessment', 'AssessmentController');
 });
 
 Route::post('/login', 'LoginController@login');
