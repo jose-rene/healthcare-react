@@ -1,5 +1,6 @@
 {
-    "name": "dme-api",
+    "name": "@dme/backend",
+    "description": "Gryphon backend and api",
     "private": true,
     "scripts": {
         "dev": "yarn development",
@@ -9,7 +10,8 @@
         "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --disable-host-check --config=node_modules/laravel-mix/setup/webpack.config.js",
         "prod": "yarn production",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "test": "php artisan test"
+        "test": "php artisan test",
+        "postinstall": "composer install"
     },
     "devDependencies": {
         "@babel/preset-react": "^7.0.0",
