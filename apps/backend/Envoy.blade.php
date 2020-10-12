@@ -19,8 +19,8 @@
 @task('clone_repository')
     echo 'Copying repository'
     cd /tmp;
-    git archive --remote={{ $repository }} develop API | tar xvf -
-    mv API {{ $new_release_dir }}
+    git archive --remote={{ $repository }} develop apps/backend | tar xvf -
+    mv apps/backend {{ $new_release_dir }}
     # [ -d {{ $releases_dir }} ] || mkdir {{ $releases_dir }}
     # git clone --depth 1 {{ $repository }} {{ $new_release_dir }}
     cd {{ $new_release_dir }}
