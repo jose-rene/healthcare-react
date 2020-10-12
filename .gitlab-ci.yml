@@ -3,12 +3,13 @@ default:
 cache:
   key:
     files:
-      - API/composer.lock
-      - web/yarn.lock
+      - apps/backend/composer.lock
+      - apps/web/yarn.lock
   paths:
-    - API/vendor/
-    - API/node_modules/
-    - web/node_modules/
+    - apps/backend/vendor/
+#    - apps/backend/node_modules/
+    - apps/web/node_modules/
+
 stages:
   - build
   - test
@@ -22,10 +23,10 @@ api:build:
   stage: build
   only:
     changes:
-      - "API/**/*"
+      - "apps/backend/**/*"
       - ".gitlab-ci.yml"
   script:
-    - cd API
+    - cd apps/backend
     # Install Composer and project dependencies.
     # Composer already installed on image
     # - curl -sS https://getcomposer.org/installer | php
@@ -47,10 +48,10 @@ api:test:
   needs: ["api:build"]
   only:
     changes:
-      - "API/**/*"
+      - "apps/backend/**/*"
       - ".gitlab-ci.yml"
   script:
-    - cd API
+    - cd apps/backend
     # run laravel tests
     - php artisan test
     # run frontend tests
@@ -66,7 +67,7 @@ api:deploy:
     refs:
       - develop
     changes:
-      - "API/**/*"
+      - "apps/backend/**/*"
       - ".gitlab-ci.yml"
   script:
     # gitlab does not correctly parse certificate from textarea input on their ui, so has to be base64 encoded and decoded
@@ -78,7 +79,7 @@ api:deploy:
     # Envoy has been added to the image
     # - curl -sS https://getcomposer.org/installer | php
     # - php composer.phar global require laravel/envoy
-    - cd API
+    - cd apps/backend
     - ~/.composer/vendor/bin/envoy run deploy --commit="$CI_COMMIT_SHA"
   environment:
     name: staging
@@ -88,10 +89,10 @@ web:build:
   stage: build
   only:
     changes:
-      - "web/**/*"
+      - "apps/web/**/*"
       - ".gitlab-ci.yml"
   script:
-    - cd web
+    - cd apps/web
     # install
     - yarn install
 
@@ -100,9 +101,9 @@ web:test:
   needs: ["web:build"]
   only:
     changes:
-      - "web/**/*"
+      - "apps/web/**/*"
       - ".gitlab-ci.yml"
   script:
-    - cd web
+    - cd apps/web
     # test
     - yarn test --watchAll=false

@@ -40,7 +40,7 @@ module.exports = {
             args: `serve --host=${API_HOST} --port=${API_PORT}`,
             interpreter: 'php',
             exec_mode: 'fork',
-            cwd: './API',
+            cwd: './apps/backend',
             instances: 1,
 
             env: {
@@ -55,7 +55,7 @@ module.exports = {
             script: 'artisan',
             interpreter: 'php',
             exec_mode: 'fork',
-            cwd: './API',
+            cwd: './apps/backend',
 
             // Options reference: https://pm2.keymetrics.io/docs/usage/application-declaration/
             args: `queue:work --tries 3 `,
@@ -68,7 +68,7 @@ module.exports = {
         {
             // script name
             name: 'web:start',
-            cwd: './web',
+            cwd: './apps/web',
             // import defaults
             ...defaults,
             script: 'node_modules/react-scripts/scripts/start.js',

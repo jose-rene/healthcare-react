@@ -1,5 +1,7 @@
 # DME-CG
 
+![DME-CG](apps/web/public/images/logo.png)
+
 # Dev
 
 ## Local dev
@@ -14,6 +16,7 @@ mysql -uUSER -p -e"create database dme";
 
 in the root of the project copy the .env.example to .env then set your ipaddress on API_HOST
 ```bash
+cd apps/backend
 cp .env.example .env
 ```
 
@@ -23,19 +26,19 @@ In the api directory copy the .env.example to .env
     without the root directories yarn package.json scripts.
      
 ```bash
-cd API
+cd apps/backend
 cp .env.example .env
 ``` 
 Set your configs in there. You should only need to update the mysql ones.
 
 Generate the IDE key
 ```bash
-cd API
+cd apps/backend
 php artisan key:generate --ansi
 ``` 
 
 ### install
-* run `yarn full:install`
+* run `yarn install` I've added a postinstall hook to do everything else.
 
 ### start the queueing server, web api server, and the app
 * run `yarn start`
@@ -43,14 +46,18 @@ php artisan key:generate --ansi
 Yarn start does a few things. It will also open xterm and run yarn start in the app directory
 xterm should exist on macs and linux systems but might break in windows. 
 
-### APP
+### apps/mobile
 
 ## Useful Links
 * https://github.com/JosephSilber/bouncer
 * https://github.com/VentureCraft/revisionable
+* https://yarnpkg.com/advanced/lifecycle-scripts
 
 ## Quick tips 
 
+If you see errors that say something like "not enough watchers" clear it with `yarn watchman:reset` should work in most cases.
+
 ### System resources
 In your IDE ignore these directories, they are compiled and are not useful to the IDE
-* APP/.expo
+* apps/mobile/.expo
+* apps/backend/public
