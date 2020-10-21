@@ -30,4 +30,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'fmapi' => [
+        'host'    => env('FM_API_HOST'),
+        'timeout' => 30,
+        'version' => 'vLatest',
+        'db'      => 'DME_New',
+        'user'    => env('FM_API_USER'),
+        'pass'    => env('FM_API_PASS'),
+    ],
+
 ];

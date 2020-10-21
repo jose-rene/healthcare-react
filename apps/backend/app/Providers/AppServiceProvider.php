@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Library\FmDataApi;
+use Illuminate\Http\Client\Factory as HttpClientFactory;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +17,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton('App\Library\FmDataApi', function ($app) {
+            return new FmDataApi(new HttpClientFactory(), Config::get('services.fmapi'));
+        });
     }
 
     /**
