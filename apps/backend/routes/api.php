@@ -19,6 +19,8 @@ Route::middleware('auth:api')->group(function ($router) {
     // protected crud routes
     Route::apiResource('questionnaire', 'QuestionnaireController');
     Route::apiResource('assessment', 'AssessmentController');
+    // test fmapi route
+    Route::get('/fmtest', 'HomeController@fmtest');
 });
 
 Route::post('/login', 'LoginController@login');
