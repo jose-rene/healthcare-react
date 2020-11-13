@@ -6,6 +6,7 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
+        "serve": "[ ! -d ./build ] && echo 'Building the app' && yarn build; pm2 start ecosystem.serve.config.js",
         "test": "react-scripts test --ci --silent --watchAll=false",
         "test:watch": "react-scripts test",
         "eject": "react-scripts eject"
