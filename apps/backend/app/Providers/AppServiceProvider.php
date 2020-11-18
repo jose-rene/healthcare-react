@@ -17,8 +17,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('App\Library\FmDataApi', function ($app) {
-            return new FmDataApi(new HttpClientFactory(), Config::get('services.fmapi'));
+        $this->app->singleton(FmDataApi::class, function ($app) {
+            return new FmDataApi();
         });
     }
 
