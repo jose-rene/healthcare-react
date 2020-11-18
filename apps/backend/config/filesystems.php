@@ -65,6 +65,16 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
         ],
 
+        'csv-files-inbox' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/csv_files/inbox'),
+        ],
+
+        'csv-files-outbox' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/csv_files/outbox'),
+        ],
+
     ],
 
     /*
