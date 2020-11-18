@@ -1,21 +1,17 @@
 import React from "react";
 import "../App.css";
-import { Alert } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import logo from "../assets/images/splash.png";
+import PageLayout from "../layouts/PageLayout";
 
 const NotFound = () => {
-  return (
-    <div className="App">
-      <Alert key="0" variant="warning">
-        Error Page Not Found
-      </Alert>
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Link to="/">Login</Link>
-      </header>
-    </div>
-  );
+    return (
+        <PageLayout>
+            <header className="App-header">
+                <img src="images/construction.gif" alt="Under Construction" />
+            </header>
+        </PageLayout>
+    );
 };
 
 export default NotFound;
