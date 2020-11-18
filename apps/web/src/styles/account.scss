@@ -1,0 +1,141 @@
+.attention-alert {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: #dadee0;
+  padding: 30px 45px;
+}
+
+.attention-alert > img {
+  width: 35px;
+  height: auto;
+  margin-right: 35px;
+}
+
+.attention-alert > p {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+  letter-spacing: 0em;
+  color: #475866;
+  margin: 0;
+}
+
+.account-img {
+  max-width: 124px;
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  margin-top: 15px;
+}
+
+.img-alert {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+.img-alert > img {
+  width: 20px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.img-alert > p {
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 12px;
+  color: #475866;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.box-inside-title {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  color: #475866;
+}
+
+.box-inside-text {
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 25px;
+  color: #475866;
+  margin-top: 16px;
+}
+
+.green-dot {
+  background: #51e648;
+  width: 10px;
+  height: 10px;
+  margin: 7px 0 0 10px;
+  border-radius: 50%;
+}
+
+.box-same-line {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.box-outside-title {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  color: #475866;
+  margin-top: 40px;
+}
+
+.new-link {
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  color: #2e94e5;
+}
+
+.action-btn {
+  margin: 0 8px 0 8px;
+}
+
+.action-btn > img {
+  width: 16px;
+  height: auto;
+}
+
+.app-table-small{
+    td,th {
+        padding-left: 0 !important;
+    }
+}
+
+.table {
+    th, td {
+        border-top: none;
+    }
+    th {
+        font-size: 14px;
+        line-height: 17px;
+        color: #475866;
+        font-weight: normal;
+    }
+
+    td {
+        font-size: 14px;
+        line-height: 17px;
+        color: #475866;
+    }
+}
+
+.alert-threshold {
+  background: white;
+  border-radius: 4px;
+  border: 1px solid #dadee0;
+  height: 56px;
+  margin: 12px 12px 12px 0;
+  padding: 16px;
+  color: #475866;
+}

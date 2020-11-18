@@ -1,21 +1,14 @@
-// Override default variables before the import, eg:
-// $body-bg: #000;
-$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-  "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-  sans-serif !default;
+@import "./variables";
 
 // Import Bootstrap and its default variables
 @import "~bootstrap/scss/bootstrap.scss";
 
 // custom scss
 body {
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.container-full {
-  min-height: 100vh;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #f5f9fc;
 }
 
 // login page css
@@ -64,14 +57,12 @@ body {
   color: #696969;
 }
 
+@import "./layout.scss";
+
 // media queries
 
-/* HD Ready or smaller */
-@media (max-width: 1440px) {
-}
-
 /* iPhone size screens or smaller */
-@media (max-width: 641px) {
+@include media-breakpoint-down(sm) {
   .container-login {
     padding: 25px;
   }
@@ -79,5 +70,23 @@ body {
   .sign-in-title {
     margin-top: 50px;
     margin-bottom: 20px;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .content-container {
+    padding-left: 0px;
+  }
+
+  .content-box {
+    padding: 32px 24px;
+  }
+
+  .attention-alert {
+      img {
+          display: none;
+      }
   }
 }
