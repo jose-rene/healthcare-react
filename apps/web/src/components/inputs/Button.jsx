@@ -1,7 +1,8 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import Icon from "../elements/Icon";
 
-export default ({useButton=true, to="#", onClick=undefined, variant = 'default', label=undefined, children, type="button", className: classAppend = '', block = false}) => {
+export default ({useButton=true, to="#", onClick=undefined, variant = 'default', label=undefined, children, type="button", className: classAppend = '', block = false, icon = undefined}) => {
     let className = `btn btn-ln ${classAppend}`;
 
     if(block){
@@ -22,9 +23,11 @@ export default ({useButton=true, to="#", onClick=undefined, variant = 'default',
 
     return useButton?
         <button type={type} className={className} onClick={onClick}>
+            {icon && <Icon icon={icon} />}
             {label || children}
         </button>:
         <Link to={to} className={className} onClick={onClick}>
+            {icon && <Icon icon={icon} />}
             {label || children}
         </Link>;
 }

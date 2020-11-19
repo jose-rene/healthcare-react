@@ -1,7 +1,7 @@
 import React from "react";
-import "../App.css";
-import { Col, Container, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import "../styles/NotFound.scss";
+// import { Col, Container, Row } from "react-bootstrap";
+// import { Link } from "react-router-dom";
 import PageLayout from "../layouts/PageLayout";
 
 const NotFound = () => {

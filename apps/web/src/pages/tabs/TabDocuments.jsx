@@ -48,45 +48,32 @@ const TabDocuments = () => {
                                             <td>Document File 2020</td>
                                             <td>6.3 MB</td>
                                             <td width="120">
-                                                <Button useButton={false} variant="icon">
-                                                    <img
-                                                        alt="Download"
-                                                        src="/images/icons/download.png"
-                                                    />
-                                                </Button>
-                                                <a
-                                                    href="#"
-                                                    className="action-btn"
-                                                >
-                                                    <img
-                                                        alt="Play"
-                                                        src="/images/icons/play.png"
-                                                    />
-                                                </a>
+                                                <Button
+                                                    to="#"
+                                                    useButton={false}
+                                                    variant="icon"
+                                                    icon="download" />
+                                                <Button
+                                                    to="#"
+                                                    useButton={false}
+                                                    variant="icon"
+                                                    icon="play" />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>License Document File 2020</td>
                                             <td>6.3 MB</td>
                                             <td width="120">
-                                                <a
-                                                    href="#"
-                                                    className="action-btn"
-                                                >
-                                                    <img
-                                                        alt="Download"
-                                                        src="/images/icons/download.png"
-                                                    />
-                                                </a>
-                                                <a
-                                                    href="#"
-                                                    className="action-btn"
-                                                >
-                                                    <img
-                                                        alt="Play"
-                                                        src="/images/icons/play.png"
-                                                    />
-                                                </a>
+                                                <Button
+                                                    to="#"
+                                                    useButton={false}
+                                                    variant="icon"
+                                                    icon="download" />
+                                                <Button
+                                                    to="#"
+                                                    useButton={false}
+                                                    variant="icon"
+                                                    icon="play" />
                                             </td>
                                         </tr>
                                     </tbody>

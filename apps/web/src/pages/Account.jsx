@@ -7,21 +7,21 @@ import TabAccount from "./tabs/TabAccount";
 import TabDocuments from "./tabs/TabDocuments";
 import TabSecurity from "./tabs/TabSecurity";
 import "../styles/account.scss";
+import "../styles/account.scss";
+import PageAlert from "../components/elements/PageAlert";
 
 const Account = ({ email, full_name }) => {
     return (
         <PageLayout>
-            <div className="attention-alert">
-                <img src="/images/icons/alert.png" alt="" />
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                    fringilla finibus odio et rhoncus. Fusce auctor massa at
-                    dictum interdum. Donec aliquam ante at ex imperdiet
-                    porttitor.Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit. Ut fringilla finibus odio et rhoncus. Fusce auctor
-                    massa at dictum interdum.
-                </p>
-            </div>
+            <PageAlert variant="primary">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
+                fringilla finibus odio et rhoncus. Fusce auctor massa at
+                dictum interdum. Donec aliquam ante at ex imperdiet
+                porttitor.Lorem ipsum dolor sit amet, consectetur adipiscing
+                elit. Ut fringilla finibus odio et rhoncus. Fusce auctor
+                massa at dictum interdum.
+            </PageAlert>
+
 
             <div className="content-box">
                 <h1 className="box-title">Your Account</h1>
