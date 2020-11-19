@@ -7,24 +7,38 @@ import React from "react";
  * @param icon
  * @param size
  * @param children
+ * @param iconType
+ * @param className
  * @param props
  * @returns {JSX.Element}
  */
-export default ({icon = undefined, size="2x", children, ...props}) => {
-    let _icon = icon || children;
-    _icon = _icon.toLowerCase().trim();
+const Icon = ({
+    icon = undefined,
+    size = "2x",
+    children,
+    iconType = "s",
+    className = undefined,
+    ...props
+}) => {
+    let name = icon || children;
+    name = name.toLowerCase().trim();
 
-    // Image Overrides
-    // switch(_icon){
-    //     case "download":
-    //         return <img src="/images/icons/download.png" alt="download icon" />;
-    // }
-
-    const icon_map = {
-        alert: 'exclamation-triangle',
+    const map = {
+        alert: "exclamation-triangle",
     };
 
-    const mappedIcon = icon_map[_icon] || _icon;
+    const mappedIcon = map[name] || name;
 
-    return <i className={`icon fas fa-${mappedIcon.toLowerCase().trim()} fa-${size}`} {...props}/>;
-}
+    return (
+        <i
+            className={`${className} icon fa${iconType} fa-${mappedIcon
+                .toLowerCase()
+                .trim()} fa-${size}`}
+            {...props}
+        />
+    );
+};
+
+Icon.displayName = "Icon";
+
+export default Icon;

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { FaBars } from "react-icons/fa";
 import { NavDropdown } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { signOut } from "../actions/authAction";
+import Icon from "../components/elements/Icon";
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 const PageLayout = ({ full_name, email, localAuth, signOut, children }) => {
@@ -37,15 +37,11 @@ const PageLayout = ({ full_name, email, localAuth, signOut, children }) => {
                             onClick={toggleMenu}
                             className="btn btn-outline ml-1"
                         >
-                            <FaBars />
+                            <Icon icon="bars" />
                         </button>
                     </div>
                     <div className="header-search d-none d-lg-block">
-                        <img
-                            src="/images/icons/search.png"
-                            className="header-icon"
-                            alt="Search"
-                        />
+                        <Icon icon="search" className="header-icon" />
                         <input
                             className="search-input"
                             type="text"
@@ -56,11 +52,7 @@ const PageLayout = ({ full_name, email, localAuth, signOut, children }) => {
 
                 <div className="d-flex w-50 align-items-center justify-content-end">
                     <a href="#">
-                        <img
-                            src="/images/icons/notification.png"
-                            className="header-icon"
-                            alt=""
-                        />
+                        <Icon icon="notification" className="header-icon" />
                     </a>
 
                     <span
