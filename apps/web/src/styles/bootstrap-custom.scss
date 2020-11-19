@@ -15,46 +15,46 @@ body {
 
 /* @note this can probably be h1 globally */
 .sign-in-title {
-  font-weight: 600;
-  font-size: 42px;
-  color: #323232;
-  margin-top: 80px;
-  margin-bottom: 48px;
+    font-weight: 600;
+    font-size: 42px;
+    color: #323232;
+    margin-top: 80px;
+    margin-bottom: 48px;
 }
 
 /* @note this can probably be btn-primary globally */
 .btn-sign-in {
-  background: linear-gradient(94.53deg, #0061a2 0%, #2085c2 96.27%);
-  border-radius: 3px;
-  color: white;
-  width: 100%;
-  height: 56px;
-  margin-top: 48px;
-  border: none;
+    background: linear-gradient(94.53deg, #0061a2 0%, #2085c2 96.27%);
+    border-radius: 3px;
+    color: white;
+    width: 100%;
+    height: 56px;
+    margin-top: 48px;
+    border: none;
 }
 
 .login-bg {
-  min-height: 100vh;
-  width: 100%;
-  background-image: url("/images/login-bg.jpg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+    min-height: 100vh;
+    width: 100%;
+    background-image: url("/images/login-bg.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
 .sign-up-notice {
-  margin-top: 32px;
-  font-size: 16px;
-  font-weight: 300;
-  color: #696969;
+    margin-top: 32px;
+    font-size: 16px;
+    font-weight: 300;
+    color: #696969;
 }
 
 .container-login {
-  padding: 120px 80px;
+    padding: 120px 80px;
 }
 
 .btn-forgot-password {
-  color: #696969;
+    color: #696969;
 }
 
 @import "./layout.scss";
@@ -62,31 +62,31 @@ body {
 // media queries
 
 /* iPhone size screens or smaller */
-@include media-breakpoint-down(sm) {
-  .container-login {
-    padding: 25px;
-  }
+@include media-breakpoint-down(xs) {
+    .container-login {
+        padding: 25px;
+    }
 
-  .sign-in-title {
-    margin-top: 50px;
-    margin-bottom: 20px;
-  }
+    .sign-in-title {
+        margin-top: 50px;
+        margin-bottom: 20px;
+    }
 
-  .sidebar {
-    display: none;
-  }
+    .sidebar {
+        display: none;
+    }
 
-  .content-container {
-    padding-left: 0px;
-  }
+    .content-container {
+        padding-left: 0px;
+    }
 
-  .content-box {
-    padding: 32px 24px;
-  }
+    .content-box {
+        padding: 32px 24px;
+    }
 
-  .attention-alert {
-      img {
-          display: none;
-      }
-  }
+    .attention-alert {
+        img {
+            display: none;
+        }
+    }
 }
