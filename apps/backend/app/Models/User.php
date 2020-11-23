@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 /**
  * @property int id
@@ -15,10 +16,11 @@ use Laravel\Passport\HasApiTokens;
  * @property string middle_name
  * @property string first_name
  * @property string last_name
+ * @link https://github.com/JosephSilber/bouncer#cheat-sheet
  */
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens, SoftDeletes;
+    use HasFactory, Notifiable, HasApiTokens, SoftDeletes, HasRolesAndAbilities;
 
     /**
      * The attributes that are mass assignable.
