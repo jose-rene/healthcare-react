@@ -34,9 +34,9 @@ const AppNavigation = ({ setUser, signOut, localAuth, user }) => {
         let isMounted = true;
         if (!user.email && localAuth.userToken) {
             apiService("/user")
-                .then(({ email, full_name }) => {
+                .then(({ email, full_name, roles = [] }) => {
                     if (isMounted) {
-                        setUser(email, full_name);
+                        setUser(email, full_name, roles);
                     }
                 })
                 .catch((e) => {

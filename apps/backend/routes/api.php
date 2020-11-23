@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Resources\MyUserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,15 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('assessment', 'AssessmentController');
     // test fmapi route
     Route::get('/fmtest', 'HomeController@fmtest');
+
+    /**
+     * This section of code is using the bouncer permissions.
+     */
+    Route::group(['middleware' => 'can:superAdmin'], function($router){
+        $router->get('something/for/super-admins', function(){
+            return new MyUserResource(auth()->user());
+        });
+    });
 });
 
 Route::post('/login', 'LoginController@login');
