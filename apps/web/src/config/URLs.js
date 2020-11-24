@@ -1,11 +1,11 @@
 const {
-  REACT_APP_API_HOST = "127.0.0.1",
-  REACT_APP_API_PORT = "8000",
+    REACT_APP_API_HOST = "127.0.0.1",
+    REACT_APP_API_PORT = "8000",
 } = process.env;
 
 const API_PROTOCOL = REACT_APP_API_HOST.indexOf("http") === 0 ? "" : "http://";
 const BASE_URL = `${API_PROTOCOL}${REACT_APP_API_HOST}:${REACT_APP_API_PORT}`;
-export const API_URL = `${BASE_URL}/api`;
+export const API_URL = `${BASE_URL}/v1`;
 export const LOGIN_URL = `${BASE_URL}/oauth/token`;
 export const USER_URL = `${API_URL}/user`;
 export const AUTH_TOKEN_NAME = "@dme.login.access_token";

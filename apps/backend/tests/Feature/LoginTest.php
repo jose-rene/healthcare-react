@@ -31,7 +31,7 @@ class LoginTest extends TestCase
     {
         $user = User::factory()->create();
         // Make sure I can login
-        $response = $this->post('/api/login', [
+        $response = $this->post('/v1/login', [
             'email'    => $this->user->email,
             'password' => 'password',
         ]);
@@ -43,7 +43,7 @@ class LoginTest extends TestCase
             ->assertJsonStructure(['token_type', 'expires_at', 'access_token']);
 
         // Make sure the bearer token is attached to the right user
-        $response = $this->get('/api/user', [
+        $response = $this->get('/v1/user', [
             'Authorization' => "Bearer {$bearer_token}", // Utilize the bearer token
         ]);
 
@@ -64,7 +64,7 @@ class LoginTest extends TestCase
      */
     public function testBadApiLogin()
     {
-        $response = $this->post('/api/login', [
+        $response = $this->post('/v1/login', [
             'email'    => $this->user->email,
             'password' => 'password1',
         ]);
@@ -87,7 +87,7 @@ class LoginTest extends TestCase
                 'Accept' => 'application/json',
                 'X-Requested-With' => 'XMLHttpRequest',
             ])
-            ->post('/api/login', [
+            ->post('/v1/login', [
                 'email'    => 'somethingthatsnotanemail@',
                 'password' => 'password',
             ]);
@@ -112,7 +112,7 @@ class LoginTest extends TestCase
                 'Accept' => 'application/json',
                 'X-Requested-With' => 'XMLHttpRequest',
             ])
-            ->post('/api/login', [
+            ->post('/v1/login', [
                 'email'    => $this->user->email,
                 'password' => Str::random(5),
             ]);
@@ -129,7 +129,7 @@ class LoginTest extends TestCase
                 'Accept' => 'application/json',
                 'X-Requested-With' => 'XMLHttpRequest',
             ])
-            ->post('/api/login', [
+            ->post('/v1/login', [
                 'email'    => $this->user->email,
                 'password' => Str::random(80),
             ]);

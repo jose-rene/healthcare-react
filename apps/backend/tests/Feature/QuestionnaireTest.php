@@ -29,7 +29,7 @@ class QuestionnaireTest extends TestCase
         $response = $this->withHeaders([
             'Accept'           => 'application/json',
             'X-Requested-With' => 'XMLHttpRequest',
-        ])->json('GET', 'api/questionnaire');
+        ])->json('GET', 'v1/questionnaire');
         // validate response code
         $response->assertStatus(200);
         // dd($response->getContent());
@@ -59,7 +59,7 @@ class QuestionnaireTest extends TestCase
         $response = $this->withHeaders([
             'Accept'           => 'application/json',
             'X-Requested-With' => 'XMLHttpRequest',
-        ])->json('GET', 'api/questionnaire/1');
+        ])->json('GET', 'v1/questionnaire/1');
         // validate response code
         $response->assertStatus(200);
 

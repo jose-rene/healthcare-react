@@ -29,14 +29,14 @@ class AssessmentTest extends TestCase
         $response = $this->withHeaders([
             'Accept'           => 'application/json',
             'X-Requested-With' => 'XMLHttpRequest',
-        ])->json('GET', 'api/questionnaire/1');
+        ])->json('GET', 'v1/questionnaire/1');
         // validate response code
         $response->assertStatus(200);
         // send request to save without required answers
         $response = $this->withHeaders([
             'Accept'           => 'application/json',
             'X-Requested-With' => 'XMLHttpRequest',
-        ])->json('POST', 'api/assessment', ['questionnaire_id' => '1']);
+        ])->json('POST', 'v1/assessment', ['questionnaire_id' => '1']);
         // validate response code
         // dd($response->getContent());
         $response->assertStatus(422);
