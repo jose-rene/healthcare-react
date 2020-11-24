@@ -42,7 +42,7 @@ class FmApiTest extends TestCase
             User::factory()->create()
         );
         // test route to load api
-        $response = $this->get('/api/fmtest');
+        $response = $this->get('/v1/fmtest');
 
         $response->assertStatus(200);
     }

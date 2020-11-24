@@ -9,6 +9,40 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * @OA\Post(
+ * path="/v1/login",
+ * summary="Sign in",
+ * description="Login by email, password",
+ * operationId="authLogin",
+ * tags={"auth"},
+ * @OA\RequestBody(
+ *    required=true,
+ *    description="Pass user credentials",
+ *    @OA\JsonContent(
+ *       required={"email","password"},
+ *       @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
+ *       @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
+ *    ),
+ * ),
+ * @OA\Response(
+ *     response=200,
+ *     description="Success",
+ *     @OA\JsonContent(
+ *       @OA\Property(property="access_token", type="string"),
+ *       @OA\Property(property="token_type", type="string"),
+ *       @OA\Property(property="expires_at", type="string", format="date-time"),
+ *     )
+ *  ),
+ * @OA\Response(
+ *    response=401,
+ *    description="Wrong credentials response",
+ *    @OA\JsonContent(
+ *       @OA\Property(property="message", type="string", example="Unauthorized")
+ *        )
+ *     )
+ * )
+ */
 class LoginController extends Controller
 {
     /**
@@ -22,7 +56,7 @@ class LoginController extends Controller
         // validate
         // @todo add regex for password to limit characters that cause WAF XSS rejections
         $request->validate([
-            'email' => 'bail|required|email|max:255',
+            'email'    => 'bail|required|email|max:255',
             'password' => 'required|string|min:8|max:64',
         ]);
 
