@@ -24,7 +24,7 @@ class PermissionsTest extends TestCase
     {
         $this->user->assign('admin');
 
-        $response = $this->get('api/something/for/super-admins', [
+        $response = $this->get('v1/something/for/super-admins', [
             'Authorization' => "Bearer {$this->bearer_token}", // Utilize the bearer token
         ]);
 
@@ -32,7 +32,7 @@ class PermissionsTest extends TestCase
             ->assertOk()
             ->assertJson([
                 'full_name' => $this->user->first_name . ' ' . $this->user->last_name,
-                'roles' => [
+                'roles'     => [
                     ['name' => 'admin'],
                 ],
             ]);
@@ -45,7 +45,7 @@ class PermissionsTest extends TestCase
      */
     public function testSuperAdminNotAssigned()
     {
-        $response = $this->get('api/something/for/super-admins', [
+        $response = $this->get('v1/something/for/super-admins', [
             'Authorization' => "Bearer {$this->bearer_token}", // Utilize the bearer token
         ]);
 
@@ -61,7 +61,7 @@ class PermissionsTest extends TestCase
 
         $this->user = User::factory()->create();
 
-        $response = $this->post('/api/login', [
+        $response = $this->post('/v1/login', [
             'email'    => $this->user->email,
             'password' => 'password',
         ]);
