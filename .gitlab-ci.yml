@@ -113,3 +113,19 @@ web:test:
     - cd apps/web
     # test
     - yarn test --watchAll=false
+
+web:deploy:
+  stage: deploy
+  # only for develop branch deploy to staging
+  only:
+    refs:
+      - develop
+    changes:
+      - "apps/web/**/*"
+      - ".gitlab-ci.yml"
+  script:
+    # A Lambda will trigger AWS Amplify to build and deploy this
+    - aws s3 sync apps/web/ s3://gryphon-web-stage
+  environment:
+    name: staging
+    url: https://gryphon.dme-cg.com
