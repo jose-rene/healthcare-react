@@ -18,7 +18,7 @@ stages:
 
 # sast / dast jobs
 include:
-  - template: Security/SAST.gitlab-ci.yml
+#  - template: Security/SAST.gitlab-ci.yml
   - template: DAST.gitlab-ci.yml
 
 variables:
@@ -126,7 +126,7 @@ web:deploy:
   script:
     # A Lambda will trigger AWS Amplify to build and deploy this
     - cd apps
-    - zip -r web.zip web && aws s3 cp web.zip s3://gryphon-web-stage
+    - zip -qr web.zip web && aws s3 cp web.zip s3://gryphon-web-stage
   environment:
     name: staging
     url: https://gryphon.dme-cg.com
