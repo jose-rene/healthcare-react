@@ -125,7 +125,7 @@ web:deploy:
       - ".gitlab-ci.yml"
   script:
     # A Lambda will trigger AWS Amplify to deploy this
-    - cd apps
+    - cd apps/web
     - yarn build && zip -qr build.zip web && aws s3 cp build.zip s3://gryphon-web-stage
   environment:
     name: staging
