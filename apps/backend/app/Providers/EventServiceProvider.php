@@ -6,6 +6,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Aacotroneo\Saml2\Events\Saml2LoginEvent;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,17 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        //
+        // handle saml logged in event
+        Event::listen('Aacotroneo\Saml2\Events\Saml2LoginEvent', function (Saml2LoginEvent $event) {
+            $messageId = $event->getSaml2Auth()->getLastMessageId();
+        
+            $user = $event->getSaml2User();
+            $userData = [
+                'id' => $user->getUserId(),
+                'attributes' => $user->getAttributes(),
+                'assertion' => $user->getRawSamlAssertion()
+            ];
+            dd($userData);
+        });
     }
 }
