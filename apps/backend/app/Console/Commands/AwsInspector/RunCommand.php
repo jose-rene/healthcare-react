@@ -32,24 +32,29 @@ class RunCommand extends Command
             $environment = 'staging';
         }
         if (null === ($region = env($param = 'AWS_REGION')) || empty($region)) {
-            $this->info(sprintf('There is not an AWS Region defined this environment: AWS_REGION', $param));
+            $this->info(sprintf('There is not an AWS Region [%s] defined this environment [%s].', $param, $environment));
 
             return 0;
         }
         if (null === ($arn = env($param = 'AWS_INSPECTOR_ARN_' . strtoupper($environment))) || empty($arn)) {
-            $this->info(sprintf('There is not an AWS Inspector template arn defined in this environment: %s', $param));
+            $this->info(sprintf('There is not an AWS Inspector template arn [%s] defined in this environment [%s].', $param, $environment));
 
             return 0;
         }
 
         $client = \AWS::createClient('Inspector');
         $result = $client->startAssessmentRun([
-            'assessmentRunName'     => sprintf('Run - %s', ucfirst($environment)),
+            'assessmentRunName'     => $name = sprintf('Run - %s', ucfirst($environment)),
             'assessmentTemplateArn' => $arn, // required
         ]);
-        Cache::put('inspector_run_' . $environment, $result->get('assessmentRunArn'), now()->addMinutes(120));
+
+        $data = [
+            'arn'  => $result->get('assessmentRunArn'),
+            'name' => $name,
+        ];
+        Cache::put('inspector_run_' . $environment, $data, now()->addMinutes(180));
         // dd($result);
-        $this->info(sprintf('Inspector run successfully initiated in %s environment', $environment));
+        $this->info(sprintf('Inspector run successfully initiated in %s environment.', $environment));
 
         return 1;
     }
