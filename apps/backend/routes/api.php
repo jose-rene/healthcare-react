@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\LoginController;
 use App\Http\Resources\MyUserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,10 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+// single sign on token route
+Route::get('/ssologin/{email}', [LoginController::class, 'requestToken'])->name('ssologin');
+
 Route::middleware('auth:api')->group(function ($router) {
     $router->get('/user', 'UserController@profile');
     $router->get('logout', 'LoginController@logout');
@@ -23,11 +28,11 @@ Route::middleware('auth:api')->group(function ($router) {
     // test fmapi route
     Route::get('/fmtest', 'HomeController@fmtest');
 
-    /**
+    /*
      * This section of code is using the bouncer permissions.
      */
-    Route::group(['middleware' => 'can:superAdmin'], function($router){
-        $router->get('something/for/super-admins', function(){
+    Route::group(['middleware' => 'can:superAdmin'], function ($router) {
+        $router->get('something/for/super-admins', function () {
             return new MyUserResource(auth()->user());
         });
     });

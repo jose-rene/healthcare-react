@@ -29,7 +29,6 @@ class LoginTest extends TestCase
      */
     public function testApiLogin()
     {
-        $user = User::factory()->create();
         // Make sure I can login
         $response = $this->post('/v1/login', [
             'email'    => $this->user->email,
@@ -84,7 +83,7 @@ class LoginTest extends TestCase
     {
         $response = $this
             ->withHeaders([
-                'Accept' => 'application/json',
+                'Accept'           => 'application/json',
                 'X-Requested-With' => 'XMLHttpRequest',
             ])
             ->post('/v1/login', [
@@ -109,7 +108,7 @@ class LoginTest extends TestCase
         // test too few characters
         $response = $this
             ->withHeaders([
-                'Accept' => 'application/json',
+                'Accept'           => 'application/json',
                 'X-Requested-With' => 'XMLHttpRequest',
             ])
             ->post('/v1/login', [
@@ -126,7 +125,7 @@ class LoginTest extends TestCase
         // too many characters
         $response = $this
             ->withHeaders([
-                'Accept' => 'application/json',
+                'Accept'           => 'application/json',
                 'X-Requested-With' => 'XMLHttpRequest',
             ])
             ->post('/v1/login', [

@@ -2,7 +2,6 @@
 
 namespace App\Models\Assessment;
 
-use App\Models\Assessment\Section;
 use App\Models\Assessment\Valuelist\Valuelist;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

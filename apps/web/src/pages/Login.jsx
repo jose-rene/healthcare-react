@@ -6,130 +6,142 @@ import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";
 import { restoreToken } from "../actions/authAction";
 import InputText from "../components/inputs/InputText";
+import Icon from "../components/elements/Icon";
 
 // this rule wants both the htmlFor and label nested, should be either not both
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 const Login = ({ localAuth, restoreToken }) => {
-  // tokenLoading is async storage, loading is http
-  const [
-    { tokenLoading, authToken, loading, error },
-    { loadAuth, authUser },
-  ] = useAuth();
+    // tokenLoading is async storage, loading is http
+    const [
+        { tokenLoading, authToken, loading, error },
+        { loadAuth, authUser },
+    ] = useAuth();
 
-  const { register, handleSubmit, errors } = useForm();
+    const { register, handleSubmit, errors } = useForm();
 
-  const location = useLocation();
+    const location = useLocation();
 
-  useEffect(() => {
-    let isMounted = true;
-    if (tokenLoading) {
-      // load local storage token
-      loadAuth();
-    } else if (authToken) {
-      // action to update redux store auth
-      if (isMounted) {
-        restoreToken(authToken);
-      }
+    useEffect(() => {
+        let isMounted = true;
+        if (tokenLoading) {
+            // load local storage token
+            loadAuth();
+        } else if (authToken) {
+            // action to update redux store auth
+            if (isMounted) {
+                restoreToken(authToken);
+            }
+        }
+        // cleanup
+        return () => {
+            isMounted = false;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [authToken]);
+    if (localAuth.userToken) {
+        return (
+            <Redirect
+                to={location.state?.from ? location.state.from : "/dashboard"}
+            />
+        );
     }
-    // cleanup
-    return () => {
-      isMounted = false;
+
+    const onSubmit = (data) => {
+        if (loading) {
+            return false;
+        }
+        authUser(data);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authToken]);
-  if (localAuth.userToken) {
+
     return (
-      <Redirect
-        to={location.state?.from ? location.state.from : "/dashboard"}
-      />
-    );
-  }
+        <div className="container-fluid">
+            <div className="row">
+                <div className="col-sm-12 col-md-12 col-lg-6 col-no-padding">
+                    <div className="container-login">
+                        <div className="text-center text-lg-left">
+                            <img alt="Logo" src="/images/logo.png" />
+                        </div>
 
-  const onSubmit = (data) => {
-    authUser(data);
-  };
+                        <h1 className="sign-in-title">Sign In</h1>
 
-  return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-sm-12 col-md-12 col-lg-6 col-no-padding">
-          <div className="container-login">
-            <div className="text-center text-lg-left">
-              <img alt="Logo" src="/images/logo.png" />
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <InputText
+                                label="Account"
+                                name="email"
+                                placeholder="Enter your email address"
+                                errors={errors}
+                                style={{ height: "56px" }}
+                                ref={register({
+                                    required: "Email is required",
+                                    pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        message:
+                                            "Please enter a valid email address",
+                                    },
+                                })}
+                            />
+                            <InputText
+                                label="Password"
+                                name="password"
+                                type="password"
+                                placeholder="Enter your password"
+                                errors={errors}
+                                style={{ height: "56px" }}
+                                ref={register({
+                                    required: "Password is required",
+                                    minLength: {
+                                        value: 8,
+                                        message:
+                                            "Password must be at least 8 characters",
+                                    },
+                                    maxLength: {
+                                        value: 64,
+                                        message:
+                                            "Password must be less than 65 characters",
+                                    },
+                                })}
+                            />
+                            <div className="d-flex justify-content-between flex-wrap mt-3">
+                                <a href="#" className="btn-forgot-password">
+                                    Forgot my password
+                                </a>
+                            </div>
+                            {error ? (
+                                <Alert className="mt-3" variant="warning">
+                                    Error: {error}
+                                </Alert>
+                            ) : null}
+                            <Button
+                                type="submit"
+                                variant="primary"
+                                title="Sign in"
+                                className="btn-sign-in"
+                                disabled={loading}
+                            >
+                                Sign In
+                                {loading ? (
+                                    <Icon className="align-middle fa-spin">
+                                        spinner
+                                    </Icon>
+                                ) : null}
+                            </Button>
+                        </form>
+                    </div>
+                </div>
+
+                <div className="d-none d-sm-none d-md-none d-lg-flex col-lg-6 login-bg col-no-padding" />
             </div>
-
-            <h1 className="sign-in-title">Sign In</h1>
-
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <InputText
-                label="Account"
-                name="email"
-                placeholder="Enter your email address"
-                errors={errors}
-                style={{ height: "56px" }}
-                ref={register({
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "Please enter a valid email address",
-                  },
-                })}
-              />
-              <InputText
-                label="Password"
-                name="password"
-                type="password"
-                placeholder="Enter your password"
-                errors={errors}
-                style={{ height: "56px" }}
-                ref={register({
-                  required: "Password is required",
-                  minLength: {
-                    value: 8,
-                    message: "Password must be at least 8 characters",
-                  },
-                  maxLength: {
-                    value: 64,
-                    message: "Password must be less than 65 characters",
-                  },
-                })}
-              />
-              <div className="d-flex justify-content-between flex-wrap mt-3">
-                <a href="#" className="btn-forgot-password">
-                  Forgot my password
-                </a>
-              </div>
-              {error ? (
-                <Alert className="mt-3" variant="warning">
-                  Error: {error}
-                </Alert>
-              ) : null}
-              <Button
-                type="submit"
-                variant="primary"
-                title="Sign in"
-                className="btn-sign-in"
-                loading={loading.toString()}
-              >
-                Sign In
-              </Button>
-            </form>
-          </div>
         </div>
-
-        <div className="d-none d-sm-none d-md-none d-lg-flex col-lg-6 login-bg col-no-padding" />
-      </div>
-    </div>
-  );
+    );
 };
 
 const mapStateToProps = ({ auth }) => ({
-  localAuth: auth,
+    localAuth: auth,
 });
 
 const mapDispatchToProps = {
-  restoreToken,
+    restoreToken,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

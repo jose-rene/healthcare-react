@@ -32,6 +32,7 @@ class User extends Authenticatable
         'last_name',
         'dob',
         'email',
+        'username',
         'password',
     ];
 
@@ -75,5 +76,10 @@ class User extends Authenticatable
     public function getFullNameAttribute()
     {
         return sprintf('%s %s', $this->first_name, $this->last_name);
+    }
+
+    public function OathClients()
+    {
+        return $this->hasMany(OathClients::class);
     }
 }

@@ -4,7 +4,7 @@ const {
 } = process.env;
 
 const API_PROTOCOL = REACT_APP_API_HOST.indexOf("http") === 0 ? "" : "http://";
-const BASE_URL = `${API_PROTOCOL}${REACT_APP_API_HOST}:${REACT_APP_API_PORT}`;
+export const BASE_URL = `${API_PROTOCOL}${REACT_APP_API_HOST}:${REACT_APP_API_PORT}`;
 export const API_URL = `${BASE_URL}/v1`;
 export const LOGIN_URL = `${BASE_URL}/oauth/token`;
 export const USER_URL = `${API_URL}/user`;

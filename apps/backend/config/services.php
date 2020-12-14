@@ -39,4 +39,12 @@ return [
         'pass'    => env('FM_API_PASS'),
     ],
 
+    'sso_providers' => null === ($providers = env('SSO_PROVIDERS', null)) || empty($providers) ? [] : array_filter(array_map('trim', explode(',', $providers))),
+
+    'github' => [
+        'client_id'     => env('GITHUB_CLIENT_ID'),
+        'client_secret' => env('GITHUB_CLIENT_SECRET'),
+        'redirect'      => env('SSO_CALLBACK_URL', ''),
+    ],
+
 ];

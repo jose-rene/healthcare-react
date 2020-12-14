@@ -19,7 +19,8 @@ stages:
 # sast / dast jobs
 include:
   - template: Security/SAST.gitlab-ci.yml
-  - template: DAST.gitlab-ci.yml
+  # requires ultimate gitlab package
+  # - template: DAST.gitlab-ci.yml
 
 variables:
   DAST_API_SPECIFICATION: https://api-test.dme-cg.com/docs/api-docs.json

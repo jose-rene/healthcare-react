@@ -7,14 +7,15 @@ import Login from "../pages/Login";
 import Error from "../pages/NotFound";
 import Dash from "../pages/Dash";
 import Account from "../pages/Account";
+import Federated from "../pages/Federated";
 import Questionnaire from "../pages/Questionnaire";
 import apiService from "../services/apiService";
 import { setUser } from "../actions/userAction";
 import { signOut } from "../actions/authAction";
 
 const AppNavigation = ({ setUser, signOut, localAuth, user }) => {
-    // if the server returns unauthorized
-    axios.interceptors.response.use(
+    // if the server returns unauthorized, @todo handle logic for this in apiService hook so it doesn't effect login
+    /* axios.interceptors.response.use(
         (response) => {
             return response;
         },
@@ -28,7 +29,7 @@ const AppNavigation = ({ setUser, signOut, localAuth, user }) => {
             }
             return Promise.reject(error);
         }
-    );
+    ); */
 
     useEffect(() => {
         let isMounted = true;
@@ -55,6 +56,7 @@ const AppNavigation = ({ setUser, signOut, localAuth, user }) => {
         <BrowserRouter>
             <Switch>
                 <Route path="/" component={Login} exact />
+                <Route path="/sso" component={Federated} />
                 <PrivateRoute path="/dashboard" authed={authed}>
                     <Dash />
                 </PrivateRoute>
