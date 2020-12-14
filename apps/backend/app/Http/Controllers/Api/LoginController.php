@@ -7,7 +7,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @OA\Post(
@@ -65,6 +65,48 @@ class LoginController extends Controller
         if (!auth()->attempt($credentials)) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
+
+        return $this->authenticatedResponse($request);
+    }
+
+    /**
+     * Request a user token from the signed url generated after 3rd party federation.
+     *
+     * @param Request $request
+     * @param string $email
+     * @return Response
+     */
+    public function requestToken(Request $request, $email)
+    {
+        if (!$request->hasValidSignature()) {
+            // return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        if (null !== ($user = User::select('id')->where('email', $email)->first()) && !empty($user)) {
+            Auth::login($user);
+
+            return $this->authenticatedResponse($request);
+        }
+
+        return response()->json(['message' => 'Unauthorized: user not found.'], 401);
+    }
+
+    public function logout(Request $request)
+    {
+        /** @var User $user */
+        $user = $request->user();
+        $user->token()->revoke();
+
+        return response()->json(['error' => false, 'message' => 'logged-out']);
+    }
+
+    /**
+     * Return authenticated response with bearer token.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    protected function authenticatedResponse(Request $request)
+    {
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
@@ -80,14 +122,5 @@ class LoginController extends Controller
             'token_type'   => 'Bearer',
             'expires_at'   => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString(),
         ]);
-    }
-
-    public function logout(Request $request)
-    {
-        /** @var User $user */
-        $user = $request->user();
-        $user->token()->revoke();
-
-        return response()->json(['error' => false, 'message' => 'logged-out']);
     }
 }

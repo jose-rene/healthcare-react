@@ -7,6 +7,9 @@ const {
     // required for api communications. You should see some notes about this in the
     // root of the project .env.example file
     API_SECRET,
+
+    APP_HOST = "0.0.0.0",
+    APP_PORT = "3000",
 } = process.env;
 
 const defaultArgs = ``;
@@ -87,6 +90,8 @@ module.exports = {
                 REACT_APP_API_PORT: API_PORT,
                 REACT_APP_API_ID: API_ID,
                 REACT_APP_API_SECRET: API_SECRET,
+                HOST: APP_HOST,
+                PORT: APP_PORT,
             },
         }
     ],

@@ -6,9 +6,9 @@ $this_idp_env_id = 'DME';
 
 //This is variable is for simplesaml example only.
 // For real IdP, you must set the url values in the 'idp' config to conform to the IdP's real urls.
-$idp_host = env('SAML2_'.$this_idp_env_id.'_IDP_HOST', 'http://localhost:8000/simplesaml');
+$idp_host = env('SAML2_' . $this_idp_env_id . '_IDP_HOST', '');
 
-return $settings = array(
+return $settings = [
 
     /*****
      * One Login Settings
@@ -24,7 +24,7 @@ return $settings = array(
     'debug' => env('APP_DEBUG', false),
 
     // Service Provider Data that we are deploying
-    'sp' => array(
+    'sp' => [
 
         // Specifies constraints on the name identifier to be used to
         // represent the requested subject.
@@ -33,58 +33,56 @@ return $settings = array(
 
         // Usually x509cert and privateKey of the SP are provided by files placed at
         // the certs folder. But we can also provide them with the following parameters
-        'x509cert' => env('SAML2_'.$this_idp_env_id.'_SP_x509',''),
-        'privateKey' => env('SAML2_'.$this_idp_env_id.'_SP_PRIVATEKEY',''),
+        'x509cert'   => env('SAML2_' . $this_idp_env_id . '_SP_x509', ''),
+        'privateKey' => env('SAML2_' . $this_idp_env_id . '_SP_PRIVATEKEY', ''),
 
         // Identifier (URI) of the SP entity.
         // Leave blank to use the '{idpName}_metadata' route, e.g. 'test_metadata'.
-        'entityId' => env('SAML2_'.$this_idp_env_id.'_SP_ENTITYID',''),
+        'entityId' => env('SAML2_' . $this_idp_env_id . '_SP_ENTITYID', ''),
 
         // Specifies info about where and how the <AuthnResponse> message MUST be
         // returned to the requester, in this case our SP.
-        'assertionConsumerService' => array(
+        'assertionConsumerService' => [
             // URL Location where the <Response> from the IdP will be returned,
             // using HTTP-POST binding.
             // Leave blank to use the '{idpName}_acs' route, e.g. 'test_acs'
             'url' => '',
-        ),
+        ],
         // Specifies info about where and how the <Logout Response> message MUST be
         // returned to the requester, in this case our SP.
         // Remove this part to not include any URL Location in the metadata.
-        'singleLogoutService' => array(
+        'singleLogoutService' => [
             // URL Location where the <Response> from the IdP will be returned,
             // using HTTP-Redirect binding.
             // Leave blank to use the '{idpName}_sls' route, e.g. 'test_sls'
             'url' => '',
-        ),
-    ),
+        ],
+    ],
 
     // Identity Provider Data that we want connect with our SP
-    'idp' => array(
+    'idp' => [
         // Identifier of the IdP entity  (must be a URI)
-        'entityId' => env('SAML2_'.$this_idp_env_id.'_IDP_ENTITYID', $idp_host . '/saml2/idp/metadata.php'),
+        'entityId' => env('SAML2_' . $this_idp_env_id . '_IDP_ENTITYID', ''),
         // SSO endpoint info of the IdP. (Authentication Request protocol)
-        'singleSignOnService' => array(
+        'singleSignOnService' => [
             // URL Target of the IdP where the SP will send the Authentication Request Message,
             // using HTTP-Redirect binding.
-            'url' => env('SAML2_'.$this_idp_env_id.'_IDP_SSO_URL', $idp_host . '/saml2/idp/SSOService.php'),
-        ),
+            'url' => env('SAML2_' . $this_idp_env_id . '_IDP_SSO_URL', ''),
+        ],
         // SLO endpoint info of the IdP.
-        'singleLogoutService' => array(
+        'singleLogoutService' => [
             // URL Location of the IdP where the SP will send the SLO Request,
             // using HTTP-Redirect binding.
-            'url' => env('SAML2_'.$this_idp_env_id.'_IDP_SL_URL', $idp_host . '/saml2/idp/SingleLogoutService.php'),
-        ),
+            'url' => env('SAML2_' . $this_idp_env_id . '_IDP_SL_URL', ''),
+        ],
         // Public x509 certificate of the IdP
-        'x509cert' => env('SAML2_'.$this_idp_env_id.'_IDP_x509', ''),
+        'x509cert' => env('SAML2_' . $this_idp_env_id . '_IDP_x509', ''),
         /*
          *  Instead of use the whole x509cert you can use a fingerprint
          *  (openssl x509 -noout -fingerprint -in "idp.crt" to generate it)
          */
-        'certFingerprint' =>  env('SAML2_'.$this_idp_env_id.'_CERT_FINGERPRINT', '57:EC:0F:E1:94:83:76:10:43:73:B9:30:E5:21:3D:25:D2:89:DC:DB'),
-    ),
-
-
+        'certFingerprint' => env('SAML2_' . $this_idp_env_id . '_CERT_FINGERPRINT', ''),
+    ],
 
     /***
      *
@@ -93,9 +91,9 @@ return $settings = array(
      *
      */
     // Security settings
-    'security' => array(
+    'security' => [
 
-        /** signatures and encryptions offered */
+        /* signatures and encryptions offered */
 
         // Indicates that the nameID of the <samlp:logoutRequest> sent by this SP
         // will be encrypted.
@@ -121,8 +119,7 @@ return $settings = array(
         */
         'signMetadata' => false,
 
-
-        /** signatures and encryptions required **/
+        /* signatures and encryptions required **/
 
         // Indicates a requirement for the <samlp:Response>, <samlp:LogoutRequest> and
         // <samlp:LogoutResponse> elements received by this SP to be signed.
@@ -141,30 +138,30 @@ return $settings = array(
         // Set true or don't present thi parameter and you will get an AuthContext 'exact' 'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport'
         // Set an array with the possible auth context values: array ('urn:oasis:names:tc:SAML:2.0:ac:classes:Password', 'urn:oasis:names:tc:SAML:2.0:ac:classes:X509'),
         'requestedAuthnContext' => true,
-    ),
+    ],
 
     // Contact information template, it is recommended to suply a technical and support contacts
-    'contactPerson' => array(
-        'technical' => array(
-            'givenName' => 'Skylar Langdon',
-            'emailAddress' => 'skylar.langdon@dme-cg.com'
-        ),
-        'support' => array(
-            'givenName' => 'Customer Care',
-            'emailAddress' => 'customercare@dme-cg.com'
-        ),
-    ),
+    'contactPerson' => [
+        'technical' => [
+            'givenName'    => 'Skylar Langdon',
+            'emailAddress' => 'skylar.langdon@dme-cg.com',
+        ],
+        'support' => [
+            'givenName'    => 'Customer Care',
+            'emailAddress' => 'customercare@dme-cg.com',
+        ],
+    ],
 
     // Organization information template, the info in en_US lang is recomended, add more if required
-    'organization' => array(
-        'en-US' => array(
-            'name' => 'DME-CG',
+    'organization' => [
+        'en-US' => [
+            'name'        => 'DME-CG',
             'displayname' => 'DME Consulting Group',
-            'url' => 'https://www.dme-cg.com'
-        ),
-    ),
+            'url'         => 'https://www.dme-cg.com',
+        ],
+    ],
 
-/* Interoperable SAML 2.0 Web Browser SSO Profile [saml2int]   http://saml2int.org/profile/current
+    /* Interoperable SAML 2.0 Web Browser SSO Profile [saml2int]   http://saml2int.org/profile/current
 
    'authnRequestsSigned' => false,    // SP SHOULD NOT sign the <samlp:AuthnRequest>,
                                       // MUST NOT assume that the IdP validates the sign
@@ -173,4 +170,4 @@ return $settings = array(
    'wantNameIdEncrypted' => false,
 */
 
-);
+];

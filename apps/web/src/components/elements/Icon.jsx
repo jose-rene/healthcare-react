@@ -17,7 +17,7 @@ const Icon = ({
     size = "2x",
     children,
     iconType = "s",
-    className = undefined,
+    className = "",
     ...props
 }) => {
     let name = icon || children;

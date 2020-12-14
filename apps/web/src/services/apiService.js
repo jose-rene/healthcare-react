@@ -4,11 +4,11 @@ import { API_URL, GET, AUTH_TOKEN_NAME, HTTP_TIMEOUT } from "../config/URLs";
 
 const apiService = async (
     url,
-    { headers = {}, params = {}, method = GET } = {}
+    { headers = {}, params = {}, method = GET, baseUrl = null } = {}
 ) => {
     const config = {
         url,
-        baseURL: API_URL,
+        baseURL: baseUrl ?? API_URL,
         timeout: HTTP_TIMEOUT,
         headers: {
             "Content-type": "application/json",
