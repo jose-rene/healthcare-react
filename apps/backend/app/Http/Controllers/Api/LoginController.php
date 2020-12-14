@@ -78,9 +78,9 @@ class LoginController extends Controller
      */
     public function requestToken(Request $request, $email)
     {
-        if (!$request->hasValidSignature()) {
-            // return response()->json(['message' => 'Unauthorized'], 401);
-        }
+        // validate signature
+        abort_unless($request->hasValidSignature(), 401, 'Invalid token');
+
         if (null !== ($user = User::select('id')->where('email', $email)->first()) && !empty($user)) {
             Auth::login($user);
 
