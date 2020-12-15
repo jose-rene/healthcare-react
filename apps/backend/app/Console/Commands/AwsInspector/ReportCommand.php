@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Swift_Attachment;
 
 class ReportCommand extends Command
 {
@@ -40,7 +41,6 @@ class ReportCommand extends Command
         }
         if (false === ($data = Cache::get($cacheKey = 'inspector_run_' . $environment, false)) || empty($data)) {
             $this->info(sprintf('There is not a recent inspector scan available for this environment [%s].', $environment));
-            Cache::put('inspector_run_' . $environment, ['arn' => 'arn:aws:inspector:us-west-2:452494236181:target/0-yOMEVtVm/template/0-MUJbu40s/run/0-hyb2Q59Q', 'name' => 'Inspector Run - Staging'], now()->addMinutes(120));
 
             return 0;
         }
@@ -66,7 +66,8 @@ class ReportCommand extends Command
         $this->info(sprintf('Inspector report successfully fetched in %s environment.', $environment));
 
         // fetch report
-        $response = Http::withOptions(['sink' => $file = tempnam(sys_get_temp_dir(), 'inspector_')]) // 'debug' => true
+        $file = tempnam(sys_get_temp_dir(), 'inspector_');
+        $response = Http::withOptions(['sink' => $file]) // 'debug' => true
             ->withHeaders(['User-Agent' => 'DME API/1.0'])
             ->get($url = $result->get('url'));
         if (!$response->successful()) {
@@ -75,24 +76,26 @@ class ReportCommand extends Command
             return 0;
         }
 
-        // $this->info(sprintf('File [%s] successfully retrieved.', $file));
         // email the report
-        /*$text = sprintf('Monthly AWS Inspector run is now available: %s', $name);
-        Mail::mailer('ses')->send([
-            'html' => '<p>' . $text . '</p>',
-            'text' => $text,
-        ], [], function ($message) {
-            $message
-            ->to(env('DEVS_EMAIL', 'devs@dme-cg.com'))
-            ->subject('Monthly AWS Inspector Run');
-        });*/
+        $fileName = now()->format('Y_m_d_') . preg_replace('~[\s\-]+~', '_', $data['name']);
+        $text = sprintf('Monthly AWS Inspector run is now available: %s', $data['name']);
+        Mail::mailer('smtp')->send([], [], function ($message) use ($file, $fileName, $text) {
+            $message->to(env('DEVS_EMAIL', 'skylar.langdon@dme-cg.com'))
+                ->setFrom('noreply@dme-cg.com', 'DME-CG')
+                ->setSubject('Monthly AWS Inspector Run')
+                ->setBody('<html><p>' . $text . '</p></html>', 'text/html')
+                ->addPart($text, 'text/plain')
+                ->attach(Swift_Attachment::fromPath($file)->setFilename($fileName . '.pdf'));
+        });
+
         // save to S3
         $s3 = \AWS::createClient('s3');
         $s3->putObject([
             'Bucket'     => 'dme-security',
-            'Key'        => now()->format('Y_m_d_') . preg_replace('~[\s\-]+~', '_', $data['name']),
+            'Key'        => $fileName,
             'SourceFile' => $file,
         ]);
+
         // cleanup
         unlink($file);
         Cache::forget($cacheKey);
