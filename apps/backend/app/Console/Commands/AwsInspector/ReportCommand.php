@@ -32,7 +32,7 @@ class ReportCommand extends Command
      */
     public function handle()
     {
-        if ('production' !== ($environment = $this->argument('environment')) || 'all' !== $environment) {
+        if ('production' !== ($environment = $this->argument('environment')) && 'all' !== $environment) {
             $environment = 'staging';
         }
         if (null === ($region = env($param = 'AWS_REGION')) || empty($region)) {
@@ -105,12 +105,12 @@ class ReportCommand extends Command
             return 0;
         }
 
-        // email the report
+        // remove date from file name
         $nameParts = array_values(array_filter(array_map('trim', explode('-', $data['name']))));
         array_pop($nameParts);
-
-        $fileName = preg_replace('~\s+~', '_', $data['name'] . ' ' . now()->format('F'));
-        $text = sprintf('Monthly AWS Inspector run is now available: %s', $data['name']);
+        $fileName = preg_replace('~\s+~', '_', $name = implode(' ', $nameParts) . ' ' . now()->format('F'));
+        $text = sprintf('Monthly AWS Inspector run is now available: %s', $name);
+        // email the report
         Mail::mailer('smtp')->send([], [], function ($message) use ($file, $fileName, $text) {
             $message->to(env('DEVS_EMAIL', 'skylar.langdon@dme-cg.com'))
                 ->setFrom('noreply@dme-cg.com', 'DME-CG')

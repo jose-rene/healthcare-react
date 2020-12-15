@@ -29,7 +29,7 @@ class RunCommand extends Command
      */
     public function handle()
     {
-        if ('production' !== ($environment = $this->argument('environment')) || 'all' !== $environment) {
+        if ('production' !== ($environment = $this->argument('environment')) && 'all' !== $environment) {
             $environment = 'staging';
         }
         if (null === ($region = env($param = 'AWS_REGION')) || empty($region)) {
