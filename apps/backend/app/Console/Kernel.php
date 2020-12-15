@@ -24,8 +24,18 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        // $schedule->command('asdjioasjdoi')->everyFifteenMinutes();
+        $log = storage_path('inspector/run.log');
+        $day = env('AWS_INSPECTOR_DAY', 1);
+
+        // run inspector scans 1AM monthly
+        $schedule->command('inspector:run all')
+            ->cron('3 1 ' . $day . ' * *')
+            ->appendOutputTo($log);
+
+        // send scan reports 3AM monthly
+        $schedule->command('inspector:report all')
+            ->cron('9 3 ' . $day . ' * *')
+            ->appendOutputTo($log);
     }
 
     /**
@@ -35,8 +45,18 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
+    }
+
+    /**
+     * Get the timezone that should be used by default for scheduled events.
+     *
+     * @return \DateTimeZone|string|null
+     */
+    protected function scheduleTimezone()
+    {
+        return 'America/Los_Angeles';
     }
 }

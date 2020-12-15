@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\AwsInspector;
 
+use AWS;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -31,14 +32,36 @@ class ReportCommand extends Command
      */
     public function handle()
     {
-        if ('production' !== ($environment = $this->argument('environment'))) {
+        if ('production' !== ($environment = $this->argument('environment')) || 'all' !== $environment) {
             $environment = 'staging';
         }
         if (null === ($region = env($param = 'AWS_REGION')) || empty($region)) {
-            $this->info(sprintf('There is not an AWS Region [%s] defined this environment [%s].', $param, $environment));
+            $this->info(sprintf('There is not an AWS Region [%s] defined.', $param));
 
             return 0;
         }
+
+        $envs = 'all' === $environment ? ['staging', 'production'] : [$environment];
+
+        foreach ($envs as $environment) {
+            if (0 !== $this->runReport($environment)) {
+                $this->info(sprintf('Inspector report successfully fetched in %s environment.', $environment));
+            }
+        }
+
+        return 1;
+    }
+
+    /**
+     * Fetch the requested AWS Inspector run.
+     *
+     * @param string $environment
+     * @param string $region
+     *
+     * @return int
+     */
+    protected function runReport($environment)
+    {
         if (false === ($data = Cache::get($cacheKey = 'inspector_run_' . $environment, false)) || empty($data)) {
             $this->info(sprintf('There is not a recent inspector scan available for this environment [%s].', $environment));
 
@@ -47,14 +70,20 @@ class ReportCommand extends Command
 
         $this->info('Fetching the inspector run');
 
-        $client = \AWS::createClient('Inspector');
+        $client = AWS::createClient('Inspector');
         $params = [
             'assessmentRunArn' => $data['arn'],
             'reportFileFormat' => 'PDF',
             'reportType'       => 'FINDING',
         ];
-        if (null === ($result = $client->getAssessmentReport($params)) || empty($result)) {
-            $this->info(sprintf('Could not retrieve Inspector report for %s environment', $environment));
+        try {
+            if (null === ($result = $client->getAssessmentReport($params)) || empty($result)) {
+                $this->info(sprintf('Could not retrieve Inspector report for %s environment', $environment));
+
+                return 0;
+            }
+        } catch (Aws\Inspector\Exception\InspectorException $e) {
+            $this->info(sprintf('Inspector report error: %s [%s]', $e->getMessage(), $environment));
 
             return 0;
         }
@@ -77,7 +106,10 @@ class ReportCommand extends Command
         }
 
         // email the report
-        $fileName = now()->format('Y_m_d_') . preg_replace('~[\s\-]+~', '_', $data['name']);
+        $nameParts = array_values(array_filter(array_map('trim', explode('-', $data['name']))));
+        array_pop($nameParts);
+
+        $fileName = preg_replace('~\s+~', '_', $data['name'] . ' ' . now()->format('F'));
         $text = sprintf('Monthly AWS Inspector run is now available: %s', $data['name']);
         Mail::mailer('smtp')->send([], [], function ($message) use ($file, $fileName, $text) {
             $message->to(env('DEVS_EMAIL', 'skylar.langdon@dme-cg.com'))
@@ -89,7 +121,7 @@ class ReportCommand extends Command
         });
 
         // save to S3
-        $s3 = \AWS::createClient('s3');
+        $s3 = AWS::createClient('s3');
         $s3->putObject([
             'Bucket'     => 'dme-security',
             'Key'        => $fileName,
@@ -99,7 +131,5 @@ class ReportCommand extends Command
         // cleanup
         unlink($file);
         Cache::forget($cacheKey);
-
-        return 1;
     }
 }
