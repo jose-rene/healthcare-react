@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,7 +11,7 @@ use Laravel\Passport\HasApiTokens;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 /**
- * @property int id
+ * @property int    id
  * @property string name
  * @property string email
  * @property string middle_name
@@ -81,5 +82,24 @@ class User extends Authenticatable
     public function OathClients()
     {
         return $this->hasMany(OathClients::class);
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param string $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        ResetPasswordNotification::$createUrlCallback = function ($notifiable, $token) {
+
+            return request()->header('referer', 'https://gryphon.com/') . 'password/change?' . http_build_query([
+                    'token' => $token,
+                    'email' => $notifiable->getEmailForPasswordReset(),
+                ]);
+        };
+
+        $this->notify(new ResetPasswordNotification($token));
     }
 }

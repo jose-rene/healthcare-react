@@ -1,80 +1,124 @@
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from 'react';
 import axios from "axios";
 import AsyncStorage from "@react-native-community/async-storage";
 import {API_URL, GET} from "../config/URLs";
 
 export default ({
-  initialMethod = GET,
-  initialParams = {},
-  initialData = {},
-  headers = {},
-} = {}) => {
-  const [data, setData] = useState(initialData);
-  const [requestUrl, setUrl] = useState(null);
-  const [requestMethod, setMethod] = useState(initialMethod);
-  const [params, setParams] = useState(initialParams);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const {
+                    url,
+                    method = GET,
+                    params = undefined,
+                    enableCancelToken = false,
+                    debug = false,
+                    headers = {},
+                    baseURL = API_URL,
+                    hasAuthedUrl = false,
+                    ...otherOptions
+                }) => {
+    const {
         REACT_APP_API_ID: ClientId = undefined,
         REACT_APP_API_SECRET: ClientSecret = undefined,
-      } = process.env;
+    } = process.env;
 
+    const [cancelToken, setCancelToken] = useState(null);
+    const [data, setData] = useState({});
+    const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-      setError(null);
-      setLoading(true);
+    const formatParams = (params, _method = method) => ({[_method == GET ? 'params' : 'data']: params});
 
-      try {
-        const config = {
-          url: requestUrl,
-          baseURL: API_URL,
-          // @todo this should be config
-          timeout: 10000,
+    const [config, setConfig] = useState({
+        url,
+        baseURL,
+        method,
+        headers: {
+            ...{
+                ClientId,
+                ClientSecret,
+                "content-type": 'application/json',
+            },
+            // Merge headers passed in with the presets
+            ...headers
+        },
 
-          headers: {
-            "content-type": "application/json",
-            ClientId,
-            ClientSecret,
-            ...headers,
-          },
+        cancelToken,
 
-          method: requestMethod,
+        ...formatParams(params),
+    });
 
-          [GET === requestMethod ? "params" : "data"]: params,
-        };
+    const fire = async ({
+                            params: request_params = false,
+                            persist_changes = true,
+                            hasAuthedUrl: _hasAuthedUrl = hasAuthedUrl,
+                            ...config_override
+                        } = {}) => {
+        let _configs = config;
 
-        const token = await AsyncStorage.getItem("@dme.login.access_token");
-        // if access token is set, then set the Authorization token header
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
+        if (config_override) {
+            _configs = {...config, ...config_override};
+            persist_changes && setConfig(_configs);
         }
 
-        const result = await axios(config);
+        if (request_params) {
+            _configs = {...config, ...formatParams(request_params, _configs.method)};
+            persist_changes && setConfig(_configs);
+        }
 
-        setData(result.data);
-      } catch (e) {
-        // set to user readable error
-        setError(e.message ? `Error: ${e.message}` : "Unknown Network Error");
-      }
+        if (_hasAuthedUrl && _configs.headers['Authorization']) {
+            _configs.url = `authed/${config.url}`;
+        }
 
-      setLoading(false);
+        setError(false);
+        setLoading(true);
+
+        debug && console.info('useService.fire', {_configs})
+
+        try {
+            const {data = 'missing'} = await axios(_configs);
+            debug && console.info('useService.fired.resolve', {data})
+            setData(data);
+            return data;
+        } catch (err) {
+            debug && console.info('useService.fired.reject', {err})
+            setError(err);
+            throw(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    if (requestUrl) {
-      // TODO :: when done dev re-enable this
-      fetchData().then();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]); // headers, method, params, url
+    useEffect(() => {
+        (async () => {
+            try {
+                const jwtToken = await AsyncStorage.getItem("@dme.login.access_token");
 
-  const doCall = (url, { params: new_params = {}, method = GET }) => {
-    setMethod(method);
-    setUrl(url);
-    setParams(new_params);
-  };
+                if (jwtToken) {
+                    const new_config = config;
+                    new_config.headers['Authorization'] = `Bearer ${jwtToken}`;
 
-  return [{ response: data, data, loading, error }, doCall];
-};
+                    setConfig(new_config);
+                }
+            } catch (e) {
+            }
+
+            if (enableCancelToken) {
+                const tmp_cancel_token = axios.CancelToken.source();
+
+                setCancelToken(tmp_cancel_token.token);
+            }
+        })();
+
+        debug && console.info('useService.fired.construct', {config})
+    }, []);
+
+    useMemo(() => {
+        setConfig({...config, url})
+        debug && console.info('useService.useMemo.url', {config})
+    }, [url]);
+
+    useMemo(() => {
+        setConfig({...config, ...formatParams(params)})
+        debug && console.info('useService.useMemo.params', {config})
+    }, [params]);
+
+    return [{loading, data, error, cancelToken}, fire];
+}
