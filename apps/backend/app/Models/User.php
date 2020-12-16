@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Arr;
 use Laravel\Passport\HasApiTokens;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
@@ -93,8 +94,7 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token): void
     {
         ResetPasswordNotification::$createUrlCallback = function ($notifiable, $token) {
-
-            return request()->header('referer', 'https://gryphon.com/') . 'password/change?' . http_build_query([
+            return Arr::get($_SERVER, 'HTTP_ORIGIN', 'dme-cg.com') . 'password/change?' . http_build_query([
                     'token' => $token,
                     'email' => $notifiable->getEmailForPasswordReset(),
                 ]);
