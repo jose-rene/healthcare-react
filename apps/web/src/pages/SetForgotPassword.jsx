@@ -52,7 +52,7 @@ export default ({location: {search: params = ''}}) => {
                             </Link>
                         </div>
 
-                        <h1 className="sign-in-title">Set Your New Password for {email}</h1>
+                        <h1 className="sign-in-title word-break">Set Your New Password for {email}</h1>
 
                         <form onSubmit={handleSubmit(handleUpdatePassword)}>
 
