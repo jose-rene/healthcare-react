@@ -1,24 +1,28 @@
-import React, { useEffect } from "react";
-import { Redirect, useLocation } from "react-router-dom";
-import { connect } from "react-redux";
-import { Alert, Button } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import React, {useEffect, useRef} from "react";
+import {Link, Redirect, useHistory, useLocation} from "react-router-dom";
+import {connect} from "react-redux";
+import {Alert, Button} from "react-bootstrap";
+import {useForm} from "react-hook-form";
 import useAuth from "../hooks/useAuth";
-import { restoreToken } from "../actions/authAction";
+import {restoreToken} from "../actions/authAction";
 import InputText from "../components/inputs/InputText";
 import Icon from "../components/elements/Icon";
+import qs from "query-string";
 
 // this rule wants both the htmlFor and label nested, should be either not both
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-const Login = ({ localAuth, restoreToken }) => {
+const Login = ({localAuth, restoreToken, location: {search: params = ''} = {}}) => {
     // tokenLoading is async storage, loading is http
     const [
-        { tokenLoading, authToken, loading, error },
-        { loadAuth, authUser },
+        {tokenLoading, authToken, loading, error},
+        {loadAuth, authUser},
     ] = useAuth();
-
-    const { register, handleSubmit, errors } = useForm();
+    const history = useHistory();
+    const {action = false, redirect = null} = qs.parse(params);
+    const {register, handleSubmit, errors, watch} = useForm();
+    const email = useRef();
+    email.current = watch('email', '');
 
     const location = useLocation();
 
@@ -48,6 +52,9 @@ const Login = ({ localAuth, restoreToken }) => {
     }
 
     const onSubmit = (data) => {
+        history.push({
+            search: redirect ? `?redirect=${redirect}` : '',
+        })
         if (loading) {
             return false;
         }
@@ -60,10 +67,16 @@ const Login = ({ localAuth, restoreToken }) => {
                 <div className="col-sm-12 col-md-12 col-lg-6 col-no-padding">
                     <div className="container-login">
                         <div className="text-center text-lg-left">
-                            <img alt="Logo" src="/images/logo.png" />
+                            <img alt="Logo" src="/images/logo.png"/>
                         </div>
 
-                        <h1 className="sign-in-title">Sign In</h1>
+                        <h1 className="sign-in-title" role="heading">Sign In</h1>
+
+                        {action && (
+                            <Alert className="mt-3" variant="success">
+                                Password Updated
+                            </Alert>
+                        )}
 
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <InputText
@@ -71,7 +84,7 @@ const Login = ({ localAuth, restoreToken }) => {
                                 name="email"
                                 placeholder="Enter your email address"
                                 errors={errors}
-                                style={{ height: "56px" }}
+                                style={{height: "56px"}}
                                 ref={register({
                                     required: "Email is required",
                                     pattern: {
@@ -103,9 +116,10 @@ const Login = ({ localAuth, restoreToken }) => {
                                 })}
                             />
                             <div className="d-flex justify-content-between flex-wrap mt-3">
-                                <a href="#" className="btn-forgot-password">
+                                <Link to={`/password/reset?email=${email.current || ''}`}
+                                      className="btn-forgot-password">
                                     Forgot my password
-                                </a>
+                                </Link>
                             </div>
                             {error ? (
                                 <Alert className="mt-3" variant="warning">

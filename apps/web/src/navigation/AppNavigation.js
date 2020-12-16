@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import axios from "axios";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { connect } from "react-redux";
+import React, {useEffect} from "react";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
+import {connect} from "react-redux";
 import PrivateRoute from "../route/PrivateRoute";
 import Login from "../pages/Login";
 import Error from "../pages/NotFound";
@@ -10,10 +9,12 @@ import Account from "../pages/Account";
 import Federated from "../pages/Federated";
 import Questionnaire from "../pages/Questionnaire";
 import apiService from "../services/apiService";
-import { setUser } from "../actions/userAction";
-import { signOut } from "../actions/authAction";
+import {setUser} from "../actions/userAction";
+import {signOut} from "../actions/authAction";
+import ForgotPassword from "../pages/ForgotPassword";
+import SetForgotPassword from "../pages/SetForgotPassword";
 
-const AppNavigation = ({ setUser, signOut, localAuth, user }) => {
+const AppNavigation = ({setUser, signOut, localAuth, user}) => {
     // if the server returns unauthorized, @todo handle logic for this in apiService hook so it doesn't effect login
     /* axios.interceptors.response.use(
         (response) => {
@@ -55,18 +56,20 @@ const AppNavigation = ({ setUser, signOut, localAuth, user }) => {
     return (
         <BrowserRouter>
             <Switch>
-                <Route path="/" component={Login} exact />
-                <Route path="/sso" component={Federated} />
+                <Route path="/" component={Login} exact/>
+                <Route path="/sso" component={Federated}/>
+                <Route path="/password/reset" component={ForgotPassword}/>
+                <Route path="/password/change" component={SetForgotPassword}/>
                 <PrivateRoute path="/dashboard" authed={authed}>
-                    <Dash />
+                    <Dash/>
                 </PrivateRoute>
                 <PrivateRoute path="/account" authed={authed}>
-                    <Account />
+                    <Account/>
                 </PrivateRoute>
                 <PrivateRoute path="/questionnaire/:id" authed={authed}>
-                    <Questionnaire />
+                    <Questionnaire/>
                 </PrivateRoute>
-                <Route component={Error} />
+                <Route component={Error}/>
             </Switch>
         </BrowserRouter>
     );
