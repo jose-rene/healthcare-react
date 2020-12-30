@@ -24,18 +24,22 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $log = storage_path('inspector/run.log');
+        $log = storage_path('logs/inspector.log');
         $day = env('AWS_INSPECTOR_DAY', 1);
 
         // run inspector scans 1AM monthly
+        $hour = 1;
         $schedule->command('inspector:run all')
-            ->cron('3 1 ' . $day . ' * *')
+            ->cron('5 ' . $hour . ' ' . $day . ' * *')
             ->appendOutputTo($log);
 
-        // send scan reports 3AM monthly
-        $schedule->command('inspector:report all')
-            ->cron('9 3 ' . $day . ' * *')
-            ->appendOutputTo($log);
+        // send scan reports monthly, 1 hour after run, run 3 times in case it takes longer
+        for ($xx = 0; $xx < 3; $xx++) {
+            $hour ++;
+            $schedule->command('inspector:report all')
+                ->cron('10 ' . $hour . ' ' . $day . ' * *')
+                ->appendOutputTo($log);
+        }
     }
 
     /**

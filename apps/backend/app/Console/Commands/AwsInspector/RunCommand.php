@@ -81,7 +81,7 @@ class RunCommand extends Command
             'arn'  => $result->get('assessmentRunArn'),
             'name' => $name,
         ];
-        Cache::put('inspector_run_' . $environment, $data, now()->addMinutes(180));
+        Cache::put('inspector_run_' . $environment, $data, now()->addHours(8));
 
         return 1;
     }
