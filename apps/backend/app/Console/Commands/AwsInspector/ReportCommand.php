@@ -106,9 +106,9 @@ class ReportCommand extends Command
         }
 
         // remove date from file name
-        $nameParts = array_values(array_filter(array_map('trim', explode('-', $data['name']))));
+        $nameParts = array_values(array_filter(array_map('trim', explode(' - ', $data['name']))));
         array_pop($nameParts);
-        $fileName = preg_replace('~\s+~', '_', $name = implode(' ', $nameParts) . ' ' . now()->format('F'));
+        $fileName = preg_replace('~\s+~', '_', $name = implode(' ', $nameParts) . ' ' . now()->format('M Y'));
         $text = sprintf('Monthly AWS Inspector run is now available: %s', $name);
         // email the report
         Mail::mailer('smtp')->send([], [], function ($message) use ($file, $fileName, $text) {
