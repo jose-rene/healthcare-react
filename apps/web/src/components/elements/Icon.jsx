@@ -27,6 +27,7 @@ const Icon = ({
         alert: "exclamation-triangle",
         mail: "envelope",
         email: "envelope",
+        cancel: 'ban',
     };
 
     const mappedIcon = map[name] || name;

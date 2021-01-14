@@ -94,7 +94,7 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token): void
     {
         ResetPasswordNotification::$createUrlCallback = function ($notifiable, $token) {
-            return Arr::get($_SERVER, 'HTTP_ORIGIN', 'dme-cg.com') . 'password/change?' . http_build_query([
+            return Arr::get($_SERVER, 'HTTP_ORIGIN', 'dme-cg.com') . '/password/change?' . http_build_query([
                     'token' => $token,
                     'email' => $notifiable->getEmailForPasswordReset(),
                 ]);

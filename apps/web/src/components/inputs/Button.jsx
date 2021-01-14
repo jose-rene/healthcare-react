@@ -1,20 +1,21 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import Icon from "../elements/Icon";
 
 const Button = ({
-    useButton = true,
-    to = "#",
-    onClick = undefined,
-    variant = "default",
-    label = undefined,
-    children,
-    type = "button",
-    className: classAppend = "",
-    block = false,
-    icon = undefined,
-    disabled = false,
-}) => {
+                    useButton = true,
+                    to = "#",
+                    onClick = undefined,
+                    variant = "default",
+                    label = undefined,
+                    children,
+                    type = "button",
+                    className: classAppend = "",
+                    block = false,
+                    icon = undefined,
+                    iconSize = undefined,
+                    disabled = false,
+                }) => {
     let className = `btn btn-ln ${classAppend}`;
 
     if (block) {
@@ -42,12 +43,12 @@ const Button = ({
             onClick={onClick}
             disabled={disabled}
         >
-            {icon && <Icon icon={icon} />}
+            {icon && <Icon className="mr-3" icon={icon} size={iconSize}/>}
             {label || children}
         </button>
     ) : (
         <Link to={to} className={className} onClick={onClick}>
-            {icon && <Icon icon={icon} />}
+            {icon && <Icon className="mr-3" icon={icon} size={iconSize}/>}
             {label || children}
         </Link>
     );

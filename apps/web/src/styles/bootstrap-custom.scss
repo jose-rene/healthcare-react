@@ -94,3 +94,8 @@ body {
 .word-break {
     word-break: break-word;
 }
+
+.modal-backdrop.timeout-backdrop.show {
+    opacity: 1;
+    background-color: #fafafa;
+}
