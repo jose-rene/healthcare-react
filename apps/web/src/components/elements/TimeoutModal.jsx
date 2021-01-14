@@ -69,10 +69,11 @@ const TimeoutModal = ({
             <div className="text-muted">You are about to be logged out unless you dismiss this modal.</div>
             {loggedOut ? (
                 <p>Bye</p>
-            ) : (<div className="text-center display-2">
-                <strong className="text-primary mt-2">{formatNumber(minutes, logoutCountdown)}</strong>
-                <span className="text-secondary"> : </span>
-                <span className="text-secondary  mt-2">{formatNumber(seconds) || "00"}</span>
+            ) : (<div className="text-center display-2 count-down">
+                <strong className={`text-${(minutes < 1) ? 'danger' : 'primary'} mt-2`}>{formatNumber(minutes)}</strong>
+                <span className={`text-secondary`}> : </span>
+                <span
+                    className={`text-${minutes < 1 ? 'danger' : 'secondary'}  mt-2`}>{formatNumber(seconds) || "00"}</span>
             </div>)}
             <div className="text-center mt-3">
                 <Button block variant="primary" onClick={onHide} icon="cancel" label="Cancel" iconSize="1x"/>
