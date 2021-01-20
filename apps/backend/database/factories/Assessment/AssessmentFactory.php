@@ -4,8 +4,9 @@ namespace Database\Factories\Assessment;
 
 use App\Models\Assessment\Assessment;
 use App\Models\Assessment\Questionnaire;
+use App\Models\Request;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class AssessmentFactory extends Factory
 {
@@ -24,7 +25,9 @@ class AssessmentFactory extends Factory
     public function definition()
     {
         return [
+            'user_id'          => User::factory()->create()->id,
             'questionnaire_id' => Questionnaire::factory()->create()->id,
+            'request_id'       => Request::factory()->create()->id,
         ];
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Library\Validation;
 
+use Arr;
 use Illuminate\Support\MessageBag;
+use Str;
 
 class Validator extends \Illuminate\Validation\Validator
 {
@@ -12,6 +14,54 @@ class Validator extends \Illuminate\Validation\Validator
      * @var bool
      */
     protected $stopOnFail = true;
+
+    /**
+     * Flag to stop the validator after the first field failure.
+     *
+     * @var bool
+     */
+    protected $bailOnFail = false;
+
+    /**
+     * Get the attributes and values that were validated.
+     *
+     * @return array
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function validated()
+    {
+        if ($this->invalid()) {
+            // throw new ValidationException($this);
+            // dd($this->failedRules);
+        }
+
+        $results = [];
+
+        $missingValue = Str::random(10);
+
+        foreach (array_keys($this->getRules()) as $key) {
+            $value = data_get($this->getData(), $key, $missingValue);
+
+            if ($value !== $missingValue) {
+                Arr::set($results, $key, $value);
+            }
+        }
+
+        $data = $this->replacePlaceholders($results);
+        $errors = $this->errors()->toArray();
+        // get only valid data
+        $data = array_filter($data, function ($key) use ($errors) {
+            return !isset($errors[$key]);
+        }, \ARRAY_FILTER_USE_KEY);
+
+        return $data;
+    }
+
+    public function validateInArray($attribute, $value, $parameters)
+    {
+        return $value == 'foo';
+    }
 
     /**
      * Determine if the data passes the validation rules.
@@ -45,8 +95,12 @@ class Validator extends \Illuminate\Validation\Validator
 
                 if ($this->shouldStopValidating($attribute)) {
                     // stop all validation when an attribute fails
-                    if ($this->stopOnFail) {
+                    if ($this->bailOnFail) {
                         break 2;
+                    }
+                    // stop validation when an attribute fails
+                    if ($this->stopOnFail) {
+                        break;
                     }
                     break;
                 }
@@ -71,6 +125,18 @@ class Validator extends \Illuminate\Validation\Validator
     public function setStopOnFail(bool $stopOnFail)
     {
         $this->stopOnFail = $stopOnFail;
+
+        return $this;
+    }
+
+    /**
+     * Set the bail on fail setting, chainable.
+     *
+     * @return App\Library\Validation\Validator
+     */
+    public function setBailOnFail(bool $bail)
+    {
+        $this->bailOnFail = $bail;
 
         return $this;
     }

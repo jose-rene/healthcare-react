@@ -2,6 +2,7 @@
 
 namespace App\Models\Assessment;
 
+use App\Models\Assessment\Assessment;
 use App\Models\Assessment\Valuelist\Listitem;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,16 @@ class Answer extends Model
     public function question()
     {
         return $this->belongsTo(Question::class);
+    }
+
+    /**
+     * Relationship to assessments.
+     *
+     * @return App\Models\Assessment\Assessment
+     */
+    public function assessment()
+    {
+        return $this->belongsTo(Assessment::class);
     }
 
     /**

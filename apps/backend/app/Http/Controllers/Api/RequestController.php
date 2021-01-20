@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Assessment\QuestionnaireResource;
-use App\Models\Assessment\Questionnaire;
-use Illuminate\Http\Request;
+use App\Http\Resources\RequestResource;
+use App\Models\Request as Request;
+use Illuminate\Http\Request as HttpRequest;
+use Str;
 
-class QuestionnaireController extends Controller
+class RequestController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,15 +17,7 @@ class QuestionnaireController extends Controller
      */
     public function index()
     {
-        // @note this will change, probably just want a list of title / id
-        $questionnaire = Questionnaire::first();
-
-        if (! $questionnaire) {
-            return response()->json(['status' => true, 'message' => 're-results']);
-        }
-
-        // return resource
-        return new QuestionnaireResource($questionnaire);
+        return response()->json(['message' => 'Method not found'], 422);
     }
 
     /**
@@ -41,22 +34,22 @@ class QuestionnaireController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  string  $uuid
+     * @param  \App\Models\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show(Questionnaire $questionnaire)
+    public function show(Request $request)
     {
-        return new QuestionnaireResource($questionnaire);
+        return new RequestResource($request);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, HttpRequest $httpRequest)
     {
         //
     }
@@ -64,10 +57,10 @@ class QuestionnaireController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
         //
     }

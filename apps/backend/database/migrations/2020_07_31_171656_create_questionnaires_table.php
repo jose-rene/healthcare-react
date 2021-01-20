@@ -15,8 +15,10 @@ class CreateQuestionnairesTable extends Migration
     {
         Schema::create('questionnaires', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->index();
             $table->string('title')->default('')->nullable(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

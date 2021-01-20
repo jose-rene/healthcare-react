@@ -3,6 +3,7 @@
 namespace Database\Factories\Assessment;
 
 use App\Models\Assessment\Answer;
+use App\Models\Assessment\Assessment;
 use App\Models\Assessment\Question;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -24,8 +25,9 @@ class AnswerFactory extends Factory
     public function definition()
     {
         return [
-            'question_id' => Question::factory()->create()->id,
-            'answer'      => $this->faker->sentence(),
+            'assessment_id' => Assessment::factory()->create()->id,
+            'question_id'   => Question::factory()->create()->id,
+            'answer'        => $this->faker->sentence(),
         ];
     }
 }
