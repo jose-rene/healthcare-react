@@ -1,21 +1,25 @@
-import React, {useState} from "react";
-import {connect} from "react-redux";
-import {NavDropdown} from "react-bootstrap";
-import {Link, useLocation} from "react-router-dom";
-import {signOut} from "../actions/authAction";
+import React, { useState } from "react";
+import { connect } from "react-redux";
+import { NavDropdown } from "react-bootstrap";
+import { Link, useLocation } from "react-router-dom";
+import { signOut } from "../actions/authAction";
 import Icon from "../components/elements/Icon";
 import useIdleTimeout from "../hooks/useIdleTimeout";
 import TimeoutModal from "../components/elements/TimeoutModal";
+import { INACTIVITY_TIMEOUT, LOGOUT_COUNTDOWN_TIME } from "../config/Login";
+
 /* eslint-disable jsx-a11y/anchor-is-valid */
-const PageLayout = ({full_name, email, localAuth, signOut, children}) => {
-    const [{showTimeoutModal}, {dismissTimeout}] = useIdleTimeout();
+const PageLayout = ({ full_name, email, localAuth, signOut, children }) => {
+    const [{ showTimeoutModal }, { dismissTimeout }] = useIdleTimeout({
+        timeout: INACTIVITY_TIMEOUT,
+    });
 
     const logOut = (e) => {
         e.preventDefault();
         signOut();
     };
 
-    const [{showMenu}, setMenu] = useState({
+    const [{ showMenu }, setMenu] = useState({
         showMenu: false,
     });
 
@@ -125,16 +129,19 @@ const PageLayout = ({full_name, email, localAuth, signOut, children}) => {
                     </li>
                     <li>
                         <a href="/" title="Logout" onClick={logOut}>
-                            <img src="/images/icons/logout.png" alt="Log Out"/>
+                            <img src="/images/icons/logout.png" alt="Log Out" />
                         </a>
                     </li>
                 </ul>
             </div>
 
-            <div className="content-container">
-                {children}
-            </div>
-            <TimeoutModal show={showTimeoutModal} onHide={dismissTimeout} handleLogout={logOut}/>
+            <div className="content-container">{children}</div>
+            <TimeoutModal
+                show={showTimeoutModal}
+                onHide={dismissTimeout}
+                handleLogout={logOut}
+                logoutCountdown={LOGOUT_COUNTDOWN_TIME}
+            />
         </>
     );
 };
