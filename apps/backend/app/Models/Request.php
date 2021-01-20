@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Models\Assessment;
+namespace App\Models;
 
+use App\Models\Assessment\Assessment;
 use App\Traits\Uuidable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Questionnaire extends Model
+class Request extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -16,23 +17,13 @@ class Questionnaire extends Model
     protected $guarded = ['id'];
 
     /**
-     * Relationship to sections.
-     *
-     * @return Illuminate\Database\Eloquent\Collection of Section
-     */
-    public function sections()
-    {
-        return $this->hasMany(Section::class);
-    }
-
-    /**
      * Relationship to assessments.
      *
-     * @return Illuminate\Database\Eloquent\Collection of Assessments
+     * @return Illuminate\Database\Eloquent\Collection of App\Assessment\Assessment
      */
     public function assessments()
     {
-        return $this->hasMany(Assessment::class);
+        return $this->hasMany(Assessment::class)->orderBy('id', 'desc');
     }
 
     /*

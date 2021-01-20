@@ -19,6 +19,10 @@ class QuestionnaireSeeder extends Seeder
      */
     public function run()
     {
+        $title = 'Favorites Assessment';
+        if (null !== Questionnaire::firstWhere(['title' => $title])) {
+            return;
+        }
         $faker = Faker::create();
         // seed a simple one section form
         $colorlist = Valuelist::create([
@@ -109,7 +113,7 @@ class QuestionnaireSeeder extends Seeder
         $sectionComments->questions()->save($comments);
         // create questionnaire
         $questionnaire = Questionnaire::create([
-            'title' => 'Favorites Assessment',
+            'title' => $title,
         ]);
         // save sections
         $questionnaire->sections()->saveMany([$section, $sectionComments]);

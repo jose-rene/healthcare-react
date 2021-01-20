@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Assessment\Questionnaire;
 use App\Models\User;
 use Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,6 +14,7 @@ class QuestionnaireTest extends TestCase
     use RefreshDatabase;
 
     protected $user;
+    protected $questionnaire;
 
     /**
      * Test index questionnaires route.
@@ -41,7 +43,7 @@ class QuestionnaireTest extends TestCase
             'sections' => [],
         ]);
         // validate expected data
-        $response->assertSee('PCA Assessment');
+        $response->assertSee('Favorites Assessment');
     }
 
     /**
@@ -59,7 +61,7 @@ class QuestionnaireTest extends TestCase
         $response = $this->withHeaders([
             'Accept'           => 'application/json',
             'X-Requested-With' => 'XMLHttpRequest',
-        ])->json('GET', 'v1/questionnaire/1');
+        ])->json('GET', 'v1/questionnaire/' . $this->questionnaire->uuid);
         // validate response code
         $response->assertStatus(200);
 
@@ -74,9 +76,9 @@ class QuestionnaireTest extends TestCase
             'sections' => [],
         ]);
         // contains questions
-        $response->assertJsonFragment(['questions' => []]);
+        $response->assertJsonFragment(['id' => $this->questionnaire->uuid]);
         // validate expected data
-        $response->assertSee('PCA Assessment');
+        $response->assertSee('Favorites Assessment');
     }
 
     protected function setUp(): void
@@ -85,9 +87,10 @@ class QuestionnaireTest extends TestCase
 
         // seed the PCA assessment
         Artisan::call('db:seed', [
-            '--class' => 'Database\Seeders\PcaSeeder',
+            '--class' => 'Database\Seeders\QuestionnaireSeeder',
         ]);
 
+        $this->questionnaire = Questionnaire::first();
         $this->user = User::factory()->create();
     }
 }
