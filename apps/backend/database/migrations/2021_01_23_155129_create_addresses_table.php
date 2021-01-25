@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRequestsTable extends Migration
+class CreateAddressesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,15 @@ class CreateRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('requests', function (Blueprint $table) {
+        Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid')->index();
-            $table->foreignId('member_id');
-            $table->string('auth_id', 128);
-            $table->string('status', 16);
+            $table->morphs('addressable');
+            $table->boolean('is_primary');
+            $table->string('street');
+            $table->string('city');
+            $table->string('county');
+            $table->string('state', 2);
+            $table->string('postal_code', 10);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +34,6 @@ class CreateRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('requests');
+        Schema::dropIfExists('addresses');
     }
 }

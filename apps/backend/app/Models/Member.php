@@ -2,38 +2,31 @@
 
 namespace App\Models;
 
-use App\Models\Assessment\Assessment;
 use App\Traits\Uuidable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Request extends Model
+class Member extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use Uuidable;
 
-    protected $guarded = ['id'];
-
     /**
-     * Relationship to assessments.
-     *
-     * @return Illuminate\Database\Eloquent\Collection of App\Assessment\Assessment
+     * Relationship to requests.
      */
-    public function assessments()
+    public function requests()
     {
-        return $this->hasMany(Assessment::class)->orderBy('id', 'desc');
+        return $this->hasMany(Request::class);
     }
 
     /**
-     * Relationship to members.
-     *
-     * @return Member
+     * Relationship to addresses.
      */
-    public function member()
+    public function addresses()
     {
-        return $this->belongsTo(Member::class);
+        return $this->morphMany(Address::class, 'addressable');
     }
 
     /*
