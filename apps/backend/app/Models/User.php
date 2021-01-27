@@ -95,11 +95,28 @@ class User extends Authenticatable
     {
         ResetPasswordNotification::$createUrlCallback = function ($notifiable, $token) {
             return Arr::get($_SERVER, 'HTTP_ORIGIN', 'dme-cg.com') . '/password/change?' . http_build_query([
-                    'token' => $token,
-                    'email' => $notifiable->getEmailForPasswordReset(),
-                ]);
+                'token' => $token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ]);
         };
 
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    /**
+     * Get the phone number for sms notifications.
+     *
+     * @param \Illuminate\Notifications\Notification $notification
+     * @return string
+     */
+    public function routeNotificationForSms($notification)
+    {
+        if (null === $this->phoneable) {
+            return null;
+        }
+
+        return $this->phonable->filter(function ($value, $key) {
+            return $value->is_mobile;
+        })->first();
     }
 }

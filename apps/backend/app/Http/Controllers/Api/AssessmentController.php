@@ -8,7 +8,6 @@ use App\Http\Resources\Assessment\AssessmentResource;
 use App\Models\Assessment\Assessment;
 use App\Models\Assessment\Questionnaire;
 use App\Models\Request as AppRequest;
-use PDO;
 
 class AssessmentController extends Controller
 {
