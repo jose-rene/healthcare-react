@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\RequestResource;
 use App\Models\Request as Request;
+use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request as HttpRequest;
 use Str;
 
@@ -18,6 +19,26 @@ class RequestController extends Controller
     public function index()
     {
         return response()->json(['message' => 'Method not found'], 422);
+    }
+
+    public function summary()
+    {
+        return response()->json([
+            'new'         => rand(1, 50),
+            'in_progress' => rand(1, 50),
+            'scheduled'   => rand(1, 50),
+            'submitted'   => rand(1, 50),
+        ]);
+    }
+
+    public function inspire()
+    {
+        return response()->json(['message' => Inspiring::quote()]);
+    }
+
+    public function list()
+    {
+        return response()->json([]);
     }
 
     /**

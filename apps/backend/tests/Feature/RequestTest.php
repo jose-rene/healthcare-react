@@ -61,6 +61,32 @@ class RequestTest extends TestCase
             ->assertJson(['id' => $this->request->uuid]);
     }
 
+    /**
+     * Test getting request by id.
+     *
+     * @return void
+     */
+    public function testRouteSummary()
+    {
+        Passport::actingAs(
+            $this->user
+        );
+        // get the request summary for user
+        $response = $this->withHeaders([
+            'Accept'           => 'application/json',
+            'X-Requested-With' => 'XMLHttpRequest',
+        ])->json('GET', 'v1/request/summary');
+        // validate response code and structure
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'new',
+                'in_progress',
+                'scheduled',
+                'submitted',
+            ]);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

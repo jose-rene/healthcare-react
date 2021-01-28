@@ -1,0 +1,63 @@
+.table {
+    th, td {
+      border-top: none;
+    }
+  
+    th {
+      font-size: 1rem;
+      line-height: 1.2rem;
+      color: #475866;
+      font-weight: normal;
+    }
+  
+    td {
+      font-size: 1rem;
+      line-height: 1.2rem;
+      color: #475866;
+    }
+}
+
+select.app-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: #ffffff;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position-x: 96%;
+    background-position-y: 15px;
+}
+
+  .margin-input {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .app-input-filter {
+    width: 100%;
+    max-width: 100%;
+    height: 33px;
+    padding: 8px 10px 10px 8px;
+    border: none;
+    color: #475866;
+    font-weight: normal;
+    box-shadow: none;
+    font-size: 14px;
+    line-height: 12px;
+  }
+  
+  select.app-input-filter {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent;
+    background-color: #ffffff;
+    border-radius: 6px;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position-x: 96%;
+    background-position-y: 4px;
+  }
+  
+  .app-input-filter::placeholder {
+    color: #b8b8b8;
+    font-size: 14px;
+  }
