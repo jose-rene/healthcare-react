@@ -89,6 +89,7 @@ class Activity extends Model
      * Implement onCreated from observable trait, send notifications.
      *
      * @todo This just returns the activity creator user, should use business logic to return actual recipients.
+     * Should also check user notification_prefs to make sure there are notification prefs set.
      *
      * @return array of App/Models/User
      */

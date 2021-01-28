@@ -23,8 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->date('dob')->nullable();
-            $table->boolean('notify_email')->default(1);
-            $table->boolean('notify_sms')->default(0);
+            $table->json('notification_prefs')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

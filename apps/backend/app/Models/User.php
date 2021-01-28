@@ -32,6 +32,7 @@ class User extends Authenticatable
     protected $fillable = [
         'first_name',
         'last_name',
+        'notification_prefs',
         'dob',
         'email',
         'username',
@@ -57,7 +58,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'email_verified_at'  => 'datetime',
+        'notification_prefs' => 'array',
     ];
 
     public function getNameAttribute()

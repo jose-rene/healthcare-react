@@ -32,7 +32,7 @@ class RequestActivity extends Notification
      */
     public function via($notifiable)
     {
-        return 'sms' === $notifiable->notify_sms ? ['sns', 'database'] : ['mail', 'database'];
+        return in_array('sms', $notifiable->notification_prefs) ? ['sms', 'database'] : ['mail', 'database'];
     }
 
     /**
