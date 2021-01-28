@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PrivateRoute from "../route/PrivateRoute";
 import Login from "../pages/Login";
 import Error from "../pages/NotFound";
-import Dash from "../pages/Dash";
+import Home from "../pages/Home";
 import Account from "../pages/Account";
 import Federated from "../pages/Federated";
 import Questionnaire from "../pages/Questionnaire";
@@ -62,7 +62,7 @@ const AppNavigation = ({ setUser, signOut, localAuth, user }) => {
                 <Route path="/password/reset" component={ForgotPassword} />
                 <Route path="/password/change" component={SetForgotPassword} />
                 <PrivateRoute path="/dashboard" authed={authed}>
-                    <Dash />
+                    <Home />
                 </PrivateRoute>
                 <PrivateRoute path="/account" authed={authed}>
                     <Account />

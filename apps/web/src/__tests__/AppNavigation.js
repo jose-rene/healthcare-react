@@ -55,7 +55,7 @@ describe("App Navigation", () => {
         // wait for the state changes
         const welcome = await screen.getByRole("heading", {
             level: 1,
-            name: "Dashboard",
+            name: "Welcome to your Portal",
         });
         // expect to see the dash page
         expect(welcome).toBeTruthy();

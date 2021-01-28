@@ -22,6 +22,10 @@ Route::get('/ssologin/{email}', [LoginController::class, 'requestToken'])->name(
 Route::middleware('auth:api')->group(function ($router) {
     $router->get('/user', 'UserController@profile');
     $router->get('logout', 'LoginController@logout');
+    // request info
+    $router->get('/request/summary', 'RequestController@summary');
+    $router->get('/request/inspire', 'RequestController@inspire');
+    $router->get('/request/list', 'RequestController@inspire');
     // protected crud routes
     Route::apiResource('questionnaire', 'QuestionnaireController');
     Route::apiResource('assessment', 'AssessmentController');

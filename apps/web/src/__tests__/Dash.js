@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import React from "react";
 import { generate as generateRandomString } from "randomstring";
 import { renderWithRouter, screen, fireEvent, wait } from "../testUtils";
-import Dash from "../pages/Dash";
+import Dash from "../pages/Home";
 
 describe("Dashboard Page", () => {
     it("can render with redux state defaults", async () => {
@@ -17,7 +17,7 @@ describe("Dashboard Page", () => {
         // wait for the state changes
         const welcome = await screen.getByRole("heading", {
             level: 1,
-            name: "Dashboard",
+            name: "Welcome to your Portal",
         });
         // expect to see the page
         expect(welcome).toBeTruthy();
