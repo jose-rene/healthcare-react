@@ -2,8 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Member;
 use App\Models\Request;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class RequestFactory extends Factory
 {
@@ -22,7 +24,11 @@ class RequestFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'status'    => 'Received',
+            'auth_id'   => Str::random(13),
+            'member_id' => function () {
+                return Member::factory()->create();
+            },
         ];
     }
 }
