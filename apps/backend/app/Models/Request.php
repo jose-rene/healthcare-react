@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Activity\Activity;
 use App\Models\Assessment\Assessment;
 use App\Traits\Uuidable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +20,7 @@ class Request extends Model
     /**
      * Relationship to assessments.
      *
-     * @return Illuminate\Database\Eloquent\Collection of App\Assessment\Assessment
+     * @return Illuminate\Database\Eloquent\Collection of App\Models\Assessment\Assessment
      */
     public function assessments()
     {
@@ -29,11 +30,21 @@ class Request extends Model
     /**
      * Relationship to members.
      *
-     * @return Member
+     * @return App\Models\Member
      */
     public function member()
     {
         return $this->belongsTo(Member::class);
+    }
+
+    /**
+     * Relationship to activities.
+     *
+     * @return Illuminate\Database\Eloquent\Collection of App\Models\Activity\Activity
+     */
+    public function activities()
+    {
+        return $this->hasMany(Activity::class)->orderBy('id', 'desc');
     }
 
     /*

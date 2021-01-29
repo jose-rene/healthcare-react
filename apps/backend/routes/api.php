@@ -31,6 +31,7 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('assessment', 'AssessmentController');
     Route::apiResource('request', 'RequestController');
     Route::apiResource('member', 'MemberController');
+    Route::apiResource('activity', 'ActivityController');
     // test fmapi route
     Route::get('/fmtest', 'HomeController@fmtest');
 

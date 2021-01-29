@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePhonesTable extends Migration
+class CreateActivityTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,11 @@ class CreatePhonesTable extends Migration
      */
     public function up()
     {
-        Schema::create('phones', function (Blueprint $table) {
+        Schema::create('activity_types', function (Blueprint $table) {
             $table->id();
-            $table->morphs('phoneable');
-            $table->boolean('is_primary')->nullable()->default(1);
-            $table->boolean('is_mobile')->nullable()->default(1);
-            $table->text('number');
+            $table->string('name', 24);
+            $table->string('permission');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -31,6 +28,6 @@ class CreatePhonesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('phones');
+        Schema::dropIfExists('types');
     }
 }
