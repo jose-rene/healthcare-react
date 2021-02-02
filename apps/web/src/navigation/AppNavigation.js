@@ -36,7 +36,7 @@ const AppNavigation = ({ setUser, signOut, localAuth, user }) => {
     useEffect(() => {
         let isMounted = true;
         if (!user.email && localAuth.userToken) {
-            apiService("/user")
+            apiService("/user/profile")
                 .then(({ email, full_name, roles = [] }) => {
                     if (isMounted) {
                         setUser(email, full_name, roles);
