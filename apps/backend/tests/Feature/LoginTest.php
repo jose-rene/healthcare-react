@@ -42,7 +42,7 @@ class LoginTest extends TestCase
             ->assertJsonStructure(['token_type', 'expires_at', 'access_token']);
 
         // Make sure the bearer token is attached to the right user
-        $response = $this->get('/v1/user', [
+        $response = $this->get('/v1/user/profile', [
             'Authorization' => "Bearer {$bearer_token}", // Utilize the bearer token
         ]);
 

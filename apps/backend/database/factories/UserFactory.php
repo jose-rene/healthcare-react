@@ -24,12 +24,13 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'first_name'  => $this->faker->firstName,
-            'middle_name' => $this->faker->boolean ? $this->faker->firstName : null,
-            'last_name'   => $this->faker->lastName,
-            'email'       => $this->faker->unique()->safeEmail,
-            'dob'         => new Carbon($this->faker->dateTimeBetween('-50 years', '-15 Years')),
-            'password'    => bcrypt('password'),
+            'first_name'        => $this->faker->firstName,
+            'middle_name'       => $this->faker->boolean ? $this->faker->firstName : null,
+            'last_name'         => $this->faker->lastName,
+            'email'             => $this->faker->unique()->safeEmail,
+            'dob'               => new Carbon($this->faker->dateTimeBetween('-50 years', '-15 Years')),
+            'email_verified_at' => Carbon::now(),
+            'password'          => bcrypt('password'),
         ];
     }
 }

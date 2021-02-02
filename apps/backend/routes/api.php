@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Resources\MyUserResource;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/ssologin/{email}', [LoginController::class, 'requestToken'])->name('ssologin');
 
 Route::middleware('auth:api')->group(function ($router) {
-    $router->get('/user', 'UserController@profile');
+    $router->get('/user/profile', 'UserController@profile');
     $router->get('logout', 'LoginController@logout');
     // request info
     $router->get('/request/summary', 'RequestController@summary');
@@ -31,6 +30,7 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('assessment', 'AssessmentController');
     Route::apiResource('request', 'RequestController');
     Route::apiResource('member', 'MemberController');
+    Route::apiResource('user', 'UserController');
     // test fmapi route
     Route::get('/fmtest', 'HomeController@fmtest');
 
