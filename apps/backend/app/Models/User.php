@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Traits\Uuidable;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -20,9 +22,9 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property string last_name
  * @link https://github.com/JosephSilber/bouncer#cheat-sheet
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, HasApiTokens, SoftDeletes, HasRolesAndAbilities;
+    use HasFactory, Notifiable, Uuidable, HasApiTokens, SoftDeletes, HasRolesAndAbilities;
 
     /**
      * The attributes that are mass assignable.
@@ -120,5 +122,15 @@ class User extends Authenticatable
         return $this->phonable->filter(function ($value, $key) {
             return $value->is_mobile;
         })->first();
+    }
+
+    /*
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'uuid';
     }
 }

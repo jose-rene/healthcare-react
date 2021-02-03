@@ -33,7 +33,7 @@ class SsoLoginTest extends TestCase
         $response->assertStatus(200)->assertJsonStructure(['token_type', 'expires_at', 'access_token']);
         // test the creditials
         $token = $response->json('access_token');
-        $response = $this->get('/v1/user', [
+        $response = $this->get('/v1/user/profile', [
             'Authorization' => sprintf('Bearer %s', $token),
         ]);
         $response

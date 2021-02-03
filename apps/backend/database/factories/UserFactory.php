@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserFactory extends Factory
@@ -30,7 +31,8 @@ class UserFactory extends Factory
             'email'              => $this->faker->unique()->safeEmail,
             'notification_prefs' => ['mail'],
             'dob'                => new Carbon($this->faker->dateTimeBetween('-50 years', '-15 Years')),
-            'password'           => bcrypt('password'),
+            'email_verified_at'  => Carbon::now(),
+            'password'           => Hash::make('password'),
         ];
     }
 }

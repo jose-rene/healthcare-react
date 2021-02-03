@@ -18,7 +18,6 @@ class CreatePhonesTable extends Migration
             $table->morphs('phoneable');
             $table->boolean('is_primary')->nullable()->default(1);
             $table->boolean('is_mobile')->nullable()->default(1);
-            $table->text('number');
             $table->timestamps();
             $table->softDeletes();
         });

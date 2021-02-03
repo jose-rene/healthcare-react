@@ -6,9 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property string name
- * @property string level
- * @property string title
+ * @OA\Schema(type="object")
  */
 class RoleResource extends JsonResource
 {
@@ -17,6 +15,10 @@ class RoleResource extends JsonResource
      *
      * @param Request $request
      * @return array
+     *
+     *  @OA\Property(property="name",type="name",example="admin")
+     *  @OA\Property(property="level",type="integer",example=54)
+     *  @OA\Property(property="title",type="string",example="Administrator")
      */
     public function toArray($request): array
     {
