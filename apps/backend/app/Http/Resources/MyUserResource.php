@@ -32,7 +32,7 @@ class MyUserResource extends JsonResource
             'email'       => $this->email,
             'dob'         => $this->dob,
 
-            'roles' => new RolesResource($this->roles),
+            'roles' => RoleResource::collection($this->roles),
         ];
     }
 }

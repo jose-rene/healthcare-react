@@ -1,23 +1,28 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { signOut } from '../actions/authAction';
-import { DOCTOR, initializeUser, setUser } from '../actions/userAction';
-import useApiCall from '../hooks/useApiCall';
-import Account from '../pages/Account';
-import Assessment from '../pages/Assessment';
-import Federated from '../pages/Federated';
-import ForgotPassword from '../pages/ForgotPassword';
-import Home from '../pages/Home';
-import Login from '../pages/Login';
-import Error from '../pages/NotFound';
-import Questionnaire from '../pages/Questionnaire';
-import SetForgotPassword from '../pages/SetForgotPassword';
-import PrivateRoute from '../route/PrivateRoute';
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { signOut } from "../actions/authAction";
+import { DOCTOR, initializeUser, setUser } from "../actions/userAction";
+import useApiCall from "../hooks/useApiCall";
+import Account from "../pages/Account";
+import Assessment from "../pages/Assessment";
+import Federated from "../pages/Federated";
+import ForgotPassword from "../pages/ForgotPassword";
+import Home from "../pages/Home";
+import Login from "../pages/Login";
+import Error from "../pages/NotFound";
+import Questionnaire from "../pages/Questionnaire";
+import SetForgotPassword from "../pages/SetForgotPassword";
+import PrivateRoute from "../route/PrivateRoute";
 
-const AppNavigation = ({ user: { authed, initializing }, setUser, localAuth, initializeUser }) => {
+const AppNavigation = ({
+    user: { authed, initializing },
+    setUser,
+    localAuth,
+    initializeUser,
+}) => {
     const [{ loading, data: user = {} }, fireInitializeUser] = useApiCall({
-        url: 'user/profile',
+        url: "user/profile",
     });
 
     useEffect(() => {
@@ -35,6 +40,10 @@ const AppNavigation = ({ user: { authed, initializing }, setUser, localAuth, ini
     }, []);
 
     useEffect(() => {
+        if (!localAuth) {
+            return;
+        }
+
         (async () => {
             try {
                 const response = await fireInitializeUser();
@@ -50,6 +59,12 @@ const AppNavigation = ({ user: { authed, initializing }, setUser, localAuth, ini
         return null;
     }
 
+    let HomeComponent = SOMETHING;
+    switch (reg_type) {
+        case DOCTOR:
+            HomeComponent = DoctorHomeComponent;
+    }
+
     return (
         <BrowserRouter>
             <Switch>
@@ -63,7 +78,10 @@ const AppNavigation = ({ user: { authed, initializing }, setUser, localAuth, ini
                 <PrivateRoute path="/account" authed={authed}>
                     <Account/>
                 </PrivateRoute>
-                <PrivateRoute path="/some/random/doc/route" authed={authed} middleware={[DOCTOR]}>
+                <PrivateRoute
+                    path="/some/random/doc/route"
+                    authed={authed}
+                    middleware={[DOCTOR]}>
                     <Account/>
                 </PrivateRoute>
                 <PrivateRoute path="/questionnaire/:id" authed={authed}>
