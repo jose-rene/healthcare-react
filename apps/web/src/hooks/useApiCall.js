@@ -1,17 +1,17 @@
-import {useEffect, useMemo, useState} from 'react';
-import axios from "axios";
-import AsyncStorage from "@react-native-community/async-storage";
-import {API_URL, GET} from "../config/URLs";
+import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios';
+import { useEffect, useMemo, useState } from 'react';
+import { API_URL, GET } from '../config/URLs';
 
 export default ({
-                    url,
-                    method = GET,
-                    params = undefined,
-                    enableCancelToken = false,
-                    debug = false,
-                    headers = {},
-                    baseURL = API_URL,
-                    hasAuthedUrl = false,
+    url,
+    method = GET,
+    params = undefined,
+    enableCancelToken = false,
+    debug = false,
+    headers = {},
+    baseURL = API_URL,
+    hasAuthedUrl = false,
                     ...otherOptions
                 }) => {
     const {
@@ -54,27 +54,32 @@ export default ({
         let _configs = config;
 
         if (config_override) {
-            _configs = {...config, ...config_override};
+            _configs = { ...config, ...config_override };
             persist_changes && setConfig(_configs);
         }
 
         if (request_params) {
-            _configs = {...config, ...formatParams(request_params, _configs.method)};
+            _configs = { ...config, ...formatParams(request_params, _configs.method) };
             persist_changes && setConfig(_configs);
         }
 
-        if (_hasAuthedUrl && _configs.headers['Authorization']) {
-            _configs.url = `authed/${config.url}`;
+        try {
+            const jwtToken = await AsyncStorage.getItem('@dme.login.access_token');
+
+            if (jwtToken) {
+                _configs.headers['Authorization'] = `Bearer ${jwtToken}`;
+            }
+        } catch (e) {
         }
 
         setError(false);
         setLoading(true);
 
-        debug && console.info('useService.fire', {_configs})
+        debug && console.info('useService.fire', { _configs });
 
         try {
-            const {data = 'missing'} = await axios(_configs);
-            debug && console.info('useService.fired.resolve', {data})
+            const { data = 'missing' } = await axios(_configs);
+            debug && console.info('useService.fired.resolve', { data });
             setData(data);
             return data;
         } catch (err) {

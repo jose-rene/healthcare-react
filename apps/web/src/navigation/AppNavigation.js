@@ -1,79 +1,74 @@
-import React, { useEffect } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { connect } from "react-redux";
-import PrivateRoute from "../route/PrivateRoute";
-import Login from "../pages/Login";
-import Error from "../pages/NotFound";
-import Home from "../pages/Home";
-import Account from "../pages/Account";
-import Federated from "../pages/Federated";
-import Questionnaire from "../pages/Questionnaire";
-import apiService from "../services/apiService";
-import { setUser } from "../actions/userAction";
-import { signOut } from "../actions/authAction";
-import ForgotPassword from "../pages/ForgotPassword";
-import SetForgotPassword from "../pages/SetForgotPassword";
-import Assessment from "../pages/Assessment";
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { signOut } from '../actions/authAction';
+import { DOCTOR, initializeUser, setUser } from '../actions/userAction';
+import useApiCall from '../hooks/useApiCall';
+import Account from '../pages/Account';
+import Assessment from '../pages/Assessment';
+import Federated from '../pages/Federated';
+import ForgotPassword from '../pages/ForgotPassword';
+import Home from '../pages/Home';
+import Login from '../pages/Login';
+import Error from '../pages/NotFound';
+import Questionnaire from '../pages/Questionnaire';
+import SetForgotPassword from '../pages/SetForgotPassword';
+import PrivateRoute from '../route/PrivateRoute';
 
-const AppNavigation = ({ setUser, signOut, localAuth, user }) => {
-    // if the server returns unauthorized, @todo handle logic for this in apiService hook so it doesn't effect login
-    /* axios.interceptors.response.use(
-        (response) => {
-            return response;
-        },
-        (error) => {
-            if (
-                !error.response ||
-                (error?.response && error.response.status === 401)
-            ) {
-                // console.log("signout");
-                signOut();
-            }
-            return Promise.reject(error);
-        }
-    ); */
+const AppNavigation = ({ user: { authed, initializing }, setUser, localAuth, initializeUser }) => {
+    const [{ loading, data: user = {} }, fireInitializeUser] = useApiCall({
+        url: 'user/profile',
+    });
 
     useEffect(() => {
-        let isMounted = true;
-        if (!user.email && localAuth.userToken) {
-            apiService("/user/profile")
-                .then(({ email, full_name, roles = [] }) => {
-                    if (isMounted) {
-                        setUser(email, full_name, roles);
-                    }
-                })
-                .catch((e) => {
-                    console.log(e);
-                });
-        }
-        return () => {
-            isMounted = false;
-        };
+        /**
+         * on page load call the api to refresh the redux storage
+         */
+        (async () => {
+            try {
+                const response = await fireInitializeUser();
+                initializeUser(response);
+            } catch (e) {
+                initializeUser();
+            }
+        })();
+    }, []);
+
+    useEffect(() => {
+        (async () => {
+            const response = await fireInitializeUser();
+            initializeUser(response);
+        })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [localAuth]);
 
-    const authed = localAuth.userToken ? 1 : 0;
+    if (loading || initializing) {
+        return null;
+    }
 
     return (
         <BrowserRouter>
             <Switch>
-                <Route path="/" component={Login} exact />
-                <Route path="/sso" component={Federated} />
-                <Route path="/password/reset" component={ForgotPassword} />
-                <Route path="/password/change" component={SetForgotPassword} />
+                <Route path="/" component={Login} exact/>
+                <Route path="/sso" component={Federated}/>
+                <Route path="/password/reset" component={ForgotPassword}/>
+                <Route path="/password/change" component={SetForgotPassword}/>
                 <PrivateRoute path="/dashboard" authed={authed}>
-                    <Home />
+                    <Home/>
                 </PrivateRoute>
                 <PrivateRoute path="/account" authed={authed}>
-                    <Account />
+                    <Account/>
+                </PrivateRoute>
+                <PrivateRoute path="/some/random/doc/route" authed={authed} middleware={[DOCTOR]}>
+                    <Account/>
                 </PrivateRoute>
                 <PrivateRoute path="/questionnaire/:id" authed={authed}>
-                    <Questionnaire />
+                    <Questionnaire/>
                 </PrivateRoute>
                 <PrivateRoute path="/assessment/:id" authed={authed}>
-                    <Assessment />
+                    <Assessment/>
                 </PrivateRoute>
-                <Route component={Error} />
+                <Route component={Error}/>
             </Switch>
         </BrowserRouter>
     );
@@ -86,6 +81,6 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = { setUser, signOut };
+const mapDispatchToProps = { setUser, signOut, initializeUser };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppNavigation);
