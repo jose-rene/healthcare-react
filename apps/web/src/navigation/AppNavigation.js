@@ -36,8 +36,12 @@ const AppNavigation = ({ user: { authed, initializing }, setUser, localAuth, ini
 
     useEffect(() => {
         (async () => {
-            const response = await fireInitializeUser();
-            initializeUser(response);
+            try {
+                const response = await fireInitializeUser();
+                initializeUser(response);
+            } catch (e) {
+                initializeUser();
+            }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [localAuth]);

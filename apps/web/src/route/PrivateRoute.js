@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 import { checkMiddleware } from '../helpers/user';
 
-const PrivateRoute = ({ children, authed, middleware, roles, ...rest }, context) => {
+const PrivateRoute = ({ children, authed, middleware = false, roles, ...rest }, context) => {
     if (middleware && !checkMiddleware(middleware, roles)) {
         window.location.href = '/dashboard?access_denied';
         return false;
