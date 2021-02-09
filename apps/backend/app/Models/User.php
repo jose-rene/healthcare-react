@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\UserType\ClinicalServicesUser;
+use App\Models\UserType\EngineeringUser;
+use App\Models\UserType\HealthplanUser;
 use App\Traits\Uuidable;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -64,14 +67,55 @@ class User extends Authenticatable implements MustVerifyEmail
         'notification_prefs' => 'array',
     ];
 
+    protected static $userTypeMap = [
+        1 => 'EngineeringUser',
+        2 => 'HealthplanUser',
+        3 => 'ClinicalServicesUser',
+    ];
+
     public function getNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
     }
 
+    /**
+     * Relationship to phones.
+     *
+     * @return Illuminate\Database\Eloquent\Collection of App\Models\Phone
+     */
     public function phones()
     {
         return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    /**
+     * Relationship to ClinicalServices User Type.
+     *
+     * @return App\Models\UserType\ClinicalServicesUser
+     */
+    public function clinicalServicesUser()
+    {
+        return $this->hasOne(ClinicalServicesUser::class);
+    }
+
+    /**
+     * Relationship to Healthplan User Type.
+     *
+     * @return App\Models\UserType\HealthplanUser
+     */
+    public function healthplanUser()
+    {
+        return $this->hasOne(HealthplanUser::class);
+    }
+
+    /**
+     * Relationship to Engineering User Type.
+     *
+     * App\Models\UserType\EngineeringUser
+     */
+    public function engineeringUser()
+    {
+        return $this->hasOne(EngineeringUser::class);
     }
 
     /**
@@ -84,9 +128,28 @@ class User extends Authenticatable implements MustVerifyEmail
         return sprintf('%s %s', $this->first_name, $this->last_name);
     }
 
+    /**
+     * Returns the name of the user type class.
+     *
+     * @return string
+     */
+    public function getUserTypeNameAttribute()
+    {
+        return empty($this->user_type) || !isset(self::$userTypeMap[$this->user_type]) ? '' : self::$userTypeMap[$this->user_type];
+    }
+
     public function OathClients()
     {
         return $this->hasMany(OathClients::class);
+    }
+
+    public static function mapType($className)
+    {
+        if (false === ($key = array_search($className, self::$userTypeMap))) {
+            return 0;
+        }
+
+        return $key;
     }
 
     /**

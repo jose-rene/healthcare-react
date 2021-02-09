@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\UserType\EngineeringUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Passport\Passport;
@@ -48,11 +49,10 @@ class UserTest extends TestCase
         // fetch the user profile
         $response = $this->get('/v1/user/' . $this->user->uuid);
 
+        // will have the field gitlab_name for an engineering user
         $response
             ->assertOk()
-            ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'roles']);
-
-        // dd($response->getContent());
+            ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'gitlab_name', 'roles']);
 
         $this->assertEquals($this->user->email, $response->json('email'));
     }
@@ -71,7 +71,7 @@ class UserTest extends TestCase
             'first_name' => $this->faker->firstName,
             'last_name'  => $this->faker->lastName,
             'email'      => $this->faker->unique()->safeEmail,
-            'password'   => preg_replace('~[^a-zA-Z0-9!_:\~#@\^\*\.\,\(\)\{\}\[\]\+\-\$]~', '!', $this->faker->password),
+            'password'   => str_pad(preg_replace('~[^a-zA-Z0-9!_:\~#@\^\*\.\,\(\)\{\}\[\]\+\-\$]~', '', $this->faker->password), 8, '!'),
             'phone'      => $this->faker->phoneNumber,
         ];
         // create the user with data
@@ -157,5 +157,7 @@ class UserTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
+        // add user type engineering
+        $this->user->engineeringUser()->save(EngineeringUser::factory()->create());
     }
 }

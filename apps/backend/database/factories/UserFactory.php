@@ -6,7 +6,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
@@ -25,6 +24,7 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
+            'user_type'          => User::mapType('EngineeringUser'),
             'first_name'         => $this->faker->firstName,
             'middle_name'        => $this->faker->boolean ? $this->faker->firstName : null,
             'last_name'          => $this->faker->lastName,
