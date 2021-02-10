@@ -28,8 +28,12 @@ const Login = ({
         if (loading) {
             return false;
         }
-        const { profile } = await authUser(data, { loadProfile: true });
-        await initializeUser(profile);
+        try {
+            const { profile } = await authUser(data, { loadProfile: true });
+            await initializeUser(profile);
+        } catch (e) {
+            console.log("onSubmit", e);
+        }
     };
 
     return authed ? <Redirect to={redirect}/> : (

@@ -13,7 +13,7 @@ export default ({
     baseURL = API_URL,
     hasAuthedUrl = false,
     defaultData = {},
-}) => {
+} = {}) => {
     const {
         REACT_APP_API_ID: ClientId = undefined,
         REACT_APP_API_SECRET: ClientSecret = undefined,

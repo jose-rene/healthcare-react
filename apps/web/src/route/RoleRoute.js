@@ -29,12 +29,8 @@ export const RoleRouteRouter = ({
     );
 };
 
-const mapStateToProps = ({ user: { primaryRole } }) => {
-    console.log("RoleRouteRouter.primaryRole", { primaryRole });
-
-    return ({
-        primaryRole,
-    });
-};
+const mapStateToProps = ({ user: { primaryRole } }) => ({
+    primaryRole,
+});
 
 export default connect(mapStateToProps)(RoleRouteRouter);

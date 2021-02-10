@@ -16,12 +16,12 @@ const PrivateRoute = ({
         window.location.href = "/access-denied";
         return false;
     }
-    // authed is passed down from parent component, from redux state auth userToken
 
-    return !authed ? <Redirect
-        to={{ pathname: "/", state: { from: location } }}/> : (
-        <Route{...rest} render={({}) => children}/>
-    );
+    // authed is passed down from parent component, from redux state auth userToken
+    return !authed ?
+        <Redirect to={{ pathname: "/", state: { from: location } }}/> : (
+            <Route{...rest} render={({}) => children}/>
+        );
 };
 
 const mapStateToProps = ({ user: { roles, authed } }) => ({

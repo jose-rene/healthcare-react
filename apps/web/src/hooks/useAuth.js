@@ -1,7 +1,6 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import { useState } from "react";
-import { AUTH_TOKEN_NAME, GET, POST } from "../config/URLs";
-import apiService from "../services/apiService";
+import { AUTH_TOKEN_NAME, POST } from "../config/URLs";
 import useApiCall from "./useApiCall";
 
 const useAuth = () => {
@@ -12,6 +11,7 @@ const useAuth = () => {
         url: "login",
         method: POST,
     });
+    const [{ loading: searchPathUrlLoading }, fireUrl] = useApiCall();
 
     const [authState, setAuthed] = useState({
         tokenLoading: true,
@@ -39,10 +39,6 @@ const useAuth = () => {
                 expires_at,
             } = response;
 
-            if (!access_token) {
-                throw "not-authed";
-            }
-
             await Promise.all([
                 await AsyncStorage.setItem(AUTH_TOKEN_NAME, access_token),
                 await AsyncStorage.setItem("@dme.login.token_type", token_type),
@@ -65,13 +61,23 @@ const useAuth = () => {
 
             return { ...authState };
         } catch (err) {
-            setAuthed({
-                ...authState,
-                tokenLoading: false,
-                authToken: null,
-                loading: false,
-                error: err,
-            });
+            if (err.response.status == 401) {
+                setAuthed({
+                    ...authState,
+                    tokenLoading: false,
+                    authToken: null,
+                    loading: false,
+                    error: "Bad Username/ Password",
+                });
+            } else {
+                setAuthed({
+                    ...authState,
+                    tokenLoading: false,
+                    authToken: null,
+                    loading: false,
+                    error: err,
+                });
+            }
         }
     };
 
@@ -95,13 +101,12 @@ const useAuth = () => {
                 return;
             }
             try {
-                data = await apiService(searchParams.get("path"), {
+                data = await fireUrl({
+                    url: searchParams.get("path"),
                     params: {
                         expires: searchParams.get("expires"),
                         signature: searchParams.get("signature"),
                     },
-                    method: GET,
-                    // baseUrl: BASE_URL,
                 });
             } catch (err) {
                 setAuthed((prevState) => ({
@@ -148,7 +153,7 @@ const useAuth = () => {
     };
 
     return [
-        { ...authState, userLoading, authLoading },
+        { ...authState, userLoading, authLoading, searchPathUrlLoading },
         { authUser, authSsoUser }];
 };
 
