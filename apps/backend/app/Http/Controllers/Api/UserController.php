@@ -104,7 +104,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\User
+     * @param User
      * @return Response
      *
      * @OA\Get(
@@ -271,5 +271,16 @@ class UserController extends Controller
     public function profile(Request $request): MyUserResource
     {
         return new MyUserResource($request->user());
+    }
+
+    public function profileSave(Request $request)
+    {
+        $user = $request->user();
+
+        $data = $request->except('password', 'roles');
+
+        $user->update($data);
+
+        return new MyUserResource($user);
     }
 }

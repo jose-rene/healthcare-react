@@ -1,13 +1,8 @@
 import React from "react";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
-import useApiService from "../../hooks/useApiService";
 import "../../styles/AlertList.scss";
 
 const List = () => {
-    /* const [{ data, loading, error }] = useApiService({
-        route: "alert/list",
-    }); */
-
     return (
         <>
             <div className="box-same-line">

@@ -1,9 +1,18 @@
-import { useState } from "react";
 import AsyncStorage from "@react-native-community/async-storage";
+import { useState } from "react";
+import { AUTH_TOKEN_NAME, GET, POST } from "../config/URLs";
 import apiService from "../services/apiService";
-import { GET, POST, AUTH_TOKEN_NAME, BASE_URL } from "../config/URLs";
+import useApiCall from "./useApiCall";
 
 const useAuth = () => {
+    const [{ loading: userLoading }, fireLoadProfile] = useApiCall({
+        url: "user/profile",
+    });
+    const [{ loading: authLoading }, fireAuth] = useApiCall({
+        url: "login",
+        method: POST,
+    });
+
     const [authState, setAuthed] = useState({
         tokenLoading: true,
         authToken: null,
@@ -11,56 +20,59 @@ const useAuth = () => {
         error: "",
     });
 
-    const authUser = ({ email, password }) => {
-        const doAuth = async () => {
-            let data = null;
-            try {
-                data = await apiService("login", {
-                    params: { email, password },
-                    method: POST,
-                });
-            } catch (err) {
-                setAuthed((prevState) => ({
-                    ...prevState,
-                    tokenLoading: false,
-                    authToken: null,
-                    loading: false,
-                    error: err,
-                }));
-            }
-
-            if (data && "access_token" in data) {
-                await AsyncStorage.setItem(AUTH_TOKEN_NAME, data.access_token);
-                await AsyncStorage.setItem(
-                    "@dme.login.token_type",
-                    data.token_type
-                );
-                await AsyncStorage.setItem(
-                    "@dme.login.expires_at",
-                    data.expires_at
-                );
-                // update state
-                setAuthed((prevState) => ({
-                    ...prevState,
-                    tokenLoading: false,
-                    authToken: data.access_token,
-                    loading: false,
-                    error: "",
-                }));
-            } else {
-                setAuthed((prevState) => ({
-                    ...prevState,
-                    tokenLoading: false,
-                    authToken: null,
-                    loading: false,
-                }));
-            }
-        };
+    const authUser = async (
+        { email, password }, { loadProfile = false } = {}) => {
+        // set loading
         setAuthed((prevState) => ({
             ...prevState,
             loading: true,
         }));
-        doAuth().then();
+
+        try {
+            const response = await fireAuth({
+                params: { email, password },
+            });
+
+            const {
+                access_token,
+                token_type,
+                expires_at,
+            } = response;
+
+            if (!access_token) {
+                throw "not-authed";
+            }
+
+            await Promise.all([
+                await AsyncStorage.setItem(AUTH_TOKEN_NAME, access_token),
+                await AsyncStorage.setItem("@dme.login.token_type", token_type),
+                await AsyncStorage.setItem("@dme.login.expires_at", expires_at),
+            ]);
+
+            // update state
+            setAuthed((prevState) => ({
+                ...prevState,
+                tokenLoading: false,
+                authToken: access_token,
+                loading: false,
+                error: "",
+            }));
+
+            if (loadProfile) {
+                const profile = await fireLoadProfile();
+                return { ...authState, profile };
+            }
+
+            return { ...authState };
+        } catch (err) {
+            setAuthed({
+                ...authState,
+                tokenLoading: false,
+                authToken: null,
+                loading: false,
+                error: err,
+            });
+        }
     };
 
     const authSsoUser = ({ search }) => {
@@ -105,11 +117,11 @@ const useAuth = () => {
                 await AsyncStorage.setItem(AUTH_TOKEN_NAME, data.access_token);
                 await AsyncStorage.setItem(
                     "@dme.login.token_type",
-                    data.token_type
+                    data.token_type,
                 );
                 await AsyncStorage.setItem(
                     "@dme.login.expires_at",
-                    data.expires_at
+                    data.expires_at,
                 );
                 // update state
                 setAuthed((prevState) => ({
@@ -135,26 +147,9 @@ const useAuth = () => {
         doAuth().then();
     };
 
-    const loadAuth = () => {
-        const load = async () => {
-            let result = null;
-            try {
-                result = await AsyncStorage.getItem(AUTH_TOKEN_NAME);
-            } catch (error) {
-                // @todo can add error to state if it is needed
-                result = null;
-            }
-            setAuthed((prevState) => ({
-                ...prevState,
-                tokenLoading: false,
-                authToken: result || null,
-            }));
-        };
-
-        load().then();
-    };
-
-    return [authState, { loadAuth, authUser, authSsoUser }];
+    return [
+        { ...authState, userLoading, authLoading },
+        { authUser, authSsoUser }];
 };
 
 export default useAuth;

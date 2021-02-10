@@ -32,7 +32,8 @@ class MyUserResource extends JsonResource
             'email'       => $this->email,
             'dob'         => $this->dob,
 
-            'roles' => RoleResource::collection($this->roles),
+            'roles'        => RoleResource::collection($this->roles),
+            'primary_role' => $this->primary_role ?? $this->roles->first()->name ?? '',
         ];
     }
 }

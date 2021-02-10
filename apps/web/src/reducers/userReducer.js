@@ -1,11 +1,13 @@
-import { CLEAR_USER, FETCH_USER, INITIALIZE_USER } from '../actions/userAction';
+import { get } from "lodash";
+import { CLEAR_USER, FETCH_USER, INITIALIZE_USER } from "../actions/userAction";
 
 const initialState = {
     initializing: true,
     authed: false,
-    email: '',
-    full_name: '',
+    email: "",
+    full_name: "",
     roles: [],
+    primaryRole: undefined,
 };
 
 export default function (state = initialState, action) {
@@ -13,12 +15,25 @@ export default function (state = initialState, action) {
 
     switch (action.type) {
         case INITIALIZE_USER:
-            return { ...state, initializing: false, ...user, authed: !!user.email };
+            const { primary_role = false, ...userProps } = user;
+            const primaryRole = primary_role || get(user, "roles.0", false);
+
+            return {
+                ...state,
+                initializing: false, ...userProps,
+                authed: !!user.email,
+                primaryRole,
+            };
         case FETCH_USER:
-            return { ...state, email: action.email, full_name: action.full_name, roles: action.roles || [] };
+            return {
+                ...state,
+                email: action.email,
+                full_name: action.full_name,
+                roles: action.roles || [],
+            };
 
         case CLEAR_USER:
-            return { ...state, ...initialState };
+            return { ...initialState };
 
         default:
             return { ...state };

@@ -1,12 +1,16 @@
-import React from "react";
-import Button from "../inputs/Button";
-import useApiService from "../../hooks/useApiService";
+import React, { useEffect } from "react";
+import useApiCall from "../../hooks/useApiCall";
 import "../../styles/RequestList.scss";
+import Button from "../inputs/Button";
 
 const List = () => {
-    const [{ data, loading, error }] = useApiService({
+    const [{ data, loading }, fireRequestList] = useApiCall({
         route: "request/list",
     });
+
+    useEffect(() => {
+        // fireRequestList();
+    }, []);
 
     return (
         <>

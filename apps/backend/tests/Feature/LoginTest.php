@@ -30,10 +30,15 @@ class LoginTest extends TestCase
     public function testApiLogin()
     {
         // Make sure I can login
-        $response = $this->post('/v1/login', [
-            'email'    => $this->user->email,
-            'password' => 'password',
-        ]);
+        $response = $this->post(
+            '/v1/login',
+            [
+                'email' => $this->user->email,
+                'password' => 'password',
+            ]
+        );
+
+        $this->user->assign('admin');
 
         $bearer_token = $response->json('access_token');
 
@@ -42,9 +47,12 @@ class LoginTest extends TestCase
             ->assertJsonStructure(['token_type', 'expires_at', 'access_token']);
 
         // Make sure the bearer token is attached to the right user
-        $response = $this->get('/v1/user/profile', [
-            'Authorization' => "Bearer {$bearer_token}", // Utilize the bearer token
-        ]);
+        $response = $this->get(
+            '/v1/user/profile',
+            [
+                'Authorization' => "Bearer {$bearer_token}", // Utilize the bearer token
+            ]
+        );
 
         $response
             ->assertOk()
@@ -52,8 +60,15 @@ class LoginTest extends TestCase
 
         $this->assertEquals($this->user->email, $response->json('email'));
 
+        // even thou the primary_role value is not set explicitly make sure
+        // its pulled from the assigned role.
+        $this->assertEquals('admin', $response->json('primary_role'));
+
         // test attribute full name
-        $this->assertEquals(sprintf('%s %s', $this->user->first_name, $this->user->last_name), $response->json('full_name'));
+        $this->assertEquals(
+            sprintf('%s %s', $this->user->first_name, $this->user->last_name),
+            $response->json('full_name')
+        );
     }
 
     /**

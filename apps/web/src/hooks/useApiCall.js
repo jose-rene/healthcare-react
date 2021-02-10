@@ -1,7 +1,7 @@
-import AsyncStorage from '@react-native-community/async-storage';
-import axios from 'axios';
-import { useEffect, useMemo, useState } from 'react';
-import { API_URL, GET } from '../config/URLs';
+import AsyncStorage from "@react-native-community/async-storage";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { API_URL, GET } from "../config/URLs";
 
 export default ({
     url,
@@ -12,19 +12,23 @@ export default ({
     headers = {},
     baseURL = API_URL,
     hasAuthedUrl = false,
-                    ...otherOptions
-                }) => {
+    defaultData = {},
+}) => {
     const {
         REACT_APP_API_ID: ClientId = undefined,
         REACT_APP_API_SECRET: ClientSecret = undefined,
     } = process.env;
 
     const [cancelToken, setCancelToken] = useState(null);
-    const [data, setData] = useState({});
+    const [data, setData] = useState(defaultData);
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const formatParams = (params, _method = method) => ({[_method == GET ? 'params' : 'data']: params});
+    const formatParams = (params, _method = method) => ({
+        [_method === GET
+            ? "params"
+            : "data"]: params,
+    });
 
     const [config, setConfig] = useState({
         url,
@@ -115,14 +119,14 @@ export default ({
         debug && console.info('useService.fired.construct', {config})
     }, []);
 
-    useMemo(() => {
-        setConfig({...config, url})
-        debug && console.info('useService.useMemo.url', {config})
+    useEffect(() => {
+        setConfig({ ...config, url });
+        debug && console.info("useService.useMemo.url", { config });
     }, [url]);
 
-    useMemo(() => {
-        setConfig({...config, ...formatParams(params)})
-        debug && console.info('useService.useMemo.params', {config})
+    useEffect(() => {
+        setConfig({ ...config, ...formatParams(params) });
+        debug && console.info("useService.useMemo.params", { config });
     }, [params]);
 
     return [{loading, data, error, cancelToken}, fire];
