@@ -38,10 +38,10 @@ export default ({
             ...{
                 ClientId,
                 ClientSecret,
-                "content-type": 'application/json',
+                "content-type": "application/json",
             },
             // Merge headers passed in with the presets
-            ...headers
+            ...headers,
         },
 
         cancelToken,
@@ -49,12 +49,27 @@ export default ({
         ...formatParams(params),
     });
 
+    //  axios.interceptors.response.use(
+    // (response) => {
+    //     return response;
+    // },
+    // (error) => {
+    //     if (
+    //         error.request.url != 'login' &&
+    //         (error?.response && error.response.status === 401)
+    //     ) {
+    //         // console.log("signout");
+    //         signOut();
+    //     }
+    //     return Promise.reject(error);
+    // });
+
     const fire = async ({
-                            params: request_params = false,
-                            persist_changes = true,
-                            hasAuthedUrl: _hasAuthedUrl = hasAuthedUrl,
-                            ...config_override
-                        } = {}) => {
+        params: request_params = false,
+        persist_changes = true,
+        hasAuthedUrl: _hasAuthedUrl = hasAuthedUrl,
+        ...config_override
+    } = {}) => {
         let _configs = config;
 
         if (config_override) {
@@ -63,15 +78,18 @@ export default ({
         }
 
         if (request_params) {
-            _configs = { ...config, ...formatParams(request_params, _configs.method) };
+            _configs = {
+                ...config, ...formatParams(request_params, _configs.method),
+            };
             persist_changes && setConfig(_configs);
         }
 
         try {
-            const jwtToken = await AsyncStorage.getItem('@dme.login.access_token');
+            const jwtToken = await AsyncStorage.getItem(
+                "@dme.login.access_token");
 
             if (jwtToken) {
-                _configs.headers['Authorization'] = `Bearer ${jwtToken}`;
+                _configs.headers["Authorization"] = `Bearer ${jwtToken}`;
             }
         } catch (e) {
         }
@@ -79,15 +97,15 @@ export default ({
         setError(false);
         setLoading(true);
 
-        debug && console.info('useService.fire', { _configs });
+        debug && console.info("useService.fire", { _configs });
 
         try {
-            const { data = 'missing' } = await axios(_configs);
-            debug && console.info('useService.fired.resolve', { data });
+            const { data = "missing" } = await axios(_configs);
+            debug && console.info("useService.fired.resolve", { data });
             setData(data);
             return data;
         } catch (err) {
-            debug && console.info('useService.fired.reject', {err})
+            debug && console.info("useService.fired.reject", { err });
             setError(err);
             throw(err);
         } finally {
@@ -98,11 +116,12 @@ export default ({
     useEffect(() => {
         (async () => {
             try {
-                const jwtToken = await AsyncStorage.getItem("@dme.login.access_token");
+                const jwtToken = await AsyncStorage.getItem(
+                    "@dme.login.access_token");
 
                 if (jwtToken) {
                     const new_config = config;
-                    new_config.headers['Authorization'] = `Bearer ${jwtToken}`;
+                    new_config.headers["Authorization"] = `Bearer ${jwtToken}`;
 
                     setConfig(new_config);
                 }
@@ -116,7 +135,7 @@ export default ({
             }
         })();
 
-        debug && console.info('useService.fired.construct', {config})
+        debug && console.info("useService.fired.construct", { config });
     }, []);
 
     useEffect(() => {
@@ -129,5 +148,5 @@ export default ({
         debug && console.info("useService.useMemo.params", { config });
     }, [params]);
 
-    return [{loading, data, error, cancelToken}, fire];
+    return [{ loading, data, error, cancelToken }, fire];
 }

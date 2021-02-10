@@ -5,7 +5,6 @@ import PageAlert from "./PageAlert";
 const BroadcastAlert = () => {
     const [{ data: { message = false } }, fireCall] = useApiCall({
         url: "request/inspire",
-        defaultData: {},
     });
 
     useEffect(() => {
