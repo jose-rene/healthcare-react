@@ -16,10 +16,7 @@ import SetForgotPassword from "../pages/SetForgotPassword";
 import PrivateRoute from "../route/PrivateRoute";
 import RoleRouteRouter from "../route/RoleRoute";
 
-const AppNavigation = ({
-    initializing,
-    initializeUser,
-}) => {
+const AppNavigation = ({ initializing, initializeUser }) => {
     const [{ loading }, fireInitializeUser] = useApiCall({
         url: "user/profile",
     });
@@ -45,32 +42,34 @@ const AppNavigation = ({
     return (
         <BrowserRouter>
             <Switch>
-                <Route path="/" component={Login} exact/>
-                <Route path="/sso" component={Federated}/>
-                <Route path="/password/reset" component={ForgotPassword}/>
-                <Route path="/password/change" component={SetForgotPassword}/>
-                <RoleRouteRouter
-                    path="/dashboard"
-                    component="Home"
+                <Route path="/" component={Login} exact />
+                <Route path="/sso" component={Federated} />
+                <Route path="/password/reset" component={ForgotPassword} />
+                <Route path="/password/change" component={SetForgotPassword} />
+                <RoleRouteRouter path="/dashboard" component="Home" />
+                <PrivateRoute
+                    path="/access-denied"
+                    component={Error401}
+                    exact
                 />
                 <PrivateRoute path="/account">
-                    <Account/>
+                    <Account />
                 </PrivateRoute>
                 <PrivateRoute
                     path="/some/random/doc/route"
-                    middleware={[DOCTOR]}>
-                    <Account/>
+                    middleware={[DOCTOR]}
+                >
+                    <Account />
                 </PrivateRoute>
                 <PrivateRoute path="/questionnaire/:id">
-                    <Questionnaire/>
+                    <Questionnaire />
                 </PrivateRoute>
                 <PrivateRoute path="/assessment/:id">
-                    <Assessment/>
+                    <Assessment />
                 </PrivateRoute>
 
                 {/* ERROR PAGES */}
-                <Route path="/access-denied" component={Error401} exact/>
-                <Route component={Error}/>
+                <Route component={Error} />
             </Switch>
         </BrowserRouter>
     );
