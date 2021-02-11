@@ -36,51 +36,46 @@ const defaults = {
 module.exports = {
     apps: [
         {
-            name: 'api:serve',
-            ...defaults,
+            name: "api:serve",
 
-            script: 'artisan',
+            script: "artisan",
             args: `serve --host=${API_HOST} --port=${API_PORT}`,
-            interpreter: 'php',
-            exec_mode: 'fork',
-            cwd: './apps/backend',
+            interpreter: "php",
             instances: 1,
+            cwd: "./apps/backend",
 
             env: {
                 // Pass all env variables along
-                ...process.env || {}
+                ...process.env || {},
             },
         },
         {
-            name: 'api:queue',
-            ...defaults,
-
-            script: 'artisan',
-            interpreter: 'php',
-            exec_mode: 'fork',
-            cwd: './apps/backend',
+            name: "api:queue",
+            script: "artisan",
+            interpreter: "php",
+            exec_mode: "fork",
+            instances: 1,
+            cwd: "./apps/backend",
 
             // Options reference: https://pm2.keymetrics.io/docs/usage/application-declaration/
             args: `queue:work --tries 3 `,
-            instances: 1,
             env: {
                 // Pass all env variables along
-                ...process.env || {}
+                ...process.env || {},
             },
         },
         {
             // script name
-            name: 'web:start',
-            cwd: './apps/web',
+            name: "web:start",
+            cwd: "./apps/web",
             // import defaults
-            ...defaults,
-            script: 'node_modules/react-scripts/scripts/start.js',
+            script: "../../node_modules/react-scripts/scripts/start.js",
             args: `${defaultArgs}`,
 
             node_args: `--inspect`,
             // while developing more than one cluster breaks things.
             exec_mode: "fork",
-            instances: '1',
+            instances: "1",
             // nuxt dev watches for changes already
             watch: false,
 
