@@ -4,11 +4,11 @@ cache:
   key:
     files:
       - apps/backend/composer.lock
-#      - apps/web/yarn.lock
+      - apps/web/yarn.lock
   paths:
     - apps/backend/vendor/
 #    - apps/backend/node_modules/
-#    - apps/web/node_modules/
+    - apps/web/node_modules/
 
 stages:
   - build
@@ -17,8 +17,8 @@ stages:
   - dast
 
 # sast / dast jobs
-#include:
-#  - template: Security/SAST.gitlab-ci.yml
+# include:
+  # - template: Security/SAST.gitlab-ci.yml
   # requires ultimate gitlab package
   # - template: DAST.gitlab-ci.yml
 
@@ -102,9 +102,6 @@ web:build:
     - cd apps/web
     # install
     - yarn install
-  artifacts:
-    paths:
-      - 'packages/*/lib'  # all artifacts that are used by tests
 
 web:test:
   stage: test
