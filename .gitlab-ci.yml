@@ -8,7 +8,7 @@ cache:
   paths:
     - apps/backend/vendor/
 #    - apps/backend/node_modules/
-    - apps/web/node_modules/
+#    - apps/web/node_modules/
 
 stages:
   - build
@@ -102,6 +102,9 @@ web:build:
     - cd apps/web
     # install
     - yarn install
+  artifacts:
+    paths:
+      - 'packages/*/lib'  # all artifacts that are used by tests
 
 web:test:
   stage: test
