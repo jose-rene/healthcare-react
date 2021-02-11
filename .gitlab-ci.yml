@@ -17,8 +17,8 @@ stages:
   - dast
 
 # sast / dast jobs
-include:
-  - template: Security/SAST.gitlab-ci.yml
+#include:
+#  - template: Security/SAST.gitlab-ci.yml
   # requires ultimate gitlab package
   # - template: DAST.gitlab-ci.yml
 
