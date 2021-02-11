@@ -9,7 +9,7 @@ const Info = () => {
     });
 
     useEffect(() => {
-        // fireRequest();
+        fireRequest();
     }, []);
 
     return (
