@@ -4,7 +4,7 @@ cache:
   key:
     files:
       - apps/backend/composer.lock
-      - apps/web/yarn.lock
+#      - apps/web/yarn.lock
   paths:
     - apps/backend/vendor/
 #    - apps/backend/node_modules/
