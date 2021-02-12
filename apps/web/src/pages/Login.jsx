@@ -23,26 +23,30 @@ const Login = ({
     const { register, handleSubmit, errors, watch } = useForm();
     const email = useRef();
     email.current = watch("email");
-
+    console.log(authed);
     const onSubmit = async (data) => {
         if (loading) {
             return false;
         }
         try {
-            const { profile } = await authUser(data, { loadProfile: true });
-            await initializeUser(profile);
+            console.log("auth user!");
+            const profileData = await authUser(data, { loadProfile: false });
+            console.log(profileData);
+            // await initializeUser(profileData.profile);
         } catch (e) {
-            console.log("onSubmit", e);
+            console.log("Login handler error:", e);
         }
     };
-
-    return authed ? <Redirect to={redirect}/> : (
+    console.log("redirect -> ", redirect);
+    return authed ? (
+        <Redirect to={redirect} />
+    ) : (
         <div className="container-fluid">
             <div className="row">
                 <div className="col-sm-12 col-md-12 col-lg-6 col-no-padding">
                     <div className="container-login">
                         <div className="text-center text-lg-left">
-                            <img alt="Logo" src="/images/logo.png"/>
+                            <img alt="Logo" src="/images/logo.png" />
                         </div>
 
                         <h1 className="sign-in-title">Sign In</h1>
@@ -90,12 +94,13 @@ const Login = ({
                                     },
                                 })}
                             />
-                            <div
-                                className="d-flex justify-content-between flex-wrap mt-3">
+                            <div className="d-flex justify-content-between flex-wrap mt-3">
                                 <Link
-                                    to={`/password/reset?email=${email.current ||
-                                    ""}`}
-                                    className="btn-forgot-password">
+                                    to={`/password/reset?email=${
+                                        email.current || ""
+                                    }`}
+                                    className="btn-forgot-password"
+                                >
                                     Forgot my password
                                 </Link>
                             </div>
@@ -122,18 +127,13 @@ const Login = ({
                     </div>
                 </div>
 
-                <div
-                    className="d-none d-sm-none d-md-none d-lg-flex col-lg-6 login-bg col-no-padding"/>
+                <div className="d-none d-sm-none d-md-none d-lg-flex col-lg-6 login-bg col-no-padding" />
             </div>
         </div>
     );
 };
 
-const mapStateToProps = ({
-    auth: { userToken = false },
-    user: { authed },
-}) => ({
-    userToken,
+const mapStateToProps = ({ user: { authed } }) => ({
     authed,
 });
 

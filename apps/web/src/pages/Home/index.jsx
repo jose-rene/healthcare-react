@@ -11,13 +11,13 @@ import "../../styles/home.scss";
 const Index = ({ email, full_name }) => {
     return (
         <PageLayout>
-            <BroadcastAlert/>
+            <BroadcastAlert />
             <div className="content-box">
                 <Row>
                     <div className="col-lg-8">
                         <h1 className="box-title">Welcome to your Portal</h1>
 
-                        <RequestInfo/>
+                        <RequestInfo />
 
                         <div className="box-same-line">
                             <h1 className="box-subtitle">Requests for You</h1>
@@ -26,14 +26,14 @@ const Index = ({ email, full_name }) => {
                                 <div className="box-filters">
                                     <p className="text-filters">Filters</p>
 
-                                    <img alt="" src="/icons/filter.png"/>
+                                    <img alt="" src="/icons/filter.png" />
                                 </div>
                             </div>
                         </div>
-                        <RequestList/>
+                        <RequestList />
                     </div>
                     <div className="col-lg-4 mt-4 mt-lg-0">
-                        <AlertList/>
+                        <AlertList />
                     </div>
                 </Row>
             </div>
@@ -41,8 +41,7 @@ const Index = ({ email, full_name }) => {
     );
 };
 
-const mapStateToProps = ({ auth, user: { email, full_name } }) => ({
-    localAuth: auth,
+const mapStateToProps = ({ user: { email, full_name } }) => ({
     email,
     full_name,
 });

@@ -21,7 +21,9 @@ const useAuth = () => {
     });
 
     const authUser = async (
-        { email, password }, { loadProfile = false } = {}) => {
+        { email, password },
+        { loadProfile = false } = {}
+    ) => {
         // set loading
         setAuthed((prevState) => ({
             ...prevState,
@@ -33,11 +35,7 @@ const useAuth = () => {
                 params: { email, password },
             });
 
-            const {
-                access_token,
-                token_type,
-                expires_at,
-            } = response;
+            const { access_token, token_type, expires_at } = response;
 
             await Promise.all([
                 await AsyncStorage.setItem(AUTH_TOKEN_NAME, access_token),
@@ -75,7 +73,7 @@ const useAuth = () => {
                     tokenLoading: false,
                     authToken: null,
                     loading: false,
-                    error: err,
+                    error: err.message ?? "Network Error",
                 });
             }
         }
@@ -122,11 +120,11 @@ const useAuth = () => {
                 await AsyncStorage.setItem(AUTH_TOKEN_NAME, data.access_token);
                 await AsyncStorage.setItem(
                     "@dme.login.token_type",
-                    data.token_type,
+                    data.token_type
                 );
                 await AsyncStorage.setItem(
                     "@dme.login.expires_at",
-                    data.expires_at,
+                    data.expires_at
                 );
                 // update state
                 setAuthed((prevState) => ({
@@ -154,7 +152,8 @@ const useAuth = () => {
 
     return [
         { ...authState, userLoading, authLoading, searchPathUrlLoading },
-        { authUser, authSsoUser }];
+        { authUser, authSsoUser },
+    ];
 };
 
 export default useAuth;

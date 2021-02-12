@@ -11,7 +11,7 @@ import "../../styles/home.scss";
 const Home = ({ email, full_name }) => {
     return (
         <PageLayout>
-            <BroadcastAlert/>
+            <BroadcastAlert />
             <div className="content-box">
                 <Row>
                     <div className="col-lg-8">
@@ -41,8 +41,7 @@ const Home = ({ email, full_name }) => {
     );
 };
 
-const mapStateToProps = ({ auth, user: { email, full_name } }) => ({
-    localAuth: auth,
+const mapStateToProps = ({ user: { email, full_name } }) => ({
     email,
     full_name,
 });
