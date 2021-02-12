@@ -99,9 +99,12 @@ web:build:
       - "apps/web/**/*"
       - ".gitlab-ci.yml"
   script:
+    - mv package.json package.json.tmp
     - cd apps/web
     # install
     - yarn install
+    - cd ../../
+    - mv package.json.tmp package.json
 
 web:test:
   stage: test

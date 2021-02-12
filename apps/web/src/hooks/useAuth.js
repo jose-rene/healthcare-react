@@ -73,7 +73,11 @@ const useAuth = () => {
                     tokenLoading: false,
                     authToken: null,
                     loading: false,
+<<<<<<< HEAD
                     error: err.message ?? "Network Error",
+=======
+                    error: "Network error, please try again.",
+>>>>>>> f2a3cf7a8cf78f38c0e8db988a19ee15c6c5d59c
                 });
             }
         }
