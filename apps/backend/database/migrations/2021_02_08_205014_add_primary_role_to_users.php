@@ -16,7 +16,11 @@ class AddPrimaryRoleToUsers extends Migration
         Schema::table(
             'users',
             function (Blueprint $table) {
-                $table->string('primary_role', 50)->nullable()->after('dob');
+                $table
+                    ->string('primary_role', 50)
+                    ->comment('Stores the users primary role they see when they login to the application.')
+                    ->nullable()
+                    ->after('dob');
             }
         );
     }
