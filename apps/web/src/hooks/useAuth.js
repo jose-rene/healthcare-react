@@ -75,7 +75,7 @@ const useAuth = () => {
                     tokenLoading: false,
                     authToken: null,
                     loading: false,
-                    error: err,
+                    error: "Network error, please try again.",
                 });
             }
         }
