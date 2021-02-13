@@ -23,21 +23,19 @@ const Login = ({
     const { register, handleSubmit, errors, watch } = useForm();
     const email = useRef();
     email.current = watch("email");
-    console.log(authed);
+
     const onSubmit = async (data) => {
         if (loading) {
             return false;
         }
         try {
-            console.log("auth user!");
-            const profileData = await authUser(data, { loadProfile: false });
-            console.log(profileData);
-            // await initializeUser(profileData.profile);
+            const { profile } = await authUser(data, { loadProfile: true });
+            await initializeUser(profile);
         } catch (e) {
-            console.log("Login handler error:", e);
+            console.log("Profile loading error:", e);
         }
     };
-    console.log("redirect -> ", redirect);
+
     return authed ? (
         <Redirect to={redirect} />
     ) : (

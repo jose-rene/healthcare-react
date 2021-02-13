@@ -21,6 +21,7 @@ const mockLocation = {
     search: "",
     state: "",
 };
+
 const { reload } = window.location;
 beforeEach(() => {
     jest.spyOn(routeData, "useLocation").mockReturnValue(mockLocation);
@@ -46,13 +47,27 @@ describe("Login Page", () => {
     // parameters used in test
     const username = "admin@admin.com";
     const password = generateRandomString(8);
-    const roles = ["admin"];
+    // const roles = ["admin"];
+    const profileResponse = {
+        full_name: "John Smith",
+        first_name: "John",
+        middle_name: null,
+        last_name: "Smith",
+        email: username,
+        dob: "2001-02-10T00:00:00.000000Z",
+        roles: [],
+        primary_role: "",
+    };
+    const initialReduxState = {
+        user: {
+            initializing: true,
+            primaryRole: false,
+        },
+    };
 
     it("can render with redux state defaults", async () => {
         // render with redux
-        renderWithRouter(<Login />, {
-            authed: false,
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         await screen.findByRole("button", { name: /sign in/i });
         // expect to see the page
@@ -63,9 +78,7 @@ describe("Login Page", () => {
     });
     it("renders form elements correctly", async () => {
         // render with redux
-        renderWithRouter(<Login />, {
-            authed: false,
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         const button = await screen.findByRole("button", { name: /sign in/i });
         expect(button).toBeTruthy();
@@ -84,9 +97,7 @@ describe("Login Page", () => {
         // invalid user email
         const user = generateRandomString(6);
         // render with redux
-        renderWithRouter(<Login />, {
-            authed: false,
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         const button = await screen.findByRole("button", { name: /sign in/i });
         const usernameInput = screen.getByPlaceholderText(/enter your email/i);
@@ -102,9 +113,7 @@ describe("Login Page", () => {
         // invalid password
         const pass = generateRandomString(6);
         // render with redux
-        renderWithRouter(<Login />, {
-            authed: false,
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         const button = await screen.findByRole("button", { name: /sign in/i });
         const usernameInput = screen.getByPlaceholderText(/enter your email/i);
@@ -120,11 +129,9 @@ describe("Login Page", () => {
     });
     it("shows error on login failure", async () => {
         // mock login failure api response
-        axiosMock().onPost(/login/).reply("401", { message: "Unauthorized" });
+        axiosMock().onPost().reply("401", { message: "Unauthorized" });
         // render with redux and router
-        renderWithRouter(<Login />, {
-            authed: false,
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         const button = await screen.findByRole("button", { name: /sign in/i });
         const usernameInput = screen.getByPlaceholderText(/enter your email/i);
@@ -148,30 +155,14 @@ describe("Login Page", () => {
                 .add(7, "minutes")
                 .format("YYYY-MM-DD hh:mm:ss"),
         };
-        const profileResponse = {
-            full_name: "Skylar Langdon",
-            first_name: "Skylar",
-            middle_name: null,
-            last_name: "Langdon",
-            email: username,
-            dob: "2001-02-10T00:00:00.000000Z",
-            roles: [],
-            primary_role: "",
-        };
         // /login/
-        axiosMock().onPost().reply("200", response);
-        // /users\/profile/
-        axiosMock().onGet().reply("200", profileResponse);
+        axiosMock()
+            .onPost()
+            .reply("200", response)
+            .onGet(/profile/)
+            .reply("200", profileResponse);
         // render with redux and router
-        renderWithRouter(<Login />, {
-            user: {
-                initializing: false,
-                authed: false,
-                email: null,
-                full_name: null,
-                primaryRole: false,
-            },
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         const button = await screen.findByRole("button", { name: /sign in/i });
         const usernameInput = screen.getByPlaceholderText(/enter your email/i);
@@ -181,12 +172,16 @@ describe("Login Page", () => {
         fireEvent.change(passwordInput, { target: { value: password } });
         fireEvent.click(button);
         // wait for mocked redirect
-        await wait(() => expect(screen.getByText("Denied Stub")).toBeTruthy());
-        /* await wait(() =>
-            expect(window.location.reload).toHaveBeenCalledWith(true)
-        ); */
+        await wait(() =>
+            expect(screen.getByText("Dashboard Stub")).toBeTruthy()
+        );
+        // await wait(() =>
+        //    expect(window.location.reload).toHaveBeenCalledWith(true)
+        // );
     });
-    /* it("redirects authenticated user to dashboard", async () => {
+    // this test is done in AppNavigation
+    /*
+    it("redirects authenticated user to dashboard", async () => {
         // set auth token
         await AsyncStorage.setItem(
             AUTH_TOKEN_NAME,
@@ -195,10 +190,11 @@ describe("Login Page", () => {
                 charset: "alphanumeric",
             })
         );
+        axiosMock()
+            .onGet(/profile/)
+            .reply("200", profileResponse);
         // render with redux and router
-        renderWithRouter(<Login />, {
-            authed: true,
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         const button = await screen.findByRole("button", { name: /sign in/i });
         expect(button).toBeTruthy();

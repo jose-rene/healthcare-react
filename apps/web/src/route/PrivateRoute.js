@@ -11,17 +11,17 @@ const PrivateRoute = ({
     location,
     ...rest
 }) => {
-
     if (authed && middleware && !checkMiddleware(middleware, roles)) {
-        window.location.href = "/access-denied";
+        window.location.assign("/access-denied");
         return false;
     }
 
     // authed is passed down from parent component, from redux state auth userToken
-    return !authed ?
-        <Redirect to={{ pathname: "/", state: { from: location } }}/> : (
-            <Route{...rest} render={({}) => children}/>
-        );
+    return !authed ? (
+        <Redirect to={{ pathname: "/", state: { from: location } }} />
+    ) : (
+        <Route {...rest} render={({}) => children} />
+    );
 };
 
 const mapStateToProps = ({ user: { roles, authed } }) => ({

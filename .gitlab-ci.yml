@@ -116,7 +116,7 @@ web:test:
   script:
     - cd apps/web
     # test
-    - yarn test --watchAll=false
+    - yarn test --silent
 
 web:deploy:
   stage: deploy
