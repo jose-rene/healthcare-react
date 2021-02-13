@@ -1,14 +1,13 @@
 import React from "react";
-import AsyncStorage from "@react-native-community/async-storage";
 import { generate as generateRandomString } from "randomstring";
 import moment from "moment";
 import routeData from "react-router";
 import {
-    render,
     renderWithRouter,
     fireEvent,
     screen,
     axiosMock,
+    profileResponse,
     wait,
 } from "../testUtils";
 import { AUTH_TOKEN_NAME } from "../config/URLs";
@@ -22,16 +21,10 @@ const mockLocation = {
     state: "",
 };
 
-const { reload } = window.location;
 beforeEach(() => {
     jest.spyOn(routeData, "useLocation").mockReturnValue(mockLocation);
-    Object.defineProperty(window.location, "reload", {
-        configurable: true,
-    });
-    window.location.reload = jest.fn();
 });
 afterEach(() => {
-    window.location.reload = reload;
     axiosMock().reset();
 });
 
@@ -47,17 +40,7 @@ describe("Login Page", () => {
     // parameters used in test
     const username = "admin@admin.com";
     const password = generateRandomString(8);
-    // const roles = ["admin"];
-    const profileResponse = {
-        full_name: "John Smith",
-        first_name: "John",
-        middle_name: null,
-        last_name: "Smith",
-        email: username,
-        dob: "2001-02-10T00:00:00.000000Z",
-        roles: [],
-        primary_role: "",
-    };
+
     const initialReduxState = {
         user: {
             initializing: true,
@@ -175,9 +158,6 @@ describe("Login Page", () => {
         await wait(() =>
             expect(screen.getByText("Dashboard Stub")).toBeTruthy()
         );
-        // await wait(() =>
-        //    expect(window.location.reload).toHaveBeenCalledWith(true)
-        // );
     });
     // this test is done in AppNavigation
     /*

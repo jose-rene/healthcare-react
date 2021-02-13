@@ -1,18 +1,36 @@
 import "@testing-library/jest-dom";
 import React from "react";
 import { generate as generateRandomString } from "randomstring";
-import { renderWithRouter, screen, fireEvent } from "../testUtils";
+import AsyncStorage from "@react-native-community/async-storage";
+import {
+    renderWithRouter,
+    axiosMock,
+    profileResponse,
+    screen,
+} from "../testUtils";
 import Account from "../pages/Account";
+import { AUTH_TOKEN_NAME } from "../config/URLs";
 
 describe("My Account Page", () => {
+    const authToken = generateRandomString({
+        length: 24,
+        charset: "alphanumeric",
+    });
     it("can render with redux state defaults", async () => {
+        await AsyncStorage.setItem(AUTH_TOKEN_NAME, authToken);
+        axiosMock()
+            .onGet(/profile/)
+            .reply("200", profileResponse)
+            .onGet(/inspire/)
+            .reply("200", {
+                message: "Fly a kite in a thunderstorm. - Benjamin Franklin",
+            });
         // render with redux
         renderWithRouter(<Account />, {
-            userToken: generateRandomString({
-                length: 24,
-                charset: "alphanumeric",
-            }),
-            isLoading: false,
+            user: {
+                initializing: true,
+                primaryRole: false,
+            },
         });
         // wait for the state changes
         const account = await screen.getByRole("heading", {
@@ -23,13 +41,20 @@ describe("My Account Page", () => {
         expect(account).toBeTruthy();
     });
     it("links to main dashboard", async () => {
+        await AsyncStorage.setItem(AUTH_TOKEN_NAME, authToken);
+        axiosMock()
+            .onGet(/profile/)
+            .reply("200", profileResponse)
+            .onGet(/inspire/)
+            .reply("200", {
+                message: "Fly a kite in a thunderstorm. - Benjamin Franklin",
+            });
         // render with redux
         renderWithRouter(<Account />, {
-            userToken: generateRandomString({
-                length: 24,
-                charset: "alphanumeric",
-            }),
-            isLoading: false,
+            user: {
+                initializing: true,
+                primaryRole: false,
+            },
         });
         // wait for the state changes
         const link = await screen.findByRole("link", { name: /home/i });

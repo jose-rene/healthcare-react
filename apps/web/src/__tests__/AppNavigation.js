@@ -2,7 +2,14 @@ import "@testing-library/jest-dom";
 import React from "react";
 import AsyncStorage from "@react-native-community/async-storage";
 import { generate as generateRandomString } from "randomstring";
-import { render, screen, axiosMock, fireEvent, wait } from "../testUtils";
+import {
+    render,
+    screen,
+    axiosMock,
+    profileResponse,
+    fireEvent,
+    wait,
+} from "../testUtils";
 import { AUTH_TOKEN_NAME } from "../config/URLs";
 import AppNavigation from "../navigation/AppNavigation";
 
@@ -23,17 +30,6 @@ afterEach(() => {
 });
 
 describe("App Navigation", () => {
-    const profileResponse = {
-        full_name: "Skyla Bowsta",
-        first_name: "Skyla",
-        middle_name: null,
-        last_name: "Bowsta",
-        email: "sb@tatooine.io",
-        dob: "2001-02-10T00:00:00.000000Z",
-        roles: [{ name: "admin", level: null, title: "Admin" }],
-        primary_role: "admin",
-    };
-
     it("renders login with redux state defaults", async () => {
         // render with redux
         render(<AppNavigation />, {
@@ -100,7 +96,7 @@ describe("App Navigation", () => {
                 scheduled: 20,
                 submitted: 22,
             });
-        // Let all your things have their places; let each part of your business have its time
+
         const authToken = generateRandomString({
             length: 24,
             charset: "alphanumeric",

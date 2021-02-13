@@ -71,7 +71,7 @@ class UserTest extends TestCase
             'first_name' => $this->faker->firstName,
             'last_name'  => $this->faker->lastName,
             'email'      => $this->faker->unique()->safeEmail,
-            'password'   => preg_replace('~[^a-zA-Z0-9!_:\~#@\^\*\.\,\(\)\{\}\[\]\+\-\$]~', '!', $this->faker->password),
+            'password'   => str_pad(preg_replace('~[^a-zA-Z0-9!_:\~#@\^\*\.\,\(\)\{\}\[\]\+\-\$]~', '', $this->faker->password), 8, '!'),
             'phone'      => $this->faker->phoneNumber,
         ];
         // create the user with data

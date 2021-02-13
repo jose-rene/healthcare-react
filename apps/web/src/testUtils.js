@@ -67,7 +67,18 @@ const axiosMock = () => {
     return new MockAdapter(axios);
 };
 
+const profileResponse = {
+    full_name: "Skyla Bowsta",
+    first_name: "Skyla",
+    middle_name: null,
+    last_name: "Bowsta",
+    email: "sb@tatooine.io",
+    dob: "2001-02-10T00:00:00.000000Z",
+    roles: [{ name: "admin", level: null, title: "Admin" }],
+    primary_role: "admin",
+};
+
 // re-export everything
 export * from "@testing-library/react";
 // override render method, pass function to mock axios
-export { render, renderWithRouter, axiosMock };
+export { render, renderWithRouter, axiosMock, profileResponse };
