@@ -84,7 +84,7 @@ const useAuth = () => {
             ...prevState,
             loading: true,
         }));
-        const searchParams = new URLSearchParams(search);
+        const searchParams = new URLSearchParams(search ?? {});
 
         if (
             !searchParams.has("path") ||

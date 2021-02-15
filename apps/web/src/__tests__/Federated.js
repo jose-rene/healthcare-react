@@ -11,6 +11,13 @@ import {
 } from "../testUtils";
 import Federated from "../pages/Federated";
 
+// redux
+const initialReduxState = {
+    user: {
+        initializing: true,
+        primaryRole: false,
+    },
+};
 // mock url
 const expires = moment().add(5, "minutes");
 const signature = generateRandomString(32);
@@ -23,6 +30,9 @@ const mockLocation = {
 };
 beforeEach(() => {
     jest.spyOn(routeData, "useLocation").mockReturnValue(mockLocation);
+});
+afterEach(() => {
+    axiosMock().reset();
 });
 
 describe("SSO Login Page", () => {
@@ -43,7 +53,7 @@ describe("SSO Login Page", () => {
 
         // render with redux and router
         renderWithRouter(<Federated />, {
-            authed: false,
+            initialReduxState,
         });
         //
         expect(screen.getByTestId("ssoLoading")).toBeTruthy();
