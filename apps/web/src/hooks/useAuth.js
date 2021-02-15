@@ -59,13 +59,13 @@ const useAuth = () => {
 
             return { ...authState };
         } catch (err) {
-            if (err.response.status == 401) {
+            if (err.response.status === 401) {
                 setAuthed({
                     ...authState,
                     tokenLoading: false,
                     authToken: null,
                     loading: false,
-                    error: "Bad Username/ Password",
+                    error: "Bad Username / Password",
                 });
             } else {
                 setAuthed({
@@ -73,7 +73,7 @@ const useAuth = () => {
                     tokenLoading: false,
                     authToken: null,
                     loading: false,
-                    error: err.message ?? "Network Error",
+                    error: err?.message ?? "Network Error",
                 });
             }
         }
@@ -125,7 +125,10 @@ const useAuth = () => {
             }));
 
             if (loadProfile) {
-                const profile = await fireLoadProfile();
+                const profile = await fireLoadProfile({
+                    url: "user/profile",
+                    params: {},
+                });
                 return { ...authState, profile };
             }
 
@@ -136,7 +139,7 @@ const useAuth = () => {
                 tokenLoading: false,
                 authToken: null,
                 loading: false,
-                error: err.message ?? "Error: could not log in.",
+                error: err?.message ?? "Network Error",
             }));
             return { ...authState, profile: {} };
         }

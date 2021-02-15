@@ -15,7 +15,7 @@ const Federated = ({ authed, initializeUser }) => {
         async function loadSsoUser() {
             try {
                 const { profile } = await authSsoUser(location, {
-                    loadProfile: false,
+                    loadProfile: true,
                 });
                 await initializeUser(profile);
             } catch (e) {
