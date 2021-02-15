@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
+import useApiCall from "../../hooks/useApiCall";
 import PageAlert from "./PageAlert";
-import useApiService from "../../hooks/useApiService";
 
 const BroadcastAlert = () => {
-    const [{ data, loading, error }] = useApiService({
-        route: "request/inspire",
+    const [{ data: { message = false } }, fireCall] = useApiCall({
+        url: "request/inspire",
     });
-    return data?.message ? (
-        <PageAlert variant="primary">{data.message}</PageAlert>
-    ) : null;
+
+    useEffect(() => {
+        fireCall();
+    }, []);
+
+    return !message ? null : (
+        <PageAlert variant="primary">{message}</PageAlert>
+    );
 };
 
 export default BroadcastAlert;

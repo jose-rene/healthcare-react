@@ -17,8 +17,8 @@ stages:
   - dast
 
 # sast / dast jobs
-include:
-  - template: Security/SAST.gitlab-ci.yml
+# include:
+  # - template: Security/SAST.gitlab-ci.yml
   # requires ultimate gitlab package
   # - template: DAST.gitlab-ci.yml
 
@@ -99,9 +99,12 @@ web:build:
       - "apps/web/**/*"
       - ".gitlab-ci.yml"
   script:
+    - mv package.json package.json.tmp
     - cd apps/web
     # install
     - yarn install
+    - cd ../../
+    - mv package.json.tmp package.json
 
 web:test:
   stage: test
@@ -113,7 +116,7 @@ web:test:
   script:
     - cd apps/web
     # test
-    - yarn test --watchAll=false
+    - yarn test --silent
 
 web:deploy:
   stage: deploy

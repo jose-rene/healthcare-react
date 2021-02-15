@@ -4,6 +4,6 @@
 .vscode/
 # php-cs-fixer
 .php_cs.cache
-/node_modules/
+node_modules
 .env
 .env.bak

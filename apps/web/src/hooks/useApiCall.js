@@ -1,30 +1,34 @@
-import {useEffect, useMemo, useState} from 'react';
-import axios from "axios";
 import AsyncStorage from "@react-native-community/async-storage";
-import {API_URL, GET} from "../config/URLs";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { API_URL, GET } from "../config/URLs";
 
 export default ({
-                    url,
-                    method = GET,
-                    params = undefined,
-                    enableCancelToken = false,
-                    debug = false,
-                    headers = {},
-                    baseURL = API_URL,
-                    hasAuthedUrl = false,
-                    ...otherOptions
-                }) => {
+    url,
+    method = GET,
+    params = undefined,
+    enableCancelToken = false,
+    debug = false,
+    headers = {},
+    baseURL = API_URL,
+    hasAuthedUrl = false,
+    defaultData = {},
+} = {}) => {
     const {
         REACT_APP_API_ID: ClientId = undefined,
         REACT_APP_API_SECRET: ClientSecret = undefined,
     } = process.env;
 
     const [cancelToken, setCancelToken] = useState(null);
-    const [data, setData] = useState({});
+    const [data, setData] = useState(defaultData);
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const formatParams = (params, _method = method) => ({[_method == GET ? 'params' : 'data']: params});
+    const formatParams = (params, _method = method) => ({
+        [_method === GET
+            ? "params"
+            : "data"]: params,
+    });
 
     const [config, setConfig] = useState({
         url,
@@ -34,10 +38,10 @@ export default ({
             ...{
                 ClientId,
                 ClientSecret,
-                "content-type": 'application/json',
+                "content-type": "application/json",
             },
             // Merge headers passed in with the presets
-            ...headers
+            ...headers,
         },
 
         cancelToken,
@@ -45,40 +49,63 @@ export default ({
         ...formatParams(params),
     });
 
+    //  axios.interceptors.response.use(
+    // (response) => {
+    //     return response;
+    // },
+    // (error) => {
+    //     if (
+    //         error.request.url != 'login' &&
+    //         (error?.response && error.response.status === 401)
+    //     ) {
+    //         // console.log("signout");
+    //         signOut();
+    //     }
+    //     return Promise.reject(error);
+    // });
+
     const fire = async ({
-                            params: request_params = false,
-                            persist_changes = true,
-                            hasAuthedUrl: _hasAuthedUrl = hasAuthedUrl,
-                            ...config_override
-                        } = {}) => {
+        params: request_params = false,
+        persist_changes = true,
+        hasAuthedUrl: _hasAuthedUrl = hasAuthedUrl,
+        ...config_override
+    } = {}) => {
         let _configs = config;
 
         if (config_override) {
-            _configs = {...config, ...config_override};
+            _configs = { ...config, ...config_override };
             persist_changes && setConfig(_configs);
         }
 
         if (request_params) {
-            _configs = {...config, ...formatParams(request_params, _configs.method)};
+            _configs = {
+                ...config, ...formatParams(request_params, _configs.method),
+            };
             persist_changes && setConfig(_configs);
         }
 
-        if (_hasAuthedUrl && _configs.headers['Authorization']) {
-            _configs.url = `authed/${config.url}`;
+        try {
+            const jwtToken = await AsyncStorage.getItem(
+                "@dme.login.access_token");
+
+            if (jwtToken) {
+                _configs.headers["Authorization"] = `Bearer ${jwtToken}`;
+            }
+        } catch (e) {
         }
 
         setError(false);
         setLoading(true);
 
-        debug && console.info('useService.fire', {_configs})
+        debug && console.info("useService.fire", { _configs });
 
         try {
-            const {data = 'missing'} = await axios(_configs);
-            debug && console.info('useService.fired.resolve', {data})
+            const { data = "missing" } = await axios(_configs);
+            debug && console.info("useService.fired.resolve", { data });
             setData(data);
             return data;
         } catch (err) {
-            debug && console.info('useService.fired.reject', {err})
+            debug && console.info("useService.fired.reject", { err });
             setError(err);
             throw(err);
         } finally {
@@ -89,11 +116,12 @@ export default ({
     useEffect(() => {
         (async () => {
             try {
-                const jwtToken = await AsyncStorage.getItem("@dme.login.access_token");
+                const jwtToken = await AsyncStorage.getItem(
+                    "@dme.login.access_token");
 
                 if (jwtToken) {
                     const new_config = config;
-                    new_config.headers['Authorization'] = `Bearer ${jwtToken}`;
+                    new_config.headers["Authorization"] = `Bearer ${jwtToken}`;
 
                     setConfig(new_config);
                 }
@@ -107,18 +135,18 @@ export default ({
             }
         })();
 
-        debug && console.info('useService.fired.construct', {config})
+        debug && console.info("useService.fired.construct", { config });
     }, []);
 
-    useMemo(() => {
-        setConfig({...config, url})
-        debug && console.info('useService.useMemo.url', {config})
+    useEffect(() => {
+        setConfig({ ...config, url });
+        debug && console.info("useService.useMemo.url", { config });
     }, [url]);
 
-    useMemo(() => {
-        setConfig({...config, ...formatParams(params)})
-        debug && console.info('useService.useMemo.params', {config})
+    useEffect(() => {
+        setConfig({ ...config, ...formatParams(params) });
+        debug && console.info("useService.useMemo.params", { config });
     }, [params]);
 
-    return [{loading, data, error, cancelToken}, fire];
+    return [{ loading, data, error, cancelToken }, fire];
 }

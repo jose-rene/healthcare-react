@@ -41,7 +41,7 @@ class UserResource extends JsonResource
             'last_name'   => $this->last_name,
             'email'       => $this->email,
             'phones'      => $this->phones->count() ? new PhoneCollectionResource($this->phones) : [],
-            'roles'       => new RolesResource($this->roles),
+            'roles'       => RoleResource::collection($this->roles),
         ];
     }
 }

@@ -1,12 +1,12 @@
 import React from "react";
-import { connect } from "react-redux";
 import { Row } from "react-bootstrap";
-import PageLayout from "../layouts/PageLayout";
-import "../styles/home.scss";
-import BroadcastAlert from "../components/elements/BroadcastAlert";
-import RequestInfo from "../components/elements/RequesInfo";
-import RequestList from "../components/elements/RequestList";
-import AlertList from "../components/elements/AlertList";
+import { connect } from "react-redux";
+import AlertList from "../../components/elements/AlertList";
+import BroadcastAlert from "../../components/elements/BroadcastAlert";
+import RequestInfo from "../../components/elements/RequesInfo";
+import RequestList from "../../components/elements/RequestList";
+import PageLayout from "../../layouts/PageLayout";
+import "../../styles/home.scss";
 
 const Home = ({ email, full_name }) => {
     return (
@@ -41,8 +41,7 @@ const Home = ({ email, full_name }) => {
     );
 };
 
-const mapStateToProps = ({ auth, user: { email, full_name } }) => ({
-    localAuth: auth,
+const mapStateToProps = ({ user: { email, full_name } }) => ({
     email,
     full_name,
 });

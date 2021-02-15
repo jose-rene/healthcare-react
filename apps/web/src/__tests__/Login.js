@@ -1,14 +1,13 @@
 import React from "react";
-import AsyncStorage from "@react-native-community/async-storage";
 import { generate as generateRandomString } from "randomstring";
 import moment from "moment";
 import routeData from "react-router";
 import {
-    render,
     renderWithRouter,
     fireEvent,
     screen,
     axiosMock,
+    profileResponse,
     wait,
 } from "../testUtils";
 import { AUTH_TOKEN_NAME } from "../config/URLs";
@@ -21,8 +20,12 @@ const mockLocation = {
     search: "",
     state: "",
 };
+
 beforeEach(() => {
     jest.spyOn(routeData, "useLocation").mockReturnValue(mockLocation);
+});
+afterEach(() => {
+    axiosMock().reset();
 });
 
 // @note using axios-mock-adapter instead of mocking axios, see ./testUtils.js
@@ -38,12 +41,16 @@ describe("Login Page", () => {
     const username = "admin@admin.com";
     const password = generateRandomString(8);
 
+    const initialReduxState = {
+        user: {
+            initializing: true,
+            primaryRole: false,
+        },
+    };
+
     it("can render with redux state defaults", async () => {
         // render with redux
-        renderWithRouter(<Login />, {
-            userToken: null,
-            isLoading: true,
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         await screen.findByRole("button", { name: /sign in/i });
         // expect to see the page
@@ -54,10 +61,7 @@ describe("Login Page", () => {
     });
     it("renders form elements correctly", async () => {
         // render with redux
-        renderWithRouter(<Login />, {
-            userToken: null,
-            isLoading: true,
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         const button = await screen.findByRole("button", { name: /sign in/i });
         expect(button).toBeTruthy();
@@ -76,10 +80,7 @@ describe("Login Page", () => {
         // invalid user email
         const user = generateRandomString(6);
         // render with redux
-        renderWithRouter(<Login />, {
-            userToken: null,
-            isLoading: true,
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         const button = await screen.findByRole("button", { name: /sign in/i });
         const usernameInput = screen.getByPlaceholderText(/enter your email/i);
@@ -95,10 +96,7 @@ describe("Login Page", () => {
         // invalid password
         const pass = generateRandomString(6);
         // render with redux
-        renderWithRouter(<Login />, {
-            userToken: null,
-            isLoading: true,
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         const button = await screen.findByRole("button", { name: /sign in/i });
         const usernameInput = screen.getByPlaceholderText(/enter your email/i);
@@ -114,12 +112,9 @@ describe("Login Page", () => {
     });
     it("shows error on login failure", async () => {
         // mock login failure api response
-        axiosMock().onPost(/login/).reply("401", { message: "Unauthorized" });
+        axiosMock().onPost().reply("401", { message: "Unauthorized" });
         // render with redux and router
-        renderWithRouter(<Login />, {
-            userToken: null,
-            isLoading: true,
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         const button = await screen.findByRole("button", { name: /sign in/i });
         const usernameInput = screen.getByPlaceholderText(/enter your email/i);
@@ -143,12 +138,14 @@ describe("Login Page", () => {
                 .add(7, "minutes")
                 .format("YYYY-MM-DD hh:mm:ss"),
         };
-        axiosMock().onPost(/login/).reply("200", response);
+        // /login/
+        axiosMock()
+            .onPost()
+            .reply("200", response)
+            .onGet(/profile/)
+            .reply("200", profileResponse);
         // render with redux and router
-        renderWithRouter(<Login />, {
-            userToken: null,
-            isLoading: true,
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         const button = await screen.findByRole("button", { name: /sign in/i });
         const usernameInput = screen.getByPlaceholderText(/enter your email/i);
@@ -162,6 +159,8 @@ describe("Login Page", () => {
             expect(screen.getByText("Dashboard Stub")).toBeTruthy()
         );
     });
+    // this test is done in AppNavigation
+    /*
     it("redirects authenticated user to dashboard", async () => {
         // set auth token
         await AsyncStorage.setItem(
@@ -171,11 +170,11 @@ describe("Login Page", () => {
                 charset: "alphanumeric",
             })
         );
+        axiosMock()
+            .onGet(/profile/)
+            .reply("200", profileResponse);
         // render with redux and router
-        renderWithRouter(<Login />, {
-            userToken: null,
-            isLoading: true,
-        });
+        renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
         const button = await screen.findByRole("button", { name: /sign in/i });
         expect(button).toBeTruthy();
@@ -183,5 +182,5 @@ describe("Login Page", () => {
         await wait(() =>
             expect(screen.getByText("Dashboard Stub")).toBeTruthy()
         );
-    });
+    }); */
 });

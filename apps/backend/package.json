@@ -1,5 +1,6 @@
 {
     "name": "@dme/backend",
+    "version": "0.0.1",
     "description": "Gryphon backend and api",
     "private": true,
     "scripts": {

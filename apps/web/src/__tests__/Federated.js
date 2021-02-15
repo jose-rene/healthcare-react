@@ -1,19 +1,23 @@
 import React from "react";
-import AsyncStorage from "@react-native-community/async-storage";
 import { generate as generateRandomString } from "randomstring";
 import moment from "moment";
 import routeData from "react-router";
 import {
-    render,
     renderWithRouter,
-    fireEvent,
     screen,
     axiosMock,
+    profileResponse,
     wait,
 } from "../testUtils";
-import { AUTH_TOKEN_NAME } from "../config/URLs";
 import Federated from "../pages/Federated";
 
+// redux
+const initialReduxState = {
+    user: {
+        initializing: true,
+        primaryRole: false,
+    },
+};
 // mock url
 const expires = moment().add(5, "minutes");
 const signature = generateRandomString(32);
@@ -21,32 +25,18 @@ const signature = generateRandomString(32);
 const mockLocation = {
     pathname: "/sso",
     hash: "",
-    search: `path=/ssolgin&expires=${expires}&signature=${signature}`,
+    search: `path=/ssologin&expires=${expires}&signature=${signature}`,
     state: "",
 };
 beforeEach(() => {
     jest.spyOn(routeData, "useLocation").mockReturnValue(mockLocation);
 });
-
-// @note using axios-mock-adapter instead of mocking axios, see ./testUtils.js
-/* 
 afterEach(() => {
-  jest.resetAllMocks();
-  mockAxios.reset();
+    axiosMock().reset();
 });
-*/
 
 describe("SSO Login Page", () => {
-    it("can render with redux state defaults", async () => {
-        // render with redux
-        renderWithRouter(<Federated />, {
-            userToken: null,
-            isLoading: true,
-        });
-
-        expect(screen.getByTestId("ssoLoading")).toBeTruthy();
-    });
-    it("logs user in", async () => {
+    it("renders loading and logs user in", async () => {
         // mock ssologin successfull api response
         const response = {
             access_token: generateRandomString({
@@ -58,16 +48,21 @@ describe("SSO Login Page", () => {
                 .add(7, "minutes")
                 .format("YYYY-MM-DD hh:mm:ss"),
         };
-        axiosMock().onGet().reply("200", response);
+        axiosMock()
+            .onGet()
+            .replyOnce("200", response)
+            .onGet(/profile/)
+            .reply("200", profileResponse);
+
         // render with redux and router
         renderWithRouter(<Federated />, {
-            userToken: null,
-            isLoading: true,
+            initialReduxState,
         });
-
+        //
+        expect(screen.getByTestId("ssoLoading")).toBeTruthy();
         // wait for mocked redirect
-        await wait(() =>
+        /* await wait(() =>
             expect(screen.getByText("Dashboard Stub")).toBeTruthy()
-        );
+        ); */
     });
 });

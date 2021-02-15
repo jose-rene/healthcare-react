@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Arr;
 use Laravel\Passport\HasApiTokens;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
@@ -33,6 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable = [
         'first_name',
+        'primary_role',
         'last_name',
         'notification_prefs',
         'dob',
@@ -110,7 +112,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get the phone number for sms notifications.
      *
-     * @param \Illuminate\Notifications\Notification $notification
+     * @param Notification $notification
      * @return string
      */
     public function routeNotificationForSms($notification)

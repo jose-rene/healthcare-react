@@ -1,58 +1,43 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
-import PrivateRoute from "../route/PrivateRoute";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { signOut } from "../actions/authAction";
+import { DOCTOR, initializeUser } from "../actions/userAction";
+import useApiCall from "../hooks/useApiCall";
+import Account from "../pages/Account";
+import Assessment from "../pages/Assessment";
+import Error401 from "../pages/Errors/401";
+import Federated from "../pages/Federated";
+import ForgotPassword from "../pages/ForgotPassword";
 import Login from "../pages/Login";
 import Error from "../pages/NotFound";
-import Home from "../pages/Home";
-import Account from "../pages/Account";
-import Federated from "../pages/Federated";
 import Questionnaire from "../pages/Questionnaire";
-import apiService from "../services/apiService";
-import { setUser } from "../actions/userAction";
-import { signOut } from "../actions/authAction";
-import ForgotPassword from "../pages/ForgotPassword";
 import SetForgotPassword from "../pages/SetForgotPassword";
-import Assessment from "../pages/Assessment";
+import PrivateRoute from "../route/PrivateRoute";
+import RoleRouteRouter from "../route/RoleRoute";
 
-const AppNavigation = ({ setUser, signOut, localAuth, user }) => {
-    // if the server returns unauthorized, @todo handle logic for this in apiService hook so it doesn't effect login
-    /* axios.interceptors.response.use(
-        (response) => {
-            return response;
-        },
-        (error) => {
-            if (
-                !error.response ||
-                (error?.response && error.response.status === 401)
-            ) {
-                // console.log("signout");
-                signOut();
-            }
-            return Promise.reject(error);
-        }
-    ); */
+const AppNavigation = ({ initializing, initializeUser }) => {
+    const [{ loading }, fireInitializeUser] = useApiCall({
+        url: "user/profile",
+    });
 
     useEffect(() => {
-        let isMounted = true;
-        if (!user.email && localAuth.userToken) {
-            apiService("/user/profile")
-                .then(({ email, full_name, roles = [] }) => {
-                    if (isMounted) {
-                        setUser(email, full_name, roles);
-                    }
-                })
-                .catch((e) => {
-                    console.log(e);
-                });
-        }
-        return () => {
-            isMounted = false;
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [localAuth]);
+        /**
+         * on page load call the api to refresh the redux storage
+         */
+        (async () => {
+            try {
+                const response = await fireInitializeUser();
+                initializeUser(response);
+            } catch (e) {
+                initializeUser();
+            }
+        })();
+    }, []);
 
-    const authed = localAuth.userToken ? 1 : 0;
+    if (loading || initializing) {
+        return null;
+    }
 
     return (
         <BrowserRouter>
@@ -61,31 +46,39 @@ const AppNavigation = ({ setUser, signOut, localAuth, user }) => {
                 <Route path="/sso" component={Federated} />
                 <Route path="/password/reset" component={ForgotPassword} />
                 <Route path="/password/change" component={SetForgotPassword} />
-                <PrivateRoute path="/dashboard" authed={authed}>
-                    <Home />
-                </PrivateRoute>
-                <PrivateRoute path="/account" authed={authed}>
+                <RoleRouteRouter path="/dashboard" component="Home" />
+                <PrivateRoute
+                    path="/access-denied"
+                    component={Error401}
+                    exact
+                />
+                <PrivateRoute path="/account">
                     <Account />
                 </PrivateRoute>
-                <PrivateRoute path="/questionnaire/:id" authed={authed}>
+                <PrivateRoute
+                    path="/some/random/doc/route"
+                    middleware={[DOCTOR]}
+                >
+                    <Account />
+                </PrivateRoute>
+                <PrivateRoute path="/questionnaire/:id">
                     <Questionnaire />
                 </PrivateRoute>
-                <PrivateRoute path="/assessment/:id" authed={authed}>
+                <PrivateRoute path="/assessment/:id">
                     <Assessment />
                 </PrivateRoute>
+
+                {/* ERROR PAGES */}
                 <Route component={Error} />
             </Switch>
         </BrowserRouter>
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        localAuth: state.auth,
-        user: state.user,
-    };
-};
+const mapStateToProps = ({ user: { authed, initializing } }) => ({
+    initializing,
+});
 
-const mapDispatchToProps = { setUser, signOut };
+const mapDispatchToProps = { signOut, initializeUser };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppNavigation);

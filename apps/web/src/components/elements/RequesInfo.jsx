@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Row } from "react-bootstrap";
+import useApiCall from "../../hooks/useApiCall";
 import "../../styles/RequestInfo.scss";
-import useApiService from "../../hooks/useApiService";
 
 const Info = () => {
-    const [{ data, loading }] = useApiService({
-        route: "request/summary",
+    const [{ data, loading }, fireRequest] = useApiCall({
+        url: "request/summary",
     });
+
+    useEffect(() => {
+        fireRequest();
+    }, []);
 
     return (
         <Row className="mb-4">
