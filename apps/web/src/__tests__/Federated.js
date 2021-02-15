@@ -39,7 +39,6 @@ describe("SSO Login Page", () => {
     it("renders loading and logs user in", async () => {
         // mock ssologin successfull api response
         const response = {
-            ...profileResponse,
             access_token: generateRandomString({
                 length: 80,
                 charset: "alphanumeric",
@@ -49,7 +48,11 @@ describe("SSO Login Page", () => {
                 .add(7, "minutes")
                 .format("YYYY-MM-DD hh:mm:ss"),
         };
-        axiosMock().onGet().reply("200", response);
+        axiosMock()
+            .onGet()
+            .replyOnce("200", response)
+            .onGet(/profile/)
+            .reply("200", profileResponse);
 
         // render with redux and router
         renderWithRouter(<Federated />, {
