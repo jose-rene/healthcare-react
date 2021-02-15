@@ -3,19 +3,30 @@ import { Redirect, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import { Alert, Spinner } from "react-bootstrap";
 import useAuth from "../hooks/useAuth";
-import { restoreToken } from "../actions/authAction";
+import { initializeUser } from "../actions/userAction";
 
-const Federated = ({ localAuth, restoreToken }) => {
+const Federated = ({ authed, initializeUser }) => {
     // for the authorization request
-    const [{ authToken, loading, error }, { authSsoUser }] = useAuth();
+    const [{ error }, { authSsoUser }] = useAuth();
     const location = useLocation();
-    // console.log(location, loading, error);
 
     // intially send sso request based on url
     useEffect(() => {
+        async function loadSsoUser() {
+            try {
+                const { profile } = await authSsoUser(location, {
+                    loadProfile: true,
+                });
+                await initializeUser(profile);
+            } catch (e) {
+                console.log("Profile loading error:", e);
+            }
+        }
         let isMounted = true;
         // send the auth request based on the query string
-        authSsoUser(location);
+        if (isMounted) {
+            loadSsoUser();
+        }
         // cleanup
         return () => {
             isMounted = false;
@@ -23,23 +34,7 @@ const Federated = ({ localAuth, restoreToken }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // update redux store if authToken is updated from api request
-    useEffect(() => {
-        let isMounted = true;
-        if (authToken) {
-            // action to update redux store auth
-            if (isMounted) {
-                restoreToken(authToken);
-            }
-        }
-        // cleanup
-        return () => {
-            isMounted = false;
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [authToken]);
-
-    if (localAuth.userToken) {
+    if (authed) {
         return <Redirect to="/dashboard" />;
     }
 
@@ -75,12 +70,12 @@ const Federated = ({ localAuth, restoreToken }) => {
     );
 };
 
-const mapStateToProps = ({ auth }) => ({
-    localAuth: auth,
+const mapStateToProps = ({ user: { authed } }) => ({
+    authed,
 });
 
 const mapDispatchToProps = {
-    restoreToken,
+    initializeUser,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Federated);
