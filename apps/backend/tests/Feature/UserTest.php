@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Artisan;
+use Bouncer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Passport\Passport;
@@ -14,6 +16,7 @@ class UserTest extends TestCase
     use WithFaker;
 
     protected $user;
+    protected $admin;
 
     /**
      * Test profile route.
@@ -43,11 +46,10 @@ class UserTest extends TestCase
     public function testRetrieve()
     {
         Passport::actingAs(
-            User::factory()->create()
+            $this->admin
         );
         // fetch the user profile
         $response = $this->get('/v1/user/' . $this->user->uuid);
-
         $response
             ->assertOk()
             ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'roles']);
@@ -65,7 +67,7 @@ class UserTest extends TestCase
     public function testCreate()
     {
         Passport::actingAs(
-            $this->user
+            $this->admin
         );
         $formData = [
             'first_name' => $this->faker->firstName,
@@ -76,7 +78,6 @@ class UserTest extends TestCase
         ];
         // create the user with data
         $response = $this->post('/v1/user', $formData);
-        // dd($response->json());
         $response
             ->assertStatus(201)
             ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'roles']);
@@ -92,7 +93,7 @@ class UserTest extends TestCase
     public function testCreateFail()
     {
         Passport::actingAs(
-            $this->user
+            $this->admin
         );
         // leave out password
         $badData = [
@@ -116,7 +117,7 @@ class UserTest extends TestCase
     public function testUpdate()
     {
         Passport::actingAs(
-            User::factory()->create()
+            $this->admin
         );
         $formData = [
             'first_name' => $this->faker->firstName,
@@ -139,7 +140,7 @@ class UserTest extends TestCase
     public function testDelete()
     {
         Passport::actingAs(
-            User::factory()->create()
+            $this->admin
         );
         // fetch the user profile
         $response = $this->delete('/v1/user/' . $this->user->uuid);
@@ -157,5 +158,12 @@ class UserTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
+        $this->admin = User::factory()->create();
+        // seed the Bouncer roles
+        Artisan::call('db:seed', [
+            '--class' => 'Database\Seeders\BouncerSeeder',
+        ]);
+        // assign superadmin role to user
+        Bouncer::assign('software_engineer')->to($this->admin);
     }
 }

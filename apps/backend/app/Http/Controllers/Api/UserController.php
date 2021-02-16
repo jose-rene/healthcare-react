@@ -15,6 +15,17 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     /**
+     * Create the controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        // uses App\Policies\UserPolicy
+        $this->authorizeResource(User::class, 'user');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return Response
@@ -84,11 +95,13 @@ class UserController extends Controller
             'password'   => Hash::make($data['password']),
         ]);
         // add the phone number
-        $phone = Phone::make([
-            'number'     => $data['phone'],
-            'is_primary' => 1,
-        ]);
-        $user->phones()->save($phone);
+        if (!empty($data['phone'])) {
+            $phone = Phone::make([
+                'number'     => $data['phone'],
+                'is_primary' => 1,
+            ]);
+            $user->phones()->save($phone);
+        }
 
         // send validation email if requested in form
         if (!empty($data['send_verification'])) {

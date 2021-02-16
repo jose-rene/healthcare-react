@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
@@ -51,9 +52,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        // give a friendly 404 message when resources are not found with implicit binding in controller
+        // give a friendly 404 message when resources are not found with implicit binding in resource controller
         if ($exception instanceof ModelNotFoundException && $request->acceptsJson()) {
             return response()->json(['message' => 'Resource Not Found.'], 404);
+        }
+
+        // give a friendly 403 message when resources are denied for permissions
+        if ($exception instanceof AuthorizationException && $request->acceptsJson()) {
+            return response()->json(['message' => $exception->getMessage()], 403);
         }
 
         return parent::render($request, $exception);
