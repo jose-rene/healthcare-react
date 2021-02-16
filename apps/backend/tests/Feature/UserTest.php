@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\UserType\EngineeringUser;
 use Artisan;
 use Bouncer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -50,11 +51,10 @@ class UserTest extends TestCase
         );
         // fetch the user profile
         $response = $this->get('/v1/user/' . $this->user->uuid);
+        // will have the field gitlab_name for an engineering user
         $response
             ->assertOk()
-            ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'roles']);
-
-        // dd($response->getContent());
+            ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'gitlab_name', 'roles']);
 
         $this->assertEquals($this->user->email, $response->json('email'));
     }
@@ -165,5 +165,7 @@ class UserTest extends TestCase
         ]);
         // assign superadmin role to user
         Bouncer::assign('software_engineer')->to($this->admin);
+        // add user type engineering
+        $this->user->engineeringUser()->save(EngineeringUser::factory()->create());
     }
 }
