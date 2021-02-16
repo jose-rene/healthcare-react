@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Library\FmDataApi;
+use App\Models\Role;
+use Bouncer;
 use Illuminate\Http\Client\Factory as HttpClientFactory;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Config;
@@ -31,5 +33,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // this will remove the data wrap from resources, axios on the client will wrap response body with data key
         JsonResource::withoutWrapping();
+        // use custom role class with bouncer
+        Bouncer::useRoleModel(Role::class);
     }
 }

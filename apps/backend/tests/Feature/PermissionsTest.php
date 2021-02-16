@@ -6,6 +6,7 @@ use App\Models\User;
 use Artisan;
 use Bouncer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class PermissionsTest extends TestCase
@@ -16,40 +17,113 @@ class PermissionsTest extends TestCase
     private $bearer_token = null;
 
     /**
-     * A basic feature test example.
+     * Test access by role.
      *
      * @return void
      */
-    public function testSuperAdminAssigned()
+    public function testAccess()
     {
-        $this->user->assign('admin');
+        Passport::actingAs(
+            $admin = User::factory()->create()
+        );
+        // assign superadmin role
+        Bouncer::assign('software_engineer')->to($admin);
 
-        $response = $this->get('v1/something/for/super-admins', [
-            'Authorization' => "Bearer {$this->bearer_token}", // Utilize the bearer token
-        ]);
+        $response = $this->get('v1/user/' . $this->user->uuid);
 
         $response
             ->assertOk()
-            ->assertJson([
-                'full_name' => $this->user->first_name . ' ' . $this->user->last_name,
-                'roles'     => [
-                    ['name' => 'admin'],
-                ],
-            ]);
+            ->assertJsonStructure(['email']);
+
+        $this->assertEquals($this->user->email, $response->json('email'));
     }
 
     /**
-     * A basic feature test example.
+     * Test access by role denied.
      *
      * @return void
      */
-    public function testSuperAdminNotAssigned()
+    public function testAccessDenied()
     {
-        $response = $this->get('v1/something/for/super-admins', [
-            'Authorization' => "Bearer {$this->bearer_token}", // Utilize the bearer token
-        ]);
+        Passport::actingAs(
+            User::factory()->create()
+        );
+        // user has no role / permissions should be forbidden
+        $response = $this->get('v1/user/' . $this->user->uuid);
 
         $response->assertForbidden();
+    }
+
+    /**
+     * Test access by ability.
+     *
+     * @return void
+     */
+    public function testAccessByAblity()
+    {
+        $this->withoutExceptionHandling();
+        $admin = User::factory()->create();
+
+        // grant the ability to create users
+        Bouncer::allow($admin)->to('create-users');
+        Passport::actingAs(
+            $admin
+        );
+
+        // try adding a user
+        $userData = $this->getUserToAdd();
+        $response = $this->post('v1/user', $userData);
+
+        $response
+            ->assertStatus(201)
+            ->assertJsonStructure(['email', 'first_name', 'last_name']);
+
+        $this->assertEquals($userData['email'], $response->json('email'));
+    }
+
+    /**
+     * Test deny access by ability.
+     *
+     * @return void
+     */
+    public function testDenyAccessByAblity()
+    {
+        Passport::actingAs(
+            $admin = User::factory()->create()
+        );
+        // try adding a user
+        $userData = $this->getUserToAdd();
+        $response = $this->post('v1/user', $userData);
+        $response->assertForbidden();
+    }
+
+    /**
+     * Test role domain.
+     *
+     * @return void
+     */
+    public function testRoleDomain()
+    {
+        $role = Bouncer::role()->firstWhere(['name' => 'software_engineer']);
+        $this->assertEquals('Engineering', $role->domain);
+        $role = Bouncer::role()->firstWhere(['name' => 'hp_manager']);
+        $this->assertEquals('HP Manager', $role->title);
+        $this->assertEquals('Health Plan', $role->domain);
+        $hpRoles = Bouncer::role()->getByDomain('Health Plan');
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $hpRoles);
+        $this->assertEquals(4, $hpRoles->count());
+    }
+
+    protected function getUserToAdd()
+    {
+        $userToAdd = User::factory()->make();
+
+        return [
+            'first_name' => $userToAdd->first_name,
+            'last_name'  => $userToAdd->last_name,
+            'email'      => $userToAdd->email,
+            'password'   => 'ABC123xyz',
+        ];
     }
 
     protected function setUp(): void
@@ -57,15 +131,12 @@ class PermissionsTest extends TestCase
         parent::setUp();
 
         Artisan::call('passport:install');
-        Bouncer::allow('admin')->everything();
 
-        $this->user = User::factory()->create();
-
-        $response = $this->post('/v1/login', [
-            'email'    => $this->user->email,
-            'password' => 'password',
+        // seed the Bouncer roles
+        Artisan::call('db:seed', [
+            '--class' => 'Database\Seeders\BouncerSeeder',
         ]);
 
-        $this->bearer_token = $response->json('access_token');
+        $this->user = User::factory()->create();
     }
 }

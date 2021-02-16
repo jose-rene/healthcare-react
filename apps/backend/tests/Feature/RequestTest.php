@@ -62,7 +62,7 @@ class RequestTest extends TestCase
     }
 
     /**
-     * Test getting request by id.
+     * Test request summary.
      *
      * @return void
      */
