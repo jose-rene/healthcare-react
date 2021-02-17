@@ -110,7 +110,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test create user.
+     * Test update user.
      *
      * @return void
      */
@@ -152,6 +152,59 @@ class UserTest extends TestCase
         // verfiy user has been deleted
         $response = $this->get('/v1/user/' . $this->user->uuid);
         $response->assertStatus(404);
+    }
+
+    /**
+     * Test update user profile permissions.
+     *
+     * @return void
+     */
+    public function testSaveProfilePermission()
+    {
+        $this->withoutExceptionHandling();
+        // assign software engineer
+        Bouncer::assign('software_engineer')->to($this->user);
+        Passport::actingAs(
+            $this->user
+        );
+        // try to switch to a non-assigned role
+        $formData = [
+            'first_name'   => $this->faker->firstName,
+            'last_name'    => $this->faker->lastName,
+            'primary_role' => 'hp_manager',
+        ];
+        // update user with invalid primary role
+        $response = $this->put('/v1/user/profile', $formData);
+        // expect 422 error
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Test update user profile.
+     *
+     * @return void
+     */
+    public function testSaveProfile()
+    {
+        $this->withoutExceptionHandling();
+        // add the hp manager role
+        Bouncer::sync($this->user)->roles(['hp_manager', 'software_engineer']);
+        Passport::actingAs(
+            $this->user
+        );
+        $formData = [
+            'first_name'   => $this->faker->firstName,
+            'last_name'    => $this->faker->lastName,
+            'primary_role' => 'hp_manager',
+        ];
+        // update user with valid primary role
+        $response = $this->put('/v1/user/profile', $formData);
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['first_name', 'last_name', 'email', 'roles']);
+        $this->assertEquals($formData['last_name'], $response->json('last_name'));
+        // make sure the user type is changed to health plan when the user domain is changed
+        $this->assertEquals('HealthPlanUser', $response->json('user_type'));
     }
 
     protected function setUp(): void

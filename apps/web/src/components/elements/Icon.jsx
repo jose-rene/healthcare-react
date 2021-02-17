@@ -27,10 +27,14 @@ const Icon = ({
         alert: "exclamation-triangle",
         mail: "envelope",
         email: "envelope",
-        cancel: 'ban',
+        cancel: "ban",
+        loading: "spinner",
     };
 
     const mappedIcon = map[name] || name;
+    if (name === "spinner" && !className) {
+        className = "fa-spin";
+    }
 
     return (
         <i

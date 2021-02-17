@@ -8,6 +8,7 @@ use App\Http\Resources\MyUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\Phone;
 use App\Models\User;
+use Bouncer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
@@ -32,7 +33,67 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(['message' => 'Not a valid endpoint.'], 422);
+    }
+
+    /**
+     * Search users.
+     *
+     * @param UserRequest $request
+     * @return Response
+     *
+     * @OA\Post(
+     *      path="/user/search",
+     *      operationId="createUser",
+     *      tags={"user"},
+     *      summary="Search existing users",
+     *      description="Returns array of users matching search criteria.",
+     *      @OA\RequestBody(
+     *        required=true,
+     *        description="User creation schema.",
+     *        @OA\JsonContent(
+     *          required={"email","password","first_name","last_name"},
+     *          @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
+     *          @OA\Property(property="password", type="string", format="password", example="PassWord!123"),
+     *          @OA\Property(property="first_name", type="string", format="string", example="Peter"),
+     *          @OA\Property(property="last_name", type="string", format="string", example="Griffin"),
+     *          @OA\Property(property="phone", type="string", format="string", example="555-555-5555"),
+     *        ),
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *            ref="#/components/schemas/UserResource"
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation Error"
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
+    public function search(Request $request)
+    {
+        // @todo may use a formrequest for this eventually
+        $user = auth()->user();
+        if ($user->cannot('viewAny', User::class)) {
+            return response()->json(['message' => 'You do not have permissions for the requested resource.'], 403);
+        }
+        // @todo implement search
+        return response()->json([], 200);
     }
 
     /**
@@ -289,8 +350,22 @@ class UserController extends Controller
     public function profileSave(Request $request)
     {
         $user = $request->user();
+        // allow user to only update their own profile
+        if ($user->cannot('view', $user)) {
+            return response()->json(['message' => 'You do not have permissions for the requested resource.'], 403);
+        }
 
-        $data = $request->except('password', 'roles');
+        $data = $request->except('password', 'roles', 'user_type');
+        // validate the primary role
+        $role = Bouncer::role()->firstWhere(['name' => $data['primary_role']]);
+        if (empty($role) || !$user->roles->contains('name', $data['primary_role'])) {
+            return response()->json(['message' => 'Invalid primary role.'], 422);
+        }
+        // change the user type if applicable
+        if ($user->user_type_domain !== $role->domain) {
+            // change the user type
+            $data['user_type'] = User::mapTypeForDomain($role->domain);
+        }
 
         $user->update($data);
 

@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PrivateRoute from "./PrivateRoute";
 
-export const RoleRouteRouter = ({
+const RoleRouteRouter = ({
     component: _component = "",
     children,
     authed,
@@ -10,9 +10,11 @@ export const RoleRouteRouter = ({
     ...rest
 }) => {
     let component = null;
+
     try {
-        component = primaryRole ? require(
-            `../pages/${_component}/${primaryRole}`).default : undefined;
+        component = primaryRole
+            ? require(`../pages/${_component}/${primaryRole}`).default
+            : undefined;
     } catch (err) {
         component = require("../pages/NotFound").default;
     }

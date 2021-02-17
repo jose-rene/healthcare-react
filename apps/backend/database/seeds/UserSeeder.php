@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Bouncer;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -29,10 +30,8 @@ class UserSeeder extends Seeder
             ]);
 
             $admin->markEmailAsVerified();
+            Bouncer::sync($admin)->roles(['hp_manager', 'software_engineer']);
         }
-
-        // TODO :: make sure the admin has admin abilities
-//        $admin->assign('admin');
 
 //        factory(User::class, random_int(100, 500))->create();
     }
