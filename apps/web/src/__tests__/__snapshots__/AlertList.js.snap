@@ -1,0 +1,370 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Alert List Displays an alert list with read and unread alerts 1`] = `
+<div
+  class="list-group"
+  data-testid="alert-list-group"
+>
+  <div
+    class="border-0 list-group-item"
+    data-testid="alert-88362598-0027-4ac1-8950-b6b1d407dc3d"
+  >
+    <div
+      class="d-flex"
+    >
+      <div>
+        <input
+          id="88362598-0027-4ac1-8950-b6b1d407dc3d"
+          name="88362598-0027-4ac1-8950-b6b1d407dc3d"
+          type="checkbox"
+          value="true"
+        />
+      </div>
+      <div>
+        <label
+          class="checkbox-label "
+          for="88362598-0027-4ac1-8950-b6b1d407dc3d"
+        >
+          Activity Request
+        </label>
+      </div>
+      <div
+        class="ml-auto"
+      >
+        <p
+          class="checkbox-time"
+        >
+          5 seconds ago
+        </p>
+      </div>
+    </div>
+    <p
+      class="checkbox-subtitle"
+    >
+      Aut mollitia eos et dolores possimus nobis dolor.
+    </p>
+  </div>
+  <div
+    class="border-0 list-group-item"
+    data-testid="alert-cd3d1a9f-1765-418e-9ded-834f07fd7d2a"
+  >
+    <div
+      class="d-flex"
+    >
+      <div>
+        <input
+          id="cd3d1a9f-1765-418e-9ded-834f07fd7d2a"
+          name="cd3d1a9f-1765-418e-9ded-834f07fd7d2a"
+          type="checkbox"
+          value="true"
+        />
+      </div>
+      <div>
+        <label
+          class="checkbox-label "
+          for="cd3d1a9f-1765-418e-9ded-834f07fd7d2a"
+        >
+          Activity Request
+        </label>
+      </div>
+      <div
+        class="ml-auto"
+      >
+        <p
+          class="checkbox-time"
+        >
+          7 seconds ago
+        </p>
+      </div>
+    </div>
+    <p
+      class="checkbox-subtitle"
+    >
+      Quidem ullam voluptates vel similique a.
+    </p>
+  </div>
+  <div
+    class="border-0 list-group-item"
+    data-testid="alert-3f8a6c03-e48d-4418-aaa2-16d26a8ce1f9"
+  >
+    <div
+      class="d-flex"
+    >
+      <div>
+        <input
+          id="3f8a6c03-e48d-4418-aaa2-16d26a8ce1f9"
+          name="3f8a6c03-e48d-4418-aaa2-16d26a8ce1f9"
+          type="checkbox"
+          value="true"
+        />
+      </div>
+      <div>
+        <label
+          class="checkbox-label "
+          for="3f8a6c03-e48d-4418-aaa2-16d26a8ce1f9"
+        >
+          Activity Request
+        </label>
+      </div>
+      <div
+        class="ml-auto"
+      >
+        <p
+          class="checkbox-time"
+        >
+          8 seconds ago
+        </p>
+      </div>
+    </div>
+    <p
+      class="checkbox-subtitle"
+    >
+      Possimus hic voluptas aperiam reprehenderit fuga est id.
+    </p>
+  </div>
+  <div
+    class="border-0 list-group-item"
+    data-testid="alert-2334ce4c-d14c-420b-91e4-23f997ce2a3b"
+  >
+    <div
+      class="d-flex"
+    >
+      <div>
+        <input
+          id="2334ce4c-d14c-420b-91e4-23f997ce2a3b"
+          name="2334ce4c-d14c-420b-91e4-23f997ce2a3b"
+          type="checkbox"
+          value="true"
+        />
+      </div>
+      <div>
+        <label
+          class="checkbox-label "
+          for="2334ce4c-d14c-420b-91e4-23f997ce2a3b"
+        >
+          Activity Request
+        </label>
+      </div>
+      <div
+        class="ml-auto"
+      >
+        <p
+          class="checkbox-time"
+        >
+          12 seconds ago
+        </p>
+      </div>
+    </div>
+    <p
+      class="checkbox-subtitle"
+    >
+      Consequatur dolorum ipsa nostrum consequuntur architecto.
+    </p>
+  </div>
+  <div
+    class="border-0 list-group-item"
+    data-testid="alert-3f909940-866c-43e3-a10f-024ebfda3542"
+  >
+    <div
+      class="d-flex"
+    >
+      <div>
+        <input
+          checked=""
+          disabled=""
+          id="3f909940-866c-43e3-a10f-024ebfda3542"
+          name="3f909940-866c-43e3-a10f-024ebfda3542"
+          type="checkbox"
+          value="true"
+        />
+      </div>
+      <div>
+        <label
+          class="checkbox-label text-muted"
+          for="3f909940-866c-43e3-a10f-024ebfda3542"
+        >
+          Activity Request
+        </label>
+      </div>
+      <div
+        class="ml-auto"
+      >
+        <p
+          class="checkbox-time"
+        >
+          22 minutes ago
+        </p>
+      </div>
+    </div>
+    <p
+      class="checkbox-subtitle"
+    >
+      Officiis dolorem aut ipsum quasi veritatis explicabo.
+    </p>
+  </div>
+  <div
+    class="border-0 list-group-item"
+    data-testid="alert-2e5bb3d2-fb51-4710-8b5d-730124034340"
+  >
+    <div
+      class="d-flex"
+    >
+      <div>
+        <input
+          checked=""
+          disabled=""
+          id="2e5bb3d2-fb51-4710-8b5d-730124034340"
+          name="2e5bb3d2-fb51-4710-8b5d-730124034340"
+          type="checkbox"
+          value="true"
+        />
+      </div>
+      <div>
+        <label
+          class="checkbox-label text-muted"
+          for="2e5bb3d2-fb51-4710-8b5d-730124034340"
+        >
+          Activity Request
+        </label>
+      </div>
+      <div
+        class="ml-auto"
+      >
+        <p
+          class="checkbox-time"
+        >
+          22 minutes ago
+        </p>
+      </div>
+    </div>
+    <p
+      class="checkbox-subtitle"
+    >
+      Eius quis consequatur ullam et autem expedita.
+    </p>
+  </div>
+  <div
+    class="border-0 list-group-item"
+    data-testid="alert-196ab37f-a55e-421b-a72d-1087563dfa4d"
+  >
+    <div
+      class="d-flex"
+    >
+      <div>
+        <input
+          checked=""
+          disabled=""
+          id="196ab37f-a55e-421b-a72d-1087563dfa4d"
+          name="196ab37f-a55e-421b-a72d-1087563dfa4d"
+          type="checkbox"
+          value="true"
+        />
+      </div>
+      <div>
+        <label
+          class="checkbox-label text-muted"
+          for="196ab37f-a55e-421b-a72d-1087563dfa4d"
+        >
+          Activity Request
+        </label>
+      </div>
+      <div
+        class="ml-auto"
+      >
+        <p
+          class="checkbox-time"
+        >
+          23 minutes ago
+        </p>
+      </div>
+    </div>
+    <p
+      class="checkbox-subtitle"
+    >
+      Magni iste neque accusantium magnam dicta voluptatum voluptatibus.
+    </p>
+  </div>
+  <div
+    class="border-0 list-group-item"
+    data-testid="alert-851a3ff8-b1db-433e-923f-b153d6014d6b"
+  >
+    <div
+      class="d-flex"
+    >
+      <div>
+        <input
+          checked=""
+          disabled=""
+          id="851a3ff8-b1db-433e-923f-b153d6014d6b"
+          name="851a3ff8-b1db-433e-923f-b153d6014d6b"
+          type="checkbox"
+          value="true"
+        />
+      </div>
+      <div>
+        <label
+          class="checkbox-label text-muted"
+          for="851a3ff8-b1db-433e-923f-b153d6014d6b"
+        >
+          Activity Request
+        </label>
+      </div>
+      <div
+        class="ml-auto"
+      >
+        <p
+          class="checkbox-time"
+        >
+          23 minutes ago
+        </p>
+      </div>
+    </div>
+    <p
+      class="checkbox-subtitle"
+    >
+      Incidunt temporibus tenetur nobis dolorem magnam.
+    </p>
+  </div>
+  <div
+    class="border-0 list-group-item"
+    data-testid="alert-8281feb5-c00a-49fd-8db2-b0243e3ecca3"
+  >
+    <div
+      class="d-flex"
+    >
+      <div>
+        <input
+          checked=""
+          disabled=""
+          id="8281feb5-c00a-49fd-8db2-b0243e3ecca3"
+          name="8281feb5-c00a-49fd-8db2-b0243e3ecca3"
+          type="checkbox"
+          value="true"
+        />
+      </div>
+      <div>
+        <label
+          class="checkbox-label text-muted"
+          for="8281feb5-c00a-49fd-8db2-b0243e3ecca3"
+        >
+          Activity Request
+        </label>
+      </div>
+      <div
+        class="ml-auto"
+      >
+        <p
+          class="checkbox-time"
+        >
+          1 hour ago
+        </p>
+      </div>
+    </div>
+    <p
+      class="checkbox-subtitle"
+    >
+      Iure est et alias rem.
+    </p>
+  </div>
+</div>
+`;

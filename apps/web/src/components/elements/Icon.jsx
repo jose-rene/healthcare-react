@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faTrash, faAlert } from '@fortawesome/free-solid-svg-icons'
 
@@ -9,15 +9,17 @@ import React from "react";
  * @param children
  * @param iconType
  * @param className
+ * @param spin
  * @param props
  * @returns {JSX.Element}
  */
 const Icon = ({
     icon = undefined,
-    size = "2x",
+    size = '2x',
     children,
-    iconType = "s",
-    className = "",
+    iconType = 's',
+    className = '',
+    spin = false,
     ...props
 }) => {
     let name = icon || children;
@@ -34,9 +36,7 @@ const Icon = ({
 
     return (
         <i
-            className={`${className} icon fa${iconType} fa-${mappedIcon
-                .toLowerCase()
-                .trim()} fa-${size}`}
+            className={`${className} icon fa${iconType} fa-${mappedIcon.toLowerCase().trim()} fa-${size} ${spin ? 'fa-spin' : ''}`}
             {...props}
         />
     );

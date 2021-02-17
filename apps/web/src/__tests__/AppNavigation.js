@@ -1,17 +1,11 @@
-import "@testing-library/jest-dom";
-import React from "react";
-import AsyncStorage from "@react-native-community/async-storage";
-import { generate as generateRandomString } from "randomstring";
-import {
-    render,
-    screen,
-    axiosMock,
-    profileResponse,
-    fireEvent,
-    wait,
-} from "../testUtils";
-import { AUTH_TOKEN_NAME } from "../config/URLs";
-import AppNavigation from "../navigation/AppNavigation";
+import AsyncStorage from '@react-native-community/async-storage';
+import '@testing-library/jest-dom';
+import { generate as generateRandomString } from 'randomstring';
+import React from 'react';
+import { AUTH_TOKEN_NAME } from '../config/URLs';
+import AppNavigation from '../navigation/AppNavigation';
+import { axiosMock, fireEvent, profileResponse, render, screen, wait } from '../testUtils';
+import { notificationResponse } from './AlertList';
 
 // mock the window location
 const initialLocation = window.location;
@@ -62,9 +56,7 @@ describe("App Navigation", () => {
             roles: [],
             primary_role: "",
         };
-        axiosMock()
-            .onGet(/profile/)
-            .reply("200", profileResponseNoRole);
+        axiosMock().onGet(/profile/).reply(200, profileResponseNoRole);
         const authToken = generateRandomString({
             length: 24,
             charset: "alphanumeric",
@@ -82,20 +74,14 @@ describe("App Navigation", () => {
         );
     });
     it("displays dashboard when authenticated with role", async () => {
-        axiosMock()
-            .onGet(/profile/)
-            .reply("200", profileResponse)
-            .onGet(/inspire/)
-            .reply("200", {
-                message: "Fly a kite in a thunderstorm. - Benjamin Franklin",
-            })
-            .onGet(/summary/)
-            .reply("200", {
-                new: 33,
-                in_progress: 12,
-                scheduled: 20,
-                submitted: 22,
-            });
+        axiosMock().onGet(/profile/).reply(200, profileResponse).onGet(/inspire/).reply(200, {
+            message: 'Fly a kite in a thunderstorm. - Benjamin Franklin',
+        }).onGet(/summary/).reply(200, {
+            new: 33,
+            in_progress: 12,
+            scheduled: 20,
+            submitted: 22,
+        }).onGet(/notifications/).reply(200, notificationResponse);
 
         const authToken = generateRandomString({
             length: 24,
@@ -124,20 +110,14 @@ describe("App Navigation", () => {
     });
     it("logs the user out", async () => {
         // render with redux
-        axiosMock()
-            .onGet(/profile/)
-            .reply("200", profileResponse)
-            .onGet(/inspire/)
-            .reply("200", {
-                message: "Fly a kite in a thunderstorm. - Benjamin Franklin",
-            })
-            .onGet(/summary/)
-            .reply("200", {
-                new: 33,
-                in_progress: 12,
-                scheduled: 20,
-                submitted: 22,
-            });
+        axiosMock().onGet(/profile/).reply(200, profileResponse).onGet(/inspire/).reply(200, {
+            message: 'Fly a kite in a thunderstorm. - Benjamin Franklin',
+        }).onGet(/summary/).reply(200, {
+            new: 33,
+            in_progress: 12,
+            scheduled: 20,
+            submitted: 22,
+        }).onGet(/notifications/).reply(200, notificationResponse);
 
         const authToken = generateRandomString({
             length: 24,

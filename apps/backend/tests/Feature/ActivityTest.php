@@ -55,13 +55,13 @@ class ActivityTest extends TestCase
         // a notification will be generated on activity creation, use notification fake
         Notification::fake();
         $this->request = Request::factory()->create();
-        $this->activity = Activity::factory()->create();
-        $this->activityCollection = Activity::factory()->count(3)->create();
-        /*$children = $this->activityCollection->map(function ($value) {
-            $value->id;
-        });
-        dd($children);*/
-        $this->activity->children()->saveMany($this->activityCollection);
+
+        // Generate activity with children for the automated tests
+        $this->activity = Activity::factory()
+            ->forUser()
+            ->has(Activity::factory()->forUser()->count(3), 'children')
+            ->create();
+
         $this->user = User::factory()->create();
     }
 }

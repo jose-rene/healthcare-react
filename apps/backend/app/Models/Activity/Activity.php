@@ -20,6 +20,18 @@ class Activity extends Model
     use Uuidable;
     use Observable;
 
+    protected $fillable = [
+        'parent_id',
+        'request_id',
+        'user_id',
+        'activity_type_id',
+        'message',
+        'notify_admin',
+        'notify_healthplan',
+        'notify_reviewer',
+        'notify_therapist',
+    ];
+
     /**
      * Relationship to request.
      *
