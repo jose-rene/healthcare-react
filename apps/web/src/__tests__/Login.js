@@ -1,24 +1,16 @@
-import React from "react";
-import { generate as generateRandomString } from "randomstring";
-import moment from "moment";
-import routeData from "react-router";
-import {
-    renderWithRouter,
-    fireEvent,
-    screen,
-    axiosMock,
-    profileResponse,
-    wait,
-} from "../testUtils";
-import { AUTH_TOKEN_NAME } from "../config/URLs";
-import Login from "../pages/Login";
+import moment from 'moment';
+import { generate as generateRandomString } from 'randomstring';
+import React from 'react';
+import routeData from 'react-router';
+import Login from '../pages/Login';
+import { axiosMock, fireEvent, profileResponse, renderWithRouter, screen, wait } from '../testUtils';
 
 // mock useLocation
 const mockLocation = {
-    pathname: "/dashboard",
-    hash: "",
-    search: "",
-    state: "",
+    pathname: '/dashboard',
+    hash: '',
+    search: '',
+    state: '',
 };
 
 beforeEach(() => {
@@ -29,7 +21,7 @@ afterEach(() => {
 });
 
 // @note using axios-mock-adapter instead of mocking axios, see ./testUtils.js
-/* 
+/*
 afterEach(() => {
   jest.resetAllMocks();
   mockAxios.reset();
@@ -139,11 +131,7 @@ describe("Login Page", () => {
                 .format("YYYY-MM-DD hh:mm:ss"),
         };
         // /login/
-        axiosMock()
-            .onPost()
-            .reply("200", response)
-            .onGet(/profile/)
-            .reply("200", profileResponse);
+        axiosMock().onPost().reply(200, response).onGet(/profile/).reply(200, profileResponse);
         // render with redux and router
         renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes
@@ -172,7 +160,7 @@ describe("Login Page", () => {
         );
         axiosMock()
             .onGet(/profile/)
-            .reply("200", profileResponse);
+            .reply(200, profileResponse);
         // render with redux and router
         renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes

@@ -1,15 +1,9 @@
-import React from "react";
-import { generate as generateRandomString } from "randomstring";
-import moment from "moment";
-import routeData from "react-router";
-import {
-    renderWithRouter,
-    screen,
-    axiosMock,
-    profileResponse,
-    wait,
-} from "../testUtils";
-import Federated from "../pages/Federated";
+import moment from 'moment';
+import { generate as generateRandomString } from 'randomstring';
+import React from 'react';
+import routeData from 'react-router';
+import Federated from '../pages/Federated';
+import { axiosMock, profileResponse, renderWithRouter, screen } from '../testUtils';
 
 // redux
 const initialReduxState = {
@@ -19,7 +13,7 @@ const initialReduxState = {
     },
 };
 // mock url
-const expires = moment().add(5, "minutes");
+const expires = moment().add(5, 'minutes');
 const signature = generateRandomString(32);
 // mock useLocation
 const mockLocation = {
@@ -48,11 +42,7 @@ describe("SSO Login Page", () => {
                 .add(7, "minutes")
                 .format("YYYY-MM-DD hh:mm:ss"),
         };
-        axiosMock()
-            .onGet()
-            .replyOnce("200", response)
-            .onGet(/profile/)
-            .reply("200", profileResponse);
+        axiosMock().onGet().replyOnce(200, response).onGet(/profile/).reply(200, profileResponse);
 
         // render with redux and router
         renderWithRouter(<Federated />, {

@@ -22,6 +22,8 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->get('/user/profile', 'UserController@profile');
     $router->put('/user/profile', 'UserController@profileSave');
     $router->get('logout', 'LoginController@logout');
+    $router->get('notifications', 'NotificationsController@index');
+    $router->put('notifications', 'NotificationsController@update');
     // request info
     $router->get('/request/summary', 'RequestController@summary');
     $router->get('/request/inspire', 'RequestController@inspire');

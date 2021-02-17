@@ -5,10 +5,12 @@ namespace App\Models;
 use App\Models\UserType\ClinicalServicesUser;
 use App\Models\UserType\EngineeringUser;
 use App\Models\UserType\HealthplanUser;
+use App\Models\Activity\Activity;
 use App\Traits\Uuidable;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -67,7 +69,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at'  => 'datetime',
-        'notification_prefs' => 'array',
+        'notification_prefs' => 'json',
     ];
 
     protected static $userTypeMap = [
@@ -89,6 +91,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function phones()
     {
         return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    /**
+     * get the activity/ notifications for a user
+     * @return HasMany
+     */
+    public function activity()
+    {
+        return $this->hasMany(Activity::class);
     }
 
     /**
@@ -165,9 +176,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         ResetPasswordNotification::$createUrlCallback = function ($notifiable, $token) {
             return Arr::get($_SERVER, 'HTTP_ORIGIN', 'dme-cg.com') . '/password/change?' . http_build_query([
-                'token' => $token,
-                'email' => $notifiable->getEmailForPasswordReset(),
-            ]);
+                                                                                                                'token' => $token,
+                                                                                                                'email' => $notifiable->getEmailForPasswordReset(),
+                                                                                                            ]);
         };
 
         $this->notify(new ResetPasswordNotification($token));

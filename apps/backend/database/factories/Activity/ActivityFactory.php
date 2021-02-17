@@ -5,7 +5,6 @@ namespace Database\Factories\Activity;
 use App\Models\Activity\Activity;
 use App\Models\Activity\ActivityType;
 use App\Models\Request;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ActivityFactory extends Factory
@@ -27,9 +26,6 @@ class ActivityFactory extends Factory
         return [
             'request_id' => function () {
                 return Request::factory();
-            },
-            'user_id' => function () {
-                return User::factory();
             },
             'activity_type_id' => function () {
                 return ActivityType::factory();

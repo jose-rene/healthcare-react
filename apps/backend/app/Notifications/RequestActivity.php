@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use App\Models\Activity\Activity;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -32,14 +31,14 @@ class RequestActivity extends Notification
      */
     public function via($notifiable)
     {
-        return in_array('sms', $notifiable->notification_prefs) ? ['sms', 'database'] : ['mail', 'database'];
+        return in_array('sms', $notifiable->notification_prefs ?? []) ? ['sms', 'database'] : ['mail', 'database'];
     }
 
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @param mixed $notifiable
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {
@@ -57,9 +56,7 @@ class RequestActivity extends Notification
      */
     public function toArray($notifiable)
     {
-        return [
-            //
-        ];
+        return $this->getActivityData();
     }
 
     public function getActivityData()
