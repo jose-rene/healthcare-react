@@ -19,6 +19,10 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
+        if (Bouncer::is($user)->a('software_engineer', 'hp_manager')) {
+            return true;
+        }
+
         return false;
     }
 

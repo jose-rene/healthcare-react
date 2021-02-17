@@ -25,9 +25,7 @@ export default ({
     const [loading, setLoading] = useState(false);
 
     const formatParams = (params, _method = method) => ({
-        [_method === GET
-            ? "params"
-            : "data"]: params,
+        [_method === GET ? "params" : "data"]: params,
     });
 
     const [config, setConfig] = useState({
@@ -79,20 +77,21 @@ export default ({
 
         if (request_params) {
             _configs = {
-                ...config, ...formatParams(request_params, _configs.method),
+                ...config,
+                ...formatParams(request_params, _configs.method),
             };
             persist_changes && setConfig(_configs);
         }
 
         try {
             const jwtToken = await AsyncStorage.getItem(
-                "@dme.login.access_token");
+                "@dme.login.access_token"
+            );
 
             if (jwtToken) {
-                _configs.headers["Authorization"] = `Bearer ${jwtToken}`;
+                _configs.headers.Authorization = `Bearer ${jwtToken}`;
             }
-        } catch (e) {
-        }
+        } catch (e) {}
 
         setError(false);
         setLoading(true);
@@ -107,7 +106,8 @@ export default ({
         } catch (err) {
             debug && console.info("useService.fired.reject", { err });
             setError(err);
-            throw(err);
+            setLoading(false);
+            throw err;
         } finally {
             setLoading(false);
         }
@@ -117,16 +117,16 @@ export default ({
         (async () => {
             try {
                 const jwtToken = await AsyncStorage.getItem(
-                    "@dme.login.access_token");
+                    "@dme.login.access_token"
+                );
 
                 if (jwtToken) {
                     const new_config = config;
-                    new_config.headers["Authorization"] = `Bearer ${jwtToken}`;
+                    new_config.headers.Authorization = `Bearer ${jwtToken}`;
 
                     setConfig(new_config);
                 }
-            } catch (e) {
-            }
+            } catch (e) {}
 
             if (enableCancelToken) {
                 const tmp_cancel_token = axios.CancelToken.source();
@@ -148,5 +148,5 @@ export default ({
         debug && console.info("useService.useMemo.params", { config });
     }, [params]);
 
-    return [{ loading, data, error, cancelToken }, fire];
-}
+    return [{ loading, data, error, cancelToken, setLoading }, fire];
+};

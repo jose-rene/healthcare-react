@@ -16,6 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
@@ -74,7 +75,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected static $userTypeMap = [
         1 => 'EngineeringUser',
-        2 => 'HealthplanUser',
+        2 => 'HealthPlanUser',
         3 => 'ClinicalServicesUser',
     ];
 
@@ -152,6 +153,20 @@ class User extends Authenticatable implements MustVerifyEmail
         return empty($this->user_type) || !isset(self::$userTypeMap[$this->user_type]) ? '' : self::$userTypeMap[$this->user_type];
     }
 
+    /**
+     * Returns the domain of the user type class.
+     *
+     * @return string
+     */
+    public function getUserTypeDomainAttribute()
+    {
+        if ('' === ($name = $this->getUserTypeNameAttribute())) {
+            return '';
+        }
+
+        return ucwords(Str::snake(str_replace('User', '', $name), ' '));
+    }
+
     public function OathClients()
     {
         return $this->hasMany(OathClients::class);
@@ -164,6 +179,13 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $key;
+    }
+
+    public static function mapTypeForDomain($domain)
+    {
+        $className = ucfirst(Str::camel($domain) . 'User');
+
+        return self::mapType($className);
     }
 
     /**

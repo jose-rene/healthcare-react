@@ -36,11 +36,13 @@ class BouncerSeeder extends Seeder
             'hp_manager'  => 'HP Manager',
         ];
         foreach ($hpRoles as $name => $title) {
-            Bouncer::role()->firstOrCreate([
+            $role = Bouncer::role()->firstOrCreate([
                 'domain' => 'Health Plan',
                 'name'   => $name,
                 'title'  => $title,
             ]);
         }
+        // allow HP Manager to create users
+        Bouncer::allow($role)->to($create);
     }
 }

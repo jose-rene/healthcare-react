@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHealthplanUsersTable extends Migration
+class CreateHealthPlanUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateHealthplanUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('healthplan_users', function (Blueprint $table) {
+        Schema::create('health_plan_users', function (Blueprint $table) {
             $table->id();
-            $table->string('specialty')->nullable();
+            $table->uuid('uuid')->index();
+            $table->foreignId('user_id')->nullable();
+            $table->foreignId('payer_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,6 +30,6 @@ class CreateHealthplanUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('healthplan_users');
+        Schema::dropIfExists('health_plan_users');
     }
 }
