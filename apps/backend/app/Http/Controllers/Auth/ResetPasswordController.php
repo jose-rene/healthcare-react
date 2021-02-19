@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserChangingPassword;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Support\Facades\Hash;
 
 class ResetPasswordController extends Controller
 {
@@ -27,4 +30,20 @@ class ResetPasswordController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
+
+    /**
+     * Set the user's password.
+     *
+     * @param CanResetPassword $user
+     * @param string           $password
+     * @return void
+     */
+    protected function setUserPassword($user, $password)
+    {
+        $originalPassword = $user->password;
+
+        $user->password = Hash::make($password);
+
+        event(new UserChangingPassword($user, $originalPassword));
+    }
 }
