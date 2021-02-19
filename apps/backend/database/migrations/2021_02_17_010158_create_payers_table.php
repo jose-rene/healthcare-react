@@ -16,7 +16,7 @@ class CreatePayersTable extends Migration
         Schema::create('payers', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->index();
-            $table->string('name')->comment('The name of the payer');
+            $table->string('name')->comment('The company name.');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -18,7 +18,7 @@ class AddPrimaryRoleToUsers extends Migration
             function (Blueprint $table) {
                 $table
                     ->string('primary_role', 50)
-                    ->comment('Stores the users primary role they see when they login to the application.')
+                    ->comment('The users primary role.')
                     ->nullable()
                     ->after('dob');
             }

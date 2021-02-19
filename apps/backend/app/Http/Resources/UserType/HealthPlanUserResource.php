@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources\UserType;
 
+use App\Http\Resources\PayerResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class HealthplanUser extends JsonResource
+class HealthPlanUserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,6 +15,8 @@ class HealthplanUser extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'payer' => new PayerResource($this->payer),
+        ];
     }
 }

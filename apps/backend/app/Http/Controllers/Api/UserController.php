@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\MyUserResource;
+use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
 use App\Models\Phone;
 use App\Models\User;
@@ -96,6 +97,23 @@ class UserController extends Controller
         return response()->json([], 200);
     }
 
+    public function availableRoles(Request $request)
+    {
+        $user = auth()->user();
+        // @todo check if this can be mapped to the create policy like the create route is
+        if ($user->cannot('create', User::class)) {
+            return response()->json(['message' => 'You do not have permissions for the requested resource.'], 403);
+        }
+
+        if ($user->can('apply-any-role')) {
+            return RoleResource::collection(Bouncer::role()->orderBy('name')->get());
+        }
+
+        $primaryRole = $user->roles->firstWhere('name', $user->primary_role);
+
+        return RoleResource::collection(Bouncer::role()->where(['domain' => $primaryRole->domain])->orderBy('name')->get());
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -150,10 +168,12 @@ class UserController extends Controller
         // the validation is already ran due to the magic of service binding, this is just retrieving the data
         $data = $request->validated();
         $user = User::create([
-            'first_name' => $data['first_name'],
-            'last_name'  => $data['last_name'],
-            'email'      => $data['email'],
-            'password'   => Hash::make($data['password']),
+            'first_name'   => $data['first_name'],
+            'last_name'    => $data['last_name'],
+            'email'        => $data['email'],
+            'password'     => Hash::make($data['password']),
+            'primary_role' => $data['primary_role'],
+            'user_type'    => $request['user_type'], // this is set in passed validation, never passed in request
         ]);
         // add the phone number
         if (!empty($data['phone'])) {
@@ -169,6 +189,18 @@ class UserController extends Controller
             $user->sendEmailVerificationNotification();
         } else {
             $user->markEmailAsVerified();
+        }
+
+        // add the primary role
+        $user->assign($data['primary_role']);
+        // sync the user type, creates user type relation if null
+        $userType = $user->syncUserType();
+        // @todo, support passing company id so admins can add health plan users
+        if ('HealthPlanUser' === $user->user_type_name && 'HealthPlanUser' === auth()->user()->user_type_name) {
+            // at this point only a health plan will be adding so get company from hp manager use
+            $payer = auth()->user()->healthplanUser->payer->first();
+            // set company relationship in user type
+            $userType->payer()->associate($payer)->save();
         }
         $user->save();
 

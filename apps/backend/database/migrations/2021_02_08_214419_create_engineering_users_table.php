@@ -16,7 +16,7 @@ class CreateEngineeringUsersTable extends Migration
         Schema::create('engineering_users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable();
-            $table->string('gitlab_name')->nullable();
+            $table->string('gitlab_name')->nullable()->comment('The gitlab username.');
             $table->timestamps();
             $table->softDeletes();
         });
