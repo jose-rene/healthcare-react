@@ -51,6 +51,7 @@ Route::middleware('auth:api')->group(function ($router) {
 });
 
 Route::post('/login', 'LoginController@login');
+Route::get('password/history/check', 'PasswordController@check');
 // @note uncomment to make registration routes publically available
 /*Route::post('/register', 'LoginController@login');
 Route::post('/register/create', 'RegisterController@store');*/

@@ -21,12 +21,13 @@ use Laravel\Passport\HasApiTokens;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 /**
- * @property int    id
- * @property string name
- * @property string email
- * @property string middle_name
- * @property string first_name
- * @property string last_name
+ * @property int             id
+ * @property string          name
+ * @property string          email
+ * @property string          middle_name
+ * @property string          first_name
+ * @property string          last_name
+ * @property PasswordHistory last_n_passwords
  * @link https://github.com/JosephSilber/bouncer#cheat-sheet
  */
 class User extends Authenticatable implements MustVerifyEmail
@@ -48,6 +49,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'username',
         'password',
+        'notification_type',
     ];
 
     protected $appends = ['full_name'];
@@ -82,6 +84,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function getLastNPasswordsAttribute()
+    {
+        return $this->password_history()->limit(config('rules.last_n', 6))->get();
+    }
+
+    public function password_history(): HasMany
+    {
+        return $this->hasMany(PasswordHistory::class)->orderBy('created_at', 'desc');
     }
 
     /**

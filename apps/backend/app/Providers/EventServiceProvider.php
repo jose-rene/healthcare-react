@@ -2,13 +2,11 @@
 
 namespace App\Providers;
 
-use Aacotroneo\Saml2\Events\Saml2LoginEvent;
-use App\Models\User;
+use App\Events\UserChangingPassword;
+use App\Listeners\TrackPasswordResets;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Log;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,8 +16,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        Registered::class => [
+        Registered::class           => [
             SendEmailVerificationNotification::class,
+        ],
+        UserChangingPassword::class => [
+            TrackPasswordResets::class,
         ],
     ];
 
