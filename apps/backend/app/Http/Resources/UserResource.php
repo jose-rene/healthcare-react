@@ -39,21 +39,22 @@ class UserResource extends JsonResource
         if (!empty($this->user_type_name)) {
             $userTypeResourceName = 'App\\Http\\Resources\\UserType\\' . $this->user_type_name . 'Resource';
             $relation = Str::camel($this->user_type_name);
-            if (null !== $this->{$relation}) {
-                $userTypeResource = new $userTypeResourceName($this->{$relation});
+            if (null !== ($userType = $this->{$relation}()->first())) {
+                $userTypeResource = new $userTypeResourceName($userType);
             }
         }
 
         return [
-            'id'          => $this->uuid,
-            'user_type'   => $this->user_type_name,
-            'name'        => $this->full_name,
-            'first_name'  => $this->first_name,
-            'middle_name' => $this->middle_name ?? '',
-            'last_name'   => $this->last_name,
-            'email'       => $this->email,
-            'phones'      => $this->phones->count() ? new PhoneCollectionResource($this->phones) : [],
-            'roles'       => RoleResource::collection($this->roles),
+            'id'           => $this->uuid,
+            'user_type'    => $this->user_type_name,
+            'name'         => $this->full_name,
+            'first_name'   => $this->first_name,
+            'middle_name'  => $this->middle_name ?? '',
+            'last_name'    => $this->last_name,
+            'email'        => $this->email,
+            'phones'       => $this->phones->count() ? new PhoneCollectionResource($this->phones) : [],
+            'primary_role' => $this->primary_role,
+            'roles'        => RoleResource::collection($this->roles),
             $this->mergeWhen(!empty($userTypeResource), $userTypeResource),
         ];
     }

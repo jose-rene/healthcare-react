@@ -28,6 +28,14 @@ class BouncerSeeder extends Seeder
         // apply to supers
         Bouncer::allow($super)->to($create);
 
+        // make adding roles outside of your domain an ability
+        $applyAnyRole = Bouncer::ability()->firstOrCreate([
+            'name'  => 'apply-any-role',
+            'title' => 'Apply any role',
+        ]);
+        // apply to supers
+        Bouncer::allow($super)->to($applyAnyRole);
+
         // add health plan user roles
         $hpRoles = [
             'hp_user'     => 'HP User',

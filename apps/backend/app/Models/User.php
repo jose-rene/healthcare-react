@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Activity\Activity;
 use App\Models\UserType\ClinicalServicesUser;
 use App\Models\UserType\EngineeringUser;
-use App\Models\UserType\HealthplanUser;
-use App\Models\Activity\Activity;
+use App\Models\UserType\HealthPlanUser;
 use App\Traits\Uuidable;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -95,7 +95,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * get the activity/ notifications for a user
+     * get the activity/ notifications for a user.
      * @return HasMany
      */
     public function activity()
@@ -116,11 +116,11 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Relationship to Healthplan User Type.
      *
-     * @return App\Models\UserType\HealthplanUser
+     * @return App\Models\UserType\HealthPlanUser
      */
-    public function healthplanUser()
+    public function healthPlanUser()
     {
-        return $this->hasOne(HealthplanUser::class);
+        return $this->hasOne(HealthPlanUser::class);
     }
 
     /**
@@ -167,6 +167,24 @@ class User extends Authenticatable implements MustVerifyEmail
         return ucwords(Str::snake(str_replace('User', '', $name), ' '));
     }
 
+    /**
+     * Creates the user type if it does not exist.
+     *
+     * @return object Illuminate\Database\Eloquent\Model
+     */
+    public function syncUserType()
+    {
+        // attach the user type
+        $relationship = lcfirst($this->user_type_name);
+        if (!$this->{$relationship}) {
+            $class = 'App\\Models\\UserType\\' . $this->user_type_name;
+            $userType = $class::create();
+            $this->{$relationship}()->save($userType);
+        }
+
+        return $this->{$relationship}()->first();
+    }
+
     public function OathClients()
     {
         return $this->hasMany(OathClients::class);
@@ -198,9 +216,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         ResetPasswordNotification::$createUrlCallback = function ($notifiable, $token) {
             return Arr::get($_SERVER, 'HTTP_ORIGIN', 'dme-cg.com') . '/password/change?' . http_build_query([
-                                                                                                                'token' => $token,
-                                                                                                                'email' => $notifiable->getEmailForPasswordReset(),
-                                                                                                            ]);
+                'token' => $token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ]);
         };
 
         $this->notify(new ResetPasswordNotification($token));

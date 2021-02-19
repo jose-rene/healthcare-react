@@ -63,9 +63,17 @@ class PermissionsTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $admin = User::factory()->create();
-
+        // create a role with no abilities
+        $super = Bouncer::role()->create([
+            'domain' => 'Engineering',
+            'name'   => 'data_entry',
+            'title'  => 'Data Entry',
+        ]);
+        $admin->assign('data_entry');
         // grant the ability to create users
         Bouncer::allow($admin)->to('create-users');
+        // grant the ability to add any role, create-user ability can only add in their own domain
+        Bouncer::allow($admin)->to('apply-any-role');
         Passport::actingAs(
             $admin
         );
@@ -119,10 +127,11 @@ class PermissionsTest extends TestCase
         $userToAdd = User::factory()->make();
 
         return [
-            'first_name' => $userToAdd->first_name,
-            'last_name'  => $userToAdd->last_name,
-            'email'      => $userToAdd->email,
-            'password'   => 'ABC123xyz',
+            'first_name'   => $userToAdd->first_name,
+            'last_name'    => $userToAdd->last_name,
+            'email'        => $userToAdd->email,
+            'password'     => 'ABC123xyz',
+            'primary_role' => 'hp_user',
         ];
     }
 

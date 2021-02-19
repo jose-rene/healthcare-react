@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Payer;
 use App\Models\User;
 use App\Models\UserType\EngineeringUser;
+use App\Models\UserType\HealthPlanUser;
 use Artisan;
 use Bouncer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -69,20 +71,49 @@ class UserTest extends TestCase
         Passport::actingAs(
             $this->admin
         );
-        $formData = [
-            'first_name' => $this->faker->firstName,
-            'last_name'  => $this->faker->lastName,
-            'email'      => $this->faker->unique()->safeEmail,
-            'password'   => str_pad(preg_replace('~[^a-zA-Z0-9!_:\~#@\^\*\.\,\(\)\{\}\[\]\+\-\$]~', '', $this->faker->password), 8, '!'),
-            'phone'      => $this->faker->phoneNumber,
-        ];
+        $formData = $this->getFormData();
+        $formData['primary_role'] = 'software_engineer';
         // create the user with data
         $response = $this->post('/v1/user', $formData);
         $response
             ->assertStatus(201)
-            ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'roles']);
+            ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'primary_role', 'roles']);
 
         $this->assertEquals($formData['email'], $response->json('email'));
+        $this->assertEquals($formData['primary_role'], $response->json('primary_role'));
+    }
+
+    /**
+     * Test create user.
+     *
+     * @return void
+     */
+    public function testHealthPlanCreate()
+    {
+        $this->withoutExceptionHandling();
+        $manager = User::factory()->create();
+        // assign hp manager role to user
+        Bouncer::sync($manager)->roles(['hp_manager']);
+        // add user type health plan
+        $hpUser = HealthPlanUser::factory()->create();
+        $manager->healthPlanUser()->save($hpUser);
+        $manager->user_type = 2;
+        $manager->save();
+        Passport::actingAs(
+            $manager
+        );
+        $formData = $this->getFormData();
+        $formData['primary_role'] = 'hp_user';
+        // create the user with data
+        $response = $this->post('/v1/user', $formData);
+        // dd($response->getContent());
+        $response
+            ->assertStatus(201)
+            ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'primary_role', 'roles', 'payer']);
+
+        // the added users company should be the same as hp manager creating the user
+        $response->assertJsonPath('payer.company_name', $manager->healthPlanUser->payer->name);
+        $this->assertEquals($formData['primary_role'], $response->json('primary_role'));
     }
 
     /**
@@ -96,17 +127,53 @@ class UserTest extends TestCase
             $this->admin
         );
         // leave out password
-        $badData = [
-            'first_name' => $this->faker->firstName,
-            'last_name'  => $this->faker->lastName,
-            'email'      => $this->faker->unique()->safeEmail,
-            'phone'      => $this->faker->phoneNumber,
-        ];
+        $badData = $this->getFormData();
+        unset($badData['password']);
         // create the user with data
         $response = $this->post('/v1/user', $badData);
         $response
             ->assertStatus(422)
             ->assertJsonStructure(['errors' => ['password']]);
+    }
+
+    /**
+     * Test create fail role permissions.
+     *
+     * @return void
+     */
+    public function testCreateFailRole()
+    {
+        // add the hp manager role
+        Bouncer::sync($this->admin)->roles(['hp_manager']);
+        Passport::actingAs(
+            $this->admin
+        );
+        $formData = $this->getFormData();
+        // apply a role not available in health plan domain
+        $formData['primary_role'] = 'softwar_engineer';
+        // create the user with data
+        $response = $this->post('/v1/user', $formData);
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Test create fail role policy.
+     *
+     * @return void
+     */
+    public function testCreateFailPolicy()
+    {
+        // sync a role that cannot create users
+        Bouncer::sync($this->admin)->roles(['hp_user']);
+        Passport::actingAs(
+            $this->admin
+        );
+        $formData = $this->getFormData();
+        $formData['primary_role'] = 'hp_user';
+        // create the user with data
+        $response = $this->post('/v1/user', $formData);
+        // expect to be denied by policy
+        $response->assertStatus(403);
     }
 
     /**
@@ -130,6 +197,72 @@ class UserTest extends TestCase
             ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'roles']);
 
         $this->assertEquals($formData['last_name'], $response->json('last_name'));
+    }
+
+    /**
+     * Test update user fail.
+     *
+     * @return void
+     */
+    public function testUpdateFail()
+    {
+        Passport::actingAs(
+            $this->admin
+        );
+        $formData = [
+            'first_name' => $this->faker->firstName,
+        ];
+        // update user with data
+        $response = $this->put('/v1/user/' . $this->user->uuid, $formData);
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure(['errors' => ['last_name']]);
+    }
+
+    /**
+     * Test update user fail role.
+     *
+     * @return void
+     */
+    public function testUpdateFailRole()
+    {
+        Passport::actingAs(
+            $this->admin
+        );
+        // try to set primary role to one the user does not have
+        $formData = [
+            'first_name'   => $this->faker->firstName,
+            'last_name'    => $this->faker->lastName,
+            'primary_role' => 'hp_user',
+        ];
+        // update user with data
+        $response = $this->put('/v1/user/' . $this->user->uuid, $formData);
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure(['errors' => ['primary_role']]);
+    }
+
+    /**
+     * Test update fail role policy.
+     *
+     * @return void
+     */
+    public function testUpdateFailPolicy()
+    {
+        // sync a role that cannot update users
+        Bouncer::sync($this->admin)->roles(['hp_user']);
+        Passport::actingAs(
+            $this->admin
+        );
+        $formData = [
+            'first_name'   => $this->faker->firstName,
+            'last_name'    => $this->faker->lastName,
+            'primary_role' => 'hp_user',
+        ];
+        // update user with data
+        $response = $this->put('/v1/user/' . $this->user->uuid, $formData);
+        // expect to be denied by policy
+        $response->assertStatus(403);
     }
 
     /**
@@ -161,7 +294,6 @@ class UserTest extends TestCase
      */
     public function testSaveProfilePermission()
     {
-        $this->withoutExceptionHandling();
         // assign software engineer
         Bouncer::assign('software_engineer')->to($this->user);
         Passport::actingAs(
@@ -186,7 +318,6 @@ class UserTest extends TestCase
      */
     public function testSaveProfile()
     {
-        $this->withoutExceptionHandling();
         // add the hp manager role
         Bouncer::sync($this->user)->roles(['hp_manager', 'software_engineer']);
         Passport::actingAs(
@@ -205,6 +336,61 @@ class UserTest extends TestCase
         $this->assertEquals($formData['last_name'], $response->json('last_name'));
         // make sure the user type is changed to health plan when the user domain is changed
         $this->assertEquals('HealthPlanUser', $response->json('user_type'));
+    }
+
+    /**
+     * Test available roles route.
+     *
+     * @return void
+     */
+    public function testAvailableRoles()
+    {
+        $user = User::factory()->create();
+        Bouncer::assign('software_engineer')->to($user);
+        $user->primary_role = 'software_engineer';
+        $user->save();
+        Passport::actingAs(
+            $user
+        );
+        // fetch the user available roles
+        $response = $this->get('/v1/user/available_roles');
+        $response->assertOk();
+    }
+
+    /**
+     * Test available roles domain limited.
+     *
+     * @return void
+     */
+    public function testAvailableRolesLimit()
+    {
+        $user = User::factory()->create();
+        Bouncer::assign('software_engineer')->to($user);
+        $user->primary_role = 'software_engineer';
+        $user->save();
+        $user->forbid('apply-any-role');
+        Passport::actingAs(
+           $user
+        );
+        // fetch the available roles
+        $response = $this->get('/v1/user/available_roles');
+        $response->assertOk();
+    }
+
+    /**
+     * Get test form data.
+     *
+     * @return array
+     */
+    protected function getFormData()
+    {
+        return [
+            'first_name' => $this->faker->firstName,
+            'last_name'  => $this->faker->lastName,
+            'email'      => $this->faker->unique()->safeEmail,
+            'password'   => str_pad(preg_replace('~[^a-zA-Z0-9!_:\~#@\^\*\.\,\(\)\{\}\[\]\+\-\$]~', '', $this->faker->password), 8, '!'),
+            'phone'      => $this->faker->phoneNumber,
+        ];
     }
 
     protected function setUp(): void
