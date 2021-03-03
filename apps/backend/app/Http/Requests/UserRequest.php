@@ -32,6 +32,7 @@ class UserRequest extends FormRequest
             'first_name'   => ['bail', 'required', 'min:1'],
             'last_name'    => ['bail', 'required', 'min:1'],
             'phone'        => ['min:10'],
+            'job_title'    => ['min:2'],
             'user_type'    => ['bail', 'required_without'], // this is always based on role
             'primary_role' => ['bail', function ($attribute, $value, $fail) {
                 if (null === ($role = Bouncer::role()->firstWhere(['name' => $value]))) {
@@ -52,7 +53,7 @@ class UserRequest extends FormRequest
         if ('user.store' === $this->route()->getName()) { // 'POST' === $this->method()
             $rules = array_replace($rules, [
                 'email'        => ['bail', 'required', 'email:rfc', 'unique:users'],
-                'password'     => ['bail', 'required', 'min:8', 'regex:/[a-zA-Z 0-9!_:~#@\.\,\(\)\{\}\[\]\+\-\$]/'],
+                'password'     => ['bail', 'min:8', 'regex:' . config('rules.patterns.password')],
                 'primary_role' => ['bail', 'required', function ($attribute, $value, $fail) {
                     if (null === ($role = Bouncer::role()->firstWhere(['name' => $value]))) {
                         $fail('An invalid role was selected.');
@@ -71,7 +72,7 @@ class UserRequest extends FormRequest
     }
 
     /**
-     * Handle a passed validation attempt.
+     * Handle a passed validation attempt. This doesn't work, use required_without and $request when determining a value based on context.
      *
      * @return void
      */

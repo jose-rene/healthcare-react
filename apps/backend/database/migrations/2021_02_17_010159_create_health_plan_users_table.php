@@ -18,6 +18,7 @@ class CreateHealthPlanUsersTable extends Migration
             $table->uuid('uuid')->index();
             $table->foreignId('user_id')->nullable();
             $table->foreignId('payer_id')->nullable();
+            $table->string('job_title', 64)->default('')->comment('The job title of the user.');
             $table->timestamps();
             $table->softDeletes();
         });

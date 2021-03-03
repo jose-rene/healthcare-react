@@ -6,6 +6,7 @@ use App\Http\SearchPipeline\Search;
 use App\Http\SearchPipeline\UserRole;
 use App\Http\SearchPipeline\UserSort;
 use App\Models\Activity\Activity;
+use App\Models\Payer;
 use App\Models\UserType\ClinicalServicesUser;
 use App\Models\UserType\EngineeringUser;
 use App\Models\UserType\HealthPlanUser;
@@ -167,11 +168,25 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Relationship to Engineering User Type.
      *
-     * App\Models\UserType\EngineeringUser
+     * @return App\Models\UserType\EngineeringUser
      */
     public function engineeringUser()
     {
         return $this->hasOne(EngineeringUser::class);
+    }
+
+    /**
+     * Get the Payer for healthplan users.
+     *
+     * @ return App\Models\Payer
+     */
+    public function payer()
+    {
+        if (2 !== $this->user_type) {
+            return null;
+        }
+
+        return $this->healthPlanUser()->first()->payer ?? null;
     }
 
     /**

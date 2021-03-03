@@ -9,7 +9,7 @@ import UserList from "../../components/elements/UserList";
 import PageLayout from "../../layouts/PageLayout";
 import "../../styles/home.scss";
 
-const Home = ({ email, full_name }) => {
+const Home = () => {
     return (
         <PageLayout>
             <BroadcastAlert />
@@ -53,9 +53,4 @@ const Home = ({ email, full_name }) => {
     );
 };
 
-const mapStateToProps = ({ user: { email, full_name } }) => ({
-    email,
-    full_name,
-});
-
-export default connect(mapStateToProps)(Home);
+export default Home;

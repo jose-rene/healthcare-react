@@ -6,7 +6,7 @@ import { ADMIN, DOCTOR, initializeUser } from "../actions/userAction";
 import useApiCall from "../hooks/useApiCall";
 import Account from "../pages/Account";
 import Table from "../pages/Test/Table";
-import AddUser from "../pages/Admin/AddUser";
+import HpAddUser from "../pages/healthplan/AddUser";
 import Assessment from "../pages/Assessment";
 import Error401 from "../pages/Errors/401";
 import Federated from "../pages/Federated";
@@ -57,6 +57,9 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                 <PrivateRoute path="/account">
                     <Account />
                 </PrivateRoute>
+                <PrivateRoute path="/healthplan/adduser">
+                    <HpAddUser />
+                </PrivateRoute>
                 <PrivateRoute
                     path="/some/random/doc/route"
                     middleware={[DOCTOR]}
@@ -65,15 +68,9 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                 </PrivateRoute>
                 <PrivateRoute
                     exact
-                    path="/admin/add-users"
-                    middleware={[ADMIN]}
-                    page={<AddUser/>}
-                />
-                <PrivateRoute
-                    exact
                     path="/admin/test/table"
                     middleware={[ADMIN]}
-                    page={<Table/>}
+                    page={<Table />}
                 />
                 <PrivateRoute path="/questionnaire/:id">
                     <Questionnaire />

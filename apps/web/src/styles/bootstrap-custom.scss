@@ -11,6 +11,12 @@ body {
     background: #f5f9fc;
 }
 
+form {
+    label.form-label, label.form-check-label {
+        color: #475866;
+    }
+}
+
 // login page css
 
 /* @note this can probably be h1 globally */

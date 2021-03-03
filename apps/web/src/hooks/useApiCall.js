@@ -47,20 +47,22 @@ export default ({
         ...formatParams(params),
     });
 
-    //  axios.interceptors.response.use(
-    // (response) => {
-    //     return response;
-    // },
-    // (error) => {
-    //     if (
-    //         error.request.url != 'login' &&
-    //         (error?.response && error.response.status === 401)
-    //     ) {
-    //         // console.log("signout");
-    //         signOut();
-    //     }
-    //     return Promise.reject(error);
-    // });
+    /*  axios.interceptors.response.use(
+        (response) => {
+            return response;
+        },
+        (error) => {
+            if (
+                error.request.url != "login" &&
+                error?.response &&
+                error.response.status === 401
+            ) {
+                // console.log("signout");
+                signOut();
+            }
+            return Promise.reject(error);
+        }
+    ); */
 
     const fire = async ({
         params: request_params = false,
@@ -105,7 +107,29 @@ export default ({
             return data;
         } catch (err) {
             debug && console.info("useService.fired.reject", { err });
-            setError(err);
+
+            // return validation errors if present
+            let validationError = "";
+            if (
+                err?.response &&
+                err.response.status === 422 &&
+                err.response.data?.errors
+            ) {
+                // pull the first error
+                // eslint-disable-next-line no-restricted-syntax
+                for (const field in err.response.data.errors) {
+                    if (err.response.data.errors.hasOwnProperty(field)) {
+                        [validationError] = err.response.data.errors[field];
+                        break;
+                    }
+                }
+            }
+            // return a readable error for application errors
+            if (err?.response && err.response.status === 500) {
+                validationError =
+                    "Unknown Application Error, please try again.";
+            }
+            setError(validationError ?? err);
             setLoading(false);
             throw err;
         } finally {

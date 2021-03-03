@@ -16,7 +16,8 @@ class HealthPlanUserResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'payer' => new PayerResource($this->payer),
+            'payer'     => new PayerResource($this->payer),
+            'job_title' => $this->job_title,
         ];
     }
 }

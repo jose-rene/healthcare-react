@@ -2,10 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\Payer;
 use App\Models\User;
 use App\Models\UserType\EngineeringUser;
-use App\Models\UserType\HealthPlanUser;
 use Artisan;
 use Bouncer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -84,39 +82,6 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test create user.
-     *
-     * @return void
-     */
-    public function testHealthPlanCreate()
-    {
-        $this->withoutExceptionHandling();
-        $manager = User::factory()->create();
-        // assign hp manager role to user
-        Bouncer::sync($manager)->roles(['hp_manager']);
-        // add user type health plan
-        $hpUser = HealthPlanUser::factory()->create();
-        $manager->healthPlanUser()->save($hpUser);
-        $manager->user_type = 2;
-        $manager->save();
-        Passport::actingAs(
-            $manager
-        );
-        $formData = $this->getFormData();
-        $formData['primary_role'] = 'hp_user';
-        // create the user with data
-        $response = $this->post('/v1/user', $formData);
-        // dd($response->getContent());
-        $response
-            ->assertStatus(201)
-            ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'primary_role', 'roles', 'payer']);
-
-        // the added users company should be the same as hp manager creating the user
-        $response->assertJsonPath('payer.company_name', $manager->healthPlanUser->payer->name);
-        $this->assertEquals($formData['primary_role'], $response->json('primary_role'));
-    }
-
-    /**
      * Test create user error.
      *
      * @return void
@@ -128,12 +93,12 @@ class UserTest extends TestCase
         );
         // leave out password
         $badData = $this->getFormData();
-        unset($badData['password']);
+        unset($badData['email']);
         // create the user with data
         $response = $this->post('/v1/user', $badData);
         $response
             ->assertStatus(422)
-            ->assertJsonStructure(['errors' => ['password']]);
+            ->assertJsonStructure(['errors' => ['email']]);
     }
 
     /**
@@ -143,14 +108,19 @@ class UserTest extends TestCase
      */
     public function testCreateFailRole()
     {
-        // add the hp manager role
-        Bouncer::sync($this->admin)->roles(['hp_manager']);
+        // add the hp manager
+        $hpManager = User::factory()->create();
+        Bouncer::sync($hpManager)->roles(['hp_manager']);
+        // @todo this should be done in factory, maybe a healthplan user factoryshow
+        $hpManager->user_type = 2;
+        $hpManager->syncUserType();
+        $hpManager->save();
         Passport::actingAs(
-            $this->admin
+            $hpManager
         );
         $formData = $this->getFormData();
         // apply a role not available in health plan domain
-        $formData['primary_role'] = 'softwar_engineer';
+        $formData['primary_role'] = 'software_engineer';
         // create the user with data
         $response = $this->post('/v1/user', $formData);
         $response->assertStatus(422);

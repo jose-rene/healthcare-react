@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Bouncer;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class BouncerSeeder extends Seeder
 {
@@ -52,5 +53,11 @@ class BouncerSeeder extends Seeder
         }
         // allow HP Manager to create users
         Bouncer::allow($role)->to($create);
+
+        // healthplan permissions
+        $hpPermissions = ['View Invoices', 'View Reports'];
+        foreach ($hpPermissions as $title) {
+            Bouncer::ability()->firstOrCreate(['name' => Str::snake($name, '-'), 'title' => $title]);
+        }
     }
 }

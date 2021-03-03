@@ -13,7 +13,7 @@ class CustomRulesTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * A basic n
+     * A basic n.
      *
      * @return void
      */
@@ -21,7 +21,7 @@ class CustomRulesTest extends TestCase
     {
         $rule = new PasswordNonVisibleCharsCheck();
 
-        self::assertTrue($rule->passes('password', "dme"));
+        self::assertTrue($rule->passes('password', 'dme'));
     }
 
     public function testShouldVisibleVisibleChars()
@@ -29,7 +29,7 @@ class CustomRulesTest extends TestCase
         $rule = new PasswordNonVisibleCharsCheck();
 
         self::assertFalse($rule->passes('password', "ab\r\ncd\tefg"));
-        self::assertFalse($rule->passes('password', "P@ssw0rd&"));
+        self::assertFalse($rule->passes('password', 'P@ssw0rd&'));
     }
 
     public function testContiguousNoHarm()
