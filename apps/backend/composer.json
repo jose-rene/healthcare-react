@@ -25,6 +25,7 @@
         "laravel/socialite": "^5.1",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
+        "nicolaslopezj/searchable": "^1.13",
         "silber/bouncer": "v1.0.0-rc.10"
     },
     "require-dev": {

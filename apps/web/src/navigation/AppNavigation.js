@@ -2,9 +2,11 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { signOut } from "../actions/authAction";
-import { DOCTOR, initializeUser } from "../actions/userAction";
+import { ADMIN, DOCTOR, initializeUser } from "../actions/userAction";
 import useApiCall from "../hooks/useApiCall";
 import Account from "../pages/Account";
+import Table from "../pages/Test/Table";
+import AddUser from "../pages/Admin/AddUser";
 import Assessment from "../pages/Assessment";
 import Error401 from "../pages/Errors/401";
 import Federated from "../pages/Federated";
@@ -61,6 +63,18 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                 >
                     <Account />
                 </PrivateRoute>
+                <PrivateRoute
+                    exact
+                    path="/admin/add-users"
+                    middleware={[ADMIN]}
+                    page={<AddUser/>}
+                />
+                <PrivateRoute
+                    exact
+                    path="/admin/test/table"
+                    middleware={[ADMIN]}
+                    page={<Table/>}
+                />
                 <PrivateRoute path="/questionnaire/:id">
                     <Questionnaire />
                 </PrivateRoute>

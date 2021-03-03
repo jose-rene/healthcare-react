@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Http\SearchPipeline\Search;
+use App\Http\SearchPipeline\UserRole;
+use App\Http\SearchPipeline\UserSort;
 use App\Models\Activity\Activity;
 use App\Models\UserType\ClinicalServicesUser;
 use App\Models\UserType\EngineeringUser;
@@ -15,9 +18,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
+use Nicolaslopezj\Searchable\SearchableTrait;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 /**
@@ -32,7 +37,7 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, Uuidable, HasApiTokens, SoftDeletes, HasRolesAndAbilities;
+    use HasFactory, Notifiable, Uuidable, HasApiTokens, SoftDeletes, HasRolesAndAbilities, SearchableTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -81,6 +86,25 @@ class User extends Authenticatable implements MustVerifyEmail
         3 => 'ClinicalServicesUser',
     ];
 
+    protected $searchable = [
+        /**
+         * Columns and their priority in search results.
+         * Columns with higher values are more important.
+         * Columns with equal values have equal importance.
+         *
+         * @var array
+         */
+        'columns' => [
+            'users.first_name' => 10,
+            'users.last_name' => 10,
+            'users.user_type' => 2,
+            'users.email' => 5,
+        ],
+//        'joins' => [
+//            'posts' => ['users.id','posts.user_id'],
+//        ],
+    ];
+
     public function getNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
@@ -113,6 +137,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function activity()
     {
         return $this->hasMany(Activity::class);
+    }
+
+    public function address()
+    {
+        return $this->morphOne(Address::class, 'addressable');
     }
 
     /**
@@ -251,6 +280,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->phonable->filter(function ($value, $key) {
             return $value->is_mobile;
         })->first();
+    }
+
+    public function scopeSearchAllUsers($query){
+        return app(Pipeline::class)
+            ->send($query)
+            ->through([
+                          Search::class,
+                          UserRole::class,
+                          UserSort::class,
+            ])
+            ->thenReturn();
     }
 
     /*

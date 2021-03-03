@@ -1,13 +1,13 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/jsx-key */
-import React from "react";
+import React, { useEffect } from "react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import { Pagination, Table } from "react-bootstrap";
 import Select from "../inputs/Select";
 import Icon from "./Icon";
 
-const DataTable = ({ columns, data, entityName, loading }) => {
+const DataTable = ({ columns, data, entityName, loading, searchObj ,updateSearchObj }) => {
     const {
         getTableProps,
         getTableBodyProps,
@@ -88,6 +88,14 @@ const DataTable = ({ columns, data, entityName, loading }) => {
         });
         return tblRows;
     };
+
+    useEffect(() => {
+        updateSearchObj({target: {name: 'pageIndex', value: pageIndex}})
+    }, [pageIndex]);
+
+    useEffect(() => {
+        updateSearchObj({target: {name: 'pageSize', value: pageSize}})
+    }, [pageSize]);
 
     return (
         <>

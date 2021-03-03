@@ -1,10 +1,11 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Form } from "react-bootstrap";
 
 const Select = (
     {
         name,
         label = "",
+        inlineLabel = false,
         options = [],
         autocomplete = false,
         className = false,
@@ -12,22 +13,26 @@ const Select = (
         helpText = false,
         errors = {},
         labelClass = "",
-        wrapperClass = "",
+        wrapperClass = false,
+        labelKey = "title",
+        valueKey = "val",
         ...otherProps
     },
-    ref
+    ref,
 ) => {
     const { [name]: { message = false } = {} } = errors;
     const hasError = !!message;
     const selectOptions = options.map((option) => (
-        <option key={option.id} value={option.val}>
-            {option.title}
+        <option key={option.id} value={option[valueKey]}>
+            {option[labelKey]}
         </option>
     ));
     return (
-        <div className={wrapperClass ?? "form-group"}>
+        <div className={`${wrapperClass
+            ? "wrapperClass"
+            : "form-group"} ${inlineLabel ? "d-flex" : ""}`}>
             {label && (
-                <Form.Label htmlFor={name} className={labelClass ?? ""}>
+                <Form.Label htmlFor={name} className={(labelClass? labelClass: "") + inlineLabel? 'col pt-2': ''}>
                     {label}
                 </Form.Label>
             )}
@@ -36,10 +41,10 @@ const Select = (
                 name={name}
                 autoComplete={autocomplete || name}
                 className={
-                    className ||
-                    `form-control ${
-                        hasError ? " is-invalid" : ""
-                    } ${classNameAppend}`
+                    `${inlineLabel ? "col " : ""}` +
+                    (className ? className : `form-control ${hasError
+                        ? " is-invalid"
+                        : ""} ${classNameAppend}`)
                 }
                 ref={ref}
                 {...otherProps}

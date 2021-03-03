@@ -1,0 +1,315 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<TableAPI /> renders pagination with a select 1`] = `
+<div
+  className="form-group d-flex"
+>
+  <label
+    className="col pt-2 form-label"
+    htmlFor="page"
+  >
+    Page
+  </label>
+  <select
+    autoComplete="page"
+    className="col form-control  "
+    id="page"
+    name="page"
+    onChange={[Function]}
+    value={1}
+  >
+    <option>
+      1
+    </option>
+  </select>
+</div>
+`;
+
+exports[`<TableAPI /> renders regular pagination 1`] = `
+<ul
+  className="pagination"
+>
+  <li
+    className="page-item active"
+  >
+    <span
+      className="page-link"
+      disabled={false}
+      onClick={[Function]}
+    >
+      <span
+        aria-hidden="true"
+      >
+        «
+      </span>
+      <span
+        className="sr-only"
+      >
+        First
+      </span>
+      <span
+        className="sr-only"
+      >
+        (current)
+      </span>
+    </span>
+  </li>
+  <li
+    className="page-item active"
+  >
+    <span
+      className="page-link"
+      disabled={false}
+      onClick={[Function]}
+    >
+      <span
+        aria-hidden="true"
+      >
+        ‹
+      </span>
+      <span
+        className="sr-only"
+      >
+        Previous
+      </span>
+      <span
+        className="sr-only"
+      >
+        (current)
+      </span>
+    </span>
+  </li>
+  <li
+    className="page-item active"
+  >
+    <span
+      className="page-link"
+      disabled={false}
+      onClick={[Function]}
+    >
+      1
+      <span
+        className="sr-only"
+      >
+        (current)
+      </span>
+    </span>
+  </li>
+  <li
+    className="page-item"
+  >
+    <a
+      className="page-link"
+      href="#"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+    >
+      2
+    </a>
+  </li>
+  <li
+    className="page-item"
+  >
+    <a
+      className="page-link"
+      href="#"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+    >
+      3
+    </a>
+  </li>
+  <li
+    className="page-item"
+  >
+    <a
+      className="page-link"
+      href="#"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+    >
+      4
+    </a>
+  </li>
+  <li
+    className="page-item"
+  >
+    <a
+      className="page-link"
+      href="#"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+    >
+      5
+    </a>
+  </li>
+  <li
+    className="page-item"
+  >
+    <a
+      className="page-link"
+      href="#"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+    >
+      6
+    </a>
+  </li>
+  <li
+    className="page-item"
+  >
+    <a
+      className="page-link"
+      href="#"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+    >
+      7
+    </a>
+  </li>
+  <li
+    className="page-item"
+  >
+    <a
+      className="page-link"
+      href="#"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+    >
+      8
+    </a>
+  </li>
+  <li
+    className="page-item"
+  >
+    <a
+      className="page-link"
+      href="#"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+    >
+      9
+    </a>
+  </li>
+  <li
+    className="page-item"
+  >
+    <a
+      className="page-link"
+      href="#"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+    >
+      <span
+        aria-hidden="true"
+      >
+        ›
+      </span>
+      <span
+        className="sr-only"
+      >
+        Next
+      </span>
+    </a>
+  </li>
+  <li
+    className="page-item"
+  >
+    <a
+      className="page-link"
+      href="#"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+    >
+      <span
+        aria-hidden="true"
+      >
+        »
+      </span>
+      <span
+        className="sr-only"
+      >
+        Last
+      </span>
+    </a>
+  </li>
+</ul>
+`;
+
+exports[`<TableAPI /> renders sortable headers 1`] = `
+<thead>
+  <tr>
+    <th
+      className="text-left"
+    >
+      Title
+    </th>
+    <th
+      className="c-pointer text-left"
+      onClick={[Function]}
+    >
+      First Name
+       
+      <span
+        className="float-right ml-1"
+      >
+        <i
+          className=" icon fas fa-sort fa-1x "
+        />
+      </span>
+    </th>
+    <th
+      className="c-pointer text-left"
+      onClick={[Function]}
+    >
+      Last Name
+       
+      <span
+        className="float-right ml-1"
+      >
+        <i
+          className=" icon fas fa-sort fa-1x "
+        />
+      </span>
+    </th>
+    <th
+      className="c-pointer text-left"
+      onClick={[Function]}
+    >
+      Email
+       
+      <span
+        className="float-right ml-1"
+      >
+        <i
+          className=" icon fas fa-sort fa-1x "
+        />
+      </span>
+    </th>
+    <th
+      className="c-pointer text-left"
+      onClick={[Function]}
+    >
+      City
+       
+      <span
+        className="float-right ml-1"
+      >
+        <i
+          className=" icon fas fa-sort fa-1x "
+        />
+      </span>
+    </th>
+  </tr>
+</thead>
+`;

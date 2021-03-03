@@ -1,10 +1,11 @@
-import { debounce } from 'lodash';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { ListGroup, ListGroupItem } from 'react-bootstrap';
-import { PUT } from '../../config/URLs';
-import useApiCall from '../../hooks/useApiCall';
-import '../../styles/AlertList.scss';
-import Icon from './Icon';
+import { debounce } from "lodash";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { PUT } from "../../config/URLs";
+import useApiCall from "../../hooks/useApiCall";
+import "../../styles/AlertList.scss";
+import Button from "../inputs/Button";
+import Icon from "./Icon";
 
 const subjectTypeMap = ({ type: notificationType = '' }) => {
     switch (true) {
@@ -96,30 +97,35 @@ const List = () => {
                 </h1>
                 <div className="d-none d-sm-block">
                     {enableCheckAll && (
-                        <a href={void (0)}
+                        <Button outline bold
                            aria-disabled={enableCheckAll}
                            onClick={handleCheckAll}
-                           className={`btn-link text-select-all ${enableCheckAll
-                               ? ''
-                               : 'not-allowed'}`}>
+                                disabled={!enableCheckAll}>
                             Select All
-                        </a>
+                        </Button>
                     )}
                 </div>
             </div>
             <div className="white-box-alerts">
                 <div className="container-items">
                     <ListGroup data-testid="alert-list-group">
-                        {alerts && alerts.map(({ id, read_at, type, data, human_created_at }) => (
-                            <ListGroupItem className="border-0" key={id} data-testid={`alert-${id}`}>
-                                <div className="d-flex">
-                                    <div>
-                                        {alertsLoading[id] ? (
-                                            <Icon size="1x" icon="spinner"
-                                                  spin/>
-                                        ) : (
-                                            <input
-                                                id={id}
+                        {alerts.length == 0 && (
+                            <div className="text-center text-muted"
+                                 style={{ minHeight: 50 }}>No alerts. All caught
+                                up.</div>
+                        )}
+                        {alerts && alerts.map(
+                            ({ id, read_at, type, data, human_created_at }) => (
+                                <ListGroupItem className="border-0" key={id}
+                                               data-testid={`alert-${id}`}>
+                                    <div className="d-flex">
+                                        <div>
+                                            {alertsLoading[id] ? (
+                                                <Icon size="1x" icon="spinner"
+                                                      spin />
+                                            ) : (
+                                                <input
+                                                    id={id}
                                                 name={id}
                                                 onChange={handleCheckChange}
                                                 type="checkbox"

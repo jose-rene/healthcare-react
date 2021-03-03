@@ -4,6 +4,7 @@ import { Redirect, Route } from "react-router-dom";
 import { checkMiddleware } from "../helpers/user";
 
 const PrivateRoute = ({
+    page: component = false,
     children,
     authed,
     middleware = false,
@@ -16,11 +17,19 @@ const PrivateRoute = ({
         return false;
     }
 
+    const renderComponent = () => {
+        if(component){
+            return component
+        }
+
+        return children;
+    };
+
     // authed is passed down from parent component, from redux state auth userToken
     return !authed ? (
         <Redirect to={{ pathname: "/", state: { from: location } }} />
     ) : (
-        <Route {...rest} render={({}) => children} />
+        <Route {...rest} render={renderComponent} />
     );
 };
 
