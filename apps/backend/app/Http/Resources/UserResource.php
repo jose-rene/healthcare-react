@@ -45,18 +45,25 @@ class UserResource extends JsonResource
             }
         }
 
+        // roles and abilities
+        $roles = RoleResource::collection($this->roles);
+        $primaryRole = $this->roles()->where(['name' => $this->primary_role])->first();
+        $abilities = $this->getAbilities();
+
         return [
-            'id'           => $this->uuid,
-            'user_type'    => $this->user_type_name,
-            'name'         => $this->full_name,
-            'first_name'   => $this->first_name,
-            'middle_name'  => $this->middle_name ?? '',
-            'last_name'    => $this->last_name,
-            'email'        => $this->email,
-            'phones'       => $this->phones->count() ? new PhoneCollectionResource($this->phones) : [],
-            'primary_role' => $this->primary_role,
-            'roles'        => RoleResource::collection($this->roles),
-            'address'     => new AddressResource($this->address),
+            'id'                 => $this->uuid,
+            'user_type'          => $this->user_type_name,
+            'name'               => $this->full_name,
+            'first_name'         => $this->first_name,
+            'middle_name'        => $this->middle_name ?? '',
+            'last_name'          => $this->last_name,
+            'email'              => $this->email,
+            'phones'             => $this->phones->count() ? new PhoneCollectionResource($this->phones) : [],
+            'address'            => new AddressResource($this->address),
+            'primary_role'       => $this->primary_role,
+            'primary_role_title' => $primaryRole ? $primaryRole->title : '',
+            'roles'              => $roles,
+            'abilities'          => $abilities->count() > 0 ? $abilities->map(fn ($item, $key) => $item['name']) : [],
             $this->mergeWhen(!empty($userTypeResource), $userTypeResource),
         ];
     }

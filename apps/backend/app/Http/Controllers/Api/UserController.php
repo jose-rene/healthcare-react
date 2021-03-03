@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -170,6 +171,10 @@ class UserController extends Controller
     {
         // the validation is already ran due to the magic of service binding, this is just retrieving the data
         $data = $request->validated();
+        // generate a password if not present
+        if (empty($data['password'])) {
+            $data['password'] = Str::random(16);
+        }
         $user = User::create([
             'first_name'   => $data['first_name'],
             'last_name'    => $data['last_name'],
@@ -202,8 +207,20 @@ class UserController extends Controller
         if ('HealthPlanUser' === $user->user_type_name && 'HealthPlanUser' === auth()->user()->user_type_name) {
             // at this point only a health plan will be adding so get company from hp manager use
             $payer = auth()->user()->healthplanUser->payer->first();
+            // healthplan specific field
+            if (!empty($data['job_title'])) {
+                $userType->job_title = $data['job_title'];
+            }
             // set company relationship in user type
-            $userType->payer()->associate($payer)->save();
+            $userType->payer()->associate($payer);
+            $userType->save();
+            // permissions
+            if ($request['can_view_reports']) {
+                $user->allow('view-reports');
+            }
+            if ($request['can_view_invoices']) {
+                $user->allow('view-invoices');
+            }
         }
         $user->save();
 

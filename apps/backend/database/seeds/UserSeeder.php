@@ -27,12 +27,13 @@ class UserSeeder extends Seeder
             $names = explode('@', $item);
             $names = explode('.', $names[0]);
             $admin = User::firstOrCreate(['email' => $item], [
-                'email'      => $item,
-                'first_name' => $names[0] ?? 'Admin',
-                'last_name'  => $names[1] ?? 'Admin',
-                'password'   => bcrypt('admin123'),
-                'dob'        => new Carbon('-20 years'),
-                'user_type'  => 1, // engineering user
+                'email'        => $item,
+                'first_name'   => $names[0] ?? 'Admin',
+                'last_name'    => $names[1] ?? 'Admin',
+                'password'     => bcrypt('admin123'),
+                'dob'          => new Carbon('-20 years'),
+                'user_type'    => 1, // engineering user
+                'primary_role' => 'software_engineer',
             ]);
             // skip the user setup if it was not just created
             if (!$admin->wasRecentlyCreated) {
@@ -43,7 +44,7 @@ class UserSeeder extends Seeder
             // add the user types
             $admin->engineeringUser(EngineeringUser::create());
             // add payer for hp user type
-            $hpUser = HealthPlanUser::create();
+            $hpUser = HealthPlanUser::create(['job_title' => 'Executive Coordinator']);
             $hpUser->payer()->associate($payer)->save();
             // add the hp user type
             $admin->healthPlanUser()->save($hpUser);

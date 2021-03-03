@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {Alert} from "react-bootstrap";
+import React, { useEffect, useRef, useState } from "react";
+import { Alert } from "react-bootstrap";
 import Icon from "./Icon";
 import "../../styles/PageAlert.scss";
 
@@ -13,27 +13,47 @@ import "../../styles/PageAlert.scss";
  * @param onClose
  * @returns {JSX.Element}
  */
-export default ({variant = 'error', children, show = true, dismissible = false, icon = 'alert', onClose = () => null}) => {
-    const [_show, set_show] = useState(show);
+const PageAlert = ({
+    variant = "error",
+    children,
+    show = true,
+    dismissible = false,
+    icon = "alert",
+    timeout = 0,
+    onClose = () => null,
+}) => {
+    const [_show, setShow] = useState(show);
+    const timeoutSet = useRef(null);
 
     useEffect(() => {
-        set_show(show);
+        setShow(show);
+        if (show && timeout) {
+            timeoutSet.current = setTimeout(() => {
+                setShow(false);
+            }, timeout);
+        }
     }, [show]);
 
     const handleOnClose = () => {
-        set_show(false);
+        if (timeoutSet.current) {
+            clearTimeout(timeoutSet.current);
+            timeoutSet.current = null;
+        }
+        setShow(false);
         onClose();
-    }
+    };
 
-
-    return _show? (
-        <Alert variant={variant} show={show} dismissible={dismissible} onClose={handleOnClose} >
-            {icon && (
-                <Icon alt={`alert-icon-${variant}`} icon={icon} />
-            )}
-            <p>
-                {children}
-            </p>
+    return _show ? (
+        <Alert
+            variant={variant}
+            show={show}
+            dismissible={dismissible}
+            onClose={handleOnClose}
+        >
+            {icon && <Icon alt={`alert-icon-${variant}`} icon={icon} />}
+            <p>{children}</p>
         </Alert>
-    ): null;
-}
+    ) : null;
+};
+
+export default PageAlert;

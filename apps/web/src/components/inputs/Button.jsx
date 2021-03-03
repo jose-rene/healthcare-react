@@ -31,6 +31,10 @@ const Button = ({
             case "warn":
                 cName += " btn-outline-secondary";
                 break;
+            case "secondary":
+                cName += " btn-secondary";
+                break;
+
             case "icon":
                 cName = "btn-icon";
                 break;

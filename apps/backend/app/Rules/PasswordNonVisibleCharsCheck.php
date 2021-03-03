@@ -23,7 +23,7 @@ class PasswordNonVisibleCharsCheck implements Rule
             }
 
             // eg ";" are used in injections and can trigger the WAF, per the following regex
-            if (preg_match(config('rules.patterns.password'), $v)) {
+            if (!preg_match(config('rules.patterns.password'), $v)) {
                 return false;
             }
         }
