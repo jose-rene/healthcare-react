@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 
@@ -13,7 +14,7 @@ class UserResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      *
      *  @OA\Property(property="id", type="string", format="uuid")
@@ -55,6 +56,7 @@ class UserResource extends JsonResource
             'phones'       => $this->phones->count() ? new PhoneCollectionResource($this->phones) : [],
             'primary_role' => $this->primary_role,
             'roles'        => RoleResource::collection($this->roles),
+            'address'     => new AddressResource($this->address),
             $this->mergeWhen(!empty($userTypeResource), $userTypeResource),
         ];
     }

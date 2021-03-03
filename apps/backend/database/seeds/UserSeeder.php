@@ -49,6 +49,12 @@ class UserSeeder extends Seeder
             $admin->healthPlanUser()->save($hpUser);
         }
 
+//        $users = User::factory()->count(random_int(1000, 5000))->create();
+//
+//        foreach($users as $user){
+//            Bouncer::sync($user)->roles(['hp_manager', 'software_engineer']);
+//        }
+
 //        factory(User::class, random_int(100, 500))->create();
     }
 }

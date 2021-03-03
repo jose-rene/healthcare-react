@@ -1,7 +1,6 @@
 import React from "react";
 import { Row } from "react-bootstrap";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import Button from "../../components/inputs/Button";
 import AlertList from "../../components/elements/AlertList";
 import BroadcastAlert from "../../components/elements/BroadcastAlert";
@@ -24,15 +23,15 @@ const Home = ({ email, full_name }) => {
                         <div className="box-same-line">
                             <h1 className="box-subtitle">
                                 Users{" "}
-                                <Link to="hp_add_user">
                                     <Button
+                                        useButton={false}
+                                        to="/admin/add-users"
                                         className="py-1 ml-2"
                                         icon="plus"
                                         iconSize="sm"
                                     >
                                         Add New
                                     </Button>
-                                </Link>
                             </h1>
 
                             <div className="d-block d-sm-none">

@@ -1,103 +1,98 @@
 import React, { useEffect, useMemo } from "react";
-import Button from "../inputs/Button";
+import useSearch from "../../hooks/useSearch";
 import Icon from "./Icon";
 import PageAlert from "./PageAlert";
 import useApiCall from "../../hooks/useApiCall";
 import "../../styles/RequestList.scss";
-import DataTable from "./DataTable";
+import TableTopSort from "./TableTopSort";
+import TableAPI from "./TableAPI";
 
 /* eslint-disable no-nested-ternary */
 
 const List = () => {
-    const [{ loading, data, error }, fireCall] = useApiCall({
+    const headers = useMemo(() => [
+        {
+            label: "Title",
+            columnMap: "roles.0.title", // name.title
+            disableSortBy: true,
+        },
+        {
+            label: "First Name",
+            columnMap: "first_name",
+        },
+        {
+            label: "Last Name",
+            columnMap: "last_name",
+        },
+        {
+            label: "Email",
+            columnMap: "email",
+            // disableSortBy: true,
+        },
+        {
+            label: "City",
+            columnMap: "address.city",
+        },
+    ], []);
+
+    const [
+        {
+            loading,
+            data: { data = [], meta = {} } = {},
+            error,
+        }, fireCall] = useApiCall({
         url: "/user/search",
+        defaultData: [],
         method: "post",
     });
 
-    useEffect(() => {
-        fireCall({
-            params: { hello: "world" },
+    const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
+        {
+            searchObj: {
+                perPage: 10,
+                sortColumn: headers[1].columnMap,
+                sortDirection: "asc",
+            },
         });
+
+    const handleSearch = (_params = searchObj) => {
+        const params = {
+            ..._params,
+            userSort: _params.sortColumn,
+        };
+
+        delete params.sortColumn;
+
+        fireCall({ params });
+    };
+
+    useEffect(() => {
+        handleSearch();
     }, []);
 
-    const handleSearch = (e) => {
-        fireCall({
-            params: { hello: "world" },
-        });
+    const handleTableChange = params => {
+        // the table should update the search obj and fire the api call
+        updateSearchObj(params);
+
+        // this might feel redundant but the searchObj does not have the new
+        // values from sorting and everything in time so this workaround helps
+        // make sure everything is set correctly
+        handleSearch({ ...searchObj, ...params });
     };
-    const columns = useMemo(
-        () => [
-            {
-                Header: "Title",
-                accessor: "name.title",
-                disableSortBy: true,
-            },
-            {
-                Header: "First Name",
-                accessor: "name.first",
-            },
-            {
-                Header: "Last Name",
-                accessor: "name.last",
-            },
-            {
-                Header: "Email",
-                accessor: "email",
-                disableSortBy: true,
-            },
-            {
-                Header: "City",
-                accessor: "location.city",
-            },
-        ],
-        []
-    );
+
     return !loading ? (
         <>
-            <div className="d-none d-sm-block mb-3">
-                <div className="d-flex justify-content-between">
-                    <div className="flex-fill px-2">
-                        <select className="app-input-filter margin-input">
-                            <option>Therapist</option>
-                        </select>
-                    </div>
-
-                    <div className="flex-fill px-2">
-                        <select className="app-input-filter margin-input">
-                            <option>Status</option>
-                        </select>
-                    </div>
-
-                    <div className="flex-fill px-2">
-                        <select className="app-input-filter margin-input">
-                            <option>From Date</option>
-                        </select>
-                    </div>
-
-                    <div className="flex-fill px-2">
-                        <select className="app-input-filter margin-input">
-                            <option>To Date</option>
-                        </select>
-                    </div>
-
-                    <div className="flex-fill px-2">
-                        <select className="app-input-filter margin-input">
-                            <option>Date Range</option>
-                        </select>
-                    </div>
-
-                    <div className="ml-auto px-2">
-                        <Button className="pt-1 pb-1" onClick={handleSearch}>
-                            Search
-                        </Button>
-                    </div>
-                </div>
-            </div>
-            <DataTable
-                columns={columns}
-                data={data.length ? data : []}
-                entityName="Users"
-                loading={loading}
+            <TableTopSort
+                handleSearch={handleSearch}
+                updateSearchObj={formUpdateSearchObj}
+            />
+            <TableAPI
+                label="Users"
+                searchObj={searchObj}
+                headers={headers}
+                data={data}
+                dataMeta={meta}
+                onChange={handleTableChange}
             />
         </>
     ) : error ? (

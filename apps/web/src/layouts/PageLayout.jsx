@@ -96,18 +96,12 @@ const PageLayout = ({
                         <Icon icon="notification" className="header-icon" />
                     </a>
 
-                    <span
-                        data-testid="userinfo"
-                        className="header-name d-none d-sm-block"
-                    >
-                        {full_name}
-                    </span>
                     <img
                         alt=""
                         className="header-avatar"
                         src="/images/icons/user.png"
                     />
-                    <NavDropdown alignRight id="user-options" title={null}>
+                    <NavDropdown data-testid="userinfo" alignRight id="user-options" title={full_name}>
                         <NavDropdown.ItemText>{email}</NavDropdown.ItemText>
                         <NavDropdown.Divider />
                         {roles && roles.length > 1 && (

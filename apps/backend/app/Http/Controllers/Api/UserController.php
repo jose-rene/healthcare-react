@@ -11,6 +11,7 @@ use App\Models\Phone;
 use App\Models\User;
 use Bouncer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 
@@ -41,7 +42,7 @@ class UserController extends Controller
      * Search users.
      *
      * @param UserRequest $request
-     * @return Response
+     * @return AnonymousResourceCollection
      *
      * @OA\Post(
      *      path="/user/search",
@@ -93,8 +94,10 @@ class UserController extends Controller
         if ($user->cannot('viewAny', User::class)) {
             return response()->json(['message' => 'You do not have permissions for the requested resource.'], 403);
         }
-        // @todo implement search
-        return response()->json([], 200);
+
+        $users = User::searchAllUsers()->paginate(request('perPage', 50));
+
+        return UserResource::collection($users);
     }
 
     public function availableRoles(Request $request)
