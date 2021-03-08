@@ -10,37 +10,50 @@ import TableAPI from "./TableAPI";
 /* eslint-disable no-nested-ternary */
 
 const List = () => {
-    const headers = useMemo(() => [
-        {
-            label: "Title",
-            columnMap: "roles.0.title", // name.title
-            disableSortBy: true,
-        },
-        {
-            label: "First Name",
-            columnMap: "first_name",
-        },
-        {
-            label: "Last Name",
-            columnMap: "last_name",
-        },
-        {
-            label: "Email",
-            columnMap: "email",
-            // disableSortBy: true,
-        },
-        {
-            label: "City",
-            columnMap: "address.city",
-        },
-    ], []);
+    const headers = useMemo(
+        () => [
+            {
+                label: "Title",
+                columnMap: "primary_role_title", // name.title
+                disableSortBy: true,
+            },
+            {
+                label: "First Name",
+                columnMap: "first_name",
+            },
+            {
+                label: "Last Name",
+                columnMap: "last_name",
+            },
+            {
+                label: "Email",
+                columnMap: "email",
+                // disableSortBy: true,
+            },
+            {
+                label: "Phone",
+                columnMap: "phone_primary",
+                disableSortBy: true,
+            },
+            {
+                label: "Job Title",
+                columnMap: "job_title",
+                disableSortBy: true,
+            },
+            {
+                label: "",
+                columnMap: "edit",
+                link: "/healthplan/user",
+                disableSortBy: true,
+            },
+        ],
+        []
+    );
 
     const [
-        {
-            loading,
-            data: { data = [], meta = {} } = {},
-            error,
-        }, fireCall] = useApiCall({
+        { loading, data: { data = [], meta = {} } = {}, error },
+        fireCall,
+    ] = useApiCall({
         url: "/user/search",
         defaultData: [],
         method: "post",
@@ -53,7 +66,8 @@ const List = () => {
                 sortColumn: headers[1].columnMap,
                 sortDirection: "asc",
             },
-        });
+        }
+    );
 
     const handleSearch = (_params = searchObj) => {
         const params = {
@@ -70,7 +84,7 @@ const List = () => {
         handleSearch();
     }, []);
 
-    const handleTableChange = params => {
+    const handleTableChange = (params) => {
         // the table should update the search obj and fire the api call
         updateSearchObj(params);
 

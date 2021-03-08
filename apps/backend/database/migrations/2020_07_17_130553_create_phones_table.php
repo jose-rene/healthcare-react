@@ -16,8 +16,9 @@ class CreatePhonesTable extends Migration
         Schema::create('phones', function (Blueprint $table) {
             $table->id();
             $table->morphs('phoneable');
-            $table->boolean('is_primary')->nullable()->default(1);
-            $table->boolean('is_mobile')->nullable()->default(1);
+            $table->string('number', 24)->comment('The phone number.');
+            $table->boolean('is_primary')->default(0);
+            $table->boolean('is_mobile')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

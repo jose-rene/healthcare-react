@@ -88,7 +88,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     protected $searchable = [
-        /**
+        /*
          * Columns and their priority in search results.
          * Columns with higher values are more important.
          * Columns with equal values have equal importance.
@@ -97,13 +97,13 @@ class User extends Authenticatable implements MustVerifyEmail
          */
         'columns' => [
             'users.first_name' => 10,
-            'users.last_name' => 10,
-            'users.user_type' => 2,
-            'users.email' => 5,
+            'users.last_name'  => 10,
+            'users.user_type'  => 2,
+            'users.email'      => 5,
         ],
-//        'joins' => [
-//            'posts' => ['users.id','posts.user_id'],
-//        ],
+        //        'joins' => [
+        //            'posts' => ['users.id','posts.user_id'],
+        //        ],
     ];
 
     public function getNameAttribute()
@@ -297,13 +297,18 @@ class User extends Authenticatable implements MustVerifyEmail
         })->first();
     }
 
-    public function scopeSearchAllUsers($query){
+    public function scopeSearchAllUsers($query, self $authedUser)
+    {
+        if (1 !== $authedUser->user_type) { // limit search to their own domain
+            $query->where('user_type', $authedUser->user_type);
+        }
+
         return app(Pipeline::class)
             ->send($query)
             ->through([
-                          Search::class,
-                          UserRole::class,
-                          UserSort::class,
+                Search::class,
+                UserRole::class,
+                UserSort::class,
             ])
             ->thenReturn();
     }

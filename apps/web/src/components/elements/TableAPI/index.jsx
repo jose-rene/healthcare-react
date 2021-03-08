@@ -1,18 +1,20 @@
 import React, { useMemo } from "react";
 import { Table } from "react-bootstrap";
+import { get } from "lodash";
+import { Link } from "react-router-dom";
 import { mapTypeToClass } from "../../../helpers/table";
 import Select from "../../inputs/Select";
 import TableHeaders from "./TableHeaders";
 import TablePagination from "./TablePagination";
-import { get } from "lodash";
+import Icon from "../Icon";
 
 const TableAPI = ({
-    label = 'Results',
+    label = "Results",
     searchObj,
     headers = [],
     data = [],
     onChange,
-    emptyMessage = 'Nothing to show',
+    emptyMessage = "Nothing to show",
     dataMeta: {
         total: total_records = 1,
         last_page: lastPage = 1,
@@ -20,9 +22,7 @@ const TableAPI = ({
         to = 1,
     },
 }) => {
-    const {
-        perPage = 50,
-    } = searchObj;
+    const { perPage = 50 } = searchObj;
 
     const handlePagination = (value = 1) => {
         onChange({ page: value });
@@ -38,17 +38,22 @@ const TableAPI = ({
 
     const renderBody = useMemo(() => {
         if (!data || data.length == 0) {
-            return (
-                <div className="table-empty">
-                    {emptyMessage}
-                </div>
-            );
+            return <div className="table-empty">{emptyMessage}</div>;
         }
         return data.map((d, index) => (
             <tr key={`tr-th-${index}`}>
-                {headers.map(({ columnMap, type }, indexTd) => (
-                    <td key={`tr-th-td-${indexTd}`} className={`${mapTypeToClass(type)}`}>
-                        {get(d, columnMap, '')}
+                {headers.map(({ columnMap, link, type }, indexTd) => (
+                    <td
+                        key={`tr-th-td-${indexTd}`}
+                        className={`${mapTypeToClass(type)}`}
+                    >
+                        {columnMap === "edit" ? (
+                            <Link to={`${link}/${d.id}`} title="Edit">
+                                <Icon icon="edit" size="lg" />
+                            </Link>
+                        ) : (
+                            get(d, columnMap, "")
+                        )}
                     </td>
                 ))}
             </tr>
@@ -56,7 +61,7 @@ const TableAPI = ({
     }, [headers, data]);
 
     const paginationOptions = useMemo(() => {
-        return [10,20,50,100].map(n => ({id: n, title: n, val: n}));
+        return [10, 20, 50, 100].map((n) => ({ id: n, title: n, val: n }));
     }, []);
 
     return (
@@ -75,9 +80,7 @@ const TableAPI = ({
                     searchObj={searchObj}
                     onChange={onChange}
                 />
-                <tbody>
-                {renderBody}
-                </tbody>
+                <tbody>{renderBody}</tbody>
             </Table>
             <div className="d-flex mt-3">
                 {totalPages > 1 && (

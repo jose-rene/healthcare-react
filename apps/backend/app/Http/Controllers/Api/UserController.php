@@ -96,7 +96,7 @@ class UserController extends Controller
             return response()->json(['message' => 'You do not have permissions for the requested resource.'], 403);
         }
 
-        $users = User::searchAllUsers()->paginate(request('perPage', 50));
+        $users = User::searchAllUsers($user)->paginate(request('perPage', 50));
 
         return UserResource::collection($users);
     }
@@ -171,6 +171,7 @@ class UserController extends Controller
     {
         // the validation is already ran due to the magic of service binding, this is just retrieving the data
         $data = $request->validated();
+        // @todo move user creation to a service
         // generate a password if not present
         if (empty($data['password'])) {
             $data['password'] = Str::random(16);
@@ -185,11 +186,7 @@ class UserController extends Controller
         ]);
         // add the phone number
         if (!empty($data['phone'])) {
-            $phone = Phone::make([
-                'number'     => $data['phone'],
-                'is_primary' => 1,
-            ]);
-            $user->phones()->save($phone);
+            $user->phones()->create(['number' => $data['phone'], 'is_primary' => 1, 'phoneable_type' => User::class, 'phoneable_id' => $user->id]);
         }
 
         // send validation email if requested in form
@@ -215,13 +212,17 @@ class UserController extends Controller
             $userType->payer()->associate($payer);
             $userType->save();
             // permissions
-            if ($request['can_view_reports']) {
+            if (!empty($data['can_view_reports'])) {
                 $user->allow('view-reports');
             }
-            if ($request['can_view_invoices']) {
+            if (!empty($data['can_view_invoices'])) {
                 $user->allow('view-invoices');
             }
+            if (!empty($data['can_create_users'])) {
+                $user->allow('create-users');
+            }
         }
+
         $user->save();
 
         return new UserResource($user);
@@ -332,9 +333,47 @@ class UserController extends Controller
     public function update(UserRequest $request, User $user)
     {
         $data = $request->validated();
-        foreach ($data as $name => $value) {
-            $user->{$name} = $value;
+        // @todo move this logic to a service
+        if ($user->first_name !== $data['first_name']) {
+            $user->first_name = $data['first_name'];
         }
+        if ($user->last_name !== $data['last_name']) {
+            $user->last_name = $data['last_name'];
+        }
+        if (isset($data['email']) && $user->email !== $data['email']) {
+            $user->email = $data['email'];
+        }
+        // add the phone number
+        // var_dump($data['phone'], $user->phones->firstWhere(['is_primary' => 1]));
+        if (!empty($data['phone'])) {
+            if (null !== ($phone = $user->phones->firstWhere('is_primary', 1))) {
+                if ($data['phone'] !== $phone->number) {
+                    $phone->number = $data['phone'];
+                    $phone->is_primary = 1;
+                    $phone->save();
+                }
+            } else { // create
+                $user->phones()->create(['number' => $data['phone'], 'is_primary' => 1, 'phoneable_type' => User::class, 'phoneable_id' => $user->id]);
+            }
+        }
+        // switch the role
+        if (!empty($data['primary_role']) && $data['primary_role'] !== $user->primary_role) {
+            // this will vary by user type
+            if ('HealthPlanUser' === $user->user_type_name) {
+                // healthplans will only have one role
+                Bouncer::sync($user)->roles([$data['primary_role']]);
+                $user->primary_role = $data['primary_role'];
+            }
+        }
+        // @todo, updating / creating users should be a service, likely by different user types
+        if ('HealthPlanUser' === $user->user_type_name) {
+            empty($data['can_view_reports']) ? $user->disallow('view-reports') : $user->allow('view-reports');
+            empty($data['can_view_invoices']) ? $user->disallow('view-invoices') : $user->allow('view-invoices');
+            empty($data['can_create_users']) ? $user->disallow('create-users') : $user->allow('create-users');
+            // refresh perms cache
+            Bouncer::refreshFor($user);
+        }
+
         $user->save();
 
         return new UserResource($user);

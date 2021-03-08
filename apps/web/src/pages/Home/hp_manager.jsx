@@ -23,15 +23,15 @@ const Home = () => {
                         <div className="box-same-line">
                             <h1 className="box-subtitle">
                                 Users{" "}
-                                    <Button
-                                        useButton={false}
-                                        to="/admin/add-users"
-                                        className="py-1 ml-2"
-                                        icon="plus"
-                                        iconSize="sm"
-                                    >
-                                        Add New
-                                    </Button>
+                                <Button
+                                    useButton={false}
+                                    to="/healthplan/adduser"
+                                    className="py-1 ml-2"
+                                    icon="plus"
+                                    iconSize="sm"
+                                >
+                                    Add New
+                                </Button>
                             </h1>
 
                             <div className="d-block d-sm-none">

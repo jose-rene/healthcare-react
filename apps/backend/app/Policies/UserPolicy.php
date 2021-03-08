@@ -75,8 +75,8 @@ class UserPolicy
         if ($user->id == $model->id) {
             return true;
         }
-        // allow supers
-        if (Bouncer::is($user)->a('software_engineer')) {
+        // check ability
+        if ($user->can('create-users')) {
             return true;
         }
 
