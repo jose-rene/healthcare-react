@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Phone;
 use App\Models\User;
 use App\Models\UserType\EngineeringUser;
 use Artisan;
@@ -79,6 +80,7 @@ class UserTest extends TestCase
 
         $this->assertEquals($formData['email'], $response->json('email'));
         $this->assertEquals($formData['primary_role'], $response->json('primary_role'));
+        $this->assertEquals($formData['phone'], $response->json('phones.0.number'));
     }
 
     /**
@@ -159,6 +161,7 @@ class UserTest extends TestCase
         $formData = [
             'first_name' => $this->faker->firstName,
             'last_name'  => $this->faker->lastName,
+            'phone'      => $this->faker->phoneNumber,
         ];
         // update user with data
         $response = $this->put('/v1/user/' . $this->user->uuid, $formData);
@@ -167,6 +170,7 @@ class UserTest extends TestCase
             ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'roles']);
 
         $this->assertEquals($formData['last_name'], $response->json('last_name'));
+        $this->assertEquals($formData['phone'], $response->json('phones.0.number'));
     }
 
     /**
@@ -206,10 +210,11 @@ class UserTest extends TestCase
             'primary_role' => 'hp_user',
         ];
         // update user with data
-        $response = $this->put('/v1/user/' . $this->user->uuid, $formData);
+        $response = $this->put('/v1/user/profile', $formData);
+
         $response
             ->assertStatus(422)
-            ->assertJsonStructure(['errors' => ['primary_role']]);
+            ->assertJsonStructure(['message']);
     }
 
     /**
@@ -358,7 +363,7 @@ class UserTest extends TestCase
             'first_name' => $this->faker->firstName,
             'last_name'  => $this->faker->lastName,
             'email'      => $this->faker->unique()->safeEmail,
-            'password'   => str_pad(preg_replace('~[^a-zA-Z0-9!_:\~#@\^\*\.\,\(\)\{\}\[\]\+\-\$]~', '', $this->faker->password), 8, '!'),
+            'password'   => str_pad(preg_replace(config('rules.patterns.password_negate'), '', $this->faker->password), 8, '!'),
             'phone'      => $this->faker->phoneNumber,
         ];
     }
@@ -368,6 +373,7 @@ class UserTest extends TestCase
         parent::setUp();
         $this->user = User::factory()->create();
         $this->admin = User::factory()->create();
+        $this->user->phones()->create(['number' => $this->faker->phoneNumber, 'is_primary' => 1, 'phoneable_type' => User::class, 'phoneable_id' => $this->user->id]);
         // seed the Bouncer roles
         Artisan::call('db:seed', [
             '--class' => 'Database\Seeders\BouncerSeeder',

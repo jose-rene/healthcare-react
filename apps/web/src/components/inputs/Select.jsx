@@ -18,7 +18,7 @@ const Select = (
         valueKey = "val",
         ...otherProps
     },
-    ref,
+    ref
 ) => {
     const { [name]: { message = false } = {} } = errors;
     const hasError = !!message;
@@ -28,11 +28,18 @@ const Select = (
         </option>
     ));
     return (
-        <div className={`${wrapperClass
-            ? "wrapperClass"
-            : "form-group"} ${inlineLabel ? "d-flex" : ""}`}>
+        <div
+            className={`${wrapperClass ? "wrapperClass" : "form-group"} ${
+                inlineLabel ? "d-flex" : ""
+            }`}
+        >
             {label && (
-                <Form.Label htmlFor={name} className={(labelClass? labelClass: "") + inlineLabel? 'col pt-2': ''}>
+                <Form.Label
+                    htmlFor={name}
+                    className={
+                        (labelClass || "") + (inlineLabel ? " col pt-2" : "")
+                    }
+                >
                     {label}
                 </Form.Label>
             )}
@@ -40,12 +47,12 @@ const Select = (
                 id={name}
                 name={name}
                 autoComplete={autocomplete || name}
-                className={
-                    `${inlineLabel ? "col " : ""}` +
-                    (className ? className : `form-control ${hasError
-                        ? " is-invalid"
-                        : ""} ${classNameAppend}`)
-                }
+                className={`${inlineLabel ? "col " : ""}${
+                    className ||
+                    `form-control ${
+                        hasError ? " is-invalid" : ""
+                    } ${classNameAppend}`
+                }`}
                 ref={ref}
                 {...otherProps}
             >

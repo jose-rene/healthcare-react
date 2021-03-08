@@ -5,7 +5,7 @@ exports[`<TableAPI /> renders pagination with a select 1`] = `
   className="form-group d-flex"
 >
   <label
-    className="col pt-2 form-label"
+    className=" col pt-2 form-label"
     htmlFor="page"
   >
     Page

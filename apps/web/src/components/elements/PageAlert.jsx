@@ -15,6 +15,7 @@ import "../../styles/PageAlert.scss";
  */
 const PageAlert = ({
     variant = "error",
+    className = "",
     children,
     show = true,
     dismissible = false,
@@ -47,6 +48,7 @@ const PageAlert = ({
         <Alert
             variant={variant}
             show={show}
+            className={className}
             dismissible={dismissible}
             onClose={handleOnClose}
         >

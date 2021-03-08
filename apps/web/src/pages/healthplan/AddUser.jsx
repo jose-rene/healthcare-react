@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -10,6 +10,7 @@ import Select from "../../components/inputs/Select";
 import InputText from "../../components/inputs/InputText";
 import useApiCall from "../../hooks/useApiCall";
 import PageAlert from "../../components/elements/PageAlert";
+/* eslint-disable jsx-a11y/label-has-associated-control */
 
 const AddUser = () => {
     const [{ data, loading, error: formError }, fireSubmit] = useApiCall({
@@ -17,7 +18,7 @@ const AddUser = () => {
         url: "user",
     });
     const [user, setUser] = useState(null);
-    console.log(formError);
+
     const { register, handleSubmit, reset, errors } = useForm();
     const onCancel = () => {
         reset();
@@ -28,7 +29,6 @@ const AddUser = () => {
         }
         try {
             const result = await fireSubmit({ params: formData });
-            console.log("result-> ", result);
             setUser(result);
             reset();
         } catch (e) {
@@ -230,6 +230,22 @@ const AddUser = () => {
                                             htmlFor="can_view_reports"
                                         >
                                             View Reports
+                                        </label>
+                                    </div>
+                                    <div className="form-check form-check-inline">
+                                        <input
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            name="can_create_users"
+                                            id="can_create_users"
+                                            value="1"
+                                            ref={register()}
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="can_create_users"
+                                        >
+                                            Manage Users
                                         </label>
                                     </div>
                                 </div>

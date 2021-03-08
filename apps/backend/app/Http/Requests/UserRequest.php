@@ -29,23 +29,30 @@ class UserRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'first_name'   => ['bail', 'required', 'min:1'],
-            'last_name'    => ['bail', 'required', 'min:1'],
-            'phone'        => ['min:10'],
-            'job_title'    => ['min:2'],
-            'user_type'    => ['bail', 'required_without'], // this is always based on role
-            'primary_role' => ['bail', function ($attribute, $value, $fail) {
+            'first_name'        => ['bail', 'required', 'min:1'],
+            'last_name'         => ['bail', 'required', 'min:1'],
+            'phone'             => ['min:10'],
+            'job_title'         => ['min:2'],
+            'can_view_invoices' => ['boolean', 'nullable'],
+            'can_view_reports'  => ['boolean', 'nullable'],
+            'can_create_users'  => ['boolean', 'nullable'],
+            'user_type'         => ['bail', 'required_without'], // this is always based on role
+            'primary_role'      => ['bail', function ($attribute, $value, $fail) {
                 if (null === ($role = Bouncer::role()->firstWhere(['name' => $value]))) {
                     $fail('An invalid role update was selected.');
 
                     return;
                 }
-                // check the role is in the users roles
-                if (!$this->user->roles->contains('name', $value)) {
+                // check if the domain matches
+                if (!auth()->user()->can('apply-any-role') && $role->domain !== auth()->user()->user_type_domain) {
+                    $fail('You do not have permission to add this role.');
+                }
+                // check the role is in the users roles, allow user to switch to a new role
+                /*if (!$this->user->roles->contains('name', $value)) {
                     $fail('The user does not have this role.');
 
                     return;
-                }
+                }*/
             }],
         ];
 
