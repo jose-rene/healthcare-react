@@ -43,6 +43,26 @@ class MemberTest extends TestCase
         $this->assertEquals($data['id'], $this->member->uuid);
     }
 
+    /**
+     * Test fetching plans.
+     *
+     * @return void
+     */
+    public function testGetPlans()
+    {
+        $this->withoutExceptionHandling();
+        Passport::actingAs(
+            $this->user
+        );
+        // get the member
+        $response = $this->withHeaders([
+            'Accept'           => 'application/json',
+            'X-Requested-With' => 'XMLHttpRequest',
+        ])->json('GET', 'v1/plan/plans');
+        // validate response code
+        $response->assertStatus(200);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
