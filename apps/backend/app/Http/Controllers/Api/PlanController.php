@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\MemberResource;
-use App\Models\Member;
+use Faker\Factory as Faker;
 use Illuminate\Http\Request;
 
-class MemberController extends Controller
+class PlanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -37,28 +36,27 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
-        // @todo implement member store
-        return response()->json(['message' => 'Member successfully entered']);
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Member  $member
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Member $member)
+    public function show($id)
     {
-        return new MemberResource($member);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Member  $member
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Member $member)
+    public function edit($id)
     {
         //
     }
@@ -67,10 +65,10 @@ class MemberController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Member  $member
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Member $member)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -78,11 +76,45 @@ class MemberController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Member  $member
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Member $member)
+    public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Fetch plans for this company.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function plans()
+    {
+        // @todo, use real plans
+        $faker = Faker::create();
+        $json = [];
+        for ($xx = 0; $xx < 5; $xx++) {
+            $json[] = ['id' => $faker->uuid, 'plan' => $faker->company];
+        }
+
+        return response()->json($json);
+    }
+
+    /**
+     * Fetch lobs for this company.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function lobs()
+    {
+        // @todo, use real lobs
+        $faker = Faker::create();
+        $json = [];
+        for ($xx = 0; $xx < 5; $xx++) {
+            $json[] = ['id' => $faker->uuid, 'plan' => $faker->catchPhrase];
+        }
+
+        return response()->json($json);
     }
 }

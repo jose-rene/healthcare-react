@@ -8,6 +8,7 @@ import Account from "../pages/Account";
 import Table from "../pages/Test/Table";
 import HpAddUser from "../pages/healthplan/AddUser";
 import HpEditUser from "../pages/healthplan/EditUser";
+import HpAddMember from "../pages/healthplan/AddMember";
 import Assessment from "../pages/Assessment";
 import Error401 from "../pages/Errors/401";
 import Federated from "../pages/Federated";
@@ -57,6 +58,12 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                 />
                 <PrivateRoute path="/account">
                     <Account />
+                </PrivateRoute>
+                <PrivateRoute
+                    path="/healthplan/addmember"
+                    middleware={["hp_manager", "hp_champion"]}
+                >
+                    <HpAddMember />
                 </PrivateRoute>
                 <PrivateRoute
                     path="/healthplan/adduser"
