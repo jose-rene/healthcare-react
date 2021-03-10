@@ -1,6 +1,5 @@
 import React from "react";
 import { Form, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Button from "../../components/inputs/Button";
 import BroadcastAlert from "../../components/elements/BroadcastAlert";
@@ -8,11 +7,20 @@ import PageLayout from "../../layouts/PageLayout";
 import "../../styles/home.scss";
 import Select from "../../components/inputs/Select";
 import InputText from "../../components/inputs/InputText";
-import useApiCall from "../../hooks/useApiCall";
-import PageAlert from "../../components/elements/PageAlert";
+import FormButtons from "../../components/elements/FormButtons";
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 const AddMember = () => {
+    const { register, handleSubmit, errors, reset } = useForm();
+
+    const onSubmit = (formData) => {
+        console.log(formData);
+    };
+
+    const onCancel = () => {
+        reset();
+    };
+
     return (
         <PageLayout>
             <BroadcastAlert />
@@ -26,292 +34,256 @@ const AddMember = () => {
                 </p>
 
                 <div className="white-box">
-                    <Form>
+                    <Form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-row">
-                            <div className="col-lg-6">
-                                <label
-                                    className="app-input-label"
-                                    style={{ fontSize: "16px" }}
-                                >
-                                    Plan
-                                </label>
-                                <select
-                                    className="app-input"
-                                    style={{ borderColor: "#DADEE0" }}
-                                >
-                                    <option>
-                                        Molina Central Medicare Unit
-                                    </option>
-                                </select>
+                            <div className="col-md-6">
+                                <Select
+                                    name="plan"
+                                    label="Plan"
+                                    options={[
+                                        {
+                                            id: "molina-central-medicare-unit",
+                                            title:
+                                                "Molina Central Medicare Unit",
+                                            val: "molina-central-medicare-unit",
+                                        },
+                                    ]}
+                                    errors={errors}
+                                />
                             </div>
 
-                            <div className="col-lg-6" />
+                            <div className="col-md-6"></div>
 
-                            <h1
-                                className="box-outside-title title-second"
-                                style={{ marginBottom: "32px" }}
-                            >
-                                Member ID
-                            </h1>
-                        </div>
-
-                        <div className="col-lg-6">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                Member ID
-                            </label>
-                            <input
-                                className="app-input"
-                                style={{ borderColor: "#DADEE0" }}
-                            />
-                        </div>
-
-                        <div className="col-lg-6">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                Line of Business*
-                            </label>
-                            <select
-                                className="app-input"
-                                style={{ borderColor: "#DADEE0" }}
-                            >
-                                <option>Select option</option>
-                            </select>
-                        </div>
-
-                        <div className="col-lg-12">
-                            <h1
-                                className="box-outside-title title-second"
-                                style={{ marginBottom: "32px" }}
-                            >
-                                Basic Info
-                            </h1>
-                        </div>
-
-                        <div className="col-lg-6">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                Title
-                            </label>
-                            <select
-                                className="app-input select-new-member"
-                                style={{ borderColor: "#DADEE0" }}
-                            >
-                                ><option>Select option</option>
-                            </select>
-                        </div>
-
-                        <div className="col-lg-6">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                Date of Birth
-                            </label>
-                            <input
-                                className="app-input"
-                                type="date"
-                                style={{ borderColor: "#DADEE0" }}
-                            />
-                        </div>
-
-                        <div className="col-lg-6">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                First Name
-                            </label>
-                            <input
-                                className="app-input select-new-member"
-                                style={{ borderColor: "#DADEE0" }}
-                            />
-                        </div>
-
-                        <div className="col-lg-6">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                Last Name
-                            </label>
-                            <input
-                                className="app-input"
-                                style={{ borderColor: "#DADEE0" }}
-                            />
-                        </div>
-
-                        <div className="col-lg-6">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                Gender
-                            </label>
-                            <select
-                                className="app-input select-new-member"
-                                style={{ borderColor: "#DADEE0" }}
-                            >
-                                ><option>Select option</option>
-                            </select>
-                        </div>
-
-                        <div className="col-lg-6">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                Language
-                            </label>
-                            <select
-                                className="app-input"
-                                style={{ borderColor: "#DADEE0" }}
-                            >
-                                <option>Select option</option>
-                            </select>
-                        </div>
-
-                        <div className="col-lg-12">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                Address 1
-                            </label>
-                            <input
-                                className="app-input select-new-member"
-                                style={{ borderColor: "#DADEE0" }}
-                            />
-                        </div>
-
-                        <div className="col-lg-12">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                Address 2
-                            </label>
-                            <input
-                                className="app-input select-new-member"
-                                style={{ borderColor: "#DADEE0" }}
-                            />
-                        </div>
-
-                        <div className="col-lg-12">
-                            <div className="form-row">
-                                <div className="col-lg-6">
-                                    <label
-                                        className="app-input-label"
-                                        style={{ fontSize: "16px" }}
-                                    >
-                                        Zip
-                                    </label>
-                                    <input
-                                        className="app-input select-new-member"
-                                        style={{ borderColor: "#DADEE0" }}
-                                    />
-                                </div>
-
-                                <div
-                                    className="col-lg-4"
-                                    style={{ paddingTop: "10px" }}
+                            <div className="col-md-12">
+                                <h1
+                                    className="box-outside-title title-second"
+                                    style={{ marginBottom: "32px" }}
                                 >
-                                    <button className="btn-blue">
-                                        Lookup Zip
-                                    </button>
+                                    Member ID
+                                </h1>
+                            </div>
+
+                            <div className="col-md-6">
+                                <InputText
+                                    name="member_id"
+                                    label="Member ID"
+                                    errors={errors}
+                                />
+                            </div>
+
+                            <div className="col-md-6">
+                                <Select
+                                    name="line_of_business"
+                                    label="Line of Business*"
+                                    options={[
+                                        {
+                                            id: "select_option",
+                                            title: "Select option",
+                                            val: "select-option",
+                                        },
+                                    ]}
+                                    errors={errors}
+                                    ref={register({
+                                        required:
+                                            "Line of Business is required",
+                                    })}
+                                />
+                            </div>
+
+                            <div className="col-md-12">
+                                <h1
+                                    className="box-outside-title title-second"
+                                    style={{ marginBottom: "32px" }}
+                                >
+                                    Basic Info
+                                </h1>
+                            </div>
+
+                            <div className="col-md-6">
+                                <Select
+                                    name="title"
+                                    label="Title"
+                                    options={[
+                                        {
+                                            id: "select_option",
+                                            title: "Select option",
+                                            val: "select-option",
+                                        },
+                                    ]}
+                                    errors={errors}
+                                />
+                            </div>
+
+                            <div className="col-md-6">
+                                <InputText
+                                    name="date_of_birth"
+                                    label="Date of Birth"
+                                    type="date"
+                                    errors={errors}
+                                />
+                            </div>
+
+                            <div className="col-md-6">
+                                <InputText
+                                    name="first_name"
+                                    label="First Name"
+                                    errors={errors}
+                                />
+                            </div>
+
+                            <div className="col-md-6">
+                                <InputText
+                                    name="last_name"
+                                    label="Last Name"
+                                    errors={errors}
+                                />
+                            </div>
+
+                            <div className="col-md-6">
+                                <Select
+                                    name="gender"
+                                    label="Gender"
+                                    options={[
+                                        {
+                                            id: "male",
+                                            title: "Male",
+                                            val: "male",
+                                        },
+                                        {
+                                            id: "female",
+                                            title: "Female",
+                                            val: "female",
+                                        },
+                                    ]}
+                                    errors={errors}
+                                />
+                            </div>
+
+                            <div className="col-md-6">
+                                <Select
+                                    name="language"
+                                    label="Language"
+                                    options={[
+                                        {
+                                            id: "english",
+                                            title: "English",
+                                            val: "english",
+                                        },
+                                        {
+                                            id: "spanish",
+                                            title: "Spanish",
+                                            val: "spanish",
+                                        },
+                                    ]}
+                                    errors={errors}
+                                />
+                            </div>
+
+                            <div className="col-md-12">
+                                <InputText
+                                    name="address_1"
+                                    label="Address 1"
+                                    errors={errors}
+                                />
+                            </div>
+
+                            <div className="col-md-12">
+                                <InputText
+                                    name="address_2"
+                                    label="Address 2"
+                                    errors={errors}
+                                />
+                            </div>
+
+                            <div className="col-md-12">
+                                <div className="form-row">
+                                    <div className="col-md-6">
+                                        <InputText
+                                            name="zip"
+                                            label="Zip"
+                                            errors={errors}
+                                        />
+                                    </div>
+
+                                    <div className="col-md-4">
+                                        <Button
+                                            className="btn btn-block btn-zip"
+                                            type="Submit"
+                                        >
+                                            Lookup Zip
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-lg-6 city">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                City
-                            </label>
-                            <input
-                                className="app-input"
-                                style={{ borderColor: "#DADEE0" }}
-                            />
-                        </div>
+                            <div className="col-md-6">
+                                <InputText
+                                    name="city"
+                                    label="City"
+                                    errors={errors}
+                                />
+                            </div>
 
-                        <div className="col-lg-6">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                State
-                            </label>
-                            <select
-                                className="app-input"
-                                style={{ borderColor: "#DADEE0" }}
-                            >
-                                <option>Select option</option>
-                            </select>
-                        </div>
+                            <div className="col-md-6">
+                                <Select
+                                    name="state"
+                                    label="State"
+                                    options={[
+                                        {
+                                            id: "select_option",
+                                            title: "Select option",
+                                            val: "select-option",
+                                        },
+                                    ]}
+                                    errors={errors}
+                                />
+                            </div>
 
-                        <div className="col-lg-12">
-                            <h1
-                                className="box-outside-title title-second"
-                                style={{ marginBottom: "32px" }}
-                            >
-                                Contact Methods
-                            </h1>
-                        </div>
+                            <div className="col-md-12">
+                                <h1
+                                    className="box-outside-title title-second"
+                                    style={{ marginBottom: "32px" }}
+                                >
+                                    Contact Methods
+                                </h1>
+                            </div>
 
-                        <div className="col-lg-6">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                Type
-                            </label>
-                            <select
-                                className="app-input"
-                                style={{ borderColor: "#DADEE0" }}
-                            >
-                                ><option>Select option</option>
-                            </select>
-                        </div>
+                            <div className="col-md-6">
+                                <Select
+                                    name="type"
+                                    label="Type"
+                                    options={[
+                                        {
+                                            id: "select_option",
+                                            title: "Select option",
+                                            val: "select-option",
+                                        },
+                                    ]}
+                                    errors={errors}
+                                />
+                            </div>
 
-                        <div className="col-lg-6">
-                            <label
-                                className="app-input-label"
-                                style={{ fontSize: "16px" }}
-                            >
-                                Phone/Email
-                            </label>
-                            <input
-                                className="app-input"
-                                style={{ borderColor: "#DADEE0" }}
-                            />
-                        </div>
+                            <div className="col-md-6">
+                                <InputText
+                                    name="phone_email"
+                                    label="Phone/Email"
+                                    errors={errors}
+                                />
+                            </div>
 
-                        <div className="col-lg-12">
-                            <button className="btn-blue btn-add-method">
-                                + Add new contact method
-                            </button>
-                        </div>
+                            <div className="col-md-12 mb-5">
+                                <Button
+                                    className="btn btn-block btn-add-method"
+                                    type="Submit"
+                                >
+                                    + Add new contact method
+                                </Button>
+                            </div>
 
-                        <div className="col-lg-12 last-buttons">
-                            <div className="form-row">
-                                <div className="col-lg-5 div-last-buttons">
-                                    <button className="btn-blue btn-cancel-newMember">
-                                        Cancel
-                                    </button>
-                                </div>
-
-                                <div className="col-lg-5 div-last-buttons">
-                                    <button className="btn-blue btn-create-request">
-                                        Create New Request
-                                    </button>
-                                </div>
+                            <div className="col-md-12">
+                                <FormButtons
+                                    submitLabel="Create New Request"
+                                    onCancel={onCancel}
+                                />
                             </div>
                         </div>
                     </Form>
