@@ -4,7 +4,7 @@ import Button from "../inputs/Button";
 const FormButtons = ({
     submitLabel = "Submit",
     cancelLabel = "Cancel",
-    onCancel,
+    onCancel = false,
 }) => {
     return (
         <div className="form-row">
@@ -14,7 +14,7 @@ const FormButtons = ({
                 </Button>
             </div>
 
-            <div className="col-md-5">
+            {onCancel && <div className="col-md-5">
                 <Button
                     className="btn btn-block"
                     variant="secondary"
@@ -22,7 +22,7 @@ const FormButtons = ({
                 >
                     {cancelLabel}
                 </Button>
-            </div>
+            </div>}
         </div>
     );
 };
