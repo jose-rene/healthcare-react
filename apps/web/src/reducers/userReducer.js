@@ -7,6 +7,7 @@ const initialState = {
     email: "",
     full_name: "",
     roles: [],
+    abilities: [],
     primaryRole: undefined,
 };
 
@@ -20,7 +21,8 @@ export default function (state = initialState, action) {
 
             return {
                 ...state,
-                initializing: false, ...userProps,
+                initializing: false,
+                ...userProps,
                 authed: !!user.email,
                 primaryRole,
             };
@@ -30,6 +32,7 @@ export default function (state = initialState, action) {
                 email: action.email,
                 full_name: action.full_name,
                 roles: action.roles || [],
+                abilities: action.abilities || [],
             };
 
         case CLEAR_USER:

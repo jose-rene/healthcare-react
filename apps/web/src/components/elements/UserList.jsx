@@ -4,8 +4,8 @@ import Icon from "./Icon";
 import PageAlert from "./PageAlert";
 import useApiCall from "../../hooks/useApiCall";
 import "../../styles/RequestList.scss";
-import TableTopSort from "./TableTopSort";
 import TableAPI from "./TableAPI";
+import UserTopSearch from "./UserTopSearch";
 
 /* eslint-disable no-nested-ternary */
 
@@ -96,9 +96,10 @@ const List = () => {
 
     return !loading ? (
         <>
-            <TableTopSort
+            <UserTopSearch
                 handleSearch={handleSearch}
                 updateSearchObj={formUpdateSearchObj}
+                searchObj={searchObj}
             />
             <TableAPI
                 label="Users"

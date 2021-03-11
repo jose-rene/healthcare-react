@@ -9,17 +9,19 @@ const PrivateRoute = ({
     authed,
     middleware = false,
     roles,
+    abilities,
     location,
     ...rest
 }) => {
+    console.log(abilities);
     if (authed && middleware && !checkMiddleware(middleware, roles)) {
         window.location.assign("/access-denied");
         return false;
     }
 
     const renderComponent = () => {
-        if(component){
-            return component
+        if (component) {
+            return component;
         }
 
         return children;
@@ -33,7 +35,8 @@ const PrivateRoute = ({
     );
 };
 
-const mapStateToProps = ({ user: { roles, authed } }) => ({
+const mapStateToProps = ({ user: { roles, authed, abilities } }) => ({
+    abilities,
     roles,
     authed,
 });

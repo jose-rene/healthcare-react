@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -19,7 +19,24 @@ const AddUser = () => {
     });
     const [user, setUser] = useState(null);
 
-    const { register, handleSubmit, reset, errors } = useForm();
+    const {
+        register,
+        handleSubmit,
+        reset,
+        watch,
+        setValue,
+        errors,
+    } = useForm();
+
+    // disable checkbox when user is champion (it's not applicable they have ability from the role)
+    const primaryRole = useRef();
+    primaryRole.current = watch("primary_role", "");
+
+    if (primaryRole.current === "hp_champion") {
+        // make sure create user perm is checked
+        setValue("can_create_users", true);
+    }
+
     const onCancel = () => {
         reset();
     };
@@ -89,7 +106,7 @@ const AddUser = () => {
                                                 val: "hp_user",
                                             },
                                             {
-                                                id: "hp_champion",
+                                                id: "hp_finance",
                                                 title: "Health Plan Finance",
                                                 val: "hp_finance",
                                             },
@@ -99,7 +116,7 @@ const AddUser = () => {
                                                 val: "hp_champion",
                                             },
                                             {
-                                                id: "hp_champion",
+                                                id: "hp_manager",
                                                 title: "Health Plan Manager",
                                                 val: "hp_manager",
                                             },
@@ -107,6 +124,26 @@ const AddUser = () => {
                                         errors={errors}
                                         ref={register({
                                             required: "User Type is required",
+                                        })}
+                                    />
+                                </div>
+                                <div className="col-6">
+                                    <InputText
+                                        name="job_title"
+                                        label="Job Title"
+                                        errors={errors}
+                                        ref={register({
+                                            required: "Job Title is required",
+                                            minLength: {
+                                                value: 2,
+                                                message:
+                                                    "Job Title must be at least 2 character",
+                                            },
+                                            maxLength: {
+                                                value: 64,
+                                                message:
+                                                    "Job Title name cannot be longer than 64 characters",
+                                            },
                                         })}
                                     />
                                 </div>
@@ -152,26 +189,6 @@ const AddUser = () => {
                                 </div>
                                 <div className="col-6">
                                     <InputText
-                                        name="job_title"
-                                        label="Job Title"
-                                        errors={errors}
-                                        ref={register({
-                                            required: "Job Title is required",
-                                            minLength: {
-                                                value: 2,
-                                                message:
-                                                    "Job Title must be at least 2 character",
-                                            },
-                                            maxLength: {
-                                                value: 64,
-                                                message:
-                                                    "Job Title name cannot be longer than 64 characters",
-                                            },
-                                        })}
-                                    />
-                                </div>
-                                <div className="col-6">
-                                    <InputText
                                         name="email"
                                         label="Email"
                                         type="email"
@@ -206,7 +223,6 @@ const AddUser = () => {
                                             type="checkbox"
                                             name="can_view_invoices"
                                             id="can_view_invoices"
-                                            value="1"
                                             ref={register()}
                                         />
                                         <label
@@ -222,7 +238,6 @@ const AddUser = () => {
                                             type="checkbox"
                                             name="can_view_reports"
                                             id="can_view_reports"
-                                            value="1"
                                             ref={register()}
                                         />
                                         <label
@@ -238,7 +253,10 @@ const AddUser = () => {
                                             type="checkbox"
                                             name="can_create_users"
                                             id="can_create_users"
-                                            value="1"
+                                            disabled={
+                                                primaryRole.current ===
+                                                "hp_champion"
+                                            }
                                             ref={register()}
                                         />
                                         <label

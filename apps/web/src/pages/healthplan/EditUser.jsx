@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Form, Row } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -17,7 +17,7 @@ const EditUser = () => {
     const { id } = useParams();
     const [user, setUser] = useState(null);
     const [{ userUpdated }, setUserUpdated] = useState({ userUpdated: false });
-    console.log("id => ", id, user);
+    // history for go back
     const history = useHistory();
     const [
         { data: userData, loading: userLoading, error: userError },
@@ -47,15 +47,30 @@ const EditUser = () => {
             isMounted = false;
         };
     }, []);
+
+    // form handling
     const [{ data, loading, error: formError }, fireSubmit] = useApiCall({
         method: "put",
         url: `user/${id}`,
     });
-    console.log(formError);
-    const { register, handleSubmit, reset, errors } = useForm();
+    // form handling
+    const { register, handleSubmit, watch, setValue, errors } = useForm();
+    // disable checkbox when user is champion (it's not applicable they have ability from the role)
+    const primaryRole = useRef();
+    primaryRole.current = watch(
+        "primary_role",
+        userData ? userData.primary_role : ""
+    );
+
+    if (primaryRole.current === "hp_champion") {
+        // make sure create user perm is checked
+        setValue("can_create_users", true);
+    }
+
     const onCancel = () => {
         history.goBack();
     };
+
     const onSubmit = async (formData) => {
         if (loading) {
             return false;
@@ -125,7 +140,7 @@ const EditUser = () => {
                                                     val: "hp_user",
                                                 },
                                                 {
-                                                    id: "hp_champion",
+                                                    id: "hp_finance",
                                                     title:
                                                         "Health Plan Finance",
                                                     val: "hp_finance",
@@ -137,7 +152,7 @@ const EditUser = () => {
                                                     val: "hp_champion",
                                                 },
                                                 {
-                                                    id: "hp_champion",
+                                                    id: "hp_manager",
                                                     title:
                                                         "Health Plan Manager",
                                                     val: "hp_manager",
@@ -147,6 +162,28 @@ const EditUser = () => {
                                             ref={register({
                                                 required:
                                                     "User Type is required",
+                                            })}
+                                        />
+                                    </div>
+                                    <div className="col-6">
+                                        <InputText
+                                            name="job_title"
+                                            label="Job Title"
+                                            errors={errors}
+                                            defaultValue={user.job_title}
+                                            ref={register({
+                                                required:
+                                                    "Job Title is required",
+                                                minLength: {
+                                                    value: 2,
+                                                    message:
+                                                        "Job Title must be at least 2 character",
+                                                },
+                                                maxLength: {
+                                                    value: 64,
+                                                    message:
+                                                        "Job Title name cannot be longer than 64 characters",
+                                                },
                                             })}
                                         />
                                     </div>
@@ -190,28 +227,6 @@ const EditUser = () => {
                                                     value: 64,
                                                     message:
                                                         "Last name cannot be longer than 64 characters",
-                                                },
-                                            })}
-                                        />
-                                    </div>
-                                    <div className="col-6">
-                                        <InputText
-                                            name="job_title"
-                                            label="Job Title"
-                                            errors={errors}
-                                            defaultValue={user.job_title}
-                                            ref={register({
-                                                required:
-                                                    "Job Title is required",
-                                                minLength: {
-                                                    value: 2,
-                                                    message:
-                                                        "Job Title must be at least 2 character",
-                                                },
-                                                maxLength: {
-                                                    value: 64,
-                                                    message:
-                                                        "Job Title name cannot be longer than 64 characters",
                                                 },
                                             })}
                                         />
@@ -290,9 +305,17 @@ const EditUser = () => {
                                                 type="checkbox"
                                                 name="can_create_users"
                                                 id="can_create_users"
-                                                defaultChecked={userData.abilities.includes(
-                                                    "create-users"
-                                                )}
+                                                defaultChecked={
+                                                    userData.abilities.includes(
+                                                        "create-users"
+                                                    ) ||
+                                                    primaryRole.current ===
+                                                        "hp_champion"
+                                                }
+                                                disabled={
+                                                    primaryRole.current ===
+                                                    "hp_champion"
+                                                }
                                                 ref={register()}
                                             />
                                             <label

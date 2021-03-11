@@ -6,7 +6,7 @@ exports[`Input Components renders Checkbox input correctly 1`] = `
 >
   
   <input
-    className="form-control  "
+    className="form-check-input  "
     type="checkbox"
   />
 </div>

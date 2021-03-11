@@ -35,7 +35,7 @@ class UserTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonStructure(['first_name', 'last_name', 'email']);
+            ->assertJsonStructure(['first_name', 'last_name', 'email', 'roles', 'abilities']);
 
         $this->assertEquals($this->user->email, $response->json('email'));
     }

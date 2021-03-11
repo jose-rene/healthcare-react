@@ -14,7 +14,7 @@ const TableAPI = ({
     headers = [],
     data = [],
     onChange,
-    emptyMessage = "Nothing to show",
+    emptyMessage = "No Records Found.",
     dataMeta: {
         total: total_records = 1,
         last_page: lastPage = 1,
@@ -38,7 +38,13 @@ const TableAPI = ({
 
     const renderBody = useMemo(() => {
         if (!data || data.length == 0) {
-            return <div className="table-empty">{emptyMessage}</div>;
+            return (
+                <tr key="0">
+                    <td colSpan={headers.length} className="text-center">
+                        {emptyMessage}
+                    </td>
+                </tr>
+            );
         }
         return data.map((d, index) => (
             <tr key={`tr-th-${index}`}>
@@ -69,7 +75,9 @@ const TableAPI = ({
             <div className="row mb-3">
                 <div className="col">
                     <small className="text-mute ml-0">
-                        Showing {from} to {to} of {total_records} {label}
+                        {total_records
+                            ? `Showing ${from} to ${to} of ${total_records} ${label}`
+                            : emptyMessage}
                     </small>
                 </div>
             </div>
