@@ -6,25 +6,29 @@ const useSearch = ({
         perPage: 50,
     },
 } = {}) => {
-    const [searchObj, setSearchObj] = useState({ ...paginationDefault, ...searchObjDefault});
+    const [searchObj, setSearchObj] = useState({
+        ...paginationDefault,
+        ...searchObjDefault,
+    });
 
     const resetSearchObj = () => {
-        setSearchObj({ ...paginationDefault, ...searchObjDefault});
+        setSearchObj({ ...paginationDefault, ...searchObjDefault });
     };
 
-    const formUpdateSearchObj = ({target: { name, value }}) => {
+    const formUpdateSearchObj = ({ target: { name, value } }) => {
         return setSearchObj({ ...searchObj, [name]: value });
     };
 
     const updateSearchObj = (objUpdates) => {
         return setSearchObj({ ...searchObj, ...objUpdates });
-    }
+    };
 
     return [
-        //values
+        // values
         { searchObj },
-        //callbacks
-        { setSearchObj, resetSearchObj, formUpdateSearchObj, updateSearchObj }];
+        // callbacks
+        { setSearchObj, resetSearchObj, formUpdateSearchObj, updateSearchObj },
+    ];
 };
 
 export default useSearch;

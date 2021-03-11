@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
                 break;
             }
             $admin->markEmailAsVerified();
-            Bouncer::sync($admin)->roles(['hp_manager', 'software_engineer']);
+            Bouncer::sync($admin)->roles(['hp_manager', 'hp_champion', 'hp_user', 'hp_finance', 'software_engineer']);
             // add the user types
             $admin->engineeringUser(EngineeringUser::create());
             // add payer for hp user type

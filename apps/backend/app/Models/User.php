@@ -98,8 +98,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'columns' => [
             'users.first_name' => 10,
             'users.last_name'  => 10,
-            'users.user_type'  => 2,
-            'users.email'      => 5,
+            // 'users.user_type'  => 2,
+            'users.email' => 5,
         ],
         //        'joins' => [
         //            'posts' => ['users.id','posts.user_id'],

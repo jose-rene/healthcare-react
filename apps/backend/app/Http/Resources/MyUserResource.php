@@ -24,6 +24,8 @@ class MyUserResource extends JsonResource
      */
     public function toArray($request): array
     {
+        $abilities = $this->getAbilities();
+
         return [
             'full_name'    => $this->name,
             'first_name'   => $this->first_name,
@@ -34,6 +36,7 @@ class MyUserResource extends JsonResource
             'user_type'    => $this->user_type_name,
             'roles'        => RoleResource::collection($this->roles),
             'primary_role' => $this->primary_role ?? $this->roles->first()->name ?? '',
+            'abilities'    => $abilities->count() > 0 ? $abilities->map(fn ($item, $key) => $item['name']) : [],
         ];
     }
 }
