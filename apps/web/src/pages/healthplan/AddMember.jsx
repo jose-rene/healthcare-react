@@ -1,6 +1,7 @@
-import React from "react";
-import { Form, Row } from "react-bootstrap";
+import React, { useEffect, useMemo } from "react";
+import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import _ from "lodash";
 import Button from "../../components/inputs/Button";
 import BroadcastAlert from "../../components/elements/BroadcastAlert";
 import PageLayout from "../../layouts/PageLayout";
@@ -8,9 +9,43 @@ import "../../styles/home.scss";
 import Select from "../../components/inputs/Select";
 import InputText from "../../components/inputs/InputText";
 import FormButtons from "../../components/elements/FormButtons";
+import useApiCall from "../../hooks/useApiCall";
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 const AddMember = () => {
+    const [{ data: plans }, plansRequest] = useApiCall({
+        url: "plan/plans",
+    });
+
+    const [{ data: lobs }, lobsRequest] = useApiCall({
+        url: "plan/lobs",
+    });
+
+    useEffect(() => {
+        plansRequest();
+        lobsRequest();
+    }, []);
+
+    const planOptions = useMemo(() => {
+        if (_.isEmpty(plans)) {
+            return [];
+        }
+
+        return plans.map(({ id, plan }) => {
+            return { id, title: plan, val: plan };
+        });
+    }, [plans]);
+
+    const lobOptions = useMemo(() => {
+        if (_.isEmpty(lobs)) {
+            return [];
+        }
+
+        return lobs.map(({ id, plan }) => {
+            return { id, title: plan, val: plan };
+        });
+    }, [lobs]);
+
     const { register, handleSubmit, errors, reset } = useForm();
 
     const onSubmit = (formData) => {
@@ -40,14 +75,7 @@ const AddMember = () => {
                                 <Select
                                     name="plan"
                                     label="Plan"
-                                    options={[
-                                        {
-                                            id: "molina-central-medicare-unit",
-                                            title:
-                                                "Molina Central Medicare Unit",
-                                            val: "molina-central-medicare-unit",
-                                        },
-                                    ]}
+                                    options={planOptions}
                                     errors={errors}
                                 />
                             </div>
@@ -75,13 +103,7 @@ const AddMember = () => {
                                 <Select
                                     name="line_of_business"
                                     label="Line of Business*"
-                                    options={[
-                                        {
-                                            id: "select_option",
-                                            title: "Select option",
-                                            val: "select-option",
-                                        },
-                                    ]}
+                                    options={lobOptions}
                                     errors={errors}
                                     ref={register({
                                         required:
