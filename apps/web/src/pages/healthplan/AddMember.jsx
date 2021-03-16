@@ -101,6 +101,9 @@ const AddMember = () => {
     const [alertMessage, setAlertMessage] = useState("");
     const [countyOptions, setCountyOptions] = useState([]);
     const [member, setMember] = useState(null);
+    const [contactMethods, setContactMethods] = useState([
+        { type: "type", phone_email: "phone_email" },
+    ]);
 
     const onSubmit = async (formData) => {
         if (loading) {
@@ -175,6 +178,62 @@ const AddMember = () => {
             });
     };
 
+    const renderContactMethod = () => {
+        return contactMethods.map(({ type, phone_email }) => (
+            <React.Fragment key={type}>
+                <div className="col-md-5">
+                    <Select
+                        name={type}
+                        label="Type*"
+                        options={typesOptions}
+                        errors={errors}
+                        ref={register({
+                            required: "Type is required",
+                        })}
+                    />
+                </div>
+
+                <div className="col-md-5">
+                    <InputText
+                        name={phone_email}
+                        label="Phone/Email*"
+                        errors={errors}
+                        ref={register({
+                            required: "Phone/Email is required",
+                        })}
+                    />
+                </div>
+
+                {contactMethods.length > 1 && (
+                    <div className="col-md-2">
+                        <Button
+                            className="btn btn-zip"
+                            variant="primary"
+                            onClick={() => removeContactMethod(type)}
+                            label="remove"
+                        />
+                    </div>
+                )}
+            </React.Fragment>
+        ));
+    };
+
+    const addNewContactMethod = () => {
+        const len = contactMethods.length;
+        setContactMethods([
+            ...contactMethods,
+            { type: `type_${len}`, phone_email: `phone_email_${len}` },
+        ]);
+    };
+
+    const removeContactMethod = (type) => {
+        const filtered = contactMethods.filter((item) => {
+            return type !== item.type;
+        });
+
+        setContactMethods(filtered);
+    };
+
     return (
         <PageLayout>
             <BroadcastAlert />
@@ -213,10 +272,12 @@ const AddMember = () => {
                             <div className="col-md-6">
                                 <Select
                                     name="plan"
-                                    label="Plan"
+                                    label="Plan*"
                                     options={planOptions}
                                     errors={errors}
-                                    ref={register()}
+                                    ref={register({
+                                        required: "Plan is required",
+                                    })}
                                 />
                             </div>
 
@@ -234,9 +295,11 @@ const AddMember = () => {
                             <div className="col-md-6">
                                 <InputText
                                     name="member_id"
-                                    label="Member ID"
+                                    label="Member ID*"
                                     errors={errors}
-                                    ref={register()}
+                                    ref={register({
+                                        required: "Member ID is required",
+                                    })}
                                 />
                             </div>
 
@@ -265,7 +328,7 @@ const AddMember = () => {
                             <div className="col-md-6">
                                 <Select
                                     name="title"
-                                    label="Title"
+                                    label="Title*"
                                     options={[
                                         {
                                             id: "select_option",
@@ -274,42 +337,50 @@ const AddMember = () => {
                                         },
                                     ]}
                                     errors={errors}
-                                    ref={register()}
+                                    ref={register({
+                                        required: "Title is required",
+                                    })}
                                 />
                             </div>
 
                             <div className="col-md-6">
                                 <InputText
                                     name="date_of_birth"
-                                    label="Date of Birth"
+                                    label="Date of Birth*"
                                     type="date"
                                     errors={errors}
-                                    ref={register()}
+                                    ref={register({
+                                        required: "Date of Birth is required",
+                                    })}
                                 />
                             </div>
 
                             <div className="col-md-6">
                                 <InputText
                                     name="first_name"
-                                    label="First Name"
+                                    label="First Name*"
                                     errors={errors}
-                                    ref={register()}
+                                    ref={register({
+                                        required: "First Name is required",
+                                    })}
                                 />
                             </div>
 
                             <div className="col-md-6">
                                 <InputText
                                     name="last_name"
-                                    label="Last Name"
+                                    label="Last Name*"
                                     errors={errors}
-                                    ref={register()}
+                                    ref={register({
+                                        required: "Last Name is required",
+                                    })}
                                 />
                             </div>
 
                             <div className="col-md-6">
                                 <Select
                                     name="gender"
-                                    label="Gender"
+                                    label="Gender*"
                                     options={[
                                         {
                                             id: "male",
@@ -323,14 +394,16 @@ const AddMember = () => {
                                         },
                                     ]}
                                     errors={errors}
-                                    ref={register()}
+                                    ref={register({
+                                        required: "Gender is required",
+                                    })}
                                 />
                             </div>
 
                             <div className="col-md-6">
                                 <Select
                                     name="language"
-                                    label="Language"
+                                    label="Language*"
                                     options={[
                                         {
                                             id: "english",
@@ -344,16 +417,20 @@ const AddMember = () => {
                                         },
                                     ]}
                                     errors={errors}
-                                    ref={register()}
+                                    ref={register({
+                                        required: "Language is required",
+                                    })}
                                 />
                             </div>
 
                             <div className="col-md-12">
                                 <InputText
                                     name="address_1"
-                                    label="Address 1"
+                                    label="Address 1*"
                                     errors={errors}
-                                    ref={register()}
+                                    ref={register({
+                                        required: "Address 1 is required",
+                                    })}
                                 />
                             </div>
 
@@ -377,9 +454,11 @@ const AddMember = () => {
                                     <div className="col-md-6">
                                         <InputText
                                             name="zip"
-                                            label="Zip"
+                                            label="Zip*"
                                             errors={errors}
-                                            ref={register()}
+                                            ref={register({
+                                                required: "Zip is required",
+                                            })}
                                         />
                                     </div>
 
@@ -396,29 +475,35 @@ const AddMember = () => {
                             <div className="col-md-6">
                                 <InputText
                                     name="city"
-                                    label="City"
+                                    label="City*"
                                     errors={errors}
-                                    ref={register()}
+                                    ref={register({
+                                        required: "City is required",
+                                    })}
                                 />
                             </div>
 
                             <div className="col-md-6">
                                 <Select
                                     name="state"
-                                    label="State"
+                                    label="State*"
                                     options={statesOptions}
                                     errors={errors}
-                                    ref={register()}
+                                    ref={register({
+                                        required: "State is required",
+                                    })}
                                 />
                             </div>
 
                             <div className="col-md-6">
                                 <Select
                                     name="county"
-                                    label="County"
+                                    label="County*"
                                     options={countyOptions}
                                     errors={errors}
-                                    ref={register()}
+                                    ref={register({
+                                        required: "County is required",
+                                    })}
                                 />
                             </div>
 
@@ -431,27 +516,13 @@ const AddMember = () => {
                                 </h1>
                             </div>
 
-                            <div className="col-md-6">
-                                <Select
-                                    name="type"
-                                    label="Type"
-                                    options={typesOptions}
-                                    errors={errors}
-                                    ref={register()}
-                                />
-                            </div>
-
-                            <div className="col-md-6">
-                                <InputText
-                                    name="phone_email"
-                                    label="Phone/Email"
-                                    errors={errors}
-                                    ref={register()}
-                                />
-                            </div>
+                            {renderContactMethod()}
 
                             <div className="col-md-12 mb-5">
-                                <Button className="btn btn-block btn-add-method">
+                                <Button
+                                    className="btn btn-block btn-add-method"
+                                    onClick={() => addNewContactMethod()}
+                                >
                                     + Add new contact method
                                 </Button>
                             </div>
