@@ -13,6 +13,7 @@ import FormButtons from "../../components/elements/FormButtons";
 import useApiCall from "../../hooks/useApiCall";
 import { BASE_URL, API_KEY } from "../../config/Map";
 import states from "../../config/States.json";
+import types from "../../config/Types.json";
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 const AddMember = () => {
@@ -22,6 +23,11 @@ const AddMember = () => {
 
     const [{ data: lobs }, lobsRequest] = useApiCall({
         url: "plan/lobs",
+    });
+
+    const [{ data, loading, error: formError }, fireSubmit] = useApiCall({
+        method: "post",
+        url: "member",
     });
 
     useEffect(() => {
@@ -66,6 +72,23 @@ const AddMember = () => {
         return result;
     }, [states]);
 
+    const typesOptions = useMemo(() => {
+        if (_.isEmpty(types)) {
+            return [];
+        }
+
+        let result = [{ id: "", title: "", val: "" }];
+        for (const [key, value] of Object.entries(types)) {
+            result.push({
+                id: value,
+                title: value,
+                val: key,
+            });
+        }
+
+        return result;
+    }, [types]);
+
     const {
         register,
         handleSubmit,
@@ -77,9 +100,20 @@ const AddMember = () => {
 
     const [alertMessage, setAlertMessage] = useState("");
     const [countyOptions, setCountyOptions] = useState([]);
+    const [member, setMember] = useState(null);
 
-    const onSubmit = (formData) => {
-        console.log("come here????", formData);
+    const onSubmit = async (formData) => {
+        if (loading) {
+            return false;
+        }
+
+        try {
+            const result = await fireSubmit({ params: formData });
+            setMember(result);
+            reset();
+        } catch (e) {
+            console.log("Member create error:", e);
+        }
     };
 
     const onCancel = () => {
@@ -154,6 +188,26 @@ const AddMember = () => {
                 </p>
 
                 <div className="white-box">
+                    {formError ? (
+                        <PageAlert
+                            className="mt-3"
+                            variant="warning"
+                            timeout={5000}
+                            dismissible
+                        >
+                            Error: {formError}
+                        </PageAlert>
+                    ) : null}
+                    {member ? (
+                        <PageAlert
+                            className="mt-3"
+                            variant="success"
+                            timeout={5000}
+                            dismissible
+                        >
+                            Member Successfully Added.
+                        </PageAlert>
+                    ) : null}
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-row">
                             <div className="col-md-6">
@@ -381,13 +435,7 @@ const AddMember = () => {
                                 <Select
                                     name="type"
                                     label="Type"
-                                    options={[
-                                        {
-                                            id: "select_option",
-                                            title: "Select option",
-                                            val: "select-option",
-                                        },
-                                    ]}
+                                    options={typesOptions}
                                     errors={errors}
                                     ref={register()}
                                 />
@@ -403,10 +451,7 @@ const AddMember = () => {
                             </div>
 
                             <div className="col-md-12 mb-5">
-                                <Button
-                                    className="btn btn-block btn-add-method"
-                                    type="Submit"
-                                >
+                                <Button className="btn btn-block btn-add-method">
                                     + Add new contact method
                                 </Button>
                             </div>
