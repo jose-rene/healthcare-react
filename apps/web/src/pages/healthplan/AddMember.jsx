@@ -1,15 +1,18 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 import Button from "../../components/inputs/Button";
 import BroadcastAlert from "../../components/elements/BroadcastAlert";
+import PageAlert from "../../components/elements/PageAlert";
 import PageLayout from "../../layouts/PageLayout";
 import "../../styles/home.scss";
 import Select from "../../components/inputs/Select";
 import InputText from "../../components/inputs/InputText";
 import FormButtons from "../../components/elements/FormButtons";
 import useApiCall from "../../hooks/useApiCall";
+import { BASE_URL, API_KEY } from "../../config/Map";
+import states from "../../config/States.json";
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 const AddMember = () => {
@@ -46,14 +49,96 @@ const AddMember = () => {
         });
     }, [lobs]);
 
-    const { register, handleSubmit, errors, reset } = useForm();
+    const statesOptions = useMemo(() => {
+        if (_.isEmpty(states)) {
+            return [];
+        }
+
+        let result = [{ id: "", title: "", val: "" }];
+        for (const [key, value] of Object.entries(states)) {
+            result.push({
+                id: value,
+                title: value,
+                val: key,
+            });
+        }
+
+        return result;
+    }, [states]);
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        setValue,
+        errors,
+        reset,
+    } = useForm();
+
+    const [alertMessage, setAlertMessage] = useState("");
+    const [countyOptions, setCountyOptions] = useState([]);
 
     const onSubmit = (formData) => {
-        console.log(formData);
+        console.log("come here????", formData);
     };
 
     const onCancel = () => {
         reset();
+    };
+
+    const address_1 = watch("address_1", "");
+    const zip = watch("zip", "");
+
+    const handleLookupZip = () => {
+        setAlertMessage("");
+        if (address_1 === null || address_1 === "") {
+            setAlertMessage("Please input address!");
+            return;
+        }
+
+        if (zip === null || zip === "") {
+            setAlertMessage("Please input postal code!");
+            return;
+        }
+
+        fetch(`${BASE_URL}?key=${API_KEY}&address=${address_1} ${zip}`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (!data?.results || !data.results[0].address_components) {
+                    setAlertMessage("Address not found");
+                    return;
+                }
+
+                data.results[0].address_components.forEach((v) => {
+                    if (v.types) {
+                        if (
+                            v.types.indexOf("administrative_area_level_1") !==
+                            -1
+                        ) {
+                            setValue("state", v.short_name);
+                        }
+                        if (
+                            v.types.indexOf("administrative_area_level_2") !==
+                            -1
+                        ) {
+                            setCountyOptions([
+                                {
+                                    id: v.short_name,
+                                    title: v.short_name,
+                                    val: v.short_name,
+                                },
+                            ]);
+                            setValue("county", v.short_name);
+                        }
+                        if (v.types.indexOf("locality") !== -1) {
+                            setValue("city", v.short_name);
+                        }
+                    }
+                });
+            })
+            .catch((error) => {
+                setAlertMessage("Address fetch error!");
+            });
     };
 
     return (
@@ -77,6 +162,7 @@ const AddMember = () => {
                                     label="Plan"
                                     options={planOptions}
                                     errors={errors}
+                                    ref={register()}
                                 />
                             </div>
 
@@ -96,6 +182,7 @@ const AddMember = () => {
                                     name="member_id"
                                     label="Member ID"
                                     errors={errors}
+                                    ref={register()}
                                 />
                             </div>
 
@@ -133,6 +220,7 @@ const AddMember = () => {
                                         },
                                     ]}
                                     errors={errors}
+                                    ref={register()}
                                 />
                             </div>
 
@@ -142,6 +230,7 @@ const AddMember = () => {
                                     label="Date of Birth"
                                     type="date"
                                     errors={errors}
+                                    ref={register()}
                                 />
                             </div>
 
@@ -150,6 +239,7 @@ const AddMember = () => {
                                     name="first_name"
                                     label="First Name"
                                     errors={errors}
+                                    ref={register()}
                                 />
                             </div>
 
@@ -158,6 +248,7 @@ const AddMember = () => {
                                     name="last_name"
                                     label="Last Name"
                                     errors={errors}
+                                    ref={register()}
                                 />
                             </div>
 
@@ -178,6 +269,7 @@ const AddMember = () => {
                                         },
                                     ]}
                                     errors={errors}
+                                    ref={register()}
                                 />
                             </div>
 
@@ -198,6 +290,7 @@ const AddMember = () => {
                                         },
                                     ]}
                                     errors={errors}
+                                    ref={register()}
                                 />
                             </div>
 
@@ -206,6 +299,7 @@ const AddMember = () => {
                                     name="address_1"
                                     label="Address 1"
                                     errors={errors}
+                                    ref={register()}
                                 />
                             </div>
 
@@ -214,8 +308,15 @@ const AddMember = () => {
                                     name="address_2"
                                     label="Address 2"
                                     errors={errors}
+                                    ref={register()}
                                 />
                             </div>
+
+                            {alertMessage && (
+                                <PageAlert className="text-muted">
+                                    {alertMessage}
+                                </PageAlert>
+                            )}
 
                             <div className="col-md-12">
                                 <div className="form-row">
@@ -224,13 +325,14 @@ const AddMember = () => {
                                             name="zip"
                                             label="Zip"
                                             errors={errors}
+                                            ref={register()}
                                         />
                                     </div>
 
                                     <div className="col-md-4">
                                         <Button
                                             className="btn btn-block btn-zip"
-                                            type="Submit"
+                                            onClick={() => handleLookupZip()}
                                         >
                                             Lookup Zip
                                         </Button>
@@ -242,6 +344,7 @@ const AddMember = () => {
                                     name="city"
                                     label="City"
                                     errors={errors}
+                                    ref={register()}
                                 />
                             </div>
 
@@ -249,14 +352,19 @@ const AddMember = () => {
                                 <Select
                                     name="state"
                                     label="State"
-                                    options={[
-                                        {
-                                            id: "select_option",
-                                            title: "Select option",
-                                            val: "select-option",
-                                        },
-                                    ]}
+                                    options={statesOptions}
                                     errors={errors}
+                                    ref={register()}
+                                />
+                            </div>
+
+                            <div className="col-md-6">
+                                <Select
+                                    name="county"
+                                    label="County"
+                                    options={countyOptions}
+                                    errors={errors}
+                                    ref={register()}
                                 />
                             </div>
 
@@ -281,6 +389,7 @@ const AddMember = () => {
                                         },
                                     ]}
                                     errors={errors}
+                                    ref={register()}
                                 />
                             </div>
 
@@ -289,6 +398,7 @@ const AddMember = () => {
                                     name="phone_email"
                                     label="Phone/Email"
                                     errors={errors}
+                                    ref={register()}
                                 />
                             </div>
 
