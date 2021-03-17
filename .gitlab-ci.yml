@@ -60,7 +60,7 @@ api:test:
   script:
     - cd apps/backend
     # run laravel tests
-    - php artisan test
+    - php artisan test --parallel
     # run frontend tests
     # if you have any task for testing frontend
     # set it in your package.json script
