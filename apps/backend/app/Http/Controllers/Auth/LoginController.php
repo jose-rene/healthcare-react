@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\PasswordExpireCheckJob;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Arr;
@@ -136,6 +137,10 @@ class LoginController extends Controller
         $this->clearLoginAttempts($request);
 
         $user = $this->guard()->user();
+
+        if ($user) {
+            $this->dispatch(new PasswordExpireCheckJob($user));
+        }
 
         if ($response = $this->authenticated($request, $user)) {
             return $response;

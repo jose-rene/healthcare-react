@@ -1,44 +1,54 @@
-import qs from 'query-string';
-import React, { useRef, useState } from 'react';
-import { Alert } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
-import { Link, useHistory } from 'react-router-dom';
-import Icon from '../components/elements/Icon';
-import Button from '../components/inputs/Button';
-import InputText from '../components/inputs/InputText';
-import PasswordRequirements from '../components/user/PasswordRequirements';
-import { BASE_URL, POST } from '../config/URLs';
-import useApiCall from '../hooks/useApiCall';
+import qs from "query-string";
+import React, { useRef, useState } from "react";
+import { Alert } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import { Link, useHistory } from "react-router-dom";
+import Icon from "../components/elements/Icon";
+import Button from "../components/inputs/Button";
+import InputText from "../components/inputs/InputText";
+import PasswordRequirements from "../components/user/PasswordRequirements";
+import { BASE_URL, POST, PUT } from "../config/URLs";
+import useApiCall from "../hooks/useApiCall";
+import { connect } from "react-redux";
 
-export default ({ location: { search: params = '' } }) => {
+const SetForgotPassword = ({ location: { search: params = "" }, authed }) => {
     const [passwordChangeError, setPasswordChangeError] = useState(null);
     const history = useHistory();
-    const { email, token } = qs.parse(params);
+    const { email, token, redirect = "/?action=password-updated" } = qs.parse(
+        params);
     const { register, handleSubmit, errors, watch, getValues } = useForm();
     const [goodPassword, setGoodPassword] = useState(false);
     const [passwordChecking, setPasswordChecking] = useState(false);
 
     const password = useRef({});
-    password.current = watch('password', '');
+    password.current = watch("password", "");
     const password_confirmation = useRef({});
-    password_confirmation.current = watch('password_confirmation', '');
+    password_confirmation.current = watch("password_confirmation", "");
 
     const [{ loading = false }, forgotPassword] = useApiCall({
         baseURL: BASE_URL,
-        url: 'password/reset/',
+        url: "password/reset/",
         method: POST,
+    });
+
+    const [{ authedLoading = false }, authedForgotPassword] = useApiCall({
+        url: "user/password",
+        method: PUT,
     });
 
     const handleUpdatePassword = async (formParams) => {
         const params = { ...formParams, email, token };
-        setPasswordChangeError('');
+        setPasswordChangeError("");
 
         try {
-            await forgotPassword({ params });
+            if (authed) {
+                await authedForgotPassword({ params });
+            } else {
+                await forgotPassword({ params });
+            }
 
             history.push({
-                pathname: '/',
-                search: '?action=password-updated',
+                pathname: redirect,
             });
         } catch (e) {
             const { response: { status } } = e;
@@ -121,14 +131,15 @@ export default ({ location: { search: params = '' } }) => {
                         <Button
                             type="submit"
                             variant="primary"
-                            disabled={loading || passwordChecking || !goodPassword}
+                            disabled={authedLoading || loading ||
+                            passwordChecking || !goodPassword}
                         >
                             Reset Password
-                            {loading || passwordChecking ? (
+                            {authedLoading || loading || passwordChecking && (
                                 <Icon className="align-middle fa-spin ml-3">
                                     spinner
                                 </Icon>
-                            ) : null}
+                            )}
                         </Button>
                     </div>
                 </div>
@@ -136,3 +147,9 @@ export default ({ location: { search: params = '' } }) => {
         </div>
     );
 };
+
+const mapStateToProps = ({ user: { authed } }) => ({
+    authed,
+});
+
+export default connect(mapStateToProps)(SetForgotPassword);

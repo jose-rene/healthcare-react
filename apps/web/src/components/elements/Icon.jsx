@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faTrash, faAlert } from '@fortawesome/free-solid-svg-icons'
 
@@ -10,20 +10,22 @@ import React from 'react';
  * @param iconType
  * @param className
  * @param spin
+ * @param stacked
+ * @param stacked_className
  * @param props
  * @returns {JSX.Element}
  */
 const Icon = ({
-                  icon = undefined,
-    size = '2x',
-                  children,
-                  iconType = 's',
-                  className = '',
+    icon = undefined,
+    size = "2x",
+    children,
+    iconType = "s",
+    className = "",
     spin = false,
-                  stacked = false,
-                  stacked_className = '',
-                  ...props
-              }) => {
+    stacked = false,
+    stacked_className = "",
+    ...props
+}) => {
     let name = icon || children;
     name = name.toLowerCase().trim();
 
@@ -42,14 +44,18 @@ const Icon = ({
 
     const mainIcon = (
         <i
-            className={`${className} icon fa${iconType} fa-${mappedIcon.toLowerCase().trim()} ${stacked ? 'fa-stack-1x' : `fa-${size} ${spin ? 'fa-spin' : ''}`}`}
+            className={`${className} icon fa${iconType} fa-${mappedIcon.toLowerCase().
+                trim()} ${stacked ? "fa-stack-1x" : `fa-${size} ${spin
+                ? "fa-spin"
+                : ""}`}`}
             {...props}
         />
     );
 
     return stacked ? (
         <span className={`fa-stack`}>
-            {stacked && <i className={`${stacked_className} fa fa-circle fa-stack-2x`}/>}
+            {stacked &&
+            <i className={`${stacked_className} fa fa-circle fa-stack-2x`} />}
             {mainIcon}
         </span>
     ) : mainIcon;

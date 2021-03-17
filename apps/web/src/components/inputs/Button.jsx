@@ -49,7 +49,7 @@ const Button = ({
     const renderedLabel = useMemo(() => {
             const lbl = label || children;
 
-            return bold? <strong>{lbl}</strong>: `${lbl}`;
+            return bold ? <strong>{lbl}</strong> : lbl;
     }, [label, children]);
 
     return useButton ? (

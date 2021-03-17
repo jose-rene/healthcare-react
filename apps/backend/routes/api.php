@@ -23,6 +23,9 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->get('/plan/lobs', 'PlanController@lobs');
     $router->get('/user/profile', 'UserController@profile');
     $router->put('/user/profile', 'UserController@profileSave');
+
+    Route::put('/user/password', 'PasswordController@authedChangePassword');
+
     $router->post('/user/search', 'UserController@search');
     $router->get('/user/available_roles', 'UserController@availableRoles');
     $router->get('logout', 'LoginController@logout');

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\UserChangingPassword;
+use App\Listeners\ChangeResetPasswordFalse;
 use App\Listeners\TrackPasswordResets;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -16,11 +17,12 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        Registered::class           => [
+        Registered::class               => [
             SendEmailVerificationNotification::class,
         ],
-        UserChangingPassword::class => [
+        UserChangingPassword::class     => [
             TrackPasswordResets::class,
+            ChangeResetPasswordFalse::class,
         ],
     ];
 
