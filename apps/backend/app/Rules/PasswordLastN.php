@@ -7,6 +7,7 @@ use Hash;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Str;
 
+
 class PasswordLastN implements Rule
 {
     /**
@@ -30,6 +31,11 @@ class PasswordLastN implements Rule
     {
         $oldPasswords = $this->user->last_n_passwords;
 
+        // Current password check
+        if (Hash::check($value, $this->user)) {
+            return false;
+        }
+
         foreach ($oldPasswords as $oldPassword) {
             if (Hash::check($value, $oldPassword->password)) {
                 return false;
@@ -46,7 +52,8 @@ class PasswordLastN implements Rule
      */
     public function message()
     {
-        return 'Cannot match last ' . config('rules.last_n', 6) . ' ' . Str::plural(
+        //Cannot use the last 6 passwords
+        return 'Cannot use the last ' . config('rules.last_n', 6) . ' ' . Str::plural(
                 'passwords',
                 config('rules.last_n', 6)
             );

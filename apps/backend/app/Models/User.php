@@ -6,11 +6,11 @@ use App\Http\SearchPipeline\Search;
 use App\Http\SearchPipeline\UserRole;
 use App\Http\SearchPipeline\UserSort;
 use App\Models\Activity\Activity;
-use App\Models\Payer;
 use App\Models\UserType\ClinicalServicesUser;
 use App\Models\UserType\EngineeringUser;
 use App\Models\UserType\HealthPlanUser;
 use App\Traits\Uuidable;
+use Carbon\Carbon;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,7 +33,12 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property string          middle_name
  * @property string          first_name
  * @property string          last_name
+ * @property string          reset_password
+ * @property PasswordHistory password_history
  * @property PasswordHistory last_n_passwords
+ * @property Carbon          created_at
+ * @property string          password
+ * @property boolean         reset_password
  * @link https://github.com/JosephSilber/bouncer#cheat-sheet
  */
 class User extends Authenticatable implements MustVerifyEmail
@@ -56,6 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'username',
         'password',
         'notification_type',
+        'reset_password',
     ];
 
     protected $appends = ['full_name'];
@@ -79,6 +85,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at'  => 'datetime',
         'notification_prefs' => 'json',
+        'reset_password'     => 'boolean',
     ];
 
     protected static $userTypeMap = [

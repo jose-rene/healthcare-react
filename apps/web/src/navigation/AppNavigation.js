@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { signOut } from "../actions/authAction";
-import { ADMIN, DOCTOR, initializeUser } from "../actions/userAction";
+import { ADMIN, initializeUser } from "../actions/userAction";
 import useApiCall from "../hooks/useApiCall";
 import Account from "../pages/Account";
 import Table from "../pages/Test/Table";
@@ -76,12 +76,6 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     middleware={["hp_manager", "hp_champion"]}
                 >
                     <HpEditUser />
-                </PrivateRoute>
-                <PrivateRoute
-                    path="/some/random/doc/route"
-                    middleware={[DOCTOR]}
-                >
-                    <Account />
                 </PrivateRoute>
                 <PrivateRoute
                     exact

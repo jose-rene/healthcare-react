@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Models\Phone;
+use App\Jobs\PasswordExpireCheckJob;
 use App\Models\User;
 use App\Models\UserType\EngineeringUser;
 use Artisan;
 use Bouncer;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Passport\Passport;
@@ -18,7 +19,7 @@ class UserTest extends TestCase
     use WithFaker;
 
     protected $user;
-    protected $admin;
+    protected User $admin;
 
     /**
      * Test profile route.
@@ -58,6 +59,70 @@ class UserTest extends TestCase
             ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'gitlab_name', 'roles']);
 
         $this->assertEquals($this->user->email, $response->json('email'));
+    }
+
+    /**
+     * Test time based password reset of user without password history.
+     *
+     * @return void
+     */
+    public function testRequirePasswordUserNoHistory()
+    {
+        // create a condition where the user will be required to change their password
+        $this->admin->reset_password = false;
+        $this->admin->created_at     = Carbon::now()->subYears(2); // 2 years since they registered
+        $this->admin->save();
+
+        // as old as the created user is this should set the reset_password to true
+        dispatch((new PasswordExpireCheckJob($this->admin)));
+
+        Passport::actingAs(
+            $this->admin
+        );
+        // fetch the user profile
+        $response = $this->get('/v1/user/profile/');
+        // will have the field gitlab_name for an engineering user
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['first_name', 'last_name', 'email', 'roles', 'reset_password']);
+
+        self::assertEquals(true, $response->json('reset_password'));
+    }
+
+    /**
+     * Test time based password reset of user with password history.
+     *
+     * @return void
+     */
+    public function testRequirePasswordResetUserWithHistory()
+    {
+        // create a condition where the user will be required to change their password
+        $this->admin->reset_password = false;// 2 years since they registered
+        $this->admin->save();
+        $this->admin->password_history()->create(
+            [
+                'password' => bcrypt('password'),
+            ]
+        );
+
+        $ph             = $this->admin->password_history->first();
+        $ph->created_at = Carbon::now()->subYears(2);
+        $ph->save();
+
+        // as old as the created user is this should set the reset_password to true
+        dispatch((new PasswordExpireCheckJob($this->admin)));
+
+        Passport::actingAs(
+            $this->admin
+        );
+        // fetch the user profile
+        $response = $this->get('/v1/user/profile/');
+        // will have the field gitlab_name for an engineering user
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['first_name', 'last_name', 'email', 'roles', 'reset_password']);
+
+        self::assertEquals(true, $response->json('reset_password'));
     }
 
     /**

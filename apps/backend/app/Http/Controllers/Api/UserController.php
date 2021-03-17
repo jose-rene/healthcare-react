@@ -7,7 +7,7 @@ use App\Http\Requests\UserRequest;
 use App\Http\Resources\MyUserResource;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
-use App\Models\Phone;
+use App\Jobs\PasswordExpireCheckJob;
 use App\Models\User;
 use Bouncer;
 use Illuminate\Http\Request;
@@ -435,6 +435,8 @@ class UserController extends Controller
      */
     public function profile(Request $request): MyUserResource
     {
+        $this->dispatch(new PasswordExpireCheckJob($request->user()));
+
         return new MyUserResource($request->user());
     }
 

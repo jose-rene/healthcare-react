@@ -27,16 +27,17 @@ class MyUserResource extends JsonResource
         $abilities = $this->getAbilities();
 
         return [
-            'full_name'    => $this->name,
-            'first_name'   => $this->first_name,
-            'middle_name'  => $this->middle_name,
-            'last_name'    => $this->last_name,
-            'email'        => $this->email,
-            'dob'          => $this->dob,
-            'user_type'    => $this->user_type_name,
-            'roles'        => RoleResource::collection($this->roles),
-            'primary_role' => $this->primary_role ?? $this->roles->first()->name ?? '',
-            'abilities'    => $abilities->count() > 0 ? $abilities->map(fn ($item, $key) => $item['name']) : [],
+            'full_name'      => $this->name,
+            'first_name'     => $this->first_name,
+            'middle_name'    => $this->middle_name,
+            'last_name'      => $this->last_name,
+            'email'          => $this->email,
+            'dob'            => $this->dob,
+            'user_type'      => $this->user_type_name,
+            'roles'          => RoleResource::collection($this->roles),
+            'primary_role'   => $this->primary_role ?? $this->roles->first()->name ?? '',
+            'abilities'      => $abilities->count() > 0 ? $abilities->map(fn($item, $key) => $item['name']) : [],
+            'reset_password' => (bool)$this->reset_password,
         ];
     }
 }

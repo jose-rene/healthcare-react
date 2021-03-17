@@ -1,17 +1,17 @@
-import '@testing-library/jest-dom';
-import React from 'react';
-import AlertList from '../components/elements/AlertList';
-import { axiosMock, render, screen } from '../testUtils';
+import "@testing-library/jest-dom";
+import React from "react";
+import AlertList from "../components/elements/AlertList";
+import { axiosMock, render, screen } from "../testUtils";
 
 export const notificationResponse = [
     {
-        'id': '88362598-0027-4ac1-8950-b6b1d407dc3d',
-        'type': 'App\\Notifications\\RequestActivity',
-        'notifiable_type': 'App\\Models\\User',
-        'notifiable_id': 1,
-        'data': {
-            'request_id': 78,
-            'activity_type_id': 77,
+        "id": "88362598-0027-4ac1-8950-b6b1d407dc3d",
+        "type": "App\\Notifications\\RequestActivity",
+        "notifiable_type": "App\\Models\\User",
+        "notifiable_id": 1,
+        "data": {
+            "request_id": 78,
+            "activity_type_id": 77,
             'message': 'Aut mollitia eos et dolores possimus nobis dolor.',
             'user_id': '1',
             'uuid': '2003307e-fe75-4971-ae33-a8030221d4ae',
@@ -365,7 +365,7 @@ afterEach(() => {
 
 describe('Alert List', () => {
     it('Displays an alert list with read and unread alerts', async () => {
-        axiosMock().onGet(/notifications/).reply('200', notificationResponse);
+        axiosMock().onGet(/notifications/).reply(200, notificationResponse);
         // .onPut(/notifications/)
         // .reply('200', {
         //     status: true,
