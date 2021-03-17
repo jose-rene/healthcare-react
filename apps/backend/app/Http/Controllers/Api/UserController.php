@@ -372,6 +372,10 @@ class UserController extends Controller
             empty($data['can_create_users']) ? $user->disallow('create-users') : $user->allow('create-users');
             // refresh perms cache
             Bouncer::refreshFor($user);
+            // healthplan specific field
+            if (!empty($data['job_title'])) {
+                $user->healthPlanUser()->first()->update(['job_title' => $data['job_title']]);
+            }
         }
 
         $user->save();

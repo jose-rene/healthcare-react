@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Payer;
+use App\Models\Phone;
 use App\Models\User;
 use App\Models\UserType\EngineeringUser;
 use App\Models\UserType\HealthPlanUser;
@@ -40,6 +41,11 @@ class UserSeeder extends Seeder
                 break;
             }
             $admin->markEmailAsVerified();
+            // add a phone
+            $phone = Phone::factory()->create([
+                'phoneable_id' => $admin,
+            ]);
+            $admin->phones()->save($phone);
             Bouncer::sync($admin)->roles(['hp_manager', 'hp_champion', 'hp_user', 'hp_finance', 'software_engineer']);
             // add the user types
             $admin->engineeringUser(EngineeringUser::create());

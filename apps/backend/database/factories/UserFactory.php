@@ -29,6 +29,7 @@ class UserFactory extends Factory
             'middle_name'        => $this->faker->boolean ? $this->faker->firstName : null,
             'last_name'          => $this->faker->lastName,
             'email'              => $this->faker->unique()->safeEmail,
+            'password'           => $this->faker->password,
             'notification_prefs' => ['mail'],
             'dob'                => new Carbon($this->faker->dateTimeBetween('-50 years', '-15 Years')),
             'email_verified_at'  => Carbon::now(),

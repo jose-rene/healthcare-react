@@ -4,9 +4,13 @@ import { useForm } from "react-hook-form";
 import Button from "../inputs/Button";
 import InputText from "../inputs/InputText";
 
-const UserTopSearch = ({ handleSearch, updateSearchObj, searchObj }) => {
+const UserTopSearch = ({
+    handleSearch,
+    updateSearchObj,
+    resetSearch,
+    searchObj,
+}) => {
     const { register, handleSubmit, errors } = useForm();
-
     return (
         <div className="d-none d-sm-block mb-2">
             <Form onSubmit={handleSubmit(handleSearch)}>
@@ -15,9 +19,10 @@ const UserTopSearch = ({ handleSearch, updateSearchObj, searchObj }) => {
                         <InputText
                             name="search"
                             prepend="search"
+                            onClear={resetSearch}
                             label=""
                             errors={errors}
-                            value={searchObj.search}
+                            defaultValue={searchObj.search}
                             onChange={updateSearchObj}
                             ref={register({
                                 required: "Search value is required",

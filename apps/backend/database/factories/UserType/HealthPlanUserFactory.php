@@ -23,9 +23,10 @@ class HealthPlanUserFactory extends Factory
     public function definition()
     {
         return [
-            'payer_id' => function () {
+            'payer_id'  => function () {
                 return Payer::create(['name' => $this->faker->company]);
             },
+            'job_title' => $this->faker->jobTitle,
         ];
     }
 }
