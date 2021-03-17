@@ -1,0 +1,18 @@
+.btn-outline {
+    background-color: #FFF;
+    border: 2px solid #2E94E6;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    color: #2E94E6;
+}
+
+.text-btn {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    color: #FFFFFF;
+}
