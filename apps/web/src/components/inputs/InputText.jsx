@@ -6,6 +6,7 @@ const InputText = (
     {
         name,
         prepend = null,
+        onClear = null,
         label = "",
         type = "text",
         autocomplete = false,
@@ -21,6 +22,9 @@ const InputText = (
     const hasError = !!message;
 
     const getInput = () => {
+        const defaultClassName = `form-control${
+            onClear ? " border-right-0" : ""
+        }`;
         return (
             <input
                 id={name}
@@ -29,7 +33,7 @@ const InputText = (
                 autoComplete={autocomplete || name}
                 className={
                     className ||
-                    `form-control ${
+                    `${defaultClassName} ${
                         hasError ? " is-invalid" : ""
                     } ${classNameAppend}`
                 }
@@ -45,11 +49,28 @@ const InputText = (
             {prepend ? (
                 <InputGroup>
                     <InputGroup.Prepend>
-                        <InputGroup.Text id="basic-addon1">
+                        <InputGroup.Text id="basic-addon-pre">
                             <Icon icon={prepend} size="lg" />
                         </InputGroup.Text>
-                    </InputGroup.Prepend>{" "}
+                    </InputGroup.Prepend>
                     {getInput()}
+                    {!!onClear && (
+                        <InputGroup.Append>
+                            <InputGroup.Text
+                                id="basic-addon-app"
+                                className="border-left-0"
+                                style={{
+                                    backgroundColor: "#ffffff",
+                                    cursor: "pointer",
+                                }}
+                                onClick={() => {
+                                    onClear();
+                                }}
+                            >
+                                <Icon icon="times-circle" size="sm" />
+                            </InputGroup.Text>
+                        </InputGroup.Append>
+                    )}
                 </InputGroup>
             ) : (
                 getInput()

@@ -59,15 +59,16 @@ const List = () => {
         method: "post",
     });
 
-    const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
-        {
-            searchObj: {
-                perPage: 10,
-                sortColumn: headers[1].columnMap,
-                sortDirection: "asc",
-            },
-        }
-    );
+    const [
+        { searchObj },
+        { formUpdateSearchObj, updateSearchObj, resetSearchObj },
+    ] = useSearch({
+        searchObj: {
+            perPage: 10,
+            sortColumn: headers[1].columnMap,
+            sortDirection: "asc",
+        },
+    });
 
     const handleSearch = (_params = searchObj) => {
         const params = {
@@ -94,12 +95,19 @@ const List = () => {
         handleSearch({ ...searchObj, ...params });
     };
 
+    const resetSearch = () => {
+        const clear = { ...searchObj, ...{ page: 1, search: "" } };
+        updateSearchObj(clear);
+        handleSearch(clear);
+    };
+
     return !loading ? (
         <>
             <UserTopSearch
                 handleSearch={handleSearch}
                 updateSearchObj={formUpdateSearchObj}
                 searchObj={searchObj}
+                resetSearch={resetSearch}
             />
             <TableAPI
                 label="Users"
