@@ -32,6 +32,7 @@ class UserFactory extends Factory
             'password'           => $this->faker->password,
             'notification_prefs' => ['mail'],
             'dob'                => new Carbon($this->faker->dateTimeBetween('-50 years', '-15 Years')),
+            'reset_password'     => false,
             'email_verified_at'  => Carbon::now(),
             'password'           => Hash::make('password'),
         ];

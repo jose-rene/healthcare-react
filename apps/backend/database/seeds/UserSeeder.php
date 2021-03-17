@@ -28,13 +28,14 @@ class UserSeeder extends Seeder
             $names = explode('@', $item);
             $names = explode('.', $names[0]);
             $admin = User::firstOrCreate(['email' => $item], [
-                'email'        => $item,
-                'first_name'   => $names[0] ?? 'Admin',
-                'last_name'    => $names[1] ?? 'Admin',
-                'password'     => bcrypt('admin123'),
-                'dob'          => new Carbon('-20 years'),
-                'user_type'    => 1, // engineering user
-                'primary_role' => 'software_engineer',
+                'email'          => $item,
+                'first_name'     => $names[0] ?? 'Admin',
+                'last_name'      => $names[1] ?? 'Admin',
+                'password'       => bcrypt('admin123'),
+                'reset_password' => false,
+                'dob'            => new Carbon('-20 years'),
+                'user_type'      => 1, // engineering user
+                'primary_role'   => 'software_engineer',
             ]);
             // skip the user setup if it was not just created
             if (!$admin->wasRecentlyCreated) {
