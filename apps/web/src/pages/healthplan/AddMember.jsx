@@ -14,6 +14,7 @@ import useApiCall from "../../hooks/useApiCall";
 import { BASE_URL, API_KEY } from "../../config/Map";
 import states from "../../config/States.json";
 import types from "../../config/Types.json";
+import titles from "../../config/Titles.json";
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 const AddMember = () => {
@@ -88,6 +89,23 @@ const AddMember = () => {
 
         return result;
     }, [types]);
+
+    const titlesOptions = useMemo(() => {
+        if (_.isEmpty(titles)) {
+            return [];
+        }
+
+        let result = [{ id: "", title: "", val: "" }];
+        for (const [key, value] of Object.entries(titles)) {
+            result.push({
+                id: value,
+                title: value,
+                val: key,
+            });
+        }
+
+        return result;
+    }, [titles]);
 
     const {
         register,
@@ -330,13 +348,7 @@ const AddMember = () => {
                                 <Select
                                     name="title"
                                     label="Title*"
-                                    options={[
-                                        {
-                                            id: "select_option",
-                                            title: "Select option",
-                                            val: "select-option",
-                                        },
-                                    ]}
+                                    options={titlesOptions}
                                     errors={errors}
                                     ref={register({
                                         required: "Title is required",
