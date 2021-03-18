@@ -1,7 +1,7 @@
 import React from "react";
-import Switch from "../../components/switch/Switch";
-import Modal from "../../components/modal/Modal";
 import "./newRequestAddSteps.css";
+import Switch from "react-bootstrap/Switch";
+import { Modal } from "react-bootstrap";
 
 const NewRequestAddSteps1 = () => (
     <>
