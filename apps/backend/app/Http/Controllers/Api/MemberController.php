@@ -85,4 +85,21 @@ class MemberController extends Controller
     {
         //
     }
+
+    /**
+     * Search for members.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        // @todo restrict this by role or permissions
+        // $user = auth()->user();
+
+        // @todo implement as search pipline
+        $members = Member::paginate(request('perPage', 50));
+
+        return MemberResource::collection($members);
+    }
 }

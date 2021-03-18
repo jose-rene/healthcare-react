@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Address;
+use App\Models\Member;
 use App\Models\User;
 use Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -36,7 +37,7 @@ class MemberTest extends TestCase
         // validate response code
         $response->assertStatus(200);
         // validate structure
-        $response->assertJsonStructure(['id', 'gender', 'title', 'firstName', 'lastName', 'address']);
+        $response->assertJsonStructure(['id', 'gender', 'title', 'first_name', 'last_name', 'address']);
         // validate data
         $data = json_decode($response->getContent(), true);
         // id is the uuid
@@ -61,6 +62,30 @@ class MemberTest extends TestCase
         ])->json('GET', 'v1/plan/plans');
         // validate response code
         $response->assertStatus(200);
+    }
+
+    /**
+     * Test search plan members.
+     *
+     * @return void
+     */
+    public function testSearchMembers()
+    {
+        $this->withoutExceptionHandling();
+        // create members to search
+        Member::factory()->count(2)->create();
+
+        Passport::actingAs(
+            $this->user
+        );
+        $response = $this->post('/v1/member/search');
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(['data', 'meta']);
+
+        // there should be 3 that we added, including setup
+        $response->assertJsonPath('meta.total', 3);
     }
 
     protected function setUp(): void

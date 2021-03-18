@@ -16,10 +16,12 @@ class CreateMembersTable extends Migration
         Schema::create('members', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->index();
-            $table->string('gender', 6);
-            $table->string('name_title', 6);
-            $table->string('first_name', 64);
-            $table->string('last_name', 64);
+            $table->string('member_id')->comment('The plan specified member ID');
+            $table->string('gender', 6)->comment('The member\'s gender');
+            $table->string('name_title', 6)->comment('The member\'s name saluation');
+            $table->string('first_name', 64)->comment('The member\'s first name');
+            $table->string('last_name', 64)->comment('The member\'s last name');
+            $table->date('dob')->nullable()->comment('The member\'s date of birth');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MemberResource extends JsonResource
@@ -19,12 +20,13 @@ class MemberResource extends JsonResource
         })->first();
 
         return [
-            'id'        => $this->uuid,
-            'gender'    => $this->gender,
-            'title'     => $this->name_title,
-            'firstName' => $this->first_name,
-            'lastName'  => $this->last_name,
-            'address'   => new AddressResource($address),
+            'id'         => $this->uuid,
+            'gender'     => $this->gender,
+            'title'      => $this->name_title,
+            'first_name' => $this->first_name,
+            'last_name'  => $this->last_name,
+            'dob'        => Carbon::parse($this->dob)->format('m/d/Y'),
+            'address'    => new AddressResource($address),
         ];
     }
 }
