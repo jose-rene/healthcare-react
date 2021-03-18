@@ -6,6 +6,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -33,7 +34,7 @@ class LoginTest extends TestCase
         $response = $this->post(
             '/v1/login',
             [
-                'email' => $this->user->email,
+                'email'    => $this->user->email,
                 'password' => 'password',
             ]
         );
@@ -165,7 +166,7 @@ class LoginTest extends TestCase
         Artisan::call('passport:install');
         // this will store a new user with random attributes in the database.
         /* @var User $user */
-        $this->user = User::factory()->create();
+        $this->user = User::factory(['password' => Hash::make('password')])->create();
 
         // this is an example of how to make multiple
         /*factory(User::class, 1000000)->make()->each(function ($user) {

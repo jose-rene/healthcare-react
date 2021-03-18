@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PayerSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(AssessmentSeeder::class);
+        $this->call(MemberSeeder::class);
     }
 }

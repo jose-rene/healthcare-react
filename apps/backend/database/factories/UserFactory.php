@@ -29,12 +29,11 @@ class UserFactory extends Factory
             'middle_name'        => $this->faker->boolean ? $this->faker->firstName : null,
             'last_name'          => $this->faker->lastName,
             'email'              => $this->faker->unique()->safeEmail,
-            'password'           => $this->faker->password,
+            'password'           => Hash::make($this->faker->password),
             'notification_prefs' => ['mail'],
             'dob'                => new Carbon($this->faker->dateTimeBetween('-50 years', '-15 Years')),
             'reset_password'     => false,
             'email_verified_at'  => Carbon::now(),
-            'password'           => Hash::make('password'),
         ];
     }
 }

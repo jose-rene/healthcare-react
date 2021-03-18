@@ -26,6 +26,7 @@ Route::middleware('auth:api')->group(function ($router) {
 
     Route::put('/user/password', 'PasswordController@authedChangePassword');
 
+    $router->post('/member/search', 'MemberController@search');
     $router->post('/user/search', 'UserController@search');
     $router->get('/user/available_roles', 'UserController@availableRoles');
     $router->get('logout', 'LoginController@logout');
