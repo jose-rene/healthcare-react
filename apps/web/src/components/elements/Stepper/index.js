@@ -1,15 +1,23 @@
 import React from "react";
-import {
-    Stepper,
-    Step,
-    StepLabel,
-    StepContent,
-    makeStyles,
-    Typography,
-} from "@material-ui/core";
+//import {
+//    Stepper as oldStepper,
+//    Step,
+//    StepLabel,
+//    StepContent,
+//    makeStyles,
+//    Typography,
+//} from "@material-ui/core";
 import PropTypes from "prop-types";
 import "./stepper.css";
 import { getStepContent } from "../../../pages/newRequestAddSteps";
+
+
+const oldStepper = () => (<span>placeholder</span>);
+const Step = () => (<span>placeholder</span>);
+const StepLabel = () => (<span>placeholder</span>);
+const StepContent = () => (<span>placeholder</span>);
+const makeStyles = () => (<span>placeholder</span>);
+const Typography = () => (<span>placeholder</span>);
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -96,7 +104,7 @@ function getSteps () {
     ];
 }
 
-const Stepper = NewRequestAdd = () => {
+const Stepper = () => {
     const classes = useStyles();
     const steps = getSteps();
     const [activeStep, setActiveStep] = React.useState(0);
@@ -112,7 +120,7 @@ const Stepper = NewRequestAdd = () => {
     return (
         <>
             <div className={classes.root}>
-                <Stepper
+                <oldStepper
                     className={classes.active}
                     activeStep={activeStep}
                     orientation="vertical"
@@ -156,7 +164,7 @@ const Stepper = NewRequestAdd = () => {
                             </StepContent>
                         </Step>
                     ))}
-                </Stepper>
+                </oldStepper>
             </div>
         </>
     );
