@@ -6,7 +6,6 @@ import Button from "../../components/inputs/Button";
 import BroadcastAlert from "../../components/elements/BroadcastAlert";
 import PageAlert from "../../components/elements/PageAlert";
 import PageLayout from "../../layouts/PageLayout";
-import "../../styles/home.scss";
 import Select from "../../components/inputs/Select";
 import InputText from "../../components/inputs/InputText";
 import FormButtons from "../../components/elements/FormButtons";
@@ -15,6 +14,8 @@ import { BASE_URL, API_KEY } from "../../config/Map";
 import states from "../../config/States.json";
 import types from "../../config/Types.json";
 import titles from "../../config/Titles.json";
+
+import "../../styles/home.scss";
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 const AddMember = () => {
