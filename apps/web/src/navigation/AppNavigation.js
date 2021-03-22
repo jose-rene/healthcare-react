@@ -61,19 +61,19 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                 </PrivateRoute>
                 <PrivateRoute
                     path="/healthplan/addmember"
-                    middleware={["hp_manager", "hp_champion"]}
+                    middleware={["hp_champion", "hp_user"]}
                 >
                     <HpAddMember />
                 </PrivateRoute>
                 <PrivateRoute
                     path="/healthplan/adduser"
-                    middleware={["hp_manager", "hp_champion"]}
+                    middleware={["hp_champion", "create-users"]}
                 >
                     <HpAddUser />
                 </PrivateRoute>
                 <PrivateRoute
                     path="/healthplan/user/:id"
-                    middleware={["hp_manager", "hp_champion"]}
+                    middleware={["hp_champion", "create-users"]}
                 >
                     <HpEditUser />
                 </PrivateRoute>
