@@ -53,8 +53,12 @@ class TrackDatabaseChangeListener
 
         $tables = DB::select('SHOW TABLES');
 
+        // show tables column name is dynamic. attempt to pull the first tables column key
+        $firstTableEntry = get_object_vars($tables[0]);
+        $dmeTableKey     = array_keys($firstTableEntry)[0];
+
         foreach ($tables as $key => $_table) {
-            $table         = $_table->Tables_in_dme_cg;
+            $table         = $_table->$dmeTableKey;
             $table_columns = DB::select("DESCRIBE {$table}");
 
             // This connect gets comments from columns in a predictable way
@@ -82,11 +86,12 @@ class TrackDatabaseChangeListener
 
                 // is this column a primary key
                 $is_primary_key = $foundColumn->Key == 'PRI';
+                $is_nullable    = strtolower($foundColumn->Null) == 'yes';
 
                 $data = [
                     'data_type'  => $column->getType()->getName(),
                     'key'        => $is_primary_key,
-                    'nullable'   => $column->getNotnull(),
+                    'nullable'   => $is_nullable,
                     'comments'   => $comment ?? 'not set',
                     'cache_json' => (array)$foundColumn + compact('comment'),
                 ];
