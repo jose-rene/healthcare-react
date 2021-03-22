@@ -1,7 +1,13 @@
-export const checkMiddleware = (checkingRoles = [], userRoles = []) => {
+const checkMiddleware = (checking = [], userRoles = [], userAbilites = []) => {
     const userRoleNames = userRoles.map(({ name }) => name);
-    checkingRoles.unshift('admin'); // check if admin first.
+    // @todo, this should be whatever the "superadmin" role will be
+    checking.unshift("admin"); // check if admin first.
 
     // explicitly check roles
-    return checkingRoles.some(r => userRoleNames.includes(r));
+    return (
+        checking.some((r) => userRoleNames.includes(r)) ||
+        checking.some((a) => userAbilites.includes(a))
+    );
 };
+
+export default checkMiddleware;
