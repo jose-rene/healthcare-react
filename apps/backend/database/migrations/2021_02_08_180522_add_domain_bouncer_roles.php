@@ -26,6 +26,8 @@ class AddDomainBouncerRoles extends Migration
      */
     public function down()
     {
-        //
+        Schema::table(Models::table('roles'), function (Blueprint $table) {
+            $table->dropColumn('domain');
+        });
     }
 }
