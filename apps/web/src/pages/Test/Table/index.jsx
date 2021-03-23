@@ -12,9 +12,9 @@ const FilterDropdown = ({
     searchObj,
     options = [],
     onChange,
-    labelKey = 'label',
-    valueKey = 'value',
-    defaultValue = '',
+    labelKey = "label",
+    valueKey = "value",
+    defaultValue = "",
     required = false,
 }) => {
     const value = useMemo(() => {
@@ -37,59 +37,59 @@ const FilterDropdown = ({
 };
 
 const TablePage = () => {
-    const [{ loading, data: {data = [], meta = {}} = {}, error }, fireCall] = useApiCall({
+    const [
+        { loading, data: { data = [], meta = {} } = {}, error },
+        fireCall,
+    ] = useApiCall({
         url: "/user/search",
         defaultData: [],
         method: "post",
     });
 
     const [headers] = useState([
-        { columnMap: 'id', label: 'ID', type: String },
-        { columnMap: 'first_name', label: 'First Name', type: String },
-        { columnMap: 'last_name', label: 'Last Name', type: String },
-        { columnMap: 'email', label: 'Email', type: String },
+        { columnMap: "id", label: "ID", type: String },
+        { columnMap: "first_name", label: "First Name", type: String },
+        { columnMap: "last_name", label: "Last Name", type: String },
+        { columnMap: "email", label: "Email", type: String },
     ]);
 
     const filter1 = [
-        { label: 'Type', value: '' },
-        { label: 'HP', value: 1 },
+        { label: "Type", value: "" },
+        { label: "HP", value: 1 },
     ];
 
     const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
         {
             searchObj: {
                 sortColumn: headers[0].columnMap,
-                sortDirection: 'asc',
+                sortDirection: "asc",
             },
-        });
+        }
+    );
 
     const redoSearch = (params = searchObj) => {
         // should fire api call to load data
-        fireCall({params});
+        fireCall({ params });
     };
 
     useEffect(() => {
-        redoSearch()
+        redoSearch();
     }, []);
 
-    const handleTableChange = props => {
+    const handleTableChange = (props) => {
         // the table should update the search obj and fire the api call
         updateSearchObj(props);
         redoSearch({ ...searchObj, ...props });
     };
 
-    if(loading){
-        return (
-            <div>Loading</div>
-        );
+    if (loading) {
+        return <div>Loading</div>;
     }
 
     return (
         <PageLayout>
             <div className="container">
-                <div className="page-title">
-                    Test table page
-                </div>
+                <div className="page-title">Test table page</div>
 
                 <TableTop
                     redoSearch={redoSearch}
@@ -151,13 +151,9 @@ const TablePage = () => {
                     <Card.Body>
                         <div>
                             <h3>searchObj</h3>
-                            <pre>
-                                {JSON.stringify(searchObj, null, 2)}
-                            </pre>
+                            <pre>{JSON.stringify(searchObj, null, 2)}</pre>
                             <h3>dataMeta</h3>
-                            <pre>
-                                {JSON.stringify(meta, null, 2)}
-                            </pre>
+                            <pre>{JSON.stringify(meta, null, 2)}</pre>
                         </div>
                     </Card.Body>
                 </Card>
