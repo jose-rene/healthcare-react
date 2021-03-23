@@ -87,8 +87,7 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                 <PrivateRoute
                     exact
                     path="/admin/test/table"
-                    // middleware={[ADMIN]}
-                    middleware={["hp_manager", "hp_champion"]}
+                    middleware={[ADMIN]}
                     page={<Table />}
                 />
                 <PrivateRoute path="/questionnaire/:id">

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import _ from "lodash";
+
 import PageLayout from "../../layouts/PageLayout";
 import InputText from "../../components/inputs/InputText";
 import TableAPI from "../../components/elements/TableAPI";
@@ -17,7 +19,9 @@ const SearchMember = () => {
         url: "member/search",
     });
 
-    const [testData] = useState([]);
+    const [searchStr, setSearchStr] = useState("");
+
+    const searchInput = useRef(null);
 
     const [headers] = useState([
         { columnMap: "id", label: "ID", type: String },
@@ -25,12 +29,26 @@ const SearchMember = () => {
         { columnMap: "last_name", label: "Last Name", type: String },
         { columnMap: "gender", label: "Gender", type: String },
         { columnMap: "title", label: "Title", type: String },
-        { columnMap: "dob", label: "Birthday", type: String },
+        { columnMap: "dob", label: "Date of Birth", type: String },
         { columnMap: "address", label: "Address", type: String },
     ]);
 
-    const redoSearch = (params = searchObj) => {
-        memberSearch({ params });
+    const redoSearch = async (params = searchObj) => {
+        await memberSearch({ params });
+        searchInput.current.focus();
+    };
+
+    const delayedSearch = useCallback(
+        _.debounce((q) => {
+            updateSearchObj({ name: q });
+            redoSearch({ ...searchObj, ...{ name: q } });
+        }, 500),
+        []
+    );
+
+    const handleSearch = (e) => {
+        setSearchStr(e.target.value);
+        delayedSearch(e.target.value);
     };
 
     useEffect(() => {
@@ -46,6 +64,7 @@ const SearchMember = () => {
         searchObj: {
             sortColumn: headers[0].columnMap,
             sortDirection: "asc",
+            name: searchStr,
         },
     });
 
@@ -68,7 +87,12 @@ const SearchMember = () => {
                                     Member Lookup by Name
                                 </h2>
                                 <div className="col-md-5 search-box">
-                                    <InputText placeholder="Type in the first four or more letters" />
+                                    <InputText
+                                        placeholder="Type in the first four or more letters"
+                                        value={searchStr}
+                                        ref={searchInput}
+                                        onChange={handleSearch}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -76,20 +100,18 @@ const SearchMember = () => {
                         <div className="white-box white-box-small">
                             <div className="row">
                                 <div className="col-md-12">
-                                    <div className="table-responsive">
-                                        {!testData.length && (
-                                            <div className="no-result">
-                                                Please search to show results
-                                            </div>
-                                        )}
-                                        <TableAPI
-                                            searchObj={searchObj}
-                                            headers={headers}
-                                            data={testData}
-                                            dataMeta={meta}
-                                            onChange={handleTableChange}
-                                        />
-                                    </div>
+                                    {!data.length && (
+                                        <div className="no-result">
+                                            Please search to show results
+                                        </div>
+                                    )}
+                                    <TableAPI
+                                        searchObj={searchObj}
+                                        headers={headers}
+                                        data={data}
+                                        dataMeta={meta}
+                                        onChange={handleTableChange}
+                                    />
                                 </div>
                             </div>
                         </div>
