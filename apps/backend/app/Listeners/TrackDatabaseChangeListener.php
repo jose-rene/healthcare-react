@@ -41,11 +41,12 @@ class TrackDatabaseChangeListener
         if (!Schema::hasTable('entities')) {
             logger()->error('Missing the entities table');
             $this->consoleWrite('Missing the entities table');
+
             return;
         }
 
         if (DB::connection()->getDriverName() !== 'mysql') {
-            $this->consoleWrite('this listener only runs for mysql');
+            // $this->consoleWrite('this listener only runs for mysql');
             return;
         }
 
@@ -55,10 +56,10 @@ class TrackDatabaseChangeListener
 
         // show tables column name is dynamic. attempt to pull the first tables column key
         $firstTableEntry = get_object_vars($tables[0]);
-        $dmeTableKey     = array_keys($firstTableEntry)[0];
+        $dmeTableKey = array_keys($firstTableEntry)[0];
 
         foreach ($tables as $key => $_table) {
-            $table         = $_table->$dmeTableKey;
+            $table = $_table->$dmeTableKey;
             $table_columns = DB::select("DESCRIBE {$table}");
 
             // This connect gets comments from columns in a predictable way
@@ -86,14 +87,14 @@ class TrackDatabaseChangeListener
 
                 // is this column a primary key
                 $is_primary_key = $foundColumn->Key == 'PRI';
-                $is_nullable    = strtolower($foundColumn->Null) == 'yes';
+                $is_nullable = strtolower($foundColumn->Null) == 'yes';
 
                 $data = [
                     'data_type'  => $column->getType()->getName(),
                     'key'        => $is_primary_key,
                     'nullable'   => $is_nullable,
                     'comments'   => $comment ?? 'not set',
-                    'cache_json' => (array)$foundColumn + compact('comment'),
+                    'cache_json' => (array) $foundColumn + compact('comment'),
                 ];
 
                 Entity::updateOrCreate($find, $find + $data);

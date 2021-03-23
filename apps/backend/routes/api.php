@@ -21,6 +21,7 @@ Route::get('/ssologin/{email}', [LoginController::class, 'requestToken'])->name(
 Route::middleware('auth:api')->group(function ($router) {
     $router->get('/plan/plans', 'PlanController@plans');
     $router->get('/plan/lobs', 'PlanController@lobs');
+    $router->get('/plan/idtypes', 'PlanController@idtypes');
     $router->get('/user/profile', 'UserController@profile');
     $router->put('/user/profile', 'UserController@profileSave');
 

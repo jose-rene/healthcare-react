@@ -65,6 +65,25 @@ class MemberTest extends TestCase
     }
 
     /**
+     * Test fetching member id types.
+     *
+     * @return void
+     */
+    public function testGetMemberIdTypes()
+    {
+        Passport::actingAs(
+            $this->user
+        );
+        // get the member
+        $response = $this->withHeaders([
+            'Accept'           => 'application/json',
+            'X-Requested-With' => 'XMLHttpRequest',
+        ])->json('GET', 'v1/plan/idtypes');
+        // validate response code
+        $response->assertStatus(200);
+    }
+
+    /**
      * Test search plan members.
      *
      * @return void
