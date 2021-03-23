@@ -117,4 +117,22 @@ class PlanController extends Controller
 
         return response()->json($json);
     }
+
+    /**
+     * Retrieve member id types.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function idtypes(Request $request)
+    {
+        // @todo connect this to member id type tables
+        $faker = Faker::create();
+        $types = [
+            ['id' => $faker->uuid, 'name' => 'cin_number', 'title' => 'CIN#'],
+            ['id' => $faker->uuid, 'name' => 'member_id', 'title' => 'Member ID'],
+        ];
+
+        return response()->json($types);
+    }
 }
