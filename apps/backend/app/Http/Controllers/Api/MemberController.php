@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MemberLookupRequest;
 use App\Http\Resources\MemberResource;
 use App\Models\Member;
 use Illuminate\Http\Request;
@@ -92,13 +93,16 @@ class MemberController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function search(Request $request)
+    public function search(MemberLookupRequest $request)
     {
-        // @todo restrict this by role or permissions
-        // $user = auth()->user();
+        // @todo make form request to validate search params
+        $user = auth()->user();
+        if ($user->cannot('viewAny', Member::class)) {
+            return response()->json(['message' => 'You do not have permissions for the requested resource.'], 403);
+        }
 
-        // @todo implement as search pipline
-        $members = Member::paginate(request('perPage', 50));
+        $members = Member::searchMembers($user)->paginate(request('perPage', 50));
+        // dd($members->toSql(), $members->getBindings(), $members->get());
 
         return MemberResource::collection($members);
     }

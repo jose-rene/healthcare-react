@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Phone;
 use App\Models\User;
 use App\Models\UserType\HealthPlanUser;
 use Artisan;
