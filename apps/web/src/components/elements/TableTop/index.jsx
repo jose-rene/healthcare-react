@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../../inputs/Button";
 
-const TableTop = ({filters = [], redoSearch}) => {
+const TableTop = ({ filters = [], redoSearch }) => {
     return (
         <div className="d-flex mb-1 flex-sm-row flex-column">
             {filters.map((f, index) => (
@@ -10,7 +10,12 @@ const TableTop = ({filters = [], redoSearch}) => {
                 </div>
             ))}
             <div className="px-2 ml-auto">
-                <Button className="px-3 py-1" variant="primary" onClick={() => redoSearch()} label="Search"/>
+                <Button
+                    className="px-3 py-1"
+                    variant="primary"
+                    onClick={() => redoSearch()}
+                    label="Search"
+                />
             </div>
         </div>
     );
