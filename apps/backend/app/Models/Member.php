@@ -17,6 +17,8 @@ class Member extends Model
     use SoftDeletes;
     use Uuidable;
 
+    protected $guarded = ['id'];
+
     /**
      * Relationship to requests.
      */

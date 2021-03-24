@@ -15,7 +15,7 @@ class PayerResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'payer_id'     => $this->uuid,
+            'id'           => $this->uuid,
             'company_name' => $this->name,
         ];
     }

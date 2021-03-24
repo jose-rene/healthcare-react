@@ -125,7 +125,7 @@ class MemberTest extends TestCase
     public function testSearchMembersValidation()
     {
         // create members to search
-        $members = Member::factory(['payer_id' => $this->user->healthPlanUser->payer])->count(2)->create();
+        $members = Member::factory(['payer_id' => $this->user->healthPlanUser->payer])->count(5)->create();
         // get a dob to search
         $member = $members->first();
         // set invalid dob

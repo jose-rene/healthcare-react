@@ -25,6 +25,7 @@ class MemberResource extends JsonResource
             'title'      => $this->name_title,
             'first_name' => $this->first_name,
             'last_name'  => $this->last_name,
+            'payer'      => $this->payer ? new PayerResource($this->payer) : null,
             'dob'        => Carbon::parse($this->dob)->format('m/d/Y'),
             'address'    => new AddressResource($address),
         ];

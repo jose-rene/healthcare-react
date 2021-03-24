@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\SearchPipeline;
-
 
 use Closure;
 use Illuminate\Support\Str;
@@ -24,18 +22,18 @@ abstract class BaseSearchPipeline
 
     protected function paramName()
     {
-        return Str::kebab(class_basename($this));
+        return Str::snake(class_basename($this));
     }
 
     protected function findParam()
     {
-        $kebab = Str::kebab(class_basename($this));
-        if(($param = request($kebab)) !== null){
-            return $param ;
+        $snake = Str::snake(class_basename($this));
+        if (($param = request($snake)) !== null) {
+            return $param;
         }
 
         $camel = Str::camel(class_basename($this));
-        if(($param = request($camel)) !== null){
+        if (($param = request($camel)) !== null) {
             return $param;
         }
 
@@ -43,7 +41,7 @@ abstract class BaseSearchPipeline
     }
 
     /**
-     * get snake case of the class name
+     * get snake case of the class name.
      * @return string
      */
     protected function filterName()
