@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import _ from "lodash";
+import { Form } from "react-bootstrap";
+import { useForm } from "react-hook-form";
 
 import PageLayout from "../../layouts/PageLayout";
 import InputText from "../../components/inputs/InputText";
+import TableTop from "../../components/elements/TableTop";
 import TableAPI from "../../components/elements/TableAPI";
+import Button from "../../components/inputs/Button";
 
 import useApiCall from "../../hooks/useApiCall";
 import useSearch from "../../hooks/useSearch";
@@ -19,10 +22,6 @@ const SearchMember = () => {
         url: "member/search",
     });
 
-    const [searchStr, setSearchStr] = useState("");
-
-    const searchInput = useRef(null);
-
     const [headers] = useState([
         { columnMap: "id", label: "ID", type: String },
         { columnMap: "first_name", label: "First Name", type: String },
@@ -33,41 +32,30 @@ const SearchMember = () => {
         { columnMap: "address", label: "Address", type: String },
     ]);
 
+    const { register, handleSubmit, errors } = useForm();
+
+    const handleSearch = (formValues) => {
+        updateSearchObj(formValues);
+        redoSearch({ ...searchObj, ...formValues });
+    };
+
     const redoSearch = async (params = searchObj) => {
         await memberSearch({ params });
-        searchInput.current.focus();
     };
-
-    const delayedSearch = useCallback(
-        _.debounce((q) => {
-            if (q.length < 3) return;
-            updateSearchObj({ name: q });
-            redoSearch({ ...searchObj, ...{ name: q } });
-        }, 500),
-        []
-    );
-
-    const handleSearch = (e) => {
-        setSearchStr(e.target.value);
-        delayedSearch(e.target.value);
-    };
-
-    useEffect(() => {
-        redoSearch();
-    }, []);
 
     const handleTableChange = (props) => {
         updateSearchObj(props);
         redoSearch({ ...searchObj, ...props });
     };
 
-    const [{ searchObj }, { updateSearchObj }] = useSearch({
-        searchObj: {
-            sortColumn: headers[0].columnMap,
-            sortDirection: "asc",
-            name: searchStr,
-        },
-    });
+    const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
+        {
+            searchObj: {
+                sortColumn: headers[0].columnMap,
+                sortDirection: "asc",
+            },
+        }
+    );
 
     if (loading) {
         return <div>Loading</div>;
@@ -82,19 +70,60 @@ const SearchMember = () => {
 
                 <div className="row">
                     <div className="col-md-12">
-                        <div className="first-div">
+                        <div className="first-div mt-3">
                             <div className="row m-0">
-                                <h2 className="box-outside-title first-title">
-                                    Member Lookup by Name
-                                </h2>
-                                <div className="col-md-5 search-box">
-                                    <InputText
-                                        placeholder="Type in the first four or more letters"
-                                        value={searchStr}
-                                        ref={searchInput}
-                                        onChange={handleSearch}
-                                    />
-                                </div>
+                                <Form onSubmit={handleSubmit(handleSearch)}>
+                                    <div className="d-flex mb-1 flex-sm-row flex-column">
+                                        <div className="px-2 flex-grow-1">
+                                            <InputText
+                                                name="first_name"
+                                                placeholder="First Name"
+                                                value={searchObj.first_name}
+                                                errors={errors}
+                                                ref={register({
+                                                    required:
+                                                        "First Name is required",
+                                                })}
+                                            />
+                                        </div>
+
+                                        <div className="px-2 flex-grow-1">
+                                            <InputText
+                                                name="last_name"
+                                                placeholder="Last Name"
+                                                value={searchObj.last_name}
+                                                errors={errors}
+                                                ref={register({
+                                                    required:
+                                                        "Last Name is required",
+                                                })}
+                                            />
+                                        </div>
+
+                                        <div className="px-2 flex-grow-1">
+                                            <InputText
+                                                name="dob"
+                                                placeholder="Date of Birth"
+                                                value={searchObj.dob}
+                                                type="date"
+                                                errors={errors}
+                                                ref={register({
+                                                    required:
+                                                        "Date of Birth is required",
+                                                })}
+                                            />
+                                        </div>
+
+                                        <div className="px-2 ml-auto">
+                                            <Button
+                                                className="px-3 py-1"
+                                                variant="primary"
+                                                label="Search"
+                                                type="submit"
+                                            />
+                                        </div>
+                                    </div>
+                                </Form>
                             </div>
                         </div>
 
@@ -106,13 +135,15 @@ const SearchMember = () => {
                                             Please search to show results
                                         </div>
                                     )}
-                                    <TableAPI
-                                        searchObj={searchObj}
-                                        headers={headers}
-                                        data={data}
-                                        dataMeta={meta}
-                                        onChange={handleTableChange}
-                                    />
+                                    {data && data.length > 0 && (
+                                        <TableAPI
+                                            searchObj={searchObj}
+                                            headers={headers}
+                                            data={data}
+                                            dataMeta={meta}
+                                            onChange={handleTableChange}
+                                        />
+                                    )}
                                 </div>
                             </div>
                         </div>
