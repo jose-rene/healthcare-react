@@ -2,12 +2,11 @@
 
 namespace App\Policies;
 
+use App\Models\Member;
 use App\Models\User;
-use Bouncer;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Auth\Access\Response;
 
-class UserPolicy
+class MemberPolicy
 {
     use HandlesAuthorization;
 
@@ -19,7 +18,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        if (Bouncer::is($user)->a('software_engineer', 'hp_champion')) {
+        if ($user->isA('software_engineer', 'hp_champion', 'hp_user')) {
             return true;
         }
 
@@ -30,17 +29,12 @@ class UserPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Member  $member
      * @return mixed
      */
-    public function view(User $user, User $model)
+    public function view(User $user, Member $member)
     {
-        // allow users to update their own data
-        if ($user->id == $model->id) {
-            return true;
-        }
-        // allow supers
-        if (Bouncer::is($user)->a('software_engineer')) {
+        if ($user->isA('software_engineer', 'hp_champion', 'hp_user')) {
             return true;
         }
 
@@ -55,72 +49,54 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        if ($user->can('create-users')) {
-            return true;
-        }
-
-        return Response::deny('Create user request denied.');
+        //
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Member  $member
      * @return mixed
      */
-    public function update(User $user, User $model)
+    public function update(User $user, Member $member)
     {
-        // allow users to update there own data
-        if ($user->id == $model->id) {
-            return true;
-        }
-        // check ability
-        if ($user->can('create-users')) {
-            return true;
-        }
-
-        return false;
+        //
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Member  $member
      * @return mixed
      */
-    public function delete(User $user, User $model)
+    public function delete(User $user, Member $member)
     {
-        // allow supers
-        if (Bouncer::is($user)->a('software_engineer')) {
-            return true;
-        }
-
-        return false;
+        //
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Member  $member
      * @return mixed
      */
-    public function restore(User $user, User $model)
+    public function restore(User $user, Member $member)
     {
-        return false;
+        //
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Member  $member
      * @return mixed
      */
-    public function forceDelete(User $user, User $model)
+    public function forceDelete(User $user, Member $member)
     {
-        return false;
+        //
     }
 }

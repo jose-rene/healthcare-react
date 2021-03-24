@@ -80,7 +80,7 @@ class UserSearchTest extends TestCase
         ]);
         $this->manager = User::factory()->create();
         // assign hp manager role to user
-        Bouncer::sync($this->manager)->roles(['hp_manager']);
+        Bouncer::sync($this->manager)->roles(['hp_champion']);
         // add user type health plan
         $hpUser = HealthPlanUser::factory()->create();
         $this->manager->healthPlanUser()->save($hpUser);
