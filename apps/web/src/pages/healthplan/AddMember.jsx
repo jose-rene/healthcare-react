@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import _ from "lodash";
+import { isEmpty } from "lodash";
 import Button from "../../components/inputs/Button";
 import BroadcastAlert from "../../components/elements/BroadcastAlert";
 import PageAlert from "../../components/elements/PageAlert";
@@ -27,6 +27,10 @@ const AddMember = () => {
         url: "plan/lobs",
     });
 
+    const [{ data: memberIdTypes }, memberIdTypesRequest] = useApiCall({
+        url: "plan/idtypes",
+    });
+
     const [{ data, loading, error: formError }, fireSubmit] = useApiCall({
         method: "post",
         url: "member",
@@ -35,10 +39,11 @@ const AddMember = () => {
     useEffect(() => {
         plansRequest();
         lobsRequest();
+        memberIdTypesRequest();
     }, []);
 
     const planOptions = useMemo(() => {
-        if (_.isEmpty(plans)) {
+        if (isEmpty(plans)) {
             return [];
         }
 
@@ -48,7 +53,7 @@ const AddMember = () => {
     }, [plans]);
 
     const lobOptions = useMemo(() => {
-        if (_.isEmpty(lobs)) {
+        if (isEmpty(lobs)) {
             return [];
         }
 
@@ -58,7 +63,7 @@ const AddMember = () => {
     }, [lobs]);
 
     const statesOptions = useMemo(() => {
-        if (_.isEmpty(states)) {
+        if (isEmpty(states)) {
             return [];
         }
 
@@ -75,7 +80,7 @@ const AddMember = () => {
     }, [states]);
 
     const typesOptions = useMemo(() => {
-        if (_.isEmpty(types)) {
+        if (isEmpty(types)) {
             return [];
         }
 
@@ -92,7 +97,7 @@ const AddMember = () => {
     }, [types]);
 
     const titlesOptions = useMemo(() => {
-        if (_.isEmpty(titles)) {
+        if (isEmpty(titles)) {
             return [];
         }
 
@@ -107,6 +112,16 @@ const AddMember = () => {
 
         return result;
     }, [titles]);
+
+    const memberIdTypesOptions = useMemo(() => {
+        if (isEmpty(memberIdTypes)) {
+            return [];
+        }
+
+        return memberIdTypes.map(({ id, title }) => {
+            return { id, title, val: id };
+        });
+    }, [memberIdTypes]);
 
     const {
         register,
@@ -308,7 +323,7 @@ const AddMember = () => {
                                     className="box-outside-title title-second"
                                     style={{ marginBottom: "32px" }}
                                 >
-                                    Member ID
+                                    Member Identification Info
                                 </h1>
                             </div>
 
@@ -319,6 +334,18 @@ const AddMember = () => {
                                     errors={errors}
                                     ref={register({
                                         required: "Member ID is required",
+                                    })}
+                                />
+                            </div>
+
+                            <div className="col-md-6">
+                                <Select
+                                    name="member_id_type"
+                                    label="Member ID Type*"
+                                    options={memberIdTypesOptions}
+                                    errors={errors}
+                                    ref={register({
+                                        required: "Member ID Type is required",
                                     })}
                                 />
                             </div>
