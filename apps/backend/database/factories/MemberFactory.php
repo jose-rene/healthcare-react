@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Member;
+use App\Models\Payer;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -28,7 +29,10 @@ class MemberFactory extends Factory
         $title = $titleOptions[$genderType][rand(0, $genderType ? 3 : 2)];
 
         return [
-            'member_id'  => $this->faker->isbn10,
+            'member_id' => $this->faker->isbn10,
+            'payer_id'  => function () {
+                return Payer::create(['name' => $this->faker->company]);
+            },
             'gender'     => $gender,
             'name_title' => $title,
             'first_name' => $genderType ? $this->faker->firstNameFemale : $this->faker->firstNameMale,

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Member;
 use App\Models\UserType\HealthPlanUser;
 use App\Traits\Uuidable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,11 +18,21 @@ class Payer extends Model
     /**
      * Relationship to users.
      *
-     * @return App\Models\Payer
+     * @return App\Models\User
      */
     public function users()
     {
         return $this->hasManyThrough(HealthPlanUser::class, User::class);
+    }
+
+    /**
+     * Relationship to members.
+     *
+     * @return App\Models\Member
+     */
+    public function members()
+    {
+        return $this->hasMany(Member::class);
     }
 
     /*
