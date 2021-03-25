@@ -33,6 +33,13 @@ class MemberLookupRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'dob.before' => 'The date of birth must be a date before today.'
+        ];
+    }
+
     /**
      * Override failedValidation to give 422 response for frontend.
      *
