@@ -67,7 +67,7 @@ const AddMember = () => {
             return [];
         }
 
-        let result = [{ id: "", title: "", val: "" }];
+        const result = [{ id: "", title: "", val: "" }];
         for (const [key, value] of Object.entries(states)) {
             result.push({
                 id: value,
@@ -84,7 +84,7 @@ const AddMember = () => {
             return [];
         }
 
-        let result = [{ id: "", title: "", val: "" }];
+        const result = [{ id: "", title: "", val: "" }];
         for (const [key, value] of Object.entries(types)) {
             result.push({
                 id: value,
@@ -101,7 +101,7 @@ const AddMember = () => {
             return [];
         }
 
-        let result = [{ id: "", title: "", val: "" }];
+        const result = [{ id: "", title: "", val: "" }];
         for (const [key, value] of Object.entries(titles)) {
             result.push({
                 id: value,
@@ -143,11 +143,18 @@ const AddMember = () => {
         if (loading) {
             return false;
         }
-
+        const contacts = [];
+        contactMethods.forEach((v) => {
+            contacts.push({
+                type: formData[v.type],
+                value: formData[v.phone_email],
+            });
+        });
+        const formSendData = { ...formData, contacts };
         try {
-            const result = await fireSubmit({ params: formData });
+            const result = await fireSubmit({ params: formSendData });
             setMember(result);
-            reset();
+            // reset();
         } catch (e) {
             console.log("Member create error:", e);
         }
@@ -316,7 +323,7 @@ const AddMember = () => {
                                 />
                             </div>
 
-                            <div className="col-md-6"></div>
+                            <div className="col-md-6" />
 
                             <div className="col-md-12">
                                 <h1
