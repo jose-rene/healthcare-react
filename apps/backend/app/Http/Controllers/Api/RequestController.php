@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Assessment\AssessmentRequest;
 use App\Http\Resources\RequestResource;
-use App\Models\Request as Request;
+use App\Models\Request as ModelRequest;
+use Exception;
 use Illuminate\Foundation\Inspiring;
-use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request as Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 use Str;
 
 class RequestController extends Controller
@@ -14,21 +19,27 @@ class RequestController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(['message' => 'Method not found'], 422);
+        $data = ModelRequest::search()->pagination($request->get('perPage', 50));
+
+        return RequestResource::collection($data);
     }
 
     public function summary()
     {
-        return response()->json([
-            'new'         => rand(1, 50),
-            'in_progress' => rand(1, 50),
-            'scheduled'   => rand(1, 50),
-            'submitted'   => rand(1, 50),
-        ]);
+        $summary = [];
+
+        // TODO :: add stats calculations
+        $summary['new']         = rand(1, 50);
+        $summary['in_progress'] = rand(1, 50);
+        $summary['scheduled']   = rand(1, 50);
+        $summary['submitted']   = rand(1, 50);
+
+        return response()->json($summary);
     }
 
     public function inspire()
@@ -44,21 +55,23 @@ class RequestController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param AssessmentRequest $request
+     * @return RequestResource
      */
-    public function store(Request $request)
+    public function store(AssessmentRequest $request)
     {
-        //
+        $data = ModelRequest::create($request->validated());
+
+        return new RequestResource($data);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param ModelRequest $request
+     * @return RequestResource
      */
-    public function show(Request $request)
+    public function show(ModelRequest $request)
     {
         return new RequestResource($request);
     }
@@ -66,23 +79,28 @@ class RequestController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param ModelRequest $request
+     * @param Request      $httpRequest
+     * @return RequestResource
      */
-    public function update(Request $request, HttpRequest $httpRequest)
+    public function update(ModelRequest $request, Request $httpRequest)
     {
-        //
+        $data = $httpRequest->update($request->validated());
+
+        return new RequestResource($data);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param ModelRequest $request
+     * @return JsonResponse
+     * @throws Exception
      */
-    public function destroy(Request $request)
+    public function destroy(ModelRequest $request)
     {
-        //
+        $request->delete();
+
+        return response()->json(['message' => 'ok']);
     }
 }

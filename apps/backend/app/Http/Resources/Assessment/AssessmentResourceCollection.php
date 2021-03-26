@@ -4,7 +4,7 @@ namespace App\Http\Resources\Assessment;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class AssessementResourceCollection extends ResourceCollection
+class AssessmentResourceCollection extends ResourceCollection
 {
     public $collects = AssessmentResource::class;
 

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Resources\MyUserResource;
+use App\Models\Member;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,7 +28,7 @@ Route::middleware('auth:api')->group(function ($router) {
 
     Route::put('/user/password', 'PasswordController@authedChangePassword');
 
-    $router->post('/member/search', 'MemberController@search');
+    $router->post('/member/search', 'MemberController@search')->middleware('can:viewAny,' . Member::class);
     $router->post('/user/search', 'UserController@search');
     $router->get('/user/available_roles', 'UserController@availableRoles');
     $router->get('logout', 'LoginController@logout');

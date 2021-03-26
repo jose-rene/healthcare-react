@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\Assessment\AssessementResourceCollection;
+use App\Http\Resources\Assessment\AssessmentResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class RequestResource extends JsonResource
@@ -17,7 +17,7 @@ class RequestResource extends JsonResource
     {
         return [
             'id'          => $this->uuid,
-            'assessments' => new AssessementResourceCollection($this->assessments),
+            'assessments' => new AssessmentResourceCollection($this->assessments),
         ];
     }
 }

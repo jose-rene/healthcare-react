@@ -4,9 +4,11 @@ namespace App\Models\Assessment;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int id
+ * @property int           id
+ * @property Questionnaire questionnaire
  */
 class Section extends Model
 {
@@ -28,7 +30,7 @@ class Section extends Model
     /**
      * Relationship to questionnaires.
      *
-     * @return Illuminate\Database\Eloquent\Collection of App\Questionnaire
+     * @return BelongsTo of App\Questionnaire
      */
     public function questionnaire()
     {

@@ -44,4 +44,9 @@ class Payer extends Model
     {
         return 'uuid';
     }
+
+    public function payerMember()
+    {
+        return $this->hasOne(PayerMemberId::class);
+    }
 }
