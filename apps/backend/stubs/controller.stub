@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace {{ namespace }};
 
-use App\Http\Controllers\Controller;
-use App\Models\Assessment\Valuelist\Valuelist;
+use {{ rootNamespace }}Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ValuelistController extends Controller
+class {{ class }} extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -42,10 +41,10 @@ class ValuelistController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Assessment\Valuelist\Valuelist  $valuelist
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Valuelist $valuelist)
+    public function show($id)
     {
         //
     }
@@ -53,10 +52,10 @@ class ValuelistController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Assessment\Valuelist\Valuelist  $valuelist
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Valuelist $valuelist)
+    public function edit($id)
     {
         //
     }
@@ -65,10 +64,10 @@ class ValuelistController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Assessment\Valuelist\Valuelist  $valuelist
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Valuelist $valuelist)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -76,10 +75,10 @@ class ValuelistController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Assessment\Valuelist\Valuelist  $valuelist
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Valuelist $valuelist)
+    public function destroy($id)
     {
         //
     }
