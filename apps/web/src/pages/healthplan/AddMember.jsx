@@ -165,7 +165,7 @@ const AddMember = () => {
     };
 
     const address_1 = watch("address_1", "");
-    const zip = watch("zip", "");
+    const postal_code = watch("postal_code", "");
 
     const handleLookupZip = () => {
         setAlertMessage("");
@@ -174,12 +174,12 @@ const AddMember = () => {
             return;
         }
 
-        if (zip === null || zip === "") {
+        if (postal_code === null || postal_code === "") {
             setAlertMessage("Please input postal code!");
             return;
         }
 
-        fetch(`${BASE_URL}?key=${API_KEY}&address=${address_1} ${zip}`)
+        fetch(`${BASE_URL}?key=${API_KEY}&address=${address_1} ${postal_code}`)
             .then((response) => response.json())
             .then((data) => {
                 if (!data?.results || !data.results[0].address_components) {
@@ -248,7 +248,7 @@ const AddMember = () => {
                 {contactMethods.length > 1 && (
                     <div className="col-md-2">
                         <Button
-                            className="btn btn-zip btn-danger"
+                            className="btn btn-postal_code btn-danger"
                             label="remove"
                             icon="cancel"
                             iconSize="1x"
@@ -336,7 +336,7 @@ const AddMember = () => {
 
                             <div className="col-md-6">
                                 <InputText
-                                    name="member_id"
+                                    name="member_number"
                                     label="Member ID*"
                                     errors={errors}
                                     ref={register({
@@ -393,7 +393,7 @@ const AddMember = () => {
 
                             <div className="col-md-6">
                                 <InputText
-                                    name="date_of_birth"
+                                    name="dob"
                                     label="Date of Birth*"
                                     type="date"
                                     errors={errors}
@@ -501,7 +501,7 @@ const AddMember = () => {
                                 <div className="form-row">
                                     <div className="col-md-6">
                                         <InputText
-                                            name="zip"
+                                            name="postal_code"
                                             label="Zip*"
                                             errors={errors}
                                             ref={register({

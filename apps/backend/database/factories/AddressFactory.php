@@ -24,7 +24,7 @@ class AddressFactory extends Factory
     {
         return [
             'is_primary'       => 1,
-            'street'           => $this->faker->streetAddress,
+            'address_1'        => $this->faker->streetAddress,
             'city'             => $this->faker->city,
             'county'           => $this->faker->lastName,
             'state'            => $this->faker->stateAbbr,

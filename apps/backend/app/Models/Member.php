@@ -36,6 +36,14 @@ class Member extends Model
     }
 
     /**
+     * Relationship to phones.
+     */
+    public function phones()
+    {
+        return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    /**
      * Relationship to payer.
      *
      * @return App\Models\Payer

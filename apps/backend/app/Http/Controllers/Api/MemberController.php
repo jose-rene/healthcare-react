@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MemberLookupRequest;
+use App\Http\Requests\MemberRequest;
 use App\Http\Resources\MemberResource;
 use App\Models\Member;
 use Illuminate\Http\Request;
@@ -36,10 +37,40 @@ class MemberController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MemberRequest $request)
     {
-        // @todo implement member store
-        return response()->json(['message' => 'Member successfully entered']);
+        // the validation is already ran due to the magic of service binding, this is just retrieving the data
+        $data = $request->validated();
+        $member = Member::create([
+            'name_title'       => $data['title'],
+            'first_name'       => $data['first_name'],
+            'last_name'        => $data['last_name'],
+            'dob'              => $data['dob'],
+            'gender'           => $data['gender'],
+            'member_number'    => $data['member_number'],
+            'member_id_type'   => $data['member_id_type'],
+            'line_of_business' => $data['line_of_business'],
+            'payer_id'         => $data['plan'],
+            'language'         => $data['language'],
+        ]);
+        // @todo add emailable model and contact types model
+        foreach ($data['contacts'] as $index => $item) {
+            if (!strstr($item['value'], '@')) {
+                $member->phones()->create(['number' => $item['value'], 'is_primary' => 0 === $index ? 1 : 0, 'phoneable_type' => Member::class, 'phoneable_id' => $member->id]);
+            }
+        }
+        // address
+        $member->addresses()->create([
+            'address_1'   => $data['address_1'],
+            'address_2'   => $data['address_2'],
+            'city'        => $data['city'],
+            'state'       => $data['state'],
+            'county'      => $data['county'],
+            'postal_code' => $data['postal_code'],
+            'is_primary'  => 1,
+        ]);
+
+        return new MemberResource($member);
     }
 
     /**
@@ -95,7 +126,6 @@ class MemberController extends Controller
      */
     public function search(MemberLookupRequest $request)
     {
-        // @todo make form request to validate search params
         $user = auth()->user();
         if ($user->cannot('viewAny', Member::class)) {
             return response()->json(['message' => 'You do not have permissions for the requested resource.'], 403);
