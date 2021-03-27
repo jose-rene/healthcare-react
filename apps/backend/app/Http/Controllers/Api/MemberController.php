@@ -126,12 +126,7 @@ class MemberController extends Controller
      */
     public function search(MemberLookupRequest $request)
     {
-        $user = auth()->user();
-        if ($user->cannot('viewAny', Member::class)) {
-            return response()->json(['message' => 'You do not have permissions for the requested resource.'], 403);
-        }
-
-        $members = Member::searchMembers($user)->paginate(request('perPage', 50));
+        $members = Member::searchMembers()->paginate(request('perPage', 50));
         // dd($members->toSql(), $members->getBindings(), $members->get());
 
         return MemberResource::collection($members);
