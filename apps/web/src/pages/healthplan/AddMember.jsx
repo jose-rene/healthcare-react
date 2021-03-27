@@ -248,7 +248,7 @@ const AddMember = () => {
                 {contactMethods.length > 1 && (
                     <div className="col-md-2">
                         <Button
-                            className="btn btn-postal_code btn-danger"
+                            className="btn btn-zip btn-danger"
                             label="remove"
                             icon="cancel"
                             iconSize="1x"
