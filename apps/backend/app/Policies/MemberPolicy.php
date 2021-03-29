@@ -49,7 +49,11 @@ class MemberPolicy
      */
     public function create(User $user)
     {
-        //
+        if ($user->isA('software_engineer', 'hp_champion', 'hp_user')) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -61,7 +65,11 @@ class MemberPolicy
      */
     public function update(User $user, Member $member)
     {
-        //
+        if ($user->isA('software_engineer', 'hp_champion', 'hp_user')) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

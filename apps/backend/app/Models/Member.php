@@ -36,6 +36,14 @@ class Member extends Model
     }
 
     /**
+     * Relationship to phones.
+     */
+    public function phones()
+    {
+        return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    /**
      * Relationship to payer.
      *
      * @return App\Models\Payer
@@ -47,10 +55,9 @@ class Member extends Model
 
     public function scopeSearchMembers($query, User $authedUser = null)
     {
-        if (!$authedUser) {
+        if (empty($authedUser)) {
             $authedUser = auth()->user();
         }
-
         if (1 !== $authedUser->user_type) { // limit search to their own plan
             $query->where('payer_id', $authedUser->healthPlanUser->payer->id);
         }

@@ -10,12 +10,13 @@ use Artisan;
 use Bouncer;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class MemberTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     protected $member;
     protected $address;
@@ -146,6 +147,51 @@ class MemberTest extends TestCase
         $response
             ->assertStatus(422)
             ->assertJsonStructure(['errors' => ['dob']]);
+    }
+
+    /**
+     * Test search plan members.
+     *
+     * @return void
+     */
+    public function testMemberStore()
+    {
+        $this->withoutExceptionHandling();
+        Passport::actingAs(
+            $this->user
+        );
+        $formData = $this->getFormData();
+        $response = $this->post('/v1/member', $formData);
+        // dd($response->json());
+        $response
+            ->assertStatus(201);
+    }
+
+    protected function getFormData()
+    {
+        $member = Member::factory()->hasPhones(1)->hasAddresses(1)->count(1)->create()->first();
+        $address = $member->addresses->first();
+        $contact = ['type' => 'phone', 'value' => $member->phones->first()->number];
+
+        return [
+            'title'            => $member->name_title,
+            'first_name'       => $member->first_name,
+            'last_name'        => $member->last_name,
+            'dob'              => $member->dob->format('Y-m-d'),
+            'gender'           => $member->gender,
+            'plan'             => $this->faker->uuid, // @todo this is payer id
+            'member_number'    => $member->member_number,
+            'member_id_type'   => $member->member_id_type,
+            'line_of_business' => $member->line_of_business,
+            'language'         => $member->language,
+            'address_1'        => $address->address_1,
+            'address_2'        => '',
+            'city'             => $address->city,
+            'state'            => $address->state,
+            'postal_code'      => $address->postal_code,
+            'county'           => $address->county,
+            'contacts'         => [$contact],
+        ];
     }
 
     protected function setUp(): void

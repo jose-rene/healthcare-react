@@ -29,15 +29,18 @@ class MemberFactory extends Factory
         $title = $titleOptions[$genderType][rand(0, $genderType ? 3 : 2)];
 
         return [
-            'member_id' => $this->faker->isbn10,
-            'payer_id'  => function () {
+            'member_number' => $this->faker->isbn10,
+            'payer_id'      => function () {
                 return Payer::create(['name' => $this->faker->company]);
             },
-            'gender'     => $gender,
-            'name_title' => $title,
-            'first_name' => $genderType ? $this->faker->firstNameFemale : $this->faker->firstNameMale,
-            'last_name'  => $this->faker->lastName,
-            'dob'        => new Carbon($this->faker->dateTimeBetween('-90 years', '-10 Years')),
+            'member_id_type'   => $this->faker->uuid, // @todo this is member id type id
+            'line_of_business' => $this->faker->uuid, // @todo this is the fk to lob
+            'language'         => 'english',
+            'gender'           => $gender,
+            'name_title'       => $title,
+            'first_name'       => $genderType ? $this->faker->firstNameFemale : $this->faker->firstNameMale,
+            'last_name'        => $this->faker->lastName,
+            'dob'              => new Carbon($this->faker->dateTimeBetween('-90 years', '-10 Years')),
         ];
     }
 }

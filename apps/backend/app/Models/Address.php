@@ -11,6 +11,8 @@ class Address extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $guarded = ['id'];
+
     /**
      * Polymorphic relationship.
      */

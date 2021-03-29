@@ -67,7 +67,7 @@ const AddMember = () => {
             return [];
         }
 
-        let result = [{ id: "", title: "", val: "" }];
+        const result = [{ id: "", title: "", val: "" }];
         for (const [key, value] of Object.entries(states)) {
             result.push({
                 id: value,
@@ -84,7 +84,7 @@ const AddMember = () => {
             return [];
         }
 
-        let result = [{ id: "", title: "", val: "" }];
+        const result = [{ id: "", title: "", val: "" }];
         for (const [key, value] of Object.entries(types)) {
             result.push({
                 id: value,
@@ -101,7 +101,7 @@ const AddMember = () => {
             return [];
         }
 
-        let result = [{ id: "", title: "", val: "" }];
+        const result = [{ id: "", title: "", val: "" }];
         for (const [key, value] of Object.entries(titles)) {
             result.push({
                 id: value,
@@ -143,11 +143,18 @@ const AddMember = () => {
         if (loading) {
             return false;
         }
-
+        const contacts = [];
+        contactMethods.forEach((v) => {
+            contacts.push({
+                type: formData[v.type],
+                value: formData[v.phone_email],
+            });
+        });
+        const formSendData = { ...formData, contacts };
         try {
-            const result = await fireSubmit({ params: formData });
+            const result = await fireSubmit({ params: formSendData });
             setMember(result);
-            reset();
+            // reset();
         } catch (e) {
             console.log("Member create error:", e);
         }
@@ -158,7 +165,7 @@ const AddMember = () => {
     };
 
     const address_1 = watch("address_1", "");
-    const zip = watch("zip", "");
+    const postal_code = watch("postal_code", "");
 
     const handleLookupZip = () => {
         setAlertMessage("");
@@ -167,12 +174,12 @@ const AddMember = () => {
             return;
         }
 
-        if (zip === null || zip === "") {
+        if (postal_code === null || postal_code === "") {
             setAlertMessage("Please input postal code!");
             return;
         }
 
-        fetch(`${BASE_URL}?key=${API_KEY}&address=${address_1} ${zip}`)
+        fetch(`${BASE_URL}?key=${API_KEY}&address=${address_1} ${postal_code}`)
             .then((response) => response.json())
             .then((data) => {
                 if (!data?.results || !data.results[0].address_components) {
@@ -316,7 +323,7 @@ const AddMember = () => {
                                 />
                             </div>
 
-                            <div className="col-md-6"></div>
+                            <div className="col-md-6" />
 
                             <div className="col-md-12">
                                 <h1
@@ -329,7 +336,7 @@ const AddMember = () => {
 
                             <div className="col-md-6">
                                 <InputText
-                                    name="member_id"
+                                    name="member_number"
                                     label="Member ID*"
                                     errors={errors}
                                     ref={register({
@@ -386,7 +393,7 @@ const AddMember = () => {
 
                             <div className="col-md-6">
                                 <InputText
-                                    name="date_of_birth"
+                                    name="dob"
                                     label="Date of Birth*"
                                     type="date"
                                     errors={errors}
@@ -494,7 +501,7 @@ const AddMember = () => {
                                 <div className="form-row">
                                     <div className="col-md-6">
                                         <InputText
-                                            name="zip"
+                                            name="postal_code"
                                             label="Zip*"
                                             errors={errors}
                                             ref={register({
