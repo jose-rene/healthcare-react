@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace {{ namespace }};
 
-use App\Http\Controllers\Controller;
-use App\Models\Assessment\Section;
+use {{ namespacedModel }};
+use {{ rootNamespace }}Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use \Exception;
 use \Illuminate\Http\JsonResponse;
+use \Exception;
 
-class SectionController extends Controller
+class {{ class }} extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class SectionController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Section::pagination($request->get('perPage', 50));
+        $data = {{ model }}::pagination($request->get('perPage', 50));
 
         return response()->json(compact('data'));
     }
@@ -31,34 +31,34 @@ class SectionController extends Controller
      */
     public function store(Request $request)
     {
-        $section = Section::create($request->validate([
+        ${{ modelVariable }} = {{ model }}::create($request->validate([
             // TODO :: validation here
         ]));
 
-        return response()->json(compact('section'));
+        return response()->json(compact('{{ modelVariable }}'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  Section  $section
+     * @param  {{ model }}  ${{ modelVariable }}
      * @return JsonResponse
      */
-    public function show(Section $section)
+    public function show({{ model }} ${{ modelVariable }})
     {
-        return response()->json(compact('section'));
+        return response()->json(compact('{{ modelVariable }}'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  Request  $request
-     * @param  Section  $section
+     * @param  {{ model }}  ${{ modelVariable }}
      * @return JsonResponse
      */
-    public function update(Request $request, Section $section)
+    public function update(Request $request, {{ model }} ${{ modelVariable }})
     {
-        $section->update($request->validate([
+        ${{ modelVariable }}->update($request->validate([
             // TODO :: validation here
         ]));
 
@@ -68,13 +68,13 @@ class SectionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Section  $section
+     * @param  {{ model }}  ${{ modelVariable }}
      * @return JsonResponse
      * @throws Exception
      */
-    public function destroy(Section $section)
+    public function destroy({{ model }} ${{ modelVariable }})
     {
-        $section->delete();
+        ${{ modelVariable }}->delete();
 
         return response()->json(['message' => 'ok']);
     }

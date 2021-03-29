@@ -33,7 +33,6 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property string          middle_name
  * @property string          first_name
  * @property string          last_name
- * @property string          reset_password
  * @property PasswordHistory password_history
  * @property PasswordHistory last_n_passwords
  * @property Carbon          created_at

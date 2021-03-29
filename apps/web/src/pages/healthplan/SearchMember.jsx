@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
 import PageLayout from "../../layouts/PageLayout";
 import InputText from "../../components/inputs/InputText";
-import TableTop from "../../components/elements/TableTop";
+import PageAlert from "../../components/elements/PageAlert";
 import TableAPI from "../../components/elements/TableAPI";
 import Button from "../../components/inputs/Button";
 
@@ -15,7 +15,7 @@ import "../../styles/healthplan.scss";
 
 const SearchMember = () => {
     const [
-        { loading, data: { data = [], meta = {} } = {}, error },
+        { loading, data: { data = [], meta = {} } = {}, error: searchError },
         memberSearch,
     ] = useApiCall({
         method: "post",
@@ -31,8 +31,13 @@ const SearchMember = () => {
         { columnMap: "dob", label: "Date of Birth", type: String },
         { columnMap: "address", label: "Address", type: String },
     ]);
+    const [searchStatus, setSearchStatus] = useState(false);
 
     const { register, handleSubmit, errors } = useForm();
+
+    useEffect(() => {
+        setSearchStatus(false);
+    }, []);
 
     const handleSearch = (formValues) => {
         updateSearchObj(formValues);
@@ -40,7 +45,12 @@ const SearchMember = () => {
     };
 
     const redoSearch = async (params = searchObj) => {
-        await memberSearch({ params });
+        try {
+            await memberSearch({ params });
+            setSearchStatus(true);
+        } catch (e) {
+            // console.log(e);
+        }
     };
 
     const handleTableChange = (props) => {
@@ -68,6 +78,17 @@ const SearchMember = () => {
                     Enter New Request
                 </h1>
 
+                {searchError ? (
+                    <PageAlert
+                        className="mt-3"
+                        variant="warning"
+                        timeout={5000}
+                        dismissible
+                    >
+                        Error: {searchError}
+                    </PageAlert>
+                ) : null}
+
                 <div className="row">
                     <div className="col-md-12">
                         <div className="first-div mt-3">
@@ -78,12 +99,15 @@ const SearchMember = () => {
                                             <InputText
                                                 name="first_name"
                                                 placeholder="First Name"
-                                                value={searchObj.first_name}
+                                                value={
+                                                    searchObj.first_name || ""
+                                                }
                                                 errors={errors}
                                                 ref={register({
                                                     required:
                                                         "First Name is required",
                                                 })}
+                                                onChange={formUpdateSearchObj}
                                             />
                                         </div>
 
@@ -91,12 +115,15 @@ const SearchMember = () => {
                                             <InputText
                                                 name="last_name"
                                                 placeholder="Last Name"
-                                                value={searchObj.last_name}
+                                                value={
+                                                    searchObj.last_name || ""
+                                                }
                                                 errors={errors}
                                                 ref={register({
                                                     required:
                                                         "Last Name is required",
                                                 })}
+                                                onChange={formUpdateSearchObj}
                                             />
                                         </div>
 
@@ -104,13 +131,14 @@ const SearchMember = () => {
                                             <InputText
                                                 name="dob"
                                                 placeholder="Date of Birth"
-                                                value={searchObj.dob}
+                                                value={searchObj.dob || ""}
                                                 type="date"
                                                 errors={errors}
                                                 ref={register({
                                                     required:
                                                         "Date of Birth is required",
                                                 })}
+                                                onChange={formUpdateSearchObj}
                                             />
                                         </div>
 
@@ -130,12 +158,12 @@ const SearchMember = () => {
                         <div className="white-box white-box-small">
                             <div className="row">
                                 <div className="col-md-12">
-                                    {!data.length && (
+                                    {!data.length && !searchStatus && (
                                         <div className="no-result">
                                             Please search to show results
                                         </div>
                                     )}
-                                    {data && data.length > 0 && (
+                                    {searchStatus && (
                                         <TableAPI
                                             searchObj={searchObj}
                                             headers={headers}
