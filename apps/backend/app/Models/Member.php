@@ -37,10 +37,22 @@ class Member extends Model
 
     /**
      * Relationship to phones.
+     *
+     *  @return Illuminate\Database\Eloquent\Collection of App\Models\Phone
      */
     public function phones()
     {
         return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    /**
+     * Relationship to emails.
+     *
+     *  @return Illuminate\Database\Eloquent\Collection of App\Models\Email
+     */
+    public function emails()
+    {
+        return $this->morphMany(Email::class, 'emailable');
     }
 
     /**
@@ -51,6 +63,18 @@ class Member extends Model
     public function payer()
     {
         return $this->belongsTo(Payer::class);
+    }
+
+    /**
+     * Contact list attribute.
+     *
+     * @return App\Models\Payer
+     *
+     *  @return Illuminate\Database\Eloquent\Collection
+     */
+    public function getContactsAttribute()
+    {
+        return $this->phones->merge($this->emails);
     }
 
     public function scopeSearchMembers($query, User $authedUser = null)

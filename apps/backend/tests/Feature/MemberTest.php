@@ -162,7 +162,7 @@ class MemberTest extends TestCase
         );
         $formData = $this->getFormData();
         $response = $this->post('/v1/member', $formData);
-        // dd($response->json());
+        // dd($response->json(), $formData);
         $response
             ->assertStatus(201);
     }
@@ -171,7 +171,9 @@ class MemberTest extends TestCase
     {
         $member = Member::factory()->hasPhones(1)->hasAddresses(1)->count(1)->create()->first();
         $address = $member->addresses->first();
-        $contact = ['type' => 'phone', 'value' => $member->phones->first()->number];
+        $phone = ['type' => 'Phone', 'value' => $member->phones->first()->number];
+        $phoneAlt = ['type' => 'Phone', 'value' => $this->faker->phonenumber];
+        $email = ['type' => 'Home Email', 'value' => $this->faker->email];
 
         return [
             'title'            => $member->name_title,
@@ -190,7 +192,7 @@ class MemberTest extends TestCase
             'state'            => $address->state,
             'postal_code'      => $address->postal_code,
             'county'           => $address->county,
-            'contacts'         => [$contact],
+            'contacts'         => [$phone, $phoneAlt, $email],
         ];
     }
 
@@ -203,9 +205,8 @@ class MemberTest extends TestCase
         Artisan::call('db:seed', [
             '--class' => 'Database\Seeders\BouncerSeeder',
         ]);
-        // Address factory will create a member as addressable entity.
-        $this->address = Address::factory()->create();
-        $this->member = $this->address->addressable()->first();
+        $this->member = Member::factory()->hasPhones(1)->hasAddresses(1)->count(1)->create()->first();
+        // dd($this->member->contacts->toArray());
         $this->user = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
         $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create());
         Bouncer::sync($this->user)->roles(['hp_user']);

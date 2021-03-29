@@ -18,9 +18,8 @@ class MemberResource extends JsonResource
         $address = $this->addresses->filter(function ($value, $key) {
             return $value->is_primary;
         })->first();
-        $phone = $this->phones->filter(function ($value, $key) {
-            return $value->is_primary;
-        })->first();
+        $phone = $this->phones->sortByDesc('is_primary')->first();
+        $email = $this->emails->sortByDesc('is_primary')->first();
         // @todo add relationship fields when the db tables are made
         return [
             'id'            => $this->uuid,
@@ -33,6 +32,7 @@ class MemberResource extends JsonResource
             'dob'           => Carbon::parse($this->dob)->format('m/d/Y'),
             'address'       => new AddressResource($address),
             'phone'         => new PhoneResource($phone),
+            'email'         => new EmailResource($email),
         ];
     }
 }
