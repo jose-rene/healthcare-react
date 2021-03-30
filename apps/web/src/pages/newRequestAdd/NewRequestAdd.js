@@ -2,10 +2,9 @@ import React from "react";
 
 import "./newRequestAdd.css";
 import PageLayout from "../../layouts/PageLayout";
-import Stepper from "../../components/elements/Stepper";
+// import Stepper from "../../components/elements/Stepper";
 
-export default function NewRequestAdd () {
-
+export default function NewRequestAdd() {
     return (
         <PageLayout>
             <div className="content-box" style={{ backgroundColor: "#FFF" }}>
@@ -16,7 +15,7 @@ export default function NewRequestAdd () {
                     <div className="col-lg-12">
                         <h1 className="box-subtitle">Test M Smith</h1>
 
-                        <Stepper />
+                        {/* <Stepper /> */}
                     </div>
                 </div>
             </div>

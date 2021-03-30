@@ -10,6 +10,7 @@ import HpAddUser from "../pages/healthplan/AddUser";
 import HpEditUser from "../pages/healthplan/EditUser";
 import HpAddMember from "../pages/healthplan/AddMember";
 import HpSearchMember from "../pages/healthplan/SearchMember";
+import NewRequestAdd from "../pages/newRequestAdd/NewRequestAdd";
 import Assessment from "../pages/Assessment";
 import Error401 from "../pages/Errors/401";
 import Federated from "../pages/Federated";
@@ -83,6 +84,12 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     middleware={["hp_champion", "create-users"]}
                 >
                     <HpEditUser />
+                </PrivateRoute>
+                <PrivateRoute
+                    path="/member/:member_id/request/add"
+                    middleware={["hp_user", "hp_champion"]}
+                >
+                    <NewRequestAdd />
                 </PrivateRoute>
                 <PrivateRoute
                     exact

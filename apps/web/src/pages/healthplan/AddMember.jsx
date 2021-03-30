@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useHistory } from "react-router";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
@@ -19,6 +20,8 @@ import "../../styles/home.scss";
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 const AddMember = () => {
+    const history = useHistory();
+
     const [{ data: plans }, plansRequest] = useApiCall({
         url: "plan/plans",
     });
@@ -35,6 +38,12 @@ const AddMember = () => {
         method: "post",
         url: "member",
     });
+
+    useEffect(() => {
+        if (!isEmpty(data)) {
+            history.push(`/member/${data.id}/request/add`);
+        }
+    }, [data]);
 
     useEffect(() => {
         plansRequest();
@@ -289,16 +298,6 @@ const AddMember = () => {
                 </p>
 
                 <div className="white-box">
-                    {formError ? (
-                        <PageAlert
-                            className="mt-3"
-                            variant="warning"
-                            timeout={5000}
-                            dismissible
-                        >
-                            Error: {formError}
-                        </PageAlert>
-                    ) : null}
                     {member ? (
                         <PageAlert
                             className="mt-3"
@@ -573,6 +572,19 @@ const AddMember = () => {
                                 >
                                     + Add new contact method
                                 </Button>
+                            </div>
+
+                            <div className="white-box">
+                                {formError ? (
+                                    <PageAlert
+                                        className="mt-3"
+                                        variant="warning"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Error: {formError}
+                                    </PageAlert>
+                                ) : null}
                             </div>
 
                             <div className="col-md-12">
