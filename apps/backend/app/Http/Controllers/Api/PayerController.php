@@ -20,6 +20,16 @@ class PayerController extends Controller
     }
 
     /**
+     * Show the company profile for the current user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function profile()
+    {
+        return new PayerResource(auth()->user()->payer()->first());
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

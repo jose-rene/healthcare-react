@@ -20,9 +20,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/ssologin/{email}', [LoginController::class, 'requestToken'])->name('ssologin');
 
 Route::middleware('auth:api')->group(function ($router) {
+    $router->get('/payer/profile', 'PayerController@profile')->name('company.profile');
+    // @todo deprecate these test routes, will be supersceded by payer and lobs
     $router->get('/plan/plans', 'PlanController@plans');
     $router->get('/plan/lobs', 'PlanController@lobs');
     $router->get('/plan/idtypes', 'PlanController@idtypes');
+    // user routes
     $router->get('/user/profile', 'UserController@profile');
     $router->put('/user/profile', 'UserController@profileSave');
 

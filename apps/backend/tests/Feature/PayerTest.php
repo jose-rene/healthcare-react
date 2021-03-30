@@ -21,7 +21,25 @@ class PayerTest extends TestCase
     protected $user;
 
     /**
-     * Test fetching plans.
+     * Test payer profile route.
+     *
+     * @return void
+     */
+    public function testProfile()
+    {
+        Passport::actingAs(
+            $this->user
+        );
+        // fetch the payer profile
+        $response = $this->get('/v1/payer/profile');
+
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['company_name', 'lines_of_business']);
+    }
+
+    /**
+     * Test fetching payer.
      *
      * @return void
      */
