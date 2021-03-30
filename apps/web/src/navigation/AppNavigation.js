@@ -86,8 +86,8 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     <HpEditUser />
                 </PrivateRoute>
                 <PrivateRoute
-                    path="/member/:member_id/reqest/add"
-                    middleware={["hp_manager", "hp_champion"]}
+                    path="/member/:member_id/request/add"
+                    middleware={["hp_user", "hp_champion"]}
                 >
                     <NewRequestAdd />
                 </PrivateRoute>

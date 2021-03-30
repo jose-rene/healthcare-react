@@ -34,21 +34,14 @@ const AddMember = () => {
         url: "plan/idtypes",
     });
 
-    const [
-        {
-            data: { data = {} },
-            loading,
-            error: formError,
-        },
-        fireSubmit,
-    ] = useApiCall({
+    const [{ data, loading, error: formError }, fireSubmit] = useApiCall({
         method: "post",
         url: "member",
     });
 
     useEffect(() => {
         if (!isEmpty(data)) {
-            history.push(`/member/${data.id}/reqest/add`);
+            history.push(`/member/${data.id}/request/add`);
         }
     }, [data]);
 
