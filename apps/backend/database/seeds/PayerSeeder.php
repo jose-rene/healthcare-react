@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Lob;
 use App\Models\Payer;
 use Illuminate\Database\Seeder;
 
@@ -15,8 +16,9 @@ class PayerSeeder extends Seeder
     public function run()
     {
         $name = 'Test Health Plan';
-        Payer::firstOrCreate(['name' => $name], [
+        $payer = Payer::firstOrCreate(['name' => $name], [
             'name' => $name,
         ]);
+        $payer->lobs()->sync(Lob::factory()->count(5)->create()->map(fn ($item) => $item->id)->toArray());
     }
 }
