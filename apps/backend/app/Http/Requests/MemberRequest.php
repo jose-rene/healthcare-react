@@ -32,10 +32,10 @@ class MemberRequest extends FormRequest
             'first_name'       => ['bail', 'required', 'min:1'],
             'last_name'        => ['bail', 'required', 'min:1'],
             'dob'              => ['bail', 'required', 'date_format:Y-m-d', 'before:today'],
-            'plan'             => ['bail', 'required', 'min:1'], // @todo this is payer id
+            'plan'             => ['bail', 'required', 'exists:payers,id'],
             'member_number'    => ['bail', 'required', 'min:1'],
-            'member_id_type'   => ['bail', 'required', 'min:1'], // @todo this with be a member id type id
-            'line_of_business' => ['bail', 'required', 'min:1'], // @todo this will be a lob id
+            'member_id_type'   => ['bail', 'required', 'min:1'],
+            'line_of_business' => ['bail', 'required', 'exists:lob_payer,id'],
             'language'         => ['bail', 'required', 'min:1'],
             'address_1'        => ['bail', 'required', 'min:1'],
             'address_2'        => ['bail', 'min:1'],

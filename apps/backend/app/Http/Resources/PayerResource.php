@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\LobPayer;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PayerResource extends JsonResource
@@ -15,8 +16,9 @@ class PayerResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'           => $this->uuid,
-            'company_name' => $this->name,
+            'id'                => $this->uuid,
+            'company_name'      => $this->name,
+            'lines_of_business' => LobResource::collection($this->lobs),
         ];
     }
 }
