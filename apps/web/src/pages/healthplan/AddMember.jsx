@@ -34,7 +34,14 @@ const AddMember = () => {
         url: "plan/idtypes",
     });
 
-    const [{ data, loading, error: formError }, fireSubmit] = useApiCall({
+    const [
+        {
+            data: { data = {} },
+            loading,
+            error: formError,
+        },
+        fireSubmit,
+    ] = useApiCall({
         method: "post",
         url: "member",
     });
@@ -298,16 +305,6 @@ const AddMember = () => {
                 </p>
 
                 <div className="white-box">
-                    {formError ? (
-                        <PageAlert
-                            className="mt-3"
-                            variant="warning"
-                            timeout={5000}
-                            dismissible
-                        >
-                            Error: {formError}
-                        </PageAlert>
-                    ) : null}
                     {member ? (
                         <PageAlert
                             className="mt-3"
@@ -582,6 +579,19 @@ const AddMember = () => {
                                 >
                                     + Add new contact method
                                 </Button>
+                            </div>
+
+                            <div className="white-box">
+                                {formError ? (
+                                    <PageAlert
+                                        className="mt-3"
+                                        variant="warning"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Error: {formError}
+                                    </PageAlert>
+                                ) : null}
                             </div>
 
                             <div className="col-md-12">
