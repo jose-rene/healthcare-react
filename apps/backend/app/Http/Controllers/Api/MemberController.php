@@ -44,17 +44,18 @@ class MemberController extends Controller
         // the validation is already ran due to the magic of service binding, this is just retrieving the data
         $data = $request->validated();
         $member = Member::create([
-            'name_title'       => $data['title'],
-            'first_name'       => $data['first_name'],
-            'last_name'        => $data['last_name'],
-            'dob'              => $data['dob'],
-            'gender'           => $data['gender'],
-            'member_number'    => $data['member_number'],
-            'member_id_type'   => $data['member_id_type'],
-            'line_of_business' => $data['line_of_business'],
-            'payer_id'         => $data['plan'],
-            'language'         => $data['language'],
+            'name_title'     => $data['title'],
+            'first_name'     => $data['first_name'],
+            'last_name'      => $data['last_name'],
+            'dob'            => $data['dob'],
+            'gender'         => $data['gender'],
+            'member_number'  => $data['member_number'],
+            'member_id_type' => $data['member_id_type'],
+            'payer_id'       => $data['plan'],
+            'language'       => $data['language'],
         ]);
+        $member->lob()->associate($data['line_of_business']);
+        $member->save();
         // @todo add emailable model and contact types model
         foreach ($data['contacts'] as $index => $item) {
             if (!strstr($item['value'], '@') || !filter_var($item['value'], \FILTER_VALIDATE_EMAIL)) {

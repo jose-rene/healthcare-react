@@ -43,6 +43,7 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('assessment', 'AssessmentController');
     Route::apiResource('request', 'RequestController');
     Route::apiResource('member', 'MemberController');
+    Route::apiResource('payer', 'PayerController');
     Route::apiResource('activity', 'ActivityController');
     Route::apiResource('user', 'UserController');
     // test fmapi route

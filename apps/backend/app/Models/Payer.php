@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Member;
 use App\Models\UserType\HealthPlanUser;
 use App\Traits\Uuidable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -35,6 +34,27 @@ class Payer extends Model
         return $this->hasMany(Member::class);
     }
 
+    /**
+     * Relationship to lines of business.
+     *
+     * @return App\Models\Lob
+     */
+    public function lobs()
+    {
+        return $this->belongsToMany(Lob::class)
+            ->using(LobPayer::class)
+            ->withPivot([
+                'id',
+                'alias_name',
+                'is_tat_enabled',
+                'is_tat_default_na',
+                'is_tat_required',
+                'payer_rate',
+                'clinician_rate',
+                'reviewer_rate',
+            ]);
+    }
+
     /*
     * Get the route key for the model.
     *
@@ -43,10 +63,5 @@ class Payer extends Model
     public function getRouteKeyName()
     {
         return 'uuid';
-    }
-
-    public function payerMember()
-    {
-        return $this->hasOne(PayerMemberId::class);
     }
 }

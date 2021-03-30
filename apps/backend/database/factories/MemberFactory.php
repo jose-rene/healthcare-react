@@ -33,14 +33,13 @@ class MemberFactory extends Factory
             'payer_id'      => function () {
                 return Payer::create(['name' => $this->faker->company]);
             },
-            'member_id_type'   => $this->faker->uuid, // @todo this is member id type id
-            'line_of_business' => $this->faker->uuid, // @todo this is the fk to lob
-            'language'         => 'english',
-            'gender'           => $gender,
-            'name_title'       => $title,
-            'first_name'       => $genderType ? $this->faker->firstNameFemale : $this->faker->firstNameMale,
-            'last_name'        => $this->faker->lastName,
-            'dob'              => new Carbon($this->faker->dateTimeBetween('-90 years', '-10 Years')),
+            'member_id_type' => $this->faker->uuid, // @todo this is member id type id
+            'language'       => 'english',
+            'gender'         => $gender,
+            'name_title'     => $title,
+            'first_name'     => $genderType ? $this->faker->firstNameFemale : $this->faker->firstNameMale,
+            'last_name'      => $this->faker->lastName,
+            'dob'            => new Carbon($this->faker->dateTimeBetween('-90 years', '-10 Years')),
         ];
     }
 }

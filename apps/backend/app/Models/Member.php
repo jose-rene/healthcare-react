@@ -66,6 +66,16 @@ class Member extends Model
     }
 
     /**
+     * Relationship to lob.
+     *
+     * @return App\Models\Lob\Payer
+     */
+    public function lob()
+    {
+        return $this->belongsTo(LobPayer::class, 'lob_payer_id');
+    }
+
+    /**
      * Contact list attribute.
      *
      * @return App\Models\Payer

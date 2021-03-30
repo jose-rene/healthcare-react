@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\Address;
 use App\Models\Member;
+use App\Models\Payer;
 use App\Models\User;
 use App\Models\UserType\HealthPlanUser;
 use Artisan;
@@ -19,7 +19,7 @@ class MemberTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     protected $member;
-    protected $address;
+    protected $payer;
     protected $user;
 
     /**
@@ -162,9 +162,10 @@ class MemberTest extends TestCase
         );
         $formData = $this->getFormData();
         $response = $this->post('/v1/member', $formData);
-        // dd($response->json(), $formData);
-        $response
-            ->assertStatus(201);
+        // dd($response->json());
+        $response->assertStatus(201);
+        $response->assertJsonPath('payer.id', $this->payer->uuid);
+        $response->assertJsonPath('lob.id', $formData['line_of_business']);
     }
 
     protected function getFormData()
@@ -181,10 +182,10 @@ class MemberTest extends TestCase
             'last_name'        => $member->last_name,
             'dob'              => $member->dob->format('Y-m-d'),
             'gender'           => $member->gender,
-            'plan'             => $this->faker->uuid, // @todo this is payer id
+            'plan'             => $this->payer->id,
             'member_number'    => $member->member_number,
             'member_id_type'   => $member->member_id_type,
-            'line_of_business' => $member->line_of_business,
+            'line_of_business' => $this->payer->lobs()->first()->pivot->id,
             'language'         => $member->language,
             'address_1'        => $address->address_1,
             'address_2'        => '',
@@ -206,6 +207,10 @@ class MemberTest extends TestCase
             '--class' => 'Database\Seeders\BouncerSeeder',
         ]);
         $this->member = Member::factory()->hasPhones(1)->hasAddresses(1)->count(1)->create()->first();
+        $this->payer = Payer::factory()->hasLobs(5)->count(1)->create()->first();
+        $this->member->payer()->associate($this->payer);
+        $this->member->lob()->associate($this->payer->lobs()->first()->pivot->id);
+        $this->member->save();
         // dd($this->member->contacts->toArray());
         $this->user = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
         $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create());
