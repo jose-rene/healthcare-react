@@ -55,6 +55,26 @@ class Payer extends Model
             ]);
     }
 
+    /**
+     * Returns one level of children or child payers.
+     *
+     * @return Illuminate\Database\Eloquent\Collection of Payer
+     */
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id')->orderBy('name');
+    }
+
+    /**
+     * Will implement the recursive relationship and return the hiarchy of child payers.
+     *
+     * @return Illuminate\Database\Eloquent\Collection of App\Questionnaire
+     */
+    public function payers()
+    {
+        return $this->hasMany(self::class, 'parent_id')->with('children');
+    }
+
     /*
     * Get the route key for the model.
     *

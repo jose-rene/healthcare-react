@@ -19,6 +19,15 @@ class PayerSeeder extends Seeder
         $payer = Payer::firstOrCreate(['name' => $name], [
             'name' => $name,
         ]);
-        $payer->lobs()->sync(Lob::factory()->count(5)->create()->map(fn ($item) => $item->id)->toArray());
+        // add lobs
+        if (!$payer->lobs()->exists()) {
+            $payer->lobs()->sync(Lob::factory()->count(5)->create()->map(fn ($item) => $item->id)->toArray());
+        }
+        // add child payers
+        if (!$payer->children()->exists()) {
+            $payer->children()->saveMany(
+                Payer::factory()->hasLobs(3)->count(5)->create()
+            );
+        }
     }
 }
