@@ -2,21 +2,56 @@
 
 namespace {{ namespace }};
 
+use App\Models\User;
+use Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Laravel\Passport\Passport;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
-class {{ class }} extends TestCase
-{
+/**
+ * Class
+ * @link https://phpunit.readthedocs.io/en/9.5/annotations.html#group
+ * @link https://phpunit.readthedocs.io/en/9.5/annotations.html#testwith
+ */
+class {{ class }} extends TestCase{
+    use RefreshDatabase;
+
+    /**
+     * @var User
+     */
+    private $user;
+
     /**
      * A basic feature test example.
      *
+     * @group everything
      * @return void
      */
-    public function test_example()
+    public function testSomethingExample()
     {
+        $this->withoutExceptionHandling();
+
+        Passport::actingAs(
+            $this->user
+        );
+
         $response = $this->get('/');
 
         $response->assertStatus(200);
+    }
+
+    /**
+     * Before running these tests install passport to make sure the tokens exists.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Artisan::call('passport:install');
+        // this will store a new user with random attributes in the database.
+        /* @var User $user */
+        $this->user = User::factory(['password' => Hash::make('password')])->create();
     }
 }

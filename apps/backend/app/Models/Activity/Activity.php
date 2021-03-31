@@ -26,10 +26,19 @@ class Activity extends Model
         'user_id',
         'activity_type_id',
         'message',
+        'priority',
         'notify_admin',
         'notify_healthplan',
         'notify_reviewer',
         'notify_therapist',
+    ];
+
+    protected $casts = [
+        'priority'          => 'boolean',
+        'notify_admin'      => 'boolean',
+        'notify_healthplan' => 'boolean',
+        'notify_reviewer'   => 'boolean',
+        'notify_therapist'  => 'boolean',
     ];
 
     /**

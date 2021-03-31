@@ -24,7 +24,7 @@ class RequestFactory extends Factory
     public function definition()
     {
         return [
-            'status'    => 'Received',
+            'status'    => '',
             'auth_id'   => Str::random(13),
             'member_id' => function () {
                 return Member::factory()->create();

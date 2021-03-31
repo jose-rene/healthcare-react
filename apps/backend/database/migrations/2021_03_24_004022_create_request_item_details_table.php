@@ -18,9 +18,9 @@ class CreateRequestItemDetailsTable extends Migration
 
             $table->unsignedBigInteger('request_item_id');
             $table->unsignedBigInteger('request_type_id');
-            $table->unsignedBigInteger('request_outcome_id');
-            $table->text('hcpcs');
-            $table->text('note');
+            $table->unsignedBigInteger('request_outcome_id')->nullable();
+            $table->text('hcpcs')->nullable();
+            $table->text('note')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

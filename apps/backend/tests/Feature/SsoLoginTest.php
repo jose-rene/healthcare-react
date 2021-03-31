@@ -54,6 +54,6 @@ class SsoLoginTest extends TestCase
         // generate a user for tests
         $this->user = User::factory()->create();
         // generate a signed url for this user
-        $this->url = URL::temporarySignedRoute('ssologin', now()->addMinutes(env('SSO_URL_TIMEOUT', 5)), ['email' => $this->user->email]);
+        $this->url = URL::temporarySignedRoute('api.ssologin', now()->addMinutes(env('SSO_URL_TIMEOUT', 5)), ['email' => $this->user->email]);
     }
 }

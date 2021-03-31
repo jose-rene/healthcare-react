@@ -48,20 +48,34 @@ const TableAPI = ({
         }
         return data.map((d, index) => (
             <tr key={`tr-th-${index}`}>
-                {headers.map(({ columnMap, link, type }, indexTd) => (
-                    <td
-                        key={`tr-th-td-${indexTd}`}
-                        className={`${mapTypeToClass(type)}`}
-                    >
-                        {columnMap === "edit" ? (
-                            <Link to={`${link}/${d.id}`} title="Edit">
-                                <Icon icon="edit" size="lg" />
-                            </Link>
-                        ) : (
-                            get(d, columnMap, "")
-                        )}
-                    </td>
-                ))}
+                {headers.map(
+                    ({ columnMap, link, type, formatter = false }, indexTd) => {
+
+                        let column = null;
+
+                        if (columnMap === "edit") {
+                            column = (
+                                <Link to={`${link}/${d.id}`} title="Edit">
+                                    <Icon icon="edit" size="lg" />
+                                </Link>
+                            );
+                        } else {
+                            if (formatter) {
+                                column = formatter(get(d, columnMap, ""));
+                            } else {
+                                column = get(d, columnMap, "");
+                            }
+                        }
+
+                        return (
+                            <td
+                                key={`tr-th-td-${indexTd}`}
+                                className={`${mapTypeToClass(type)}`}
+                            >
+                                {column}
+                            </td>
+                        );
+                    })}
             </tr>
         ));
     }, [headers, data]);

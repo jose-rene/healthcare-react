@@ -2,6 +2,12 @@
 
 return [
 
+    /**
+     * If this is true then after php artisan migrate:fresh the DatabaseRefreshedListener will
+     * auto run `php artisan passport:install | tee storage/app/keys.txt`
+     */
+    'auto_passport' => env('AUTO_PASSPORT', false),
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Keys

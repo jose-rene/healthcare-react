@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateActivityTypesTable extends Migration
+class CreateRelevantDiagnosesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,16 @@ class CreateActivityTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('activity_types', function (Blueprint $table) {
+        Schema::create('relevant_diagnoses', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 24);
-            $table->string('permission');
-            $table->integer('visible')->comment('1 = private, 2 = internal, 3 = financial, 4 = all');
+
+            $table->unsignedBigInteger('request_id');
+            $table->string('code');
+            $table->string('description');
+            $table->boolean('weighted');
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -29,6 +33,6 @@ class CreateActivityTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('types');
+        Schema::dropIfExists('relevant_diagnoses');
     }
 }

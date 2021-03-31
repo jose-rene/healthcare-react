@@ -54,10 +54,10 @@ class RequestTest extends TestCase
             'Accept'           => 'application/json',
             'X-Requested-With' => 'XMLHttpRequest',
         ])->json('GET', 'v1/request/' . $this->request->uuid);
-        // dd($response->getContent(), $this->request->toArray());
+        // dd($response->json());
         // validate response code
         $response->assertStatus(200)
-            ->assertJsonStructure(['id', 'assessments'])
+            ->assertJsonStructure(['id', 'member'])
             ->assertJson(['id' => $this->request->uuid]);
     }
 

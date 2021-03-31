@@ -15,17 +15,18 @@ class CreateRequestItemsTable extends Migration
     {
         Schema::create('request_items', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid');
 
             $table->unsignedBigInteger('request_id');
             $table->unsignedBigInteger('request_type_id');
-            $table->unsignedBigInteger('request_outcome_id');
-            $table->string('hcpcs');
-            $table->string('note');
-            $table->string('clinician_summary');
-            $table->string('assessment');
-            $table->string('decision');
-            $table->json('json_data');
-            $table->boolean('additional_consideration');
+            $table->unsignedBigInteger('request_outcome_id')->nullable();
+            $table->string('hcpcs')->nullable();
+            $table->string('note')->nullable();
+            $table->string('clinician_summary')->nullable();
+            $table->string('assessment')->nullable();
+            $table->string('decision')->nullable();
+            $table->json('json_data')->nullable();
+            $table->boolean('additional_consideration')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

@@ -21,7 +21,8 @@ class CreateActivitiesTable extends Migration
             $table->foreignId('request_id');
             $table->foreignId('user_id');
             $table->foreignId('activity_type_id');
-            $table->string('message');
+            $table->string('message')->nullable();
+            $table->boolean('priority')->default(0);
             $table->boolean('notify_admin')->default(0);
             $table->boolean('notify_healthplan')->default(0);
             $table->boolean('notify_reviewer')->default(0);

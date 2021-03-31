@@ -15,7 +15,9 @@ class AddressChangeStreet extends Migration
     {
         Schema::table('addresses', function (Blueprint $table) {
             $table->renameColumn('street', 'address_1')->comment('The street address.');
-            $table->string('address_2')->after('street')->default('')->comment('The suite, apt, unit, etc # portion of the address.');
+        });
+        Schema::table('addresses', function (Blueprint $table) {
+            $table->string('address_2')->after('address_1')->default('')->comment('The suite, apt, unit, etc # portion of the address.');
         });
     }
 
