@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\UserType\HealthPlanUser;
 use Artisan;
 use Bouncer;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Passport\Passport;
@@ -35,7 +34,7 @@ class PayerTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonStructure(['company_name', 'lines_of_business']);
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers']);
     }
 
     /**
@@ -48,14 +47,64 @@ class PayerTest extends TestCase
         Passport::actingAs(
             $this->user
         );
-        // get the lines of business
-        $response = $this->withHeaders([
-            'Accept'           => 'application/json',
-            'X-Requested-With' => 'XMLHttpRequest',
-        ])->json('GET', 'v1/payer/' . $this->payer->uuid);
-        // validate response code
+        // get the payer
+        $response = $this->json('GET', 'v1/payer/' . $this->payer->uuid);
+        // validate response code and structure
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers']);
+    }
+
+    /**
+     * Test fetching payer.
+     *
+     * @return void
+     */
+    public function testGetPayerWithChildren()
+    {
+        Passport::actingAs(
+            $this->user
+        );
+        // add child records
+        $this->payer->children()->saveMany(
+            Payer::factory()->hasLobs(3)->count($payerCount = 3)->create()
+        );
+        // get the payer
+        $response = $this->json('GET', 'v1/payer/' . $this->payer->uuid);
+        // validate response code and structure
         // dd($response->json());
-        $response->assertStatus(200);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers'])
+            ->assertJsonCount($payerCount, 'payers');
+    }
+
+    /**
+     * Test that the payer child hierarchy is retrieved properly.
+     *
+     * @return void
+     */
+    public function testPayerChildHierarchy()
+    {
+        Passport::actingAs(
+            $this->user
+        );
+        // child record with children
+        $child = Payer::factory()->hasLobs(3)->create();
+        // add children to child
+        $child->children()->saveMany(
+            Payer::factory()->hasLobs(3)->count($payerCount = 3)->create()
+        );
+        // add child records
+        $this->payer->children()->save($child);
+        // get the payer
+        $response = $this->json('GET', 'v1/payer/' . $this->payer->uuid);
+        // validate response code and structure
+        // dd($response->json());
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers'])
+            ->assertJsonCount($payerCount, 'payers.0.payers');
     }
 
     protected function setUp(): void

@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\LobPayer;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PayerResource extends JsonResource
@@ -19,6 +18,7 @@ class PayerResource extends JsonResource
             'id'                => $this->uuid,
             'company_name'      => $this->name,
             'lines_of_business' => LobResource::collection($this->lobs),
+            'payers'            => self::collection($this->children),
         ];
     }
 }
