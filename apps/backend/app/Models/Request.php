@@ -10,11 +10,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property Carbon created_at
+ * @property Carbon      created_at
+ * @property RequestItem requestItems
+ * @property int         id
+ * @property Member      member
  */
 class Request extends Model
 {
@@ -41,6 +43,11 @@ class Request extends Model
         return $this->hasMany(RequestDate::class, 'request_id');
     }
 
+    public function requestStatus()
+    {
+        return $this->belongsTo(RequestStatus::class);
+    }
+
     public function requestType()
     {
         return $this->hasOne(RequestType::class, 'request_type_id');
@@ -49,6 +56,11 @@ class Request extends Model
     public function requestItems()
     {
         return $this->hasMany(RequestItem::class, 'request_id');
+    }
+
+    public function relevantDiagnoses()
+    {
+        return $this->hasMany(RelevantDiagnoses::class, 'request_id');
     }
 
     public function requestQuestionnaireSection()
@@ -69,11 +81,11 @@ class Request extends Model
     /**
      * Relationship to members.
      *
-     * @return HasOne
+     * @return Address
      */
-    public function memberAddress()
+    public function getMemberAddressAttribute()
     {
-        return $this->hasOne(Address::class, 'member_address_id');
+        return $this->member->addresses()->first();
     }
 
     /**
@@ -105,5 +117,10 @@ class Request extends Model
     public function getRequestedAtAttributes()
     {
         return $this->created_at;
+    }
+
+    public function getStatusNameAttribute()
+    {
+        return $this->requestStatus->name ?? '';
     }
 }

@@ -27,8 +27,10 @@ class MemberAddFields extends Migration
      */
     public function down()
     {
-        $table->dropColumn('language');
-        $table->dropColumn('line_of_business');
-        $table->dropColumn('member_type_id');
+        Schema::table('members', function (Blueprint $table) {
+            $table->dropColumn('language');
+            $table->dropColumn('line_of_business');
+            $table->dropColumn('member_type_id');
+        });
     }
 }

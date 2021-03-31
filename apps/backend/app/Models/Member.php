@@ -27,12 +27,33 @@ class Member extends Model
         return $this->hasMany(Request::class);
     }
 
+
+    /**
+     * Relationship to requests.
+     */
+    public function memberRequests()
+    {
+        return $this->hasMany(Request::class, 'member_id');
+    }
+
     /**
      * Relationship to addresses.
      */
     public function addresses()
     {
-        return $this->morphMany(Address::class, 'addressable');
+        return $this->morphMany(Address::class, 'addressable')->orderBy('is_primary', 'desc');
+    }
+
+    public function address()
+    {
+        return $this->addresses()->firstOrCreate([
+            'is_primary'  => true,
+            'street'      => '',
+            'city'        => '',
+            'county'      => '',
+            'state'       => '',
+            'postal_code' => '',
+        ]);
     }
 
     /**
@@ -92,7 +113,7 @@ class Member extends Model
         if (empty($authedUser)) {
             $authedUser = auth()->user();
         }
-        if (1 !== $authedUser->user_type) { // limit search to their own plan
+        if (1 !== $authedUser->user_type) {// limit search to their own plan
             $query->where('payer_id', $authedUser->healthPlanUser->payer->id);
         }
 

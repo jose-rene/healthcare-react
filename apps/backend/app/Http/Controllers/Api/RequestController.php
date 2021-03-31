@@ -11,8 +11,6 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request as Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
-use Str;
 
 class RequestController extends Controller
 {
@@ -24,7 +22,7 @@ class RequestController extends Controller
      */
     public function index(Request $request)
     {
-        $data = ModelRequest::search()->pagination($request->get('perPage', 50));
+        $data = ModelRequest::search()->paginate($request->get('perPage', 50));
 
         return RequestResource::collection($data);
     }

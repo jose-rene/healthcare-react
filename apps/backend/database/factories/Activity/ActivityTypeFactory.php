@@ -24,6 +24,7 @@ class ActivityTypeFactory extends Factory
         return [
             'name'       => 'Request',
             'permission' => 'TBD',
+            'visible'    => '1',
         ];
     }
 }

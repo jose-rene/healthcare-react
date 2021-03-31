@@ -29,7 +29,20 @@ const SearchMember = () => {
         { columnMap: "gender", label: "Gender", type: String },
         { columnMap: "title", label: "Title", type: String },
         { columnMap: "dob", label: "Date of Birth", type: String },
-        { columnMap: "address", label: "Address", type: String },
+        {
+            columnMap: "address",
+            label: "Address",
+            type: String,
+            formatter (address) {
+                return [
+                    `${address.street}`,
+                    `${address.city},`,
+                    `${address.county}`,
+                    `${address.state}`,
+                    `${address.zip_code}`,
+                ].join(" ");
+            },
+        },
     ]);
     const [searchStatus, setSearchStatus] = useState(false);
 

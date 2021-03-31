@@ -57,7 +57,7 @@ class UserRequest extends FormRequest
         ];
 
         // add rules for create user route
-        if ('user.store' === $this->route()->getName()) { // 'POST' === $this->method()
+        if ('api.user.store' === $this->route()->getName()) { // 'POST' === $this->method()
             $rules = array_replace($rules, [
                 'email'        => ['bail', 'required', 'email:rfc', 'unique:users'],
                 'password'     => ['bail', 'min:8', 'regex:' . config('rules.patterns.password')],
