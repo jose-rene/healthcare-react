@@ -1,3 +1,9 @@
+.box-legenda {
+    font-family: Averta;
+    line-height: 180%;
+    color: #475866;
+}
+
 .attention-alert {
     display: flex;
     flex-direction: row;
@@ -86,21 +92,6 @@
     font-size: 16px;
     line-height: 19px;
     color: #475866;
-}
-
-.box-title {
-    margin-bottom: 0px;
-}
-
-.box-legenda {
-    font-family: Averta;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 180%;
-    color: #475866;
-
-    margin-bottom: 0px;
 }
 
 select.app-input {
@@ -219,16 +210,6 @@ select.app-input {
     margin-bottom: 0;
 }
 
-.btn-search {
-    margin-top: 0;
-    margin-bottom: 0;
-    height: 33px;
-    width: 93px;
-    background: #2e94e6;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
-    border-radius: 6px;
-}
-
 .app-input-filter {
     width: 100%;
     max-width: 100%;
@@ -282,7 +263,7 @@ select.app-input-filter {
 
 .input-member {
     margin-bottom: 0px;
-    border-color: #DADEE0;
+    border-color: #dadee0;
 }
 
 .btn-new-member {
@@ -295,16 +276,6 @@ select.app-input-filter {
     font-size: 18px;
     line-height: 22px;
     text-align: center;
-    color: #475866;
-}
-
-.box-subtitle {
-    margin-top: 64px;
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 29px;
-    display: flex;
-    align-items: center;
     color: #475866;
 }
 

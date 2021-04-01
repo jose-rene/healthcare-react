@@ -14,15 +14,17 @@ const FormButtons = ({
                 </Button>
             </div>
 
-            {onCancel && <div className="col-md-5">
-                <Button
-                    className="btn btn-block"
-                    variant="secondary"
-                    onClick={() => onCancel()}
-                >
-                    {cancelLabel}
-                </Button>
-            </div>}
+            {onCancel && (
+                <div className="col-md-5">
+                    <Button
+                        className="btn btn-block"
+                        variant="secondary"
+                        onClick={() => onCancel()}
+                    >
+                        {cancelLabel}
+                    </Button>
+                </div>
+            )}
         </div>
     );
 };

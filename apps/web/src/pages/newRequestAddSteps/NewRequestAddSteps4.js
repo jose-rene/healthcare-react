@@ -1,37 +1,60 @@
 import React from "react";
+import Select from "../../components/inputs/Select";
+
 import "./newRequestAddSteps.css";
 
 const NewRequestAddSteps4 = () => (
     <>
         <div className="container-info">
-            <div className="row">
-                <div className="col-lg-12">
-                    <p className="title-info padding-title-step4">Select a
-                        Request Classification / Category / Type</p>
-                </div>
+            <div className="col-md-12 px-0">
+                <div className="row">
+                    <div className="col-md-12">
+                        <p className="title-info padding-title-step4">
+                            Select a Request Classification / Category / Type
+                        </p>
+                    </div>
 
-                <div className="col-lg-6">
-                    <label className="app-input-label">Classification</label>
-                    <select className="app-input"
-                            style={{ borderColor: "#DADEE0" }}>
-                        <option>Select option</option>
-                    </select>
-                </div>
+                    <div className="col-md-6">
+                        <Select
+                            name="classification"
+                            label="Classification"
+                            options={[
+                                {
+                                    id: "Select option",
+                                    title: "Select option",
+                                    val: "Select option",
+                                },
+                            ]}
+                        />
+                    </div>
 
-                <div className="col-lg-6">
-                    <label className="app-input-label">Category</label>
-                    <select className="app-input"
-                            style={{ borderColor: "#DADEE0" }}>
-                        <option>Select option</option>
-                    </select>
-                </div>
+                    <div className="col-md-6">
+                        <Select
+                            name="category"
+                            label="Category"
+                            options={[
+                                {
+                                    id: "Select option",
+                                    title: "Select option",
+                                    val: "Select option",
+                                },
+                            ]}
+                        />
+                    </div>
 
-                <div className="col-lg-12">
-                    <label className="app-input-label label-step3">Type</label>
-                    <select className="app-input input-step3"
-                            style={{ borderColor: "#DADEE0" }}>
-                        <option>Select option</option>
-                    </select>
+                    <div className="col-md-12">
+                        <Select
+                            name="type"
+                            label="Type"
+                            options={[
+                                {
+                                    id: "Select option",
+                                    title: "Select option",
+                                    val: "Select option",
+                                },
+                            ]}
+                        />
+                    </div>
                 </div>
             </div>
         </div>
