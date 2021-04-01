@@ -34,7 +34,7 @@ const SearchMember = () => {
             label: "Address",
             type: String,
             formatter (address) {
-                return [
+                return !address ? "" : [
                     `${address.street}`,
                     `${address.city},`,
                     `${address.county}`,

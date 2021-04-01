@@ -1,172 +1,122 @@
-import React from "react";
-//import {
-//    Stepper as oldStepper,
-//    Step,
-//    StepLabel,
-//    StepContent,
-//    makeStyles,
-//    Typography,
-//} from "@material-ui/core";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { Accordion, Card } from "react-bootstrap";
+
+import Button from "../../inputs/Button";
+
+import NewRequestAddSteps1 from "../../../pages/newRequestAddSteps/NewRequestAddSteps1";
+import NewRequestAddSteps2 from "../../../pages/newRequestAddSteps/NewRequestAddSteps2";
+import NewRequestAddSteps3 from "../../../pages/newRequestAddSteps/NewRequestAddSteps3";
+import NewRequestAddSteps4 from "../../../pages/newRequestAddSteps/NewRequestAddSteps4";
+import NewRequestAddSteps5 from "../../../pages/newRequestAddSteps/NewRequestAddSteps5";
+
 import "./stepper.css";
-import { getStepContent } from "../../../pages/newRequestAddSteps";
 
-
-const oldStepper = () => (<span>placeholder</span>);
-const Step = () => (<span>placeholder</span>);
-const StepLabel = () => (<span>placeholder</span>);
-const StepContent = () => (<span>placeholder</span>);
-const makeStyles = () => (<span>placeholder</span>);
-const Typography = () => (<span>placeholder</span>);
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: "100%",
-    },
-    buttonNext: {
-        width: "177px",
-        height: "35px",
-        backgroundColor: "#2E94E6",
-        color: "#FFF",
-        "&:hover": { backgroundColor: "#2E94E6" },
-        fontWeight: 600,
-        fontSize: "16px",
-        lineHeight: "19px",
-        marginTop: theme.spacing(2),
-        marginLeft: theme.spacing(3),
-    },
-    buttonPrevious: {
-        width: "177px",
-        height: "35px",
-        borderColor: "#2E94E5",
-        "&:hover": { backgroundColor: "#FFF" },
-        borderWidth: "2px",
-        fontWeight: 600,
-        fontSize: "16px",
-        lineHeight: "19px",
-        color: "#2E94E6",
-        marginTop: theme.spacing(2),
-        marginLeft: theme.spacing(3),
-    },
-    actionsContainer: {
-        marginBottom: theme.spacing(2),
-        marginTop: theme.spacing(10),
-    },
-    resetContainer: {
-        padding: theme.spacing(3),
-    },
-    circle: {
-        width: 58,
-        height: 58,
-        borderRadius: "50%",
-        backgroundColor: "#DADEE0",
-        marginLeft: -15,
-    },
-    completed: {
-        color: "#fff",
-        fontSize: 22,
-        width: 58,
-        height: 58,
-        borderRadius: "50%",
-        backgroundColor: "#2E94E5",
-        marginLeft: -15,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-}));
-
-const ChangeStyle = ({ active, completed }) => {
-    const classes = useStyles();
-
-    return (
-        <div className={[classes.root, active && classes.active]}>
-            {completed ?
-                <div className={classes.completed}><i
-                    className="fas fa-check" /></div> :
-                <div className={classes.circle} />}
-        </div>
-    );
-};
-
-ChangeStyle.propTypes = {
-    active: PropTypes.bool,
-    completed: PropTypes.bool,
-};
-
-function getSteps () {
+const getSteps = () => {
     return [
         "Verify Member Information",
         "Unique Assessment ID",
         "Relevant Diagnosis",
-        "Request Category/Type",
+        "Request Type",
         "Due Date",
     ];
-}
+};
+
+const getStepContent = (step) => {
+    switch (step) {
+        case 0:
+            return <NewRequestAddSteps1 />;
+        case 1:
+            return <NewRequestAddSteps2 />;
+        case 2:
+            return <NewRequestAddSteps3 />;
+        case 3:
+            return <NewRequestAddSteps4 />;
+        case 4:
+            return <NewRequestAddSteps5 />;
+    }
+};
 
 const Stepper = () => {
-    const classes = useStyles();
     const steps = getSteps();
-    const [activeStep, setActiveStep] = React.useState(0);
-
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
+    const [activeStep, setActiveStep] = useState(0);
 
     return (
         <>
-            <div className={classes.root}>
-                <oldStepper
-                    className={classes.active}
-                    activeStep={activeStep}
-                    orientation="vertical"
-                >
-                    {steps.map((label, index) => (
-                        <Step key={label}>
-                            <StepLabel
-                                StepIconComponent={ChangeStyle}
-                            >{label}
-                            </StepLabel>
-                            <StepContent>
-                                <Typography
-                                    component={"span"}
-                                    variant={"body2"}
+            {steps.map((label, index) => {
+                return (
+                    <Accordion
+                        key={label}
+                        defaultActiveKey={`${activeStep}`}
+                        activeKey={`${activeStep}`}
+                    >
+                        <Card className="step">
+                            <Accordion.Toggle
+                                className="step-header"
+                                as={Card.Header}
+                                eventKey={`${index}`}
+                            >
+                                {index < activeStep ? (
+                                    <div className="step-header-active-circle">
+                                        <i className="fas fa-check"></i>
+                                    </div>
+                                ) : (
+                                    <div className="step-header-circle"></div>
+                                )}
+                                {label}
+                            </Accordion.Toggle>
+                            {index !== activeStep && index !== 4 && (
+                                <Card.Body
+                                    className="step-body"
+                                    style={{ height: "24px" }}
+                                ></Card.Body>
+                            )}
+                            <Accordion.Collapse eventKey={`${index}`}>
+                                <Card.Body
+                                    className="step-body"
+                                    style={{ borderLeft: index === 4 && 0 }}
                                 >
                                     {getStepContent(index)}
-                                </Typography>
-                                <div className="col-lg-12" style={{
-                                    padding: "0px",
-                                    marginTop: "78px",
-                                }}>
-                                    <div className="row">
-                                        <div className="col-lg-6">
-                                            <button disabled={activeStep === 0}
-                                                    onClick={handleBack}
-                                                    className="btn-blue btn-outline">Back
-                                            </button>
-                                        </div>
-
-                                        <div className="col-lg-6">
-                                            <button
-                                                onClick={handleNext}
-                                                className="btn-blue text-btn"
+                                    <div className="form-row mt-5">
+                                        <div className="col-md-6">
+                                            <Button
+                                                block
+                                                outline
+                                                onClick={() =>
+                                                    setActiveStep(
+                                                        index > 0
+                                                            ? index - 1
+                                                            : index
+                                                    )
+                                                }
                                             >
-                                                {activeStep === steps.length - 1
-                                                    ? "Create New Request"
-                                                    : "Next"}</button>
+                                                Back
+                                            </Button>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <Button
+                                                block
+                                                variant="primary"
+                                                className="btn-lg"
+                                                onClick={() =>
+                                                    setActiveStep(
+                                                        index < 5
+                                                            ? index + 1
+                                                            : index
+                                                    )
+                                                }
+                                            >
+                                                Next
+                                            </Button>
                                         </div>
                                     </div>
-                                </div>
-                            </StepContent>
-                        </Step>
-                    ))}
-                </oldStepper>
-            </div>
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
+                    </Accordion>
+                );
+            })}
         </>
     );
 };
+
 export default Stepper;

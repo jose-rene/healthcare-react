@@ -4,11 +4,11 @@ import store from "./store";
 import AppNavigation from "./navigation/AppNavigation";
 
 function App() {
-  return (
-    <Provider store={store}>
-      <AppNavigation />
-    </Provider>
-  );
+    return (
+        <Provider store={store}>
+            <AppNavigation />
+        </Provider>
+    );
 }
 
 export default App;
