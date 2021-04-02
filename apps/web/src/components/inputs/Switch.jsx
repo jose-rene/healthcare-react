@@ -14,7 +14,7 @@ const CustomSwitch = () => {
                 onChange={handleChange}
                 color="primary"
                 name="checkedB"
-                inputProps={{ "aria-label": "primary checkbox" }}
+                inputprops={{ "aria-label": "primary checkbox" }}
             />
         </div>
     );

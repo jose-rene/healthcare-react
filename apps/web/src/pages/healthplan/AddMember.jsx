@@ -22,12 +22,8 @@ import "../../styles/home.scss";
 const AddMember = () => {
     const history = useHistory();
 
-    const [{ data: plans }, plansRequest] = useApiCall({
-        url: "plan/plans",
-    });
-
-    const [{ data: lobs }, lobsRequest] = useApiCall({
-        url: "plan/lobs",
+    const [{ data: payerProfile }, payerProfileRequest] = useApiCall({
+        url: "payer/profile",
     });
 
     const [{ data: memberIdTypes }, memberIdTypesRequest] = useApiCall({
@@ -46,30 +42,29 @@ const AddMember = () => {
     }, [data]);
 
     useEffect(() => {
-        plansRequest();
-        lobsRequest();
         memberIdTypesRequest();
+        payerProfileRequest();
     }, []);
 
     const planOptions = useMemo(() => {
-        if (isEmpty(plans)) {
+        if (isEmpty(payerProfile) || !payerProfile.payers.length) {
             return [];
         }
 
-        return plans.map(({ id, plan }) => {
-            return { id, title: plan, val: plan };
+        return payerProfile.payers.map(({ id, company_name }) => {
+            return { id, title: company_name, val: id };
         });
-    }, [plans]);
+    }, [payerProfile]);
 
     const lobOptions = useMemo(() => {
-        if (isEmpty(lobs)) {
+        if (isEmpty(payerProfile) || !payerProfile.lines_of_business.length) {
             return [];
         }
 
-        return lobs.map(({ id, plan }) => {
-            return { id, title: plan, val: plan };
+        return payerProfile.lines_of_business.map(({ id, name }) => {
+            return { id, title: name, val: id };
         });
-    }, [lobs]);
+    }, [payerProfile]);
 
     const statesOptions = useMemo(() => {
         if (isEmpty(states)) {
@@ -160,6 +155,7 @@ const AddMember = () => {
             });
         });
         const formSendData = { ...formData, contacts };
+
         try {
             const result = await fireSubmit({ params: formSendData });
             setMember(result);
@@ -310,19 +306,30 @@ const AddMember = () => {
                     ) : null}
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-row">
-                            <div className="col-md-6">
-                                <Select
-                                    name="plan"
-                                    label="Plan*"
-                                    options={planOptions}
-                                    errors={errors}
-                                    ref={register({
-                                        required: "Plan is required",
-                                    })}
-                                />
-                            </div>
+                            {planOptions.length > 0 ? (
+                                <>
+                                    <div className="col-md-6">
+                                        <Select
+                                            name="plan"
+                                            label="Plan*"
+                                            options={planOptions}
+                                            errors={errors}
+                                            ref={register({
+                                                required: "Plan is required",
+                                            })}
+                                        />
+                                    </div>
 
-                            <div className="col-md-6" />
+                                    <div className="col-md-6" />
+                                </>
+                            ) : (
+                                <InputText
+                                    hidden
+                                    name="plan"
+                                    value={payerProfile.id || ""}
+                                    readOnly
+                                />
+                            )}
 
                             <div className="col-md-12">
                                 <h1

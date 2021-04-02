@@ -32,7 +32,7 @@ class MemberRequest extends FormRequest
             'first_name'       => ['bail', 'required', 'min:1'],
             'last_name'        => ['bail', 'required', 'min:1'],
             'dob'              => ['bail', 'required', 'date_format:Y-m-d', 'before:today'],
-            'plan'             => ['bail', 'required', 'exists:payers,id'],
+            'plan'             => ['bail', 'required', 'exists:payers,uuid'],
             'member_number'    => ['bail', 'required', 'min:1'],
             'member_id_type'   => ['bail', 'required', 'min:1'],
             'line_of_business' => ['bail', 'required', 'exists:lob_payer,id'],
@@ -49,6 +49,13 @@ class MemberRequest extends FormRequest
         ];
 
         return $rules;
+    }
+
+    public function messages()
+    {
+        return [
+            'dob.before' => 'The date of birth must be a date before today.',
+        ];
     }
 
     /**

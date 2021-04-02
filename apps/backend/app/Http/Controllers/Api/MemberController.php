@@ -7,6 +7,7 @@ use App\Http\Requests\MemberLookupRequest;
 use App\Http\Requests\MemberRequest;
 use App\Http\Resources\MemberResource;
 use App\Models\Member;
+use App\Models\Payer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -51,7 +52,7 @@ class MemberController extends Controller
             'gender'         => $data['gender'],
             'member_number'  => $data['member_number'],
             'member_id_type' => $data['member_id_type'],
-            'payer_id'       => $data['plan'],
+            'payer_id'       => Payer::firstWhere('uuid', $data['plan'])->id,
             'language'       => $data['language'],
         ]);
         $member->lob()->associate($data['line_of_business']);

@@ -182,7 +182,7 @@ class MemberTest extends TestCase
             'last_name'        => $member->last_name,
             'dob'              => $member->dob->format('Y-m-d'),
             'gender'           => $member->gender,
-            'plan'             => $this->payer->id,
+            'plan'             => $this->payer->uuid,
             'member_number'    => $member->member_number,
             'member_id_type'   => $member->member_id_type,
             'line_of_business' => $this->payer->lobs()->first()->pivot->id,
