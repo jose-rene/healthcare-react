@@ -44,7 +44,7 @@ class MemberController extends Controller
     {
         // the validation is already ran due to the magic of service binding, this is just retrieving the data
         $data = $request->validated();
-        $member = Member::create([
+        $member = Member::make([
             'name_title'     => $data['title'],
             'first_name'     => $data['first_name'],
             'last_name'      => $data['last_name'],

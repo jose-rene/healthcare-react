@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\MemberCreated;
 use App\Http\SearchPipeline\Dob;
 use App\Http\SearchPipeline\FirstName;
 use App\Http\SearchPipeline\LastName;
@@ -11,6 +12,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pipeline\Pipeline;
 
+/**
+ * @property mixed  payer
+ * @property Lob    lob
+ * @property string member_number
+ * @property int    member_id_type
+ */
 class Member extends Model
 {
     use HasFactory;
@@ -19,6 +26,10 @@ class Member extends Model
 
     protected $guarded = ['id'];
 
+    protected $dispatchesEvents = [
+        'created' => MemberCreated::class,
+    ];
+
     /**
      * Relationship to requests.
      */
@@ -26,7 +37,6 @@ class Member extends Model
     {
         return $this->hasMany(Request::class);
     }
-
 
     /**
      * Relationship to requests.
@@ -94,6 +104,14 @@ class Member extends Model
     public function lob()
     {
         return $this->belongsTo(LobPayer::class, 'lob_payer_id');
+    }
+
+    /**
+     * Relationship to history.
+     */
+    public function history()
+    {
+        return $this->hasMany(MemberPayerHistory::class);
     }
 
     /**
