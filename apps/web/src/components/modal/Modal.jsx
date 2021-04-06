@@ -22,7 +22,7 @@ const FormModal = ({ title, nameField }) => {
         switch (nameField) {
             case "Address":
                 return (
-                    <div className="row row-no-margin">
+                    <div className="row">
                         <div className="col-md-6">
                             <InputText name="address_1" label="Address 1" />
                         </div>
@@ -61,8 +61,8 @@ const FormModal = ({ title, nameField }) => {
 
             case "Phone":
                 return (
-                    <div className="row row-no-margin">
-                        <div className="col-md-12 no-padding-right">
+                    <div className="row">
+                        <div className="col-md-12">
                             <InputText name="phone" label="Phone" />
                         </div>
                     </div>
@@ -70,8 +70,8 @@ const FormModal = ({ title, nameField }) => {
 
             case "Plan":
                 return (
-                    <div className="row row-no-margin">
-                        <div className="col-md-12 no-padding-right">
+                    <div className="row">
+                        <div className="col-md-12">
                             <Select
                                 name="member_plan"
                                 label="Member Plan"
@@ -89,8 +89,8 @@ const FormModal = ({ title, nameField }) => {
 
             case "Business":
                 return (
-                    <div className="row row-no-margin">
-                        <div className="col-md-12 no-padding-right">
+                    <div className="row">
+                        <div className="col-md-12">
                             <Select
                                 name="line_of_business"
                                 label="Line of business"
@@ -108,8 +108,8 @@ const FormModal = ({ title, nameField }) => {
 
             case "id":
                 return (
-                    <div className="row row-no-margin">
-                        <div className="col-md-12 no-padding-right">
+                    <div className="row">
+                        <div className="col-md-12">
                             <InputText name="member_id" label="Member ID" />
                         </div>
                     </div>
@@ -119,19 +119,19 @@ const FormModal = ({ title, nameField }) => {
     return (
         <div>
             <a className="action-btn" onClick={handleClickOpen}>
-                <i className="far fa-edit"></i>
+                <i className="far fa-edit" />
             </a>
 
             <Modal show={open} onHide={onclose} title={title}>
                 <div className="col-md-12">{content(nameField)}</div>
 
                 <div className="col-md-12" style={{ marginBottom: "24px" }}>
-                    <div className="row row-no-margin">
+                    <div className="row">
                         <div className="col-md-6"></div>
 
                         <div className="col-md-3">
                             <Button
-                                className="btn-blue btn-outline"
+                                outline
                                 label="Cancel"
                                 onClick={handleClose}
                             />

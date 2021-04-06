@@ -57,10 +57,10 @@ const Stepper = () => {
                             >
                                 {index < activeStep ? (
                                     <div className="step-header-active-circle">
-                                        <i className="fas fa-check"></i>
+                                        <i className="fas fa-check" />
                                     </div>
                                 ) : (
-                                    <div className="step-header-circle"></div>
+                                    <div className="step-header-circle" />
                                 )}
                                 {label}
                             </Accordion.Toggle>
