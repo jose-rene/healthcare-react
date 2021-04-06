@@ -13,7 +13,10 @@ class CreateEntitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('entities', function (Blueprint $table) {
+        if (null === ($db = config('database.connections.eag')) || 'nada' === $db['database']) {
+            return;
+        }
+        Schema::connection('eag')->create('entities', function (Blueprint $table) {
             $table->id();
 
             $table->string('entity')->comment('table name');
@@ -36,6 +39,9 @@ class CreateEntitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('entities');
+        if (null === ($db = config('database.connections.eag')) || 'nada' === $db['database']) {
+            return;
+        }
+        Schema::connection('eag')->dropIfExists('entities');
     }
 }
