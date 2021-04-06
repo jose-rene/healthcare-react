@@ -9,6 +9,8 @@ class Entity extends Model
 {
     use HasFactory;
 
+    protected $connection = 'eag';
+
     protected $fillable = [
         'entity',
         'column_name',
