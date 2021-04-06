@@ -15,12 +15,12 @@ class CreateDocumentsTable extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid');
 
-            $table->morphs('documentable');
+            $table->nullableMorphs('documentable');
             $table->unsignedBigInteger('request_item_id');
-            $table->unsignedBigInteger('parent_id');
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->unsignedBigInteger('document_type_id');
-            $table->string('url');
             $table->string('name');
             $table->string('mime_type');
 

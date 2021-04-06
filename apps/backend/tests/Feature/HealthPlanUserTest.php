@@ -38,7 +38,7 @@ class HealthPlanUserTest extends TestCase
             ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'primary_role', 'roles', 'payer']);
 
         // the added users company should be the same as hp manager creating the user
-        $response->assertJsonPath('payer.company_name', $this->manager->payer()->name);
+        $response->assertJsonPath('payer.company_name', $this->manager->payer->name);
         $this->assertEquals($formData['primary_role'], $response->json('primary_role'));
     }
 

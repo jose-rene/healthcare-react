@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Assessment\AssessmentRequest;
 use App\Http\Resources\RequestResource;
 use App\Models\Request as ModelRequest;
+use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\JsonResponse;
@@ -14,6 +15,41 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class RequestController extends Controller
 {
+    public function requestsItemsFunction()
+    {
+        /**
+         * on page load Jarek will need this
+         */
+        // value from request -> request_items
+
+        // wheelchair (request_types)
+
+        // wheel types, etc, etc NEW table ( request_type_detail )
+        // request_type_detail[request_type_id] FK
+
+        $request_types = [
+            'name' => 'wheelchair',
+
+            'request_type_details' => [
+                'name' => 'leg rest',
+            ],
+        ];
+
+
+        /**
+         * on form save
+         */
+        /**
+         * request = {
+         * request_items = [
+         *     {
+         *         request_type_id,
+         *        ...other field,
+         *        request_item_details = [ {request_item_id, request_type_id} ] } ];
+         * }
+         */
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,13 +65,17 @@ class RequestController extends Controller
 
     public function summary()
     {
-        $summary = [];
+        /** @var User $user */
+//        $user      = auth()->user();
+//        $baseQuery = $user->request();
+        $baseQuery = ModelRequest::query();
 
-        // TODO :: add stats calculations
-        $summary['new']         = rand(1, 50);
-        $summary['in_progress'] = rand(1, 50);
-        $summary['scheduled']   = rand(1, 50);
-        $summary['submitted']   = rand(1, 50);
+        $summary = [
+            'new'         => $baseQuery->where('request_status_id', 1)->orWhereNull('request_status_id')->count(),
+            'in_progress' => $baseQuery->where('request_status_id', 2)->count(),
+            'scheduled'   => $baseQuery->where('request_status_id', 3)->count(),
+            'submitted'   => $baseQuery->where('request_status_id', 5)->count(),
+        ];
 
         return response()->json($summary);
     }

@@ -3,6 +3,7 @@
 use Aacotroneo\Saml2\Saml2Auth;
 use App\Events\DatabaseHasChangedEvent;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DocumentController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,10 @@ Route::domain(env('DME_SSO_DOMAIN'))->group(function (Router $router) {
         return $saml2Auth->login(env('FRONTEND_SSO_URL',
             '/')); // URL::full() is original url, but will make infinite loop if it is also the sso triggering url
     })->where('any', '^(?!saml2).*');
+});
+
+Route::middleware(['api'])->group(function ($router) {
+    $router->get('document/{document}/name/{name}', [DocumentController::class, 'show'])->name('document.request');
 });
 
 Route::get('/', 'HomeController@welcome');

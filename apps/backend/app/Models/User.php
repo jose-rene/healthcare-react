@@ -186,13 +186,13 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @ return App\Models\Payer
      */
-    public function payer()
+    public function getPayerAttribute()
     {
         if (2 !== $this->user_type) {
             return null;
         }
 
-        return $this->healthPlanUser()->first()->payer ?? null;
+        return Arr::get($this->healthPlanUser, 'payer');
     }
 
     /**
