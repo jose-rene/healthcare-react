@@ -18,11 +18,8 @@ class MemberPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->isA('software_engineer', 'hp_champion', 'hp_user')) {
-            return true;
-        }
-
-        return $this->deny('You do not have permissions for the requested resource.');
+        // @todo make an ability for viewing members and apply to roles
+        return $user->isA('software_engineer', 'hp_champion', 'hp_user');
     }
 
     /**
@@ -34,11 +31,8 @@ class MemberPolicy
      */
     public function view(User $user, Member $member)
     {
-        if ($user->isA('software_engineer', 'hp_champion', 'hp_user')) {
-            return true;
-        }
-
-        return false;
+        // @todo make an ability for viewing members and apply to roles
+        return $user->isA('software_engineer', 'hp_champion', 'hp_user');
     }
 
     /**
@@ -49,11 +43,8 @@ class MemberPolicy
      */
     public function create(User $user)
     {
-        if ($user->isA('software_engineer', 'hp_champion', 'hp_user')) {
-            return true;
-        }
-
-        return false;
+        // @todo make an ability for creating members and apply to roles
+        return $user->isA('software_engineer', 'hp_champion', 'hp_user');
     }
 
     /**
@@ -65,9 +56,8 @@ class MemberPolicy
      */
     public function update(User $user, Member $member)
     {
-        if ($user->isA('software_engineer', 'hp_champion', 'hp_user')) {
-            return true;
-        }
+        // @todo make an ability for creating members and apply to roles
+        return $user->isA('software_engineer', 'hp_champion', 'hp_user');
 
         return false;
     }

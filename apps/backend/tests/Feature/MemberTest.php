@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Member;
+use App\Models\MemberPayerHistory;
 use App\Models\Payer;
 use App\Models\User;
 use App\Models\UserType\HealthPlanUser;
@@ -162,10 +163,17 @@ class MemberTest extends TestCase
         );
         $formData = $this->getFormData();
         $response = $this->post('/v1/member', $formData);
-        // dd($response->json());
-        $response->assertStatus(201);
-        $response->assertJsonPath('payer.id', $this->payer->uuid);
-        $response->assertJsonPath('lob.id', $formData['line_of_business']);
+        $response
+            ->assertStatus(201)
+            ->assertJsonPath('payer.id', $this->payer->uuid)
+            ->assertJsonPath('lob.id', $formData['line_of_business']);
+        // verify member history was created by member create event
+        $data = $response->json();
+        // get the created member
+        $member = Member::firstWhere('uuid', $data['id']);
+        $this->assertInstanceOf(Member::class, $member);
+        // the member payer history was created
+        $this->assertInstanceOf(MemberPayerHistory::class, $member->history->first());
     }
 
     protected function getFormData()
@@ -206,7 +214,7 @@ class MemberTest extends TestCase
         Artisan::call('db:seed', [
             '--class' => 'Database\Seeders\BouncerSeeder',
         ]);
-        $this->member = Member::factory()->hasPhones(1)->hasAddresses(1)->count(1)->create()->first();
+        $this->member = Member::factory()->hasPhones(1)->hasAddresses(1)->count(1)->make()->first();
         $this->payer = Payer::factory()->hasLobs(5)->count(1)->create()->first();
         $this->member->payer()->associate($this->payer);
         $this->member->lob()->associate($this->payer->lobs()->first()->pivot->id);
