@@ -12,6 +12,7 @@ const Checkbox = (
         classNameAppend = "",
         helpText = false,
         errors = {},
+        labelLeft = false,
         ...otherProps
     },
     ref
@@ -21,7 +22,8 @@ const Checkbox = (
 
     return (
         <div className={inline ? "form-check form-check-inline" : "form-group"}>
-            {label && <Form.Label htmlFor={name}>{label}</Form.Label>}
+            {labelLeft === false && label &&
+            <Form.Label htmlFor={name}>{label}</Form.Label>}
             <input
                 type="checkbox"
                 id={name}
@@ -36,6 +38,8 @@ const Checkbox = (
                 ref={ref}
                 {...otherProps}
             />
+            {labelLeft && label &&
+            <Form.Label htmlFor={name}>{label}</Form.Label>}
             {helpText && (
                 <Form.Text className="text-muted form-text">
                     {helpText}

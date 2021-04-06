@@ -28,7 +28,7 @@ const NewRequestAddSteps3 = () => (
                 </div>
 
                 <div className="col-md-12">
-                    <p className="title-info second-title">
+                    <p className="title-info mt-5">
                         Relevant Diagnosis 2 (optional)
                     </p>
                 </div>
@@ -42,7 +42,7 @@ const NewRequestAddSteps3 = () => (
                 </div>
 
                 <div className="col-md-12">
-                    <p className="title-info second-title">
+                    <p className="title-info mt-5">
                         Relevant Diagnosis 3 (optional)
                     </p>
                 </div>
