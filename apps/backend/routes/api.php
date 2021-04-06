@@ -51,6 +51,7 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('member-request.request-item', 'RequestRequestItemController')->only('store', 'show', 'update');
     Route::apiResource('activity', 'ActivityController');
     Route::apiResource('user', 'UserController');
+    Route::apiResource('document', 'DocumentController')->only('store', 'update', 'destroy');
     // test fmapi route
     Route::get('/fmtest', 'HomeController@fmtest');
 

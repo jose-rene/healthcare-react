@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\PayerResource;
 use App\Models\Payer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PayerController extends Controller
 {
@@ -54,7 +55,7 @@ class PayerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -64,17 +65,19 @@ class PayerController extends Controller
     /**
      * Show the company profile for the current user.
      *
-     * @return \Illuminate\Http\Response
+     * @return PayerResource
      */
     public function profile()
     {
-        return new PayerResource(auth()->user()->payer()->first());
+        abort_if(!($payer = auth()->user()->payer), 406, 'wrong-user_type');
+
+        return new PayerResource($payer);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -84,8 +87,8 @@ class PayerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -95,8 +98,8 @@ class PayerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Payer  $payer
-     * @return \Illuminate\Http\Response
+     * @param Payer $payer
+     * @return Response
      */
     public function show(Payer $payer)
     {
@@ -106,8 +109,8 @@ class PayerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Payer  $payer
-     * @return \Illuminate\Http\Response
+     * @param Payer $payer
+     * @return Response
      */
     public function edit(Payer $payer)
     {
@@ -117,9 +120,9 @@ class PayerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Payer  $payer
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Payer   $payer
+     * @return Response
      */
     public function update(Request $request, Payer $payer)
     {
@@ -129,8 +132,8 @@ class PayerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Payer  $payer
-     * @return \Illuminate\Http\Response
+     * @param Payer $payer
+     * @return Response
      */
     public function destroy(Payer $payer)
     {
