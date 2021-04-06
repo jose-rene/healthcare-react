@@ -33,6 +33,10 @@ class TrackDatabaseChangeListener
      */
     public function handle(MigrationsEnded $event)
     {
+        // skip for testing environment
+        if (app()->environment('testing')) {
+            return;
+        }
         // at minimum the entities table is required for this to work.
         $test = false;
         try {
@@ -58,13 +62,13 @@ class TrackDatabaseChangeListener
 
         // show tables column name is dynamic. attempt to pull the first tables column key
         $firstTableEntry = get_object_vars($tables[0]);
-        $dmeTableKey     = array_keys($firstTableEntry)[0];
+        $dmeTableKey = array_keys($firstTableEntry)[0];
 
         // cleanout the entities table
         Entity::truncate();
 
         foreach ($tables as $key => $_table) {
-            $table         = $_table->$dmeTableKey;
+            $table = $_table->$dmeTableKey;
             $table_columns = DB::select("DESCRIBE {$table}");
 
             // This connect gets comments from columns in a predictable way
@@ -92,14 +96,14 @@ class TrackDatabaseChangeListener
 
                 // is this column a primary key
                 $is_primary_key = $foundColumn->Key == 'PRI';
-                $is_nullable    = strtolower($foundColumn->Null) == 'yes';
+                $is_nullable = strtolower($foundColumn->Null) == 'yes';
 
                 $data = [
                     'data_type'  => $column->getType()->getName(),
                     'key'        => $is_primary_key,
                     'nullable'   => $is_nullable,
                     'comments'   => $comment ?? 'not set',
-                    'cache_json' => (array)$foundColumn + compact('comment'),
+                    'cache_json' => (array) $foundColumn + compact('comment'),
                 ];
 
                 Entity::create($find + $data);
