@@ -4,23 +4,16 @@ namespace App\Listeners;
 
 use App\Models\Entity;
 use DB;
+use Doctrine\DBAL\Schema\SchemaException;
+use Exception;
 use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Support\Arr;
+use JsonException;
 use Schema;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 class TrackDatabaseChangeListener
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     public function consoleWrite(string $text = '')
     {
         if (app()->runningInConsole()) {
@@ -34,11 +27,20 @@ class TrackDatabaseChangeListener
      *
      * @param MigrationsEnded $event
      * @return void
+     * @throws \Doctrine\DBAL\Exception
+     * @throws SchemaException
+     * @throws JsonException
      */
     public function handle(MigrationsEnded $event)
     {
         // at minimum the entities table is required for this to work.
-        if (!Schema::hasTable('entities')) {
+        $test = false;
+        try {
+            $test = Schema::connection('eag')->hasTable('entities');
+        } catch (Exception $e) {
+        }
+
+        if (!$test) {
             logger()->error('Missing the entities table');
             $this->consoleWrite('Missing the entities table');
 
@@ -56,10 +58,13 @@ class TrackDatabaseChangeListener
 
         // show tables column name is dynamic. attempt to pull the first tables column key
         $firstTableEntry = get_object_vars($tables[0]);
-        $dmeTableKey = array_keys($firstTableEntry)[0];
+        $dmeTableKey     = array_keys($firstTableEntry)[0];
+
+        // cleanout the entities table
+        Entity::truncate();
 
         foreach ($tables as $key => $_table) {
-            $table = $_table->$dmeTableKey;
+            $table         = $_table->$dmeTableKey;
             $table_columns = DB::select("DESCRIBE {$table}");
 
             // This connect gets comments from columns in a predictable way
@@ -87,17 +92,17 @@ class TrackDatabaseChangeListener
 
                 // is this column a primary key
                 $is_primary_key = $foundColumn->Key == 'PRI';
-                $is_nullable = strtolower($foundColumn->Null) == 'yes';
+                $is_nullable    = strtolower($foundColumn->Null) == 'yes';
 
                 $data = [
                     'data_type'  => $column->getType()->getName(),
                     'key'        => $is_primary_key,
                     'nullable'   => $is_nullable,
                     'comments'   => $comment ?? 'not set',
-                    'cache_json' => (array) $foundColumn + compact('comment'),
+                    'cache_json' => (array)$foundColumn + compact('comment'),
                 ];
 
-                Entity::updateOrCreate($find, $find + $data);
+                Entity::create($find + $data);
             }
         }
     }
