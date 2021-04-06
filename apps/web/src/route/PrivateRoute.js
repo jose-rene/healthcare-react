@@ -12,6 +12,7 @@ const PrivateRoute = ({
     abilities,
     location,
     reset_password,
+    primaryRole,
     ...rest
 }) => {
     useEffect(() => {
@@ -26,7 +27,7 @@ const PrivateRoute = ({
     if (
         authed &&
         middleware &&
-        !checkMiddleware(middleware, roles, abilities)
+        (!roles.length || !checkMiddleware(middleware, primaryRole, abilities))
     ) {
         window.location.assign("/access-denied");
         return false;
@@ -49,12 +50,13 @@ const PrivateRoute = ({
 };
 
 const mapStateToProps = ({
-    user: { roles, authed, abilities, reset_password },
+    user: { roles, authed, abilities, reset_password, primaryRole },
 }) => ({
     abilities,
     roles,
     authed,
     reset_password,
+    primaryRole,
 });
 
 export default connect(mapStateToProps)(PrivateRoute);
