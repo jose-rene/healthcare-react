@@ -10,6 +10,48 @@ use Illuminate\Http\Request;
 class PayerController extends Controller
 {
     /**
+     * Create the controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        // uses App\Policies\PayerPolicy
+        $this->authorizeResource(Payer::class, 'payer');
+    }
+
+    /**
+     * Get the map of resource methods to ability names.
+     * Overrides the AuthorizesRequests trait function.
+     *
+     * @return array
+     */
+    protected function resourceAbilityMap()
+    {
+        return [
+            'index'   => 'viewAny',
+            'show'    => 'view',
+            'create'  => 'create',
+            'store'   => 'create',
+            'edit'    => 'update',
+            'update'  => 'update',
+            'destroy' => 'delete',
+            'profile' => 'profile',
+        ];
+    }
+
+    /**
+     * Get the list of resource methods which do not have model parameters.
+     * Overrides the AuthorizesRequests trait function.
+     *
+     * @return array
+     */
+    protected function resourceMethodsWithoutModels()
+    {
+        return ['index', 'create', 'store', 'profile'];
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
