@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRequestItemDetailsTable extends Migration
+class CreateRequestTypeDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,11 @@ class CreateRequestItemDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('request_item_details', function (Blueprint $table) {
+        Schema::create('request_type_details', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid');
 
             $table->string('name');
-            $table->unsignedBigInteger('request_item_id');
             $table->unsignedBigInteger('request_type_id');
-            $table->unsignedBigInteger('request_outcome_id')->nullable();
-            $table->text('hcpcs')->nullable();
-            $table->text('note')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
@@ -36,6 +31,6 @@ class CreateRequestItemDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('request_item_details');
+        Schema::dropIfExists('request_type_details');
     }
 }

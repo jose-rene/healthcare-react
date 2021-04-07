@@ -40,9 +40,9 @@ class RequestItem extends Model
         return $this->belongsTo(RequestOutcome::class);
     }
 
-    public function itemDetail()
+    public function itemDetails()
     {
-        return $this->hasOne(RequestItemDetail::class, 'request_item_id');
+        return $this->hasMany(RequestItemDetail::class, 'request_item_id');
     }
 
     /*
