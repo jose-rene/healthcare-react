@@ -24,6 +24,17 @@ class Request extends Model
     use SoftDeletes;
     use Uuidable;
 
+    public static $received = '1';
+    public static $assigned = '2';
+    public static $scheduled = '3';
+    public static $assessed = '4';
+    public static $submitted = '5';
+    public static $completed = '6';
+    public static $on_hold = '7';
+    public static $cancelled = '8';
+    public static $reopened = '9';
+
+
     protected $guarded = ['id'];
 
     protected $dates = ['due_at'];

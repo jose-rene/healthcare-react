@@ -16,11 +16,11 @@ class HealthPlanUserSeeder extends Seeder
      */
     public function run()
     {
-        $payer = Payer::firstWhere(['name' => 'Test Health Plan']);
+        $payer = Payer::firstOrCreate(['name' => 'Test Health Plan'], ['name' => 'Test Health Plan']);
 
         User::factory()
             ->count(25)
-            ->hasHealthPlanUser(1, ['payer_id' => $payer])
+            ->hasHealthPlanUser(1, ['payer_id' => $payer->id])
             // add a phone
             ->hasPhones(1)
             ->create(['user_type' => 2, 'primary_role' => 'hp_user'])
