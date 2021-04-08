@@ -66,16 +66,16 @@ class RequestController extends Controller
     public function summary()
     {
         /** @var User $user */
-//        $user      = auth()->user();
-//        $baseQuery = $user->request();
-        $baseQuery = ModelRequest::query();
+        $user      = auth()->user();
+        $baseQuery = $user->healthPlanUser->requests();
 
-        $summary = [
-            'new'         => $baseQuery->where('request_status_id', 1)->orWhereNull('request_status_id')->count(),
-            'in_progress' => $baseQuery->where('request_status_id', 2)->count(),
-            'scheduled'   => $baseQuery->where('request_status_id', 3)->count(),
-            'submitted'   => $baseQuery->where('request_status_id', 5)->count(),
-        ];
+
+        $assigned  = $baseQuery->where('request_status_id', ModelRequest::$assigned)->count();
+        $scheduled = $baseQuery->where('request_status_id', ModelRequest::$scheduled)->count();
+        $submitted = $baseQuery->where('request_status_id', ModelRequest::$submitted)->count();
+        $new       = $baseQuery->where('request_status_id', ModelRequest::$received)->count();
+
+        $summary = compact('new', 'assigned', 'scheduled', 'submitted');
 
         return response()->json($summary);
     }
@@ -98,7 +98,12 @@ class RequestController extends Controller
      */
     public function store(AssessmentRequest $request)
     {
-        $data = ModelRequest::create($request->validated());
+        /** @var User $user */
+        $user = auth()->user();
+        // the request needs the payer-id, we can pull that from the logged in users healthPlanUser record
+        $payer_id = $user->healthPlanUser->payer_id;
+
+        $data = ModelRequest::create($request->validated() + compact('payer_id'));
 
         return new RequestResource($data);
     }
