@@ -30,9 +30,6 @@ class MemberTest extends TestCase
      */
     public function testGetMember()
     {
-        Passport::actingAs(
-            $this->user
-        );
         // get the member
         $response = $this->withHeaders([
             'Accept'           => 'application/json',
@@ -55,9 +52,6 @@ class MemberTest extends TestCase
      */
     public function testGetPlans()
     {
-        Passport::actingAs(
-            $this->user
-        );
         // get the member
         $response = $this->withHeaders([
             'Accept'           => 'application/json',
@@ -74,9 +68,6 @@ class MemberTest extends TestCase
      */
     public function testGetMemberIdTypes()
     {
-        Passport::actingAs(
-            $this->user
-        );
         // get the member
         $response = $this->withHeaders([
             'Accept'           => 'application/json',
@@ -103,9 +94,7 @@ class MemberTest extends TestCase
             'first_name' => $member->first_name,
             'last_name'  => $member->last_name,
         ];
-        Passport::actingAs(
-            $this->user
-        );
+
         // dd($this->user->isA('hp_user'), $this->user->healthPlanUser->payer->id);
         $response = $this->post('/v1/member/search', $search);
         $response
@@ -139,9 +128,6 @@ class MemberTest extends TestCase
             'first_name' => $member->first_name,
             'last_name'  => $member->last_name,
         ];
-        Passport::actingAs(
-            $this->user
-        );
 
         $response = $this->post('/v1/member/search', $search);
         // should validate dob and return error;
@@ -157,10 +143,6 @@ class MemberTest extends TestCase
      */
     public function testMemberStore()
     {
-        $this->withoutExceptionHandling();
-        Passport::actingAs(
-            $this->user
-        );
         $formData = $this->getFormData();
         $response = $this->post('/v1/member', $formData);
         $response
@@ -174,6 +156,81 @@ class MemberTest extends TestCase
         $this->assertInstanceOf(Member::class, $member);
         // the member payer history was created
         $this->assertInstanceOf(MemberPayerHistory::class, $member->history->first());
+    }
+
+    /**
+     * Test member update address.
+     *
+     * @return void
+     */
+    public function testMemberUpdateAddress()
+    {
+        // test update address
+        $formData = [
+            'address_1'   => $this->faker->streetAddress,
+            'address_2'   => '',
+            'city'        => $this->faker->city,
+            'county'      => $this->faker->lastName,
+            'state'       => $this->faker->stateAbbr,
+            'postal_code' => $this->faker->postcode,
+        ];
+        $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('address.address_1', $formData['address_1']);
+    }
+
+    /**
+     * Test member update phone.
+     *
+     * @return void
+     */
+    public function testMemberUpdatePhone()
+    {
+        // test update phone
+        $formData = [
+            'phone' => $this->faker->phoneNumber,
+        ];
+        $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('phone.number', $formData['phone']);
+    }
+
+    /**
+     * Test member update payer (plan).
+     *
+     * @return void
+     */
+    public function testMemberUpdatePayer()
+    {
+        $this->withoutExceptionHandling();
+        // test update payer
+        $formData = [
+            'plan' => $payerId = $this->payer->children->first()->uuid,
+        ];
+        $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('payer.id', $payerId);
+    }
+
+    /**
+     * Test member update lob.
+     *
+     * @return void
+     */
+    public function testMemberUpdateLob()
+    {
+        $this->withoutExceptionHandling();
+        // test update payer
+        $formData = [
+            'line_of_business' => $lobId = $this->payer->lobs()->whereNotIn('lob_id', [$this->member->lob->id])->first()->id,
+        ];
+        $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('lob.id', $lobId);
     }
 
     protected function getFormData()
@@ -214,15 +271,17 @@ class MemberTest extends TestCase
         Artisan::call('db:seed', [
             '--class' => 'Database\Seeders\BouncerSeeder',
         ]);
-        $this->member = Member::factory()->hasPhones(1)->hasAddresses(1)->count(1)->make()->first();
-        $this->payer = Payer::factory()->hasLobs(5)->count(1)->create()->first();
+        $this->member = Member::factory()->hasPhones(1)->hasAddresses(1)->count(1)->create()->first();
+        $this->payer = Payer::factory()->hasLobs(5)->hasChildren(5)->count(1)->create()->first();
         $this->member->payer()->associate($this->payer);
         $this->member->lob()->associate($this->payer->lobs()->first()->pivot->id);
         $this->member->save();
-        // dd($this->member->contacts->toArray());
         $this->user = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
         $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create());
         Bouncer::sync($this->user)->roles(['hp_user']);
         $this->user->save();
+        Passport::actingAs(
+            $this->user
+        );
     }
 }

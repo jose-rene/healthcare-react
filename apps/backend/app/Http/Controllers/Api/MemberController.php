@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MemberLookupRequest;
 use App\Http\Requests\MemberRequest;
 use App\Http\Resources\MemberResource;
+use App\Jobs\MemberUpdateJob;
 use App\Models\Member;
 use App\Models\Payer;
 use Illuminate\Http\Request;
@@ -120,9 +121,11 @@ class MemberController extends Controller
      * @param Member  $member
      * @return Response
      */
-    public function update(Request $request, Member $member)
+    public function update(MemberRequest $request, Member $member)
     {
-        //
+        dispatch(new MemberUpdateJob($request, $member));
+
+        return new MemberResource($member);
     }
 
     /**

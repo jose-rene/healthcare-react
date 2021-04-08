@@ -99,7 +99,7 @@ class Member extends Model
     /**
      * Relationship to lob.
      *
-     * @return App\Models\Lob\Payer
+     * @return App\Models\LobPayer
      */
     public function lob()
     {

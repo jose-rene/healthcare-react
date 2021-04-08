@@ -48,6 +48,15 @@ class MemberRequest extends FormRequest
             // "contacts.*.email_phone" => "required_if:object.*.type,".implode(",",range(0,18))."|min:5"
         ];
 
+        if ('api.member.update' === $this->route()->getName()) {
+            // remove required from rules for updating
+            $rules = array_map(function ($item) {
+                return array_filter($item, fn ($rule) => 'required' !== $rule);
+            }, $rules);
+            // if the phone is to be updated
+            $rules['phone'] = ['bail', 'min:7'];
+        }
+
         return $rules;
     }
 
