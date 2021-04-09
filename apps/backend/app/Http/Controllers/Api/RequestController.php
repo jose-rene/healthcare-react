@@ -73,7 +73,12 @@ class RequestController extends Controller
         $assigned  = $baseQuery->where('request_status_id', ModelRequest::$assigned)->count();
         $scheduled = $baseQuery->where('request_status_id', ModelRequest::$scheduled)->count();
         $submitted = $baseQuery->where('request_status_id', ModelRequest::$submitted)->count();
-        $new       = $baseQuery->where('request_status_id', ModelRequest::$received)->count();
+        $new       = $baseQuery
+            ->whereIn('request_status_id', [
+                ModelRequest::$received,
+                ModelRequest::$reopened,
+            ])
+            ->count();
 
         $summary = compact('new', 'assigned', 'scheduled', 'submitted');
 
