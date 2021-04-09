@@ -6,7 +6,9 @@ use App\Models\Assessment\Assessment;
 use App\Models\Assessment\Questionnaire;
 use App\Models\Request;
 use App\Models\User;
+use App\Models\UserType\HealthPlanUser;
 use Artisan;
+use Database\Seeders\HealthPlanUserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
@@ -68,23 +70,31 @@ class RequestTest extends TestCase
      */
     public function testRouteSummary()
     {
-        Passport::actingAs(
-            $this->user
-        );
+        // generate some health plan users
+        Artisan::call('db:seed', [
+            '--class' => HealthPlanUserSeeder::class,
+        ]);
+
+        /**
+         * get the first healthplan user
+         */
+        $hp   = HealthPlanUser::first();
+        $user = $hp->payer->users()->first();
+
+        // login
+        Passport::actingAs($user);
+
         // get the request summary for user
-        $response = $this->withHeaders([
-            'Accept'           => 'application/json',
-            'X-Requested-With' => 'XMLHttpRequest',
-        ])->json('GET', 'v1/request/summary');
+        $response = $this->get('v1/request/summary');
         // validate response code and structure
         $response
-            ->assertStatus(200)
+            ->assertOk()
             ->assertJsonStructure([
                 'new',
-                'in_progress',
+                'assigned',
                 'scheduled',
                 'submitted',
-            ]);
+            ]); // this health plan user only has one new request
     }
 
     protected function setUp(): void

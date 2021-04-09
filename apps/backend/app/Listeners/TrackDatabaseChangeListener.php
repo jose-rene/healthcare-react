@@ -64,8 +64,7 @@ class TrackDatabaseChangeListener
         $firstTableEntry = get_object_vars($tables[0]);
         $dmeTableKey = array_keys($firstTableEntry)[0];
 
-        // cleanout the entities table
-        Entity::truncate();
+        $allEntities = Entity::withTrashed()->get()->keyBy('uniqueIdentifier')->map(fn() => false)->toArray();
 
         foreach ($tables as $key => $_table) {
             $table = $_table->$dmeTableKey;
@@ -96,17 +95,37 @@ class TrackDatabaseChangeListener
 
                 // is this column a primary key
                 $is_primary_key = $foundColumn->Key == 'PRI';
-                $is_nullable = strtolower($foundColumn->Null) == 'yes';
+                $is_nullable    = strtolower($foundColumn->Null) == 'yes';
 
                 $data = [
                     'data_type'  => $column->getType()->getName(),
                     'key'        => $is_primary_key,
                     'nullable'   => $is_nullable,
                     'comments'   => $comment ?? 'not set',
-                    'cache_json' => (array) $foundColumn + compact('comment'),
+                    'cache_json' => (array)$foundColumn + compact('comment'),
                 ];
 
-                Entity::create($find + $data);
+                $finder               = json_encode($find);
+                $allEntities[$finder] = true;
+
+                // only update if not soft deleted
+                $t = Entity::withTrashed()->where($find)->first();
+                if (is_null($t->deleted_at)) {
+                    Entity::withTrashed()->updateOrCreate($find, $find + $data);
+                }
+            }
+        }
+
+        // mark entities deleted if they're related column does not exist in the
+        // database any more
+        $notFound = array_filter($allEntities, fn($e) => $e === false);
+        if (count($notFound) > 0) {
+            $identifiers = array_keys($notFound);
+
+            foreach ($identifiers as $identifier) {
+                $find = json_decode($identifier, true);
+                // no withTrashed here because if its already deleted I don't want to re-delete it.
+                Entity::where($find)->delete();
             }
         }
     }

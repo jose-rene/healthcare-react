@@ -29,6 +29,7 @@ class CreateEntitiesTable extends Migration
             $table->json('cache_json')->comment('Whole role describe');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

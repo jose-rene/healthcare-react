@@ -21,7 +21,14 @@ class Payer extends Model
      */
     public function users()
     {
-        return $this->hasManyThrough(HealthPlanUser::class, User::class);
+        return $this->hasManyThrough(
+            User::class,
+            HealthPlanUser::class,
+            'user_id',// Foreign key on the HealthPlanUser table...
+            'id',     // Foreign key on the User table...
+            'id',     // Local key on the Payer table...
+            'user_id' // Local key on the HealthPlanUser table...
+        );
     }
 
     /**

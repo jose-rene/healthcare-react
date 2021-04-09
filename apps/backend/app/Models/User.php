@@ -38,6 +38,7 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property Carbon          created_at
  * @property string          password
  * @property boolean         reset_password
+ * @property HealthPlanUser  healthPlanUser
  * @link https://github.com/JosephSilber/bouncer#cheat-sheet
  */
 class User extends Authenticatable implements MustVerifyEmail
