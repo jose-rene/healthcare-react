@@ -17,6 +17,7 @@ class CreateMemberPayerHistoriesTable extends Migration
             $table->id();
             $table->foreignId('member_id')->constrained()->comment('The member associated with this history record');
             $table->foreignId('payer_id')->comment('The payer related to this member');
+            // @todo this probably has to be lob_payer_id
             $table->foreignId('lob_id')->comment('The line of business associated with this member');
             $table->string('member_number')->comment('The members ID assigned by the plan');
             $table->string('member_id_type')->comment('The member ID or number type');

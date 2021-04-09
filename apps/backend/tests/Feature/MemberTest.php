@@ -206,13 +206,22 @@ class MemberTest extends TestCase
     {
         $this->withoutExceptionHandling();
         // test update payer
+        $payer = $this->payer->children->first();
         $formData = [
-            'plan' => $payerId = $this->payer->children->first()->uuid,
+            'plan' => $payer->uuid,
         ];
+        $historyCount = $this->member->history->count();
         $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
         $response
             ->assertStatus(200)
-            ->assertJsonPath('payer.id', $payerId);
+            ->assertJsonPath('payer.id', $payer->uuid);
+
+        // a history record should have been created
+        $historyCount++;
+        $memberHistory = $this->member->history()->orderBy('id', 'desc')->get();
+        $this->assertEquals($historyCount, $memberHistory->count());
+        // assert the history is current
+        $this->assertEquals($memberHistory->first()->payer_id, $payer->id);
     }
 
     /**
@@ -227,10 +236,42 @@ class MemberTest extends TestCase
         $formData = [
             'line_of_business' => $lobId = $this->payer->lobs()->whereNotIn('lob_id', [$this->member->lob->id])->first()->id,
         ];
+        $historyCount = $this->member->history->count();
         $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
         $response
             ->assertStatus(200)
             ->assertJsonPath('lob.id', $lobId);
+
+        // a history record should have been created
+        $historyCount++;
+        $memberHistory = $this->member->history()->orderBy('id', 'desc')->get();
+        $this->assertEquals($historyCount, $memberHistory->count());
+        // assert the history is current
+        $this->assertEquals($memberHistory->first()->lob_id, $lobId);
+    }
+
+    /**
+     * Test member update member id number.
+     *
+     * @return void
+     */
+    public function testMemberUpdateMemberId()
+    {
+        $this->withoutExceptionHandling();
+        // test update payer
+        $formData = ['member_number' => $memberId = $this->faker->isbn10];
+        $historyCount = $this->member->history->count();
+        $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('member_number', $memberId);
+        // dd($response->json());
+        // a history record should have been created
+        $historyCount++;
+        $memberHistory = $this->member->history()->orderBy('id', 'desc')->get();
+        $this->assertEquals($historyCount, $memberHistory->count());
+        // assert the history is current
+        $this->assertEquals($memberHistory->first()->member_number, $memberId);
     }
 
     protected function getFormData()
