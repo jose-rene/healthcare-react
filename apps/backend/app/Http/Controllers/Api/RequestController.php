@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Assessment\AssessmentRequest;
 use App\Http\Resources\RequestResource;
+use App\Jobs\RequestSectionSaveJob;
 use App\Models\Request as ModelRequest;
 use App\Models\User;
 use Exception;
@@ -133,9 +134,9 @@ class RequestController extends Controller
      */
     public function update(ModelRequest $request, Request $httpRequest)
     {
-        $data = $httpRequest->update($request->validated());
+        dispatch(new RequestSectionSaveJob($request, $httpRequest->all()));
 
-        return new RequestResource($data);
+        return new RequestResource($request);
     }
 
     /**

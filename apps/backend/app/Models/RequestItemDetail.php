@@ -17,6 +17,7 @@ class RequestItemDetail extends Model
         'request_outcome_id',
         'hcpcs',
         'note',
+        'name',
     ];
 
     public function outcome()

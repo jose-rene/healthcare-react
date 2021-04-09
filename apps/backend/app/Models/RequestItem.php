@@ -23,6 +23,7 @@ class RequestItem extends Model
         'json_data',
         'new_request_json',
         'additional_consideration',
+        'name',
     ];
 
     protected $casts = [

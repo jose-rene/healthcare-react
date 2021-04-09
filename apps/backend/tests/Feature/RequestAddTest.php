@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Member;
 use App\Models\Request;
-use App\Models\RequestItem;
 use App\Models\User;
 use Artisan;
 use Bouncer;
@@ -63,28 +62,30 @@ class RequestAddTest extends TestCase
         $response = $this->post($route);
 
         $requestId = $response->json('id');
+        /** @var Request $newRequest */
+        $newRequest = Request::where('uuid', $requestId)->first();
+        self::assertEquals($requestId, $newRequest->uuid);
 
-        $route = route('api.member-request.request-item.store', [
-            'member_request' => $requestId,
+        $route = route('api.request.update', [
+            'request' => $requestId,
         ]);
 
-        $response = $this->post($route, ['type_name' => 'verify']);
+        $response = $this->put($route, [
+            'type_name'     => 'verify',
+            'phone'         => '1112223333',
+            'member_number' => 'this was changed',
+            'dob'           => '1984-12-20',
+        ]);
         $response->assertSuccessful();
-        $requestItems = RequestItem::all();
-        $requestItem  = RequestItem::first();
-        self::assertCount(1, $requestItems);
+
+        self::assertEquals("1112223333", $newRequest->member->mainPhone->number);
 
         /**
          * personal information verification, first step
          */
         $newStreet = $this->faker->streetAddress . '.new';
 
-        $updateRoute = route('api.member-request.request-item.update', [
-            'member_request' => $requestId,
-            'request_item'   => $requestItem->uuid,
-        ]);
-
-        $response = $this->put($updateRoute, [
+        $response = $this->put($route, [
             'type_name' => 'verify',
 
             'address' => [
@@ -100,7 +101,7 @@ class RequestAddTest extends TestCase
         /**
          * assessment 2nd step
          */
-        $response = $this->put($updateRoute, [
+        $response = $this->put($route, [
             'type_name' => ' auth-id',
 
             'auth_number' => '1234',
@@ -110,7 +111,7 @@ class RequestAddTest extends TestCase
         /**
          * diagnosis 3rd step
          */
-        $response = $this->put($updateRoute, [
+        $response = $this->put($route, [
             'type_name' => 'diagnosis',
 
             'relevantDiagnosis' => [
@@ -120,10 +121,13 @@ class RequestAddTest extends TestCase
         ]);
         $response->assertSuccessful();
 
+        // make sure that relevantDiagnosis actually saved in the database
+        self::assertCount(2, $newRequest->relevantDiagnoses);
+
         /**
          * due 4th and final step
          */
-        $response = $this->put($updateRoute, [
+        $response = $this->put($route, [
             'type_name' => 'due',
             'is_last'   => true,
 

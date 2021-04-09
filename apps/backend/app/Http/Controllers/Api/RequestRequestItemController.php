@@ -8,6 +8,7 @@ use App\Http\Resources\RequestRequestItemResource;
 use App\Jobs\RequestSectionSaveJob;
 use App\Models\Request as ModelRequest;
 use App\Models\RequestItem;
+use App\Models\RequestType;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -42,23 +43,27 @@ class RequestRequestItemController extends Controller
         if (empty($request_items)) {
             $memberRequest->requestItems()->delete();
 
-            return new RequestItemResource([]);
+            return response()->json([]);
         }
 
         foreach ($request_items as $request_item) {
-            $newRequestItem = $memberRequest->requestItems()->create([
-                'name' => $request_item['name'],
+            $request_type_id = RequestType::where('uuid', $request_item['id'])->first()->id ?? 0;
+            $newRequestItem  = $memberRequest->requestItems()->create([
+                'name'            => $request_item['name'],
+                'request_type_id' => $request_type_id,
             ]);
+
 
             $request_item_details = $request_item['request_item_details'] ?? [];
             foreach ($request_item_details as $request_item_detail) {
                 $newRequestItem->itemDetails()->create([
-                    'name' => $request_item_detail['name'],
+                    'name'            => $request_item_detail,
+                    'request_type_id' => $request_type_id,
                 ]);
             }
         }
 
-        return new RequestItemResource($requestItem);
+        return response()->json(['status' => true, 'message' => 'ok']);
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Models\Request;
-use App\Models\RequestType;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Str;
 
@@ -47,10 +46,6 @@ class RequestSectionSaveJob /*implements ShouldQueue*/
         $section   = $this->section;
         $type_name = Str::slug($section['type_name']);
 
-        $requestType = RequestType::firstOrCreate(['name' => $type_name],
-            ['name' => $type_name]
-        );
-
         switch ($type_name) {
             case 'verify':
                 $this->verify();
@@ -73,14 +68,14 @@ class RequestSectionSaveJob /*implements ShouldQueue*/
 
             case 'due':
                 // update request.due_at or the note on the request item named due
-                $this->dueSection($requestType);
+                $this->dueSection();
                 break;
         }
 
         if (request('is_last', false) === true) {
             // if this is the last section mark the request as received.
             $request->update([
-                'request_status_id' => '1', // Received
+                'request_status_id' => Request::$received,
             ]);
         }
     }
@@ -121,18 +116,10 @@ class RequestSectionSaveJob /*implements ShouldQueue*/
         ]));
     }
 
-    protected function dueSection($requestType)
+    protected function dueSection()
     {
-        $request = $this->request;
-
-        $request->update(request()->validate([
+        $this->request->update(request()->validate([
             'due_at' => '', // form - due_date + time
-        ]));
-
-        $requestItem = $request->requestItems()->firstOrCreate(['request_type_id' => $requestType->id]);
-
-        $requestItem->update(request()->validate([
-            'note' => '', // form - special instructions
         ]));
     }
 
@@ -141,11 +128,12 @@ class RequestSectionSaveJob /*implements ShouldQueue*/
         $request = $this->request;
         $member  = $request->member;
 
-        $addressForm     = request()->input('address');
-        $memberForm      = request()->only('member_number', 'line_of_business');
+        $addressForm     = request()->input('address', []);
+        $memberForm      = request()->only('member_number', 'line_of_business', 'dob');
         $memberPhoneForm = request()->only('phone');
 
         request()->validate([
+            'dob'                 => 'date',
             'phone'               => '',
             'member_id'           => '',
             'address.address_1'   => '',
@@ -157,14 +145,18 @@ class RequestSectionSaveJob /*implements ShouldQueue*/
             'address.is_primary'  => 'boolean',
         ]);
 
-        // only update the values that are passed in
-        $member->addresses()->first()->update($addressForm);
-
-        if ($memberPhoneForm) {
-            $member->phones()->firstOrCreate($memberPhoneForm);
+        if ($addressForm) {
+            // only update the values that are passed in
+            $member->addresses()->first()->update($addressForm);
         }
 
-        $member->update($memberForm);
+        if ($memberPhoneForm) {
+            $member->phones()->firstOrCreate(['number' => $memberPhoneForm['phone']]);
+        }
+
+        if ($memberForm) {
+            $member->update($memberForm);
+        }
     }
 
     protected function categorySection()
