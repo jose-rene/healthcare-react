@@ -26,6 +26,7 @@ class PayerTest extends TestCase
      */
     public function testProfile()
     {
+        $this->withoutExceptionHandling();
         Passport::actingAs(
             $this->user
         );
@@ -116,8 +117,7 @@ class PayerTest extends TestCase
         Artisan::call('db:seed', [
             '--class' => 'Database\Seeders\BouncerSeeder',
         ]);
-        $this->payer = Payer::factory()->hasLobs(5)->count(1)->create()->first();
-        $this->payer->lobs()->updateExistingPivot($this->payer->lobs()->first(), ['is_tat_enabled' => 1]);
+        $this->payer = Payer::factory()->hasLobs(5, ['is_tat_enabled' => 1])->count(1)->create()->first();
         $this->user = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
         $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create());
         Bouncer::sync($this->user)->roles(['hp_user']);

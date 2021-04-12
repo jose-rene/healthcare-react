@@ -99,11 +99,11 @@ class Member extends Model
     /**
      * Relationship to lob.
      *
-     * @return App\Models\LobPayer
+     * @return App\Models\Lob
      */
     public function lob()
     {
-        return $this->belongsTo(LobPayer::class, 'lob_payer_id');
+        return $this->belongsTo(Lob::class);
     }
 
     /**

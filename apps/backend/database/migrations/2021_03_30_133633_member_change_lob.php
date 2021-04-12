@@ -14,7 +14,7 @@ class MemberChangeLob extends Migration
     public function up()
     {
         Schema::table('members', function (Blueprint $table) {
-            $table->foreignId('lob_payer_id')->after('payer_id')->nullable()->comment('The lob associated with this member.');
+            $table->foreignId('lob_id')->after('payer_id')->nullable()->comment('The lob associated with this member.');
         });
     }
 
@@ -26,7 +26,7 @@ class MemberChangeLob extends Migration
     public function down()
     {
         Schema::table('members', function (Blueprint $table) {
-            $table->dropColumn('lob_payer_id');
+            $table->dropColumn('lob_id');
         });
     }
 }

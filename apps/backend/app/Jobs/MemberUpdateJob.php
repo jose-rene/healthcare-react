@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Http\Requests\MemberRequest;
-use App\Models\LobPayer;
+use App\Models\Lob;
 use App\Models\Member;
 use App\Models\Payer;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -99,8 +99,7 @@ class MemberUpdateJob
 
     protected function updateLob()
     {
-        $lobPayer = LobPayer::firstWhere(['payer_id' => $this->member->payer_id, 'lob_id' => $this->data['line_of_business']]);
-        $this->member->update(['lob_payer_id' => $lobPayer->id]);
+        $this->member->update(['lob_id' => $this->data['line_of_business']]);
         // create a new member history record
         dispatch(new MemberPayerHistoryAddJob($this->member));
     }

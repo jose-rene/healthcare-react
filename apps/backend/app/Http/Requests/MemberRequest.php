@@ -35,7 +35,7 @@ class MemberRequest extends FormRequest
             'plan'             => ['bail', 'required', 'exists:payers,uuid'],
             'member_number'    => ['bail', 'required', 'min:1'],
             'member_id_type'   => ['bail', 'required', 'min:1'],
-            'line_of_business' => ['bail', 'required', 'exists:lob_payer,id'],
+            'line_of_business' => ['bail', 'required', 'exists:lobs,id'],
             'language'         => ['bail', 'required', 'min:1'],
             'address_1'        => ['bail', 'required', 'min:1'],
             'address_2'        => ['bail', 'min:1'],

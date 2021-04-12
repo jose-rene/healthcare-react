@@ -48,18 +48,7 @@ class Payer extends Model
      */
     public function lobs()
     {
-        return $this->belongsToMany(Lob::class)
-            ->using(LobPayer::class)
-            ->withPivot([
-                'id',
-                'alias_name',
-                'is_tat_enabled',
-                'is_tat_default_na',
-                'is_tat_required',
-                'payer_rate',
-                'clinician_rate',
-                'reviewer_rate',
-            ]);
+        return $this->hasMany(Lob::class);
     }
 
     /**
