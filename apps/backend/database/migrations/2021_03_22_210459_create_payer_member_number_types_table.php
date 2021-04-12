@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePayerMemberIdTypesTable extends Migration
+class CreatePayerMemberNumberTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePayerMemberIdTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('payer_member_id_types', function (Blueprint $table) {
+        Schema::create('payer_member_number_types', function (Blueprint $table) {
             $table->id();
             $table->foreignId('payer_id');
             $table->string('name')->comment('An entity or slug name.');
@@ -30,6 +30,6 @@ class CreatePayerMemberIdTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payer_member_id_types');
+        Schema::dropIfExists('payer_member_number_types');
     }
 }

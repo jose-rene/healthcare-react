@@ -35,7 +35,7 @@ class PayerTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers']);
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types']);
     }
 
     /**
@@ -53,7 +53,7 @@ class PayerTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers']);
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types']);
     }
 
     /**
@@ -76,7 +76,7 @@ class PayerTest extends TestCase
         // dd($response->json());
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers'])
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types'])
             ->assertJsonCount($payerCount, 'payers');
     }
 
@@ -101,10 +101,9 @@ class PayerTest extends TestCase
         // get the payer
         $response = $this->json('GET', 'v1/payer/' . $this->payer->uuid);
         // validate response code and structure
-        // dd($response->json());
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers'])
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types'])
             ->assertJsonCount($payerCount, 'payers.0.payers');
     }
 
