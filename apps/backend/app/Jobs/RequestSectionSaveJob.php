@@ -112,14 +112,15 @@ class RequestSectionSaveJob /*implements ShouldQueue*/
     protected function assessmentSection()
     {
         $this->request->update(request()->validate([
-            'auth_number' => '',
+            'auth_number' => 'unique:requests,auth_number,' . $this->request,
         ]));
     }
 
     protected function dueSection()
     {
         $this->request->update(request()->validate([
-            'due_at' => '', // form - due_date + time
+            'due_at' => ['date', 'after:today'],
+            'notes'  => [],// form - due_date + time
         ]));
     }
 

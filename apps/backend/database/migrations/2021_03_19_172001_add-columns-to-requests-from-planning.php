@@ -28,6 +28,7 @@ class AddColumnsToRequestsFromPlanning extends Migration
             $table->unsignedBigInteger('member_address_id')->nullable();       // fk to addresses.id
             $table->unsignedBigInteger('payer_id')->nullable();                // fk to addresses.id
             $table->dateTime('due_at')->nullable();
+            $table->string('note')->nullable();
         });
     }
 
