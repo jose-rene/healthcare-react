@@ -16,6 +16,11 @@ class CreateEntitiesTable extends Migration
         if (null === ($db = config('database.connections.eag')) || 'nada' === $db['database']) {
             return;
         }
+
+        if (Schema::connection('eag')->hasTable('entities')) { // do not re-run in eag
+            return;
+        }
+
         Schema::connection('eag')->create('entities', function (Blueprint $table) {
             $table->id();
 
