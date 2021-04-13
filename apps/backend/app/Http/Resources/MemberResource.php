@@ -19,13 +19,9 @@ class MemberResource extends JsonResource
         $address = $this->addresses->filter(function ($value, $key) {
             return $value->is_primary;
         })->first();
-        $lob = null;
+        $phone = $this->phones->sortByDesc('is_primary')->first();
+        $email = $this->emails->sortByDesc('is_primary')->first();
 
-        if ($this->payer && $this->lob) {
-            $lob = $this->payer->lobs->filter(fn ($item) => $item->id == $this->lob->id)->first();
-        }
-
-        // @todo add relationship fields when the db tables are made
         return [
             'id'            => $this->uuid,
             'gender'        => $this->gender,
@@ -34,7 +30,7 @@ class MemberResource extends JsonResource
             'last_name'     => $this->last_name,
             'member_number' => $this->member_number,
             'payer'         => $this->payer ? new PayerResource($this->payer) : null,
-            'lob'           => $lob ? new LobResource($lob) : null,
+            'lob'           => $this->lob ? new LobResource($this->lob) : null,
             'dob'           => Carbon::parse($this->dob)->format('m/d/Y'),
             'address'       => new AddressResource($address),
             'phone'         => new PhoneResource($this->mainPhone),

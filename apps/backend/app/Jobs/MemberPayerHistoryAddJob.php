@@ -30,10 +30,10 @@ class MemberPayerHistoryAddJob
     {
         if ($this->member->lob) {
             $this->member->history()->create([
-                'payer_id'       => $this->member->payer->id,
-                'lob_id'         => $this->member->lob->id,
-                'member_number'  => $this->member->member_number,
-                'member_id_type' => $this->member->member_id_type,
+                'payer_id'           => $this->member->payer->id,
+                'lob_id'             => $this->member->lob->id,
+                'member_number'      => $this->member->member_number,
+                'member_number_type' => $this->member->member_number_type,
             ]);
         }
     }

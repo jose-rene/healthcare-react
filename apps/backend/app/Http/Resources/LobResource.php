@@ -17,10 +17,10 @@ class LobResource extends JsonResource
         return [
             'id'                => $this->id,
             'name'              => $this->name,
-            'alias'             => $this->pivot->alias_name,
-            'is_tat_enabled'    => $this->pivot->is_tat_enabled,
-            'is_tat_default_na' => $this->pivot->is_tat_default_na,
-            'is_tat_required'   => $this->pivot->is_tat_required,
+            'alias'             => $this->alias_name,
+            'is_tat_enabled'    => $this->is_tat_enabled,
+            'is_tat_default_na' => $this->is_tat_default_na,
+            'is_tat_required'   => $this->is_tat_required,
         ];
     }
 }

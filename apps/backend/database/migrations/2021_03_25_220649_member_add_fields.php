@@ -16,7 +16,7 @@ class MemberAddFields extends Migration
         Schema::table('members', function (Blueprint $table) {
             $table->string('language', 64)->after('member_number')->nullable()->comment('The member\'s primary language.');
             $table->string('line_of_business')->after('member_number')->nullable()->comment('The line of business associated with the member.');
-            $table->string('member_id_type')->after('member_number')->nullable()->comment('The member ID type for the plan specifiec member id number.');
+            $table->string('member_number_type')->after('member_number')->nullable()->comment('The member ID type for the plan specifiec member id number.');
         });
     }
 
@@ -30,7 +30,7 @@ class MemberAddFields extends Migration
         Schema::table('members', function (Blueprint $table) {
             $table->dropColumn('language');
             $table->dropColumn('line_of_business');
-            $table->dropColumn('member_type_id');
+            $table->dropColumn('member_number_id');
         });
     }
 }

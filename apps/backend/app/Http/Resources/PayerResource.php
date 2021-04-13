@@ -15,10 +15,11 @@ class PayerResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'                => $this->uuid,
-            'company_name'      => $this->name,
-            'lines_of_business' => LobResource::collection($this->lobs),
-            'payers'            => self::collection($this->children),
+            'id'                  => $this->uuid,
+            'company_name'        => $this->name,
+            'lines_of_business'   => LobResource::collection($this->lobs),
+            'payers'              => self::collection($this->children),
+            'member_number_types' => PayerMemberNumberResource::collection($this->memberNumberTypes),
         ];
     }
 }

@@ -16,7 +16,7 @@ use Illuminate\Pipeline\Pipeline;
  * @property mixed  payer
  * @property Lob    lob
  * @property string member_number
- * @property int    member_id_type
+ * @property string member_number_type
  */
 class Member extends Model
 {
@@ -103,11 +103,11 @@ class Member extends Model
     /**
      * Relationship to lob.
      *
-     * @return App\Models\Lob\Payer
+     * @return App\Models\Lob
      */
     public function lob()
     {
-        return $this->belongsTo(LobPayer::class, 'lob_payer_id');
+        return $this->belongsTo(Lob::class);
     }
 
     /**

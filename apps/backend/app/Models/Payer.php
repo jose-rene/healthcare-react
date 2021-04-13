@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\PayerCreated;
 use App\Models\UserType\HealthPlanUser;
 use App\Traits\Uuidable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,6 +14,10 @@ class Payer extends Model
     use HasFactory, Uuidable, SoftDeletes;
 
     protected $guarded = ['id'];
+
+    protected $dispatchesEvents = [
+        'created' => PayerCreated::class,
+    ];
 
     /**
      * Relationship to users.
@@ -48,18 +53,17 @@ class Payer extends Model
      */
     public function lobs()
     {
-        return $this->belongsToMany(Lob::class)
-            ->using(LobPayer::class)
-            ->withPivot([
-                'id',
-                'alias_name',
-                'is_tat_enabled',
-                'is_tat_default_na',
-                'is_tat_required',
-                'payer_rate',
-                'clinician_rate',
-                'reviewer_rate',
-            ]);
+        return $this->hasMany(Lob::class);
+    }
+
+    /**
+     * Relationship to payer member number types.
+     *
+     * @return App\Models\PayerMemberNumberType
+     */
+    public function memberNumberTypes()
+    {
+        return $this->hasMany(PayerMemberNumberType::class);
     }
 
     /**

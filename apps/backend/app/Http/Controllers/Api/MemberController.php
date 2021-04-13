@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MemberLookupRequest;
 use App\Http\Requests\MemberRequest;
 use App\Http\Resources\MemberResource;
+use App\Jobs\MemberUpdateJob;
 use App\Models\Member;
 use App\Models\Payer;
 use Illuminate\Http\Request;
@@ -44,19 +45,18 @@ class MemberController extends Controller
     {
         // the validation is already ran due to the magic of service binding, this is just retrieving the data
         $data = $request->validated();
-        $member = Member::make([
-            'name_title'     => $data['title'],
-            'first_name'     => $data['first_name'],
-            'last_name'      => $data['last_name'],
-            'dob'            => $data['dob'],
-            'gender'         => $data['gender'],
-            'member_number'  => $data['member_number'],
-            'member_id_type' => $data['member_id_type'],
-            'payer_id'       => Payer::firstWhere('uuid', $data['plan'])->id,
-            'language'       => $data['language'],
+        $member = Member::create([
+            'name_title'         => $data['title'],
+            'first_name'         => $data['first_name'],
+            'last_name'          => $data['last_name'],
+            'dob'                => $data['dob'],
+            'gender'             => $data['gender'],
+            'member_number'      => $data['member_number'],
+            'member_number_type' => $data['member_number_type'],
+            'payer_id'           => Payer::firstWhere('uuid', $data['plan'])->id,
+            'lob_id'             => $data['line_of_business'],
+            'language'           => $data['language'],
         ]);
-        $member->lob()->associate($data['line_of_business']);
-        $member->save();
         // @todo add emailable model and contact types model
         foreach ($data['contacts'] as $index => $item) {
             if (!strstr($item['value'], '@') || !filter_var($item['value'], \FILTER_VALIDATE_EMAIL)) {
@@ -120,9 +120,11 @@ class MemberController extends Controller
      * @param Member  $member
      * @return Response
      */
-    public function update(Request $request, Member $member)
+    public function update(MemberRequest $request, Member $member)
     {
-        //
+        dispatch(new MemberUpdateJob($request, $member));
+
+        return new MemberResource($member);
     }
 
     /**
