@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RequestItemResource extends JsonResource
+class RequestRequestItemResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,7 +18,7 @@ class RequestItemResource extends JsonResource
         return [
             'id'      => $this->uuid,
             'name'    => $this->name,
-            'details' => $this->typeDetails->pluck('name', 'name'),
+            'details' => RequestItemDetailResource::collection($this->itemDetails),
         ];
     }
 }

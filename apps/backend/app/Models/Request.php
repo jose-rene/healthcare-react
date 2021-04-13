@@ -34,7 +34,6 @@ class Request extends Model
     public static $cancelled = '8';
     public static $reopened = '9';
 
-
     protected $guarded = ['id'];
 
     protected $dates = ['due_at'];
@@ -109,6 +108,16 @@ class Request extends Model
         return $this->hasMany(Activity::class)->orderBy('id', 'desc');
     }
 
+    /**
+     * Relationship to payer.
+     *
+     * @return BelongsTo of App\Models\Payer
+     */
+    public function payer()
+    {
+        return $this->belongsTo(Payer::class);
+    }
+
     public function scopeSearch($query)
     {
         // TODO :: implement the search pipeline
@@ -125,7 +134,7 @@ class Request extends Model
         return 'uuid';
     }
 
-    public function getRequestedAtAttributes()
+    public function getRequestedAtAttribute()
     {
         return $this->created_at;
     }
@@ -133,5 +142,10 @@ class Request extends Model
     public function getStatusNameAttribute()
     {
         return $this->requestStatus->name ?? '';
+    }
+
+    public function getMemberVerifiedAttribute()
+    {
+        return (bool) $this->member_verified_at;
     }
 }

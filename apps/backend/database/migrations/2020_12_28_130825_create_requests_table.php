@@ -16,9 +16,10 @@ class CreateRequestsTable extends Migration
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->index();
-            $table->foreignId('member_id');
-            $table->string('auth_id', 128);
-            $table->string('status', 16);
+            $table->foreignId('member_id')->comment('The member associated with the request');
+            $table->foreignId('payer_id')->nullable()->comment('The payer associated with this request');
+            $table->string('auth_number', 128)->nullable()->comment('The user assigned Auth # for the request');
+            $table->string('status', 16)->nullable()->comment('The current status of the request');
             $table->timestamps();
             $table->softDeletes();
         });
