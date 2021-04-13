@@ -27,12 +27,12 @@ class MemberFactory extends Factory
         $gender = $genderOptions[$genderType = rand(0, 1)];
         $titleOptions = [['Mr.', 'Dr.', 'Sir'], ['Ms.', 'Mrs.', 'Miss.', 'Dr.']];
         $title = $titleOptions[$genderType][rand(0, $genderType ? 3 : 2)];
+        $payer = Payer::factory()->hasLobs(5, ['is_tat_enabled' => 1])->count(1)->create()->first();
 
         return [
-            'member_number' => $this->faker->isbn10,
-            'payer_id'      => function () {
-                return Payer::create(['name' => $this->faker->company]);
-            },
+            'member_number'  => $this->faker->isbn10,
+            'payer_id'       => $payer->id,
+            'lob_id'         => $payer->lobs->first(),
             'member_id_type' => $this->faker->uuid, // @todo this is member id type id
             'language'       => 'english',
             'gender'         => $gender,
