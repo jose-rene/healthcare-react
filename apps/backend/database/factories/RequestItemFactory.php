@@ -22,10 +22,17 @@ class RequestItemFactory extends Factory
      */
     public function definition()
     {
+        $itemNames = [
+            'wheel chair',
+            'skittles',
+            'handle bars',
+        ];
+
         return [
             'request_type_id'          => function () {
                 return RequestType::factory();
             },
+            'name'                     => $this->faker->randomElement($itemNames),
             'request_outcome_id'       => $this->faker->numberBetween(1, 4),
             'hcpcs'                    => '',
             'note'                     => $this->faker->realText(),

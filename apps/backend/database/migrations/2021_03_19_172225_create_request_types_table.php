@@ -15,6 +15,7 @@ class CreateRequestTypesTable extends Migration
     {
         Schema::create('request_types', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid');
 
             $table->string('name');
 

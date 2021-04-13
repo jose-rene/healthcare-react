@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateRequestFields extends Migration
+class RequestsAddMemberVerified extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class UpdateRequestFields extends Migration
     public function up()
     {
         Schema::table('requests', function (Blueprint $table) {
-            $table->string('auth_id', 128)->nullable()->change();
-            $table->string('status', 16)->nullable()->change();
+            $table->dateTime('member_verified_at')->nullable()->after('status')->comment('Member information was verified during request entry');
         });
     }
 
@@ -27,8 +26,7 @@ class UpdateRequestFields extends Migration
     public function down()
     {
         Schema::table('requests', function (Blueprint $table) {
-            $table->string('auth_id', 128)->change();
-            $table->string('status', 16)->change();
+            $table->dropColumn('member_verified_at');
         });
     }
 }

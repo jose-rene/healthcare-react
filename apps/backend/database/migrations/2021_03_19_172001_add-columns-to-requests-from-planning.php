@@ -22,12 +22,11 @@ class AddColumnsToRequestsFromPlanning extends Migration
             $table->unsignedBigInteger('payer_user_id')->nullable();              //fk payer.id
             $table->unsignedBigInteger('request_status_id')->nullable();          //fk request_status.id
             $table->unsignedBigInteger('questionnaire_id')->nullable();           //fk questionnaire.id
-            $table->unsignedBigInteger('auth_number')->nullable();
             $table->unsignedBigInteger('auth_payer_uniqueness')->nullable();
             $table->unsignedBigInteger('member_payer_history_id')->nullable(); // fk to member payer history
             $table->unsignedBigInteger('member_address_id')->nullable();       // fk to addresses.id
-            $table->unsignedBigInteger('payer_id')->nullable();                // fk to addresses.id
             $table->dateTime('due_at')->nullable();
+            $table->string('note')->nullable();
         });
     }
 

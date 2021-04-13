@@ -19,12 +19,12 @@ class MemberResource extends JsonResource
         $address = $this->addresses->filter(function ($value, $key) {
             return $value->is_primary;
         })->first();
-        $phone = $this->phones->sortByDesc('is_primary')->first();
-        $email = $this->emails->sortByDesc('is_primary')->first();
         $lob = null;
+
         if ($this->payer && $this->lob) {
             $lob = $this->payer->lobs->filter(fn ($item) => $item->id == $this->lob->id)->first();
         }
+
         // @todo add relationship fields when the db tables are made
         return [
             'id'            => $this->uuid,
@@ -37,8 +37,8 @@ class MemberResource extends JsonResource
             'lob'           => $lob ? new LobResource($lob) : null,
             'dob'           => Carbon::parse($this->dob)->format('m/d/Y'),
             'address'       => new AddressResource($address),
-            'phone'         => new PhoneResource($phone),
-            'email'         => new EmailResource($email),
+            'phone'         => new PhoneResource($this->mainPhone),
+            'email'         => new EmailResource($this->mainEmail),
         ];
     }
 }

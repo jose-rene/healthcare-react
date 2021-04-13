@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Assessment\AssessmentRequest;
 use App\Http\Resources\RequestResource;
+use App\Jobs\RequestSectionSaveJob;
 use App\Models\Request as ModelRequest;
 use App\Models\User;
 use Exception;
@@ -73,7 +74,12 @@ class RequestController extends Controller
         $assigned  = $baseQuery->where('request_status_id', ModelRequest::$assigned)->count();
         $scheduled = $baseQuery->where('request_status_id', ModelRequest::$scheduled)->count();
         $submitted = $baseQuery->where('request_status_id', ModelRequest::$submitted)->count();
-        $new       = $baseQuery->where('request_status_id', ModelRequest::$received)->count();
+        $new       = $baseQuery
+            ->whereIn('request_status_id', [
+                ModelRequest::$received,
+                ModelRequest::$reopened,
+            ])
+            ->count();
 
         $summary = compact('new', 'assigned', 'scheduled', 'submitted');
 
@@ -128,9 +134,9 @@ class RequestController extends Controller
      */
     public function update(ModelRequest $request, Request $httpRequest)
     {
-        $data = $httpRequest->update($request->validated());
+        dispatch(new RequestSectionSaveJob($request, $httpRequest->all()));
 
-        return new RequestResource($data);
+        return new RequestResource($request);
     }
 
     /**
