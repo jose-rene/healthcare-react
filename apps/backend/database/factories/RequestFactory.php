@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Member;
+use App\Models\Payer;
 use App\Models\Request;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -24,11 +25,12 @@ class RequestFactory extends Factory
     public function definition()
     {
         return [
-            'status'    => '',
-            'auth_id'   => Str::random(13),
-            'member_id' => function () {
+            'status'      => '',
+            'auth_number' => Str::random(13),
+            'member_id'   => function () {
                 return Member::factory()->create();
             },
+            'payer_id' => fn () => Payer::factory()->create(),
         ];
     }
 }

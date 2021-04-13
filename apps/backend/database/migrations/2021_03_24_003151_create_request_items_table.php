@@ -17,6 +17,7 @@ class CreateRequestItemsTable extends Migration
             $table->id();
             $table->uuid('uuid');
 
+            $table->string('name');
             $table->unsignedBigInteger('request_id');
             $table->unsignedBigInteger('request_type_id');
             $table->unsignedBigInteger('request_outcome_id')->nullable();

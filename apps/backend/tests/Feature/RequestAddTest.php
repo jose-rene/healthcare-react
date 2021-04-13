@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Member;
 use App\Models\Request;
-use App\Models\RequestItem;
 use App\Models\User;
 use Artisan;
 use Bouncer;
@@ -25,7 +24,7 @@ class RequestAddTest extends TestCase
     private Member $member;
 
     /**
-     * Act like I'm submitting a new request for a member
+     * Act like I'm submitting a new request for a member.
      *
      * @group request
      *
@@ -48,69 +47,55 @@ class RequestAddTest extends TestCase
     }
 
     /**
-     * Act like I'm submitting a new request for a member
+     * Act like I'm submitting a new request for a member.
      * @depends testRequestPost
      * @group   request
      *
      * @return void
      */
-    public function testRequestSectionAddressWithUpdate()
+    public function testRequestSections()
     {
+        $this->withoutExceptionHandling();
         $route = route('api.member.member-requests.store', [
             'member' => $this->member->uuid,
         ]);
 
         $response = $this->post($route);
-
+        $response->assertJsonPath('payer.id', $this->member->payer->uuid);
         $requestId = $response->json('id');
 
-        $route = route('api.member-request.request-item.store', [
-            'member_request' => $requestId,
-        ]);
+        /** @var Request $newRequest */
+        $newRequest = Request::where('uuid', $requestId)->first();
+        self::assertEquals($requestId, $newRequest->uuid);
 
-        $response = $this->post($route, ['type_name' => 'verify']);
-        $response->assertSuccessful();
-        $requestItems = RequestItem::all();
-        $requestItem  = RequestItem::first();
-        self::assertCount(1, $requestItems);
+        $route = route('api.request.update', [
+            'request' => $requestId,
+        ]);
 
         /**
-         * personal information verification, first step
+         * assessment 1st step.
          */
-        $newStreet = $this->faker->streetAddress . '.new';
-
-        $updateRoute = route('api.member-request.request-item.update', [
-            'member_request' => $requestId,
-            'request_item'   => $requestItem->uuid,
-        ]);
-
-        $response = $this->put($updateRoute, [
-            'type_name' => 'verify',
-
-            'address' => [
-                'address_1' => $newStreet,
-            ],
-        ]);
-        $response->assertSuccessful();
-
-        $memberRequest = Request::with('member.addresses')->first();
-        $memberAddress = $memberRequest->member->addresses()->first();
-        self::assertEquals($newStreet, $memberAddress->address_1);
+        $response = $this->put($route, ['type_name' => 'verify']);
+        $response
+            ->assertSuccessful()
+            ->assertJsonStructure(['member_verified'])
+            ->assertJsonPath('member_verified', true);
 
         /**
-         * assessment 2nd step
+         * assessment 2nd step.
          */
-        $response = $this->put($updateRoute, [
-            'type_name' => ' auth-id',
-
-            'auth_number' => '1234',
+        $response = $this->put($route, [
+            'type_name'   => 'auth-id',
+            'auth_number' => $authNumber = '1234',
         ]);
-        $response->assertSuccessful();
+        $response->assertSuccessful()
+            ->assertJsonStructure(['auth_number'])
+            ->assertJsonPath('auth_number', $authNumber);
 
         /**
-         * diagnosis 3rd step
+         * diagnosis 3rd step.
          */
-        $response = $this->put($updateRoute, [
+        $response = $this->put($route, [
             'type_name' => 'diagnosis',
 
             'relevantDiagnosis' => [
@@ -120,22 +105,66 @@ class RequestAddTest extends TestCase
         ]);
         $response->assertSuccessful();
 
+        // make sure that relevantDiagnosis actually saved in the database
+        self::assertCount(2, $newRequest->relevantDiagnoses);
+
         /**
-         * due 4th and final step
+         * due 4th and final step.
          */
-        $response = $this->put($updateRoute, [
+        $response = $this->put($route, [
             'type_name' => 'due',
             'is_last'   => true,
-
-            'due_at' => $due_at = $this->faker->dateTimeBetween('now', '+2 weeks'),
+            'due_at'    => $due_at = $this->faker->dateTimeBetween('now', '+2 weeks'),
         ]);
         $response->assertSuccessful();
 
-        // Reload values from the database and make sure the last pieces were updated
-        $memberRequest->refresh();
+        // Load from the database and make sure the last pieces were updated
+        $memberRequest = Request::firstWhere('member_id', $this->member->id);
 
         self::assertEquals('Received', $memberRequest->statusName);
         self::assertEquals($due_at, $memberRequest->due_at);
+    }
+
+    public function testUniqueAuthNumber()
+    {
+        // $this->withoutExceptionHandling();
+        // create a random previous request, not the same payer
+        $anyRequest = Request::factory()->create();
+        $this->assertNotEquals($this->member->payer->id, $anyRequest->payer->id);
+
+        // create a previous request for the same payer
+        $previousRequest = Request::factory()->create(['payer_id' => $this->member->payer]);
+        $this->assertEquals($this->member->payer->id, $previousRequest->payer->id);
+
+        // get the a new request for the member
+        $route = route('api.member.member-requests.store', [
+            'member' => $this->member->uuid,
+        ]);
+
+        $response = $this->post($route);
+        $response->assertJsonPath('payer.id', $this->member->payer->uuid);
+        $requestId = $response->json('id');
+
+        // update request route
+        $route = route('api.request.update', [
+            'request' => $requestId,
+        ]);
+
+        // use an auth number from an unrelated plan, should pass
+        $response = $this->put($route, [
+            'type_name'   => 'auth-id',
+            'auth_number' => $anyRequest->auth_number,
+        ]);
+        $response->assertSuccessful()
+            ->assertJsonStructure(['auth_number'])
+            ->assertJsonPath('auth_number', $anyRequest->auth_number);
+
+        // use an auth number from an related plan, should fail validation
+        $response = $this->put($route, [
+            'type_name'   => 'auth-id',
+            'auth_number' => $previousRequest->auth_number,
+        ]);
+        $response->assertStatus(422);
     }
 
     /**

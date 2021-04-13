@@ -1,7 +1,6 @@
 <?php
 
 use Aacotroneo\Saml2\Saml2Auth;
-use App\Events\DatabaseHasChangedEvent;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DocumentController;
 use Illuminate\Routing\Router;
@@ -17,7 +16,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 // handle sso login triggering subdomain
 Route::domain(env('DME_SSO_DOMAIN'))->group(function (Router $router) {
     $router->get('/', function () {

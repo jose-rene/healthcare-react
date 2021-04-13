@@ -73,7 +73,9 @@ class Member extends Model
      */
     public function phones()
     {
-        return $this->morphMany(Phone::class, 'phoneable');
+        return $this->morphMany(Phone::class, 'phoneable')
+            ->orderBy('is_primary', 'desc')
+            ->orderBy('updated_at', 'desc');
     }
 
     /**
@@ -83,7 +85,9 @@ class Member extends Model
      */
     public function emails()
     {
-        return $this->morphMany(Email::class, 'emailable');
+        return $this->morphMany(Email::class, 'emailable')
+            ->orderBy('is_primary', 'desc')
+            ->orderBy('updated_at', 'desc');
     }
 
     /**
@@ -119,11 +123,21 @@ class Member extends Model
      *
      * @return App\Models\Payer
      *
-     *  @return Illuminate\Database\Eloquent\Collection
+     * @return Illuminate\Database\Eloquent\Collection
      */
     public function getContactsAttribute()
     {
         return $this->phones->merge($this->emails);
+    }
+
+    public function getMainPhoneAttribute()
+    {
+        return $this->phones()->first();
+    }
+
+    public function getMainEmailAttribute()
+    {
+        return $this->emails()->first();
     }
 
     public function scopeSearchMembers($query, User $authedUser = null)

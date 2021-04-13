@@ -33,8 +33,8 @@ class MemberResource extends JsonResource
             'lob'           => $this->lob ? new LobResource($this->lob) : null,
             'dob'           => Carbon::parse($this->dob)->format('m/d/Y'),
             'address'       => new AddressResource($address),
-            'phone'         => new PhoneResource($phone),
-            'email'         => new EmailResource($email),
+            'phone'         => new PhoneResource($this->mainPhone),
+            'email'         => new EmailResource($this->mainEmail),
         ];
     }
 }

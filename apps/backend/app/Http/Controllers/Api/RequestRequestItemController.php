@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\RequestItemResource;
+use App\Http\Resources\RequestRequestItemResource;
 use App\Jobs\RequestSectionSaveJob;
 use App\Models\Request as ModelRequest;
 use App\Models\RequestItem;
@@ -24,7 +25,7 @@ class RequestRequestItemController extends Controller
      */
     public function index(ModelRequest $memberRequest)
     {
-        return RequestItemResource::collection($memberRequest->requestItems);
+        return RequestRequestItemResource::collection($memberRequest->requestItems);
     }
 
     /**
@@ -36,18 +37,33 @@ class RequestRequestItemController extends Controller
      */
     public function store(ModelRequest $memberRequest, Request $request)
     {
-        $data = $request->validate([
-            'type_name' => 'required',
-        ]);
+        $request_items = $request->input('request.request_items', []);
 
-        $request_type = RequestType::firstOrCreate(['name' => $data['type_name']]);
+        // no items passed through they must have been removed
+        if (empty($request_items)) {
+            $memberRequest->requestItems()->delete();
 
-        $data['request_id']      = $memberRequest->id;
-        $data['request_type_id'] = $request_type->id;
+            return response()->json([]);
+        }
 
-        $requestItem = $memberRequest->requestItems()->create($data);
+        foreach ($request_items as $request_item) {
+            $request_type_id = RequestType::where('uuid', $request_item['id'])->first()->id ?? 0;
+            $newRequestItem  = $memberRequest->requestItems()->create([
+                'name'            => $request_item['name'],
+                'request_type_id' => $request_type_id,
+            ]);
 
-        return new RequestItemResource($requestItem);
+
+            $request_item_details = $request_item['request_item_details'] ?? [];
+            foreach ($request_item_details as $request_item_detail) {
+                $newRequestItem->itemDetails()->create([
+                    'name'            => $request_item_detail,
+                    'request_type_id' => $request_type_id,
+                ]);
+            }
+        }
+
+        return response()->json(['status' => true, 'message' => 'ok']);
     }
 
     /**
