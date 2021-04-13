@@ -30,16 +30,16 @@ class MemberFactory extends Factory
         $payer = Payer::factory()->hasLobs(5, ['is_tat_enabled' => 1])->count(1)->create()->first();
 
         return [
-            'member_number'  => $this->faker->isbn10,
-            'payer_id'       => $payer->id,
-            'lob_id'         => $payer->lobs->first(),
-            'member_id_type' => $this->faker->uuid, // @todo this is member id type id
-            'language'       => 'english',
-            'gender'         => $gender,
-            'name_title'     => $title,
-            'first_name'     => $genderType ? $this->faker->firstNameFemale : $this->faker->firstNameMale,
-            'last_name'      => $this->faker->lastName,
-            'dob'            => new Carbon($this->faker->dateTimeBetween('-90 years', '-10 Years')),
+            'member_number'      => $this->faker->isbn10,
+            'payer_id'           => $payer->id,
+            'lob_id'             => $payer->lobs->first(),
+            'member_number_type' => 'Member ID',
+            'language'           => 'english',
+            'gender'             => $gender,
+            'name_title'         => $title,
+            'first_name'         => $genderType ? $this->faker->firstNameFemale : $this->faker->firstNameMale,
+            'last_name'          => $this->faker->lastName,
+            'dob'                => new Carbon($this->faker->dateTimeBetween('-90 years', '-10 Years')),
         ];
     }
 }

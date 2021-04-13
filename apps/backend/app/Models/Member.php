@@ -16,7 +16,7 @@ use Illuminate\Pipeline\Pipeline;
  * @property mixed  payer
  * @property Lob    lob
  * @property string member_number
- * @property int    member_id_type
+ * @property string member_number_type
  */
 class Member extends Model
 {

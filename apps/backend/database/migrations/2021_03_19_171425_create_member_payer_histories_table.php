@@ -20,7 +20,7 @@ class CreateMemberPayerHistoriesTable extends Migration
             // @todo this probably has to be lob_payer_id
             $table->foreignId('lob_id')->comment('The line of business associated with this member');
             $table->string('member_number')->comment('The members ID assigned by the plan');
-            $table->string('member_id_type')->comment('The member ID or number type');
+            $table->string('member_number_type')->comment('The member ID or number type');
 
             $table->timestamps();
             $table->softDeletes();
