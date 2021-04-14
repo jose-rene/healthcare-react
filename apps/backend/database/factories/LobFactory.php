@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Lob;
+use App\Models\Payer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LobFactory extends Factory
@@ -22,7 +23,8 @@ class LobFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->catchPhrase,
+            'name'     => $this->faker->catchPhrase,
+            'payer_id' => fn() => Payer::factory(),
         ];
     }
 }

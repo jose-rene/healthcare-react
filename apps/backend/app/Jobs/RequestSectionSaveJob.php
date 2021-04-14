@@ -3,19 +3,16 @@
 namespace App\Jobs;
 
 use App\Models\Request;
+use Carbon\Carbon;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
-//use Illuminate\Bus\Queueable;
-//use Illuminate\Contracts\Queue\ShouldBeUnique;
-//use Illuminate\Contracts\Queue\ShouldQueue;
-//use Illuminate\Queue\InteractsWithQueue;
-//use Illuminate\Queue\SerializesModels;
-
-class RequestSectionSaveJob /*implements ShouldQueue*/
+class RequestSectionSaveJob
 {
-    use Dispatchable/*, InteractsWithQueue, Queueable, SerializesModels*/
-        ;
+    use Dispatchable;
 
     /**
      * @var Request
@@ -51,18 +48,18 @@ class RequestSectionSaveJob /*implements ShouldQueue*/
                 $this->verify();
                 break;
 
-            case "diagnosis":
+            case 'diagnosis':
                 // Syncs what the frontend sends to the related diagnosis. This could create,
                 // update, or delete what is in the database
                 $this->relevantDiagnosisSection();
                 break;
 
-            case "auth-id":
+            case 'auth-id':
                 // basically updates the auth_number value in the request table
-                $this->assessmentSection();
+                $this->authNumberSection();
                 break;
 
-            case "category":
+            case 'category':
                 $this->categorySection();
                 break;
 
@@ -109,11 +106,17 @@ class RequestSectionSaveJob /*implements ShouldQueue*/
         }
     }
 
-    protected function assessmentSection()
+    protected function authNumberSection()
     {
-        $this->request->update(request()->validate([
-            'auth_number' => 'unique:requests,auth_number,' . $this->request,
-        ]));
+        $request = $this->request;
+        try {
+            $this->request->update(request()->validate([
+                'auth_number' => Rule::unique('requests')->where(fn($query) => $query->where('payer_id',
+                    $request->payer_id)),
+            ]));
+        } catch (ValidationException $e) {
+            throw new HttpResponseException(response()->json(['errors' => 'The Auth ID provided is not unique.'], 422));
+        }
     }
 
     protected function dueSection()
@@ -158,6 +161,8 @@ class RequestSectionSaveJob /*implements ShouldQueue*/
         if ($memberForm) {
             $member->update($memberForm);
         }
+
+        $request->update(['member_verified_at' => Carbon::now()]);
     }
 
     protected function categorySection()

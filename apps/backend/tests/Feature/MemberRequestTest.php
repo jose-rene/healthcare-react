@@ -50,8 +50,9 @@ class MemberRequestTest extends TestCase
         $response->assertStatus(201);
 
         // update with auth id
-        $data = $response->json();
-        $update = $this->put('v1/member/' . $this->member->uuid . '/member-requests/' . $data['id'], ['auth_id' => $this->faker->isbn10]);
+        $data   = $response->json();
+        $update = $this->put('v1/member/' . $this->member->uuid . '/member-requests/' . $data['id'],
+            ['auth_number' => $this->faker->isbn10]);
         $update->assertStatus(200);
     }
 
@@ -71,7 +72,8 @@ class MemberRequestTest extends TestCase
 
         // update with an unrelated request
         $request = Request::factory()->create();
-        $update = $this->put('v1/member/' . $this->member->uuid . '/member-requests/' . $request->id, ['auth_id' => $this->faker->isbn10]);
+        $update  = $this->put('v1/member/' . $this->member->uuid . '/member-requests/' . $request->id,
+            ['auth_number' => $this->faker->isbn10]);
         // the model binding will throw exception
         $update->assertStatus(404);
     }

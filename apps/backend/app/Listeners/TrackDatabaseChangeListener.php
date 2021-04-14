@@ -109,8 +109,7 @@ class TrackDatabaseChangeListener
                 $allEntities[$finder] = true;
 
                 // only update if not soft deleted
-                $t = Entity::withTrashed()->where($find)->first();
-                if (is_null($t->deleted_at)) {
+                if (null === ($t = Entity::withTrashed()->where($find)->first()) || is_null($t->deleted_at)) {
                     Entity::withTrashed()->updateOrCreate($find, $find + $data);
                 }
             }

@@ -16,9 +16,12 @@ class RequestResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'          => $this->uuid,
-            //            'assessments' => new AssessmentResourceCollection($this->assessments),
-            'member'      => new MemberResource($this->member),
+            'id'              => $this->uuid,
+            'member'          => new MemberResource($this->member),
+            'payer'           => new PayerResource($this->payer),
+            'member_verified' => $this->member_verified,
+            'request_date'    => $this->requested_at->format('m/d/Y'),
+            'auth_number'     => $this->auth_number,
         ];
     }
 }

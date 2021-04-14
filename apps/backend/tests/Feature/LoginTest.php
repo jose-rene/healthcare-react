@@ -31,7 +31,7 @@ class LoginTest extends TestCase
     public function testApiLogin()
     {
         // Make sure I can login
-        $response = $this->post(
+        $response = $this->postJson(
             '/v1/login',
             [
                 'email'    => $this->user->email,

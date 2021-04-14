@@ -37,7 +37,8 @@ class MemberRequestController extends Controller
     public function store(Member $member)
     {
         $memberRequest = $member->requests()->create([
-            'status' => 'started',
+            'status'   => 'started',
+            'payer_id' => $member->payer->id,
         ]);
 
         return new RequestResource($memberRequest);
@@ -66,7 +67,7 @@ class MemberRequestController extends Controller
     public function update(Request $request, Member $member, MemberRequest $memberRequest)
     {
         // @todo, this only saves auth id
-        $memberRequest->auth_id = $request['auth_id'];
+        $memberRequest->auth_number = $request['auth_number'];
         $memberRequest->save();
 
         return new RequestResource($memberRequest);

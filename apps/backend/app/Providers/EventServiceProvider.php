@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Events\MemberCreated;
+use App\Events\PayerCreated;
 use App\Events\UserChangingPassword;
 use App\Listeners\ChangeResetPasswordFalse;
 use App\Listeners\DatabaseRefreshedListener;
 use App\Listeners\MemberCreatedListener;
+use App\Listeners\PayerCreatedListener;
 use App\Listeners\TrackDatabaseChangeListener;
 use App\Listeners\TrackPasswordResets;
 use Illuminate\Auth\Events\Registered;
@@ -23,21 +25,24 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        Registered::class => [
+        Registered::class           => [
             SendEmailVerificationNotification::class,
         ],
         UserChangingPassword::class => [
             TrackPasswordResets::class,
             ChangeResetPasswordFalse::class,
         ],
-        MigrationsEnded::class => [
+        MigrationsEnded::class      => [
             TrackDatabaseChangeListener::class,
         ],
-        DatabaseRefreshed::class => [
+        DatabaseRefreshed::class    => [
             DatabaseRefreshedListener::class,
         ],
-        MemberCreated::class => [
+        MemberCreated::class        => [
             MemberCreatedListener::class,
+        ],
+        PayerCreated::class         => [
+            PayerCreatedListener::class,
         ],
     ];
 

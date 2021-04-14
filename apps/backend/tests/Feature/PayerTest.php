@@ -26,6 +26,7 @@ class PayerTest extends TestCase
      */
     public function testProfile()
     {
+        $this->withoutExceptionHandling();
         Passport::actingAs(
             $this->user
         );
@@ -34,7 +35,7 @@ class PayerTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers']);
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types']);
     }
 
     /**
@@ -52,7 +53,7 @@ class PayerTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers']);
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types']);
     }
 
     /**
@@ -75,7 +76,7 @@ class PayerTest extends TestCase
         // dd($response->json());
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers'])
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types'])
             ->assertJsonCount($payerCount, 'payers');
     }
 
@@ -100,10 +101,9 @@ class PayerTest extends TestCase
         // get the payer
         $response = $this->json('GET', 'v1/payer/' . $this->payer->uuid);
         // validate response code and structure
-        // dd($response->json());
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers'])
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types'])
             ->assertJsonCount($payerCount, 'payers.0.payers');
     }
 
@@ -116,9 +116,8 @@ class PayerTest extends TestCase
         Artisan::call('db:seed', [
             '--class' => 'Database\Seeders\BouncerSeeder',
         ]);
-        $this->payer = Payer::factory()->hasLobs(5)->count(1)->create()->first();
-        $this->payer->lobs()->updateExistingPivot($this->payer->lobs()->first(), ['is_tat_enabled' => 1]);
-        $this->user = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
+        $this->payer = Payer::factory()->hasLobs(5, ['is_tat_enabled' => 1])->count(1)->create()->first();
+        $this->user  = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
         $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create());
         Bouncer::sync($this->user)->roles(['hp_user']);
         $this->user->save();
