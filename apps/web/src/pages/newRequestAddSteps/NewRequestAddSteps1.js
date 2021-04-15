@@ -4,9 +4,11 @@ import { isEmpty } from "lodash";
 import Switch from "../../components/inputs/Switch";
 import Modal from "../../components/modal/Modal";
 
+import useApiCall from "../../hooks/useApiCall";
+
 import "./newRequestAddSteps.css";
 
-const NewRequestAddSteps1 = ({ memberData }) => {
+const NewRequestAddSteps1 = ({ memberData, payerProfile }) => {
     const [data, setData] = useState({
         type_name: "verify",
 
@@ -110,6 +112,7 @@ const NewRequestAddSteps1 = ({ memberData }) => {
                                     nameField="address"
                                     data={address}
                                     member_id={member.id}
+                                    payerProfile={payerProfile}
                                 />
                             </div>
                         </div>
@@ -133,6 +136,7 @@ const NewRequestAddSteps1 = ({ memberData }) => {
                                     nameField="phone"
                                     data={phone}
                                     member_id={member.id}
+                                    payerProfile={payerProfile}
                                 />
                             </div>
                         </div>
@@ -158,6 +162,7 @@ const NewRequestAddSteps1 = ({ memberData }) => {
                                     nameField="plan"
                                     data={plan}
                                     member_id={member.id}
+                                    payerProfile={payerProfile}
                                 />
                             </div>
                         </div>
@@ -183,6 +188,7 @@ const NewRequestAddSteps1 = ({ memberData }) => {
                                     nameField="line_of_business"
                                     data={lob}
                                     member_id={member.id}
+                                    payerProfile={payerProfile}
                                 />
                             </div>
                         </div>
@@ -210,6 +216,7 @@ const NewRequestAddSteps1 = ({ memberData }) => {
                                     nameField="member_number"
                                     data={member}
                                     member_id={member.id}
+                                    payerProfile={payerProfile}
                                 />
                             </div>
                         </div>

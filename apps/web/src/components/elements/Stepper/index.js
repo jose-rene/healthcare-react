@@ -23,10 +23,15 @@ const getSteps = () => {
     ];
 };
 
-const getStepContent = (step, data, editData, setParams) => {
+const getStepContent = (step, data, editData, payerProfile, setParams) => {
     switch (step) {
         case 0:
-            return <NewRequestAddSteps1 memberData={data} />;
+            return (
+                <NewRequestAddSteps1
+                    memberData={data}
+                    payerProfile={payerProfile}
+                />
+            );
         case 1:
             return (
                 <NewRequestAddSteps2
@@ -56,9 +61,17 @@ const Stepper = ({ data }) => {
         url: `request/${request_uuid}`,
     });
 
+    const [{ data: payerProfile }, payerProfileRequest] = useApiCall({
+        url: "payer/profile",
+    });
+
     useEffect(() => {
         setEditData(data);
     }, [data]);
+
+    useEffect(() => {
+        payerProfileRequest();
+    }, []);
 
     const handleUpdate = async () => {
         try {
@@ -108,6 +121,7 @@ const Stepper = ({ data }) => {
                                         activeStep,
                                         data,
                                         editData,
+                                        payerProfile,
                                         setParams
                                     )}
                                     <div className="form-row mt-5">
