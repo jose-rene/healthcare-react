@@ -18,9 +18,7 @@ describe("<TableAPI />", () => {
             },
         };
 
-        const pagination = renderer
-            .create(<TablePagination {...props} />)
-            .toJSON();
+        const pagination = renderer.create(<TablePagination {...props} />).toJSON();
         expect(pagination).toMatchSnapshot();
     });
 
@@ -35,9 +33,7 @@ describe("<TableAPI />", () => {
             },
         };
 
-        const pagination = renderer
-            .create(<TablePagination {...props} />)
-            .toJSON();
+        const pagination = renderer.create(<TablePagination {...props} />).toJSON();
         expect(pagination).toMatchSnapshot();
     });
 
@@ -71,9 +67,7 @@ describe("<TableAPI />", () => {
             searchObj: {},
         };
 
-        const tableHeader = renderer
-            .create(<TableHeaders {...props} />)
-            .toJSON();
+        const tableHeader = renderer.create(<TableHeaders {...props} />).toJSON();
         expect(tableHeader).toMatchSnapshot();
     });
 });

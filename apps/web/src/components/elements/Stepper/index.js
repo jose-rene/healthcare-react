@@ -40,11 +40,11 @@ const getStepContent = (step, data, editData, payerProfile, setParams) => {
                 />
             );
         case 2:
-            return <NewRequestAddSteps3 setParams={setParams} />;
+            return <NewRequestAddSteps3 data={data} />;
         case 3:
-            return <NewRequestAddSteps4 />;
+            return <NewRequestAddSteps4 data={data} setParams={setParams} />;
         case 4:
-            return <NewRequestAddSteps5 />;
+            return <NewRequestAddSteps5 data={data} />;
     }
 };
 
@@ -93,7 +93,8 @@ const Stepper = ({ data }) => {
                     >
                         <Card className="step">
                             <Accordion.Toggle
-                                className="step-header"
+                                onClick={() => setActiveStep(index)}
+                                className="step-header c-pointer"
                                 as={Card.Header}
                                 eventKey={`${index}`}
                             >
@@ -110,7 +111,7 @@ const Stepper = ({ data }) => {
                                 <Card.Body
                                     className="step-body"
                                     style={{ height: "24px" }}
-                                ></Card.Body>
+                                />
                             )}
                             <Accordion.Collapse eventKey={`${index}`}>
                                 <Card.Body
@@ -122,7 +123,7 @@ const Stepper = ({ data }) => {
                                         data,
                                         editData,
                                         payerProfile,
-                                        setParams
+                                        setParams,
                                     )}
                                     <div className="form-row mt-5">
                                         <div className="col-md-6">
@@ -133,7 +134,7 @@ const Stepper = ({ data }) => {
                                                     setActiveStep(
                                                         index > 0
                                                             ? index - 1
-                                                            : index
+                                                            : index,
                                                     )
                                                 }
                                             >
@@ -152,7 +153,7 @@ const Stepper = ({ data }) => {
                                                     setActiveStep(
                                                         index < 5
                                                             ? index + 1
-                                                            : index
+                                                            : index,
                                                     );
                                                 }}
                                             >

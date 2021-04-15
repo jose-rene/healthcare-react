@@ -10,6 +10,7 @@ import { INACTIVITY_TIMEOUT, LOGOUT_COUNTDOWN_TIME } from "../config/Login";
 import { PUT } from "../config/URLs";
 import useApiCall from "../hooks/useApiCall";
 import useIdleTimeout from "../hooks/useIdleTimeout";
+import checkMiddleware from "../helpers/user";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const PageLayout = ({
@@ -19,6 +20,7 @@ const PageLayout = ({
     children,
     primaryRole,
     roles: _roles,
+    abilities,
 }) => {
     const [{ showTimeoutModal }, { dismissTimeout }] = useIdleTimeout({
         timeout: INACTIVITY_TIMEOUT,
@@ -141,14 +143,15 @@ const PageLayout = ({
                             <img src="/images/icons/home.png" alt="Home" />
                         </Link>
                     </li>
-                    <li className={page === "requests" ? "sidebar-active" : ""}>
-                        <Link to="/requests">
-                            <img
-                                src="/images/icons/request.png"
-                                alt="Requests"
-                            />
-                        </Link>
-                    </li>
+                    {checkMiddleware(["hp_manager", "hp_champion"], primaryRole, abilities) && (
+                        <li className={page === "requests" ? "sidebar-active" : ""}>
+                            <Link to="/healthplan/start-request">
+                                <img
+                                    src="/images/icons/request.png"
+                                    alt="Requests"
+                                />
+                            </Link>
+                        </li>)}
                     <li className={page === "account" ? "sidebar-active" : ""}>
                         <Link to="/account">
                             <img src="/images/icons/user.png" alt="Account" />
@@ -189,11 +192,12 @@ const PageLayout = ({
 };
 
 const mapStateToProps = ({
-    user: { email, full_name, primaryRole, roles },
+    user: { email, full_name, primaryRole, roles, abilities },
 }) => ({
     email,
     full_name,
     roles,
+    abilities,
     primaryRole,
 });
 
