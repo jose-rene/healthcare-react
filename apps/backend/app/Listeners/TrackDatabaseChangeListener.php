@@ -64,7 +64,7 @@ class TrackDatabaseChangeListener
         $firstTableEntry = get_object_vars($tables[0]);
         $dmeTableKey = array_keys($firstTableEntry)[0];
 
-        $allEntities = Entity::withTrashed()->get()->keyBy('uniqueIdentifier')->map(fn () => false)->toArray();
+        $allEntities = Entity::withTrashed()->get()->keyBy('uniqueIdentifier')->map(fn() => false)->toArray();
 
         foreach ($tables as $key => $_table) {
             $table = $_table->$dmeTableKey;
@@ -95,17 +95,17 @@ class TrackDatabaseChangeListener
 
                 // is this column a primary key
                 $is_primary_key = $foundColumn->Key == 'PRI';
-                $is_nullable = strtolower($foundColumn->Null) == 'yes';
+                $is_nullable    = strtolower($foundColumn->Null) == 'yes';
 
                 $data = [
                     'data_type'  => $column->getType()->getName(),
                     'key'        => $is_primary_key,
                     'nullable'   => $is_nullable,
                     'comments'   => $comment ?? 'not set',
-                    'cache_json' => (array) $foundColumn + compact('comment'),
+                    'cache_json' => (array)$foundColumn + compact('comment'),
                 ];
 
-                $finder = json_encode($find);
+                $finder               = json_encode($find);
                 $allEntities[$finder] = true;
 
                 // only update if not soft deleted
@@ -117,7 +117,7 @@ class TrackDatabaseChangeListener
 
         // mark entities deleted if they're related column does not exist in the
         // database any more
-        $notFound = array_filter($allEntities, fn ($e) => $e === false);
+        $notFound = array_filter($allEntities, fn($e) => $e === false);
         if (count($notFound) > 0) {
             $identifiers = array_keys($notFound);
 

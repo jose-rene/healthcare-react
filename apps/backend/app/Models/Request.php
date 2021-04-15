@@ -146,6 +146,6 @@ class Request extends Model
 
     public function getMemberVerifiedAttribute()
     {
-        return (bool) $this->member_verified_at;
+        return (bool)$this->member_verified_at;
     }
 }

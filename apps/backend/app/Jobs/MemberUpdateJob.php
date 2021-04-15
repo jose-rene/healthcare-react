@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Http\Requests\MemberRequest;
-use App\Models\Lob;
 use App\Models\Member;
 use App\Models\Payer;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -22,7 +21,7 @@ class MemberUpdateJob
      */
     public function __construct(MemberRequest $request, Member $member)
     {
-        $this->data = $request->validated();
+        $this->data   = $request->validated();
         $this->member = $member;
     }
 
@@ -54,8 +53,8 @@ class MemberUpdateJob
     {
         // get primary address and set to non-primary
         $this->member->addresses
-            ->filter(fn ($address) => $address->is_primary)
-            ->each(fn ($address)   => $address->update(['is_primary' => 0]));
+            ->filter(fn($address) => $address->is_primary)
+            ->each(fn($address) => $address->update(['is_primary' => 0]));
         // add new primary address
         $this->member->addresses()->create([
             'address_1'   => $this->data['address_1'],
@@ -74,8 +73,8 @@ class MemberUpdateJob
     {
         // get primary phone and set to non-primary
         $this->member->phones
-            ->filter(fn ($phone) => $phone->is_primary)
-            ->each(fn ($phone)   => $phone->update(['is_primary' => 0]));
+            ->filter(fn($phone) => $phone->is_primary)
+            ->each(fn($phone) => $phone->update(['is_primary' => 0]));
         // add new primary phone contact
         $this->member->phones()->create([
             'number'         => $this->data['phone'],

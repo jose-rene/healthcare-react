@@ -24,7 +24,7 @@ class LobFactory extends Factory
     {
         return [
             'name'     => $this->faker->catchPhrase,
-            'payer_id' => fn () => Payer::factory(),
+            'payer_id' => fn() => Payer::factory(),
         ];
     }
 }

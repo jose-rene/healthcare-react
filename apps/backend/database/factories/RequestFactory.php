@@ -30,7 +30,7 @@ class RequestFactory extends Factory
             'member_id'   => function () {
                 return Member::factory()->create();
             },
-            'payer_id' => fn () => Payer::factory()->create(),
+            'payer_id'    => fn() => Payer::factory()->create(),
         ];
     }
 }

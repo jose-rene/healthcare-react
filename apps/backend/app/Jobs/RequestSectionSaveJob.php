@@ -10,16 +10,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
-//use Illuminate\Bus\Queueable;
-//use Illuminate\Contracts\Queue\ShouldBeUnique;
-//use Illuminate\Contracts\Queue\ShouldQueue;
-//use Illuminate\Queue\InteractsWithQueue;
-//use Illuminate\Queue\SerializesModels;
-
-class RequestSectionSaveJob /*implements ShouldQueue*/
+class RequestSectionSaveJob
 {
-    use Dispatchable/*, InteractsWithQueue, Queueable, SerializesModels*/
-;
+    use Dispatchable;
 
     /**
      * @var Request
@@ -46,8 +39,8 @@ class RequestSectionSaveJob /*implements ShouldQueue*/
      */
     public function handle()
     {
-        $request = $this->request;
-        $section = $this->section;
+        $request   = $this->request;
+        $section   = $this->section;
         $type_name = Str::slug($section['type_name']);
 
         switch ($type_name) {
@@ -86,7 +79,7 @@ class RequestSectionSaveJob /*implements ShouldQueue*/
 
     protected function relevantDiagnosisSection()
     {
-        $request = $this->request;
+        $request           = $this->request;
         $relevantDiagnosis = request()->input('relevantDiagnosis');
 
         $trackedCodes = $request->relevantDiagnoses->keyBy('code')->map(function ($c) {
@@ -118,7 +111,8 @@ class RequestSectionSaveJob /*implements ShouldQueue*/
         $request = $this->request;
         try {
             $this->request->update(request()->validate([
-                'auth_number' => Rule::unique('requests')->where(fn ($query) => $query->where('payer_id', $request->payer_id)),
+                'auth_number' => Rule::unique('requests')->where(fn($query) => $query->where('payer_id',
+                    $request->payer_id)),
             ]));
         } catch (ValidationException $e) {
             throw new HttpResponseException(response()->json(['errors' => 'The Auth ID provided is not unique.'], 422));
@@ -129,14 +123,46 @@ class RequestSectionSaveJob /*implements ShouldQueue*/
     {
         $this->request->update(request()->validate([
             'due_at' => ['date', 'after:today'],
-            'notes'  => [], // form - due_date + time
+            'notes'  => [],// form - due_date + time
         ]));
     }
 
     protected function verify()
     {
-        // verify the member information is correct
-        $this->request->update(['member_verified_at' => Carbon::now()]);
+        $request = $this->request;
+        $member  = $request->member;
+
+        $addressForm     = request()->input('address', []);
+        $memberForm      = request()->only('member_number', 'line_of_business', 'dob');
+        $memberPhoneForm = request()->only('phone');
+
+        request()->validate([
+            'dob'                 => 'date',
+            'phone'               => '',
+            'member_id'           => '',
+            'address.address_1'   => '',
+            'address.address_2'   => '',
+            'address.city'        => '',
+            'address.county'      => '',
+            'address.state'       => '',
+            'address.postal_code' => '',
+            'address.is_primary'  => 'boolean',
+        ]);
+
+        if ($addressForm) {
+            // only update the values that are passed in
+            $member->addresses()->first()->update($addressForm);
+        }
+
+        if ($memberPhoneForm) {
+            $member->phones()->firstOrCreate(['number' => $memberPhoneForm['phone']]);
+        }
+
+        if ($memberForm) {
+            $member->update($memberForm);
+        }
+
+        $request->update(['member_verified_at' => Carbon::now()]);
     }
 
     protected function categorySection()

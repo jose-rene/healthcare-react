@@ -19,13 +19,7 @@ class MemberResource extends JsonResource
         $address = $this->addresses->filter(function ($value, $key) {
             return $value->is_primary;
         })->first();
-        $phone   = $this->phones->sortByDesc('is_primary')->first();
-        $email   = $this->emails->sortByDesc('is_primary')->first();
-        $lob     = $this->lob;
-        if ($this->payer && $this->lob) {
-            $lob = $this->payer->lobs->filter(fn ($item) => $item->id == $this->lob->id)->first();
-        }
-        // @todo add relationship fields when the db tables are made
+
         return [
             'id'            => $this->uuid,
             'gender'        => $this->gender,
