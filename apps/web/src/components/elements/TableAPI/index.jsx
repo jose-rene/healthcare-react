@@ -50,7 +50,6 @@ const TableAPI = ({
             <tr key={`tr-th-${index}`}>
                 {headers.map(
                     ({ columnMap, link, type, formatter = false }, indexTd) => {
-
                         let column = null;
 
                         if (columnMap === "edit") {
@@ -75,7 +74,8 @@ const TableAPI = ({
                                 {column}
                             </td>
                         );
-                    })}
+                    }
+                )}
             </tr>
         ));
     }, [headers, data]);

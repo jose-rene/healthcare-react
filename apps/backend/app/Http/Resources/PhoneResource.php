@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -12,7 +13,7 @@ class PhoneResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      *
      * @OA\Property(property="number", type="string", format="phone", example="123-345-6789")
@@ -21,6 +22,7 @@ class PhoneResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id'         => $this->uuid,
             'number'     => $this->number,
             'is_primary' => $this->is_primary,
         ];

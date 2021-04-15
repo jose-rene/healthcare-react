@@ -353,7 +353,7 @@ const AddMember = () => {
 
                             <div className="col-md-6">
                                 <Select
-                                    name="member_id_type"
+                                    name="member_number_type"
                                     label="Member ID Type*"
                                     options={memberIdTypesOptions}
                                     errors={errors}

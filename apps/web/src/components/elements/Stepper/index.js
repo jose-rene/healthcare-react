@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Accordion, Card } from "react-bootstrap";
 
 import Button from "../../inputs/Button";
@@ -8,6 +8,8 @@ import NewRequestAddSteps2 from "../../../pages/newRequestAddSteps/NewRequestAdd
 import NewRequestAddSteps3 from "../../../pages/newRequestAddSteps/NewRequestAddSteps3";
 import NewRequestAddSteps4 from "../../../pages/newRequestAddSteps/NewRequestAddSteps4";
 import NewRequestAddSteps5 from "../../../pages/newRequestAddSteps/NewRequestAddSteps5";
+
+import useApiCall from "../../../hooks/useApiCall";
 
 import "./stepper.css";
 
@@ -21,24 +23,64 @@ const getSteps = () => {
     ];
 };
 
-const getStepContent = (step) => {
+const getStepContent = (step, data, editData, payerProfile, setParams) => {
     switch (step) {
         case 0:
-            return <NewRequestAddSteps1 />;
+            return (
+                <NewRequestAddSteps1
+                    memberData={data}
+                    payerProfile={payerProfile}
+                />
+            );
         case 1:
-            return <NewRequestAddSteps2 />;
+            return (
+                <NewRequestAddSteps2
+                    memberData={editData}
+                    setParams={setParams}
+                />
+            );
         case 2:
-            return <NewRequestAddSteps3 />;
+            return <NewRequestAddSteps3 data={data} />;
         case 3:
-            return <NewRequestAddSteps4 />;
+            return <NewRequestAddSteps4 data={data} setParams={setParams} />;
         case 4:
-            return <NewRequestAddSteps5 />;
+            return <NewRequestAddSteps5 data={data} />;
     }
 };
 
-const Stepper = () => {
+const Stepper = ({ data }) => {
     const steps = getSteps();
     const [activeStep, setActiveStep] = useState(0);
+    const [params, setParams] = useState();
+    const [editData, setEditData] = useState();
+
+    const request_uuid = data.id;
+
+    const [{ data: requestData, loading, error }, fireSubmit] = useApiCall({
+        method: "put",
+        url: `request/${request_uuid}`,
+    });
+
+    const [{ data: payerProfile }, payerProfileRequest] = useApiCall({
+        url: "payer/profile",
+    });
+
+    useEffect(() => {
+        setEditData(data);
+    }, [data]);
+
+    useEffect(() => {
+        payerProfileRequest();
+    }, []);
+
+    const handleUpdate = async () => {
+        try {
+            const result = await fireSubmit({ params });
+            setEditData(result);
+        } catch (e) {
+            console.log("Request update error:", e);
+        }
+    };
 
     return (
         <>
@@ -51,7 +93,8 @@ const Stepper = () => {
                     >
                         <Card className="step">
                             <Accordion.Toggle
-                                className="step-header"
+                                onClick={() => setActiveStep(index)}
+                                className="step-header c-pointer"
                                 as={Card.Header}
                                 eventKey={`${index}`}
                             >
@@ -68,14 +111,20 @@ const Stepper = () => {
                                 <Card.Body
                                     className="step-body"
                                     style={{ height: "24px" }}
-                                ></Card.Body>
+                                />
                             )}
                             <Accordion.Collapse eventKey={`${index}`}>
                                 <Card.Body
                                     className="step-body"
                                     style={{ borderLeft: index === 4 && 0 }}
                                 >
-                                    {getStepContent(index)}
+                                    {getStepContent(
+                                        activeStep,
+                                        data,
+                                        editData,
+                                        payerProfile,
+                                        setParams,
+                                    )}
                                     <div className="form-row mt-5">
                                         <div className="col-md-6">
                                             <Button
@@ -85,7 +134,7 @@ const Stepper = () => {
                                                     setActiveStep(
                                                         index > 0
                                                             ? index - 1
-                                                            : index
+                                                            : index,
                                                     )
                                                 }
                                             >
@@ -97,13 +146,16 @@ const Stepper = () => {
                                                 block
                                                 variant="primary"
                                                 className="btn-lg"
-                                                onClick={() =>
+                                                onClick={() => {
+                                                    if (activeStep !== 0) {
+                                                        handleUpdate();
+                                                    }
                                                     setActiveStep(
                                                         index < 5
                                                             ? index + 1
-                                                            : index
-                                                    )
-                                                }
+                                                            : index,
+                                                    );
+                                                }}
                                             >
                                                 Next
                                             </Button>

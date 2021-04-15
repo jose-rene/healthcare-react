@@ -1,27 +1,80 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useMemo } from "react";
 import PageLayout from "../../layouts/PageLayout";
 import Stepper from "../../components/elements/Stepper";
 
 import "./newRequestAdd.css";
+import useApiCall from "../../hooks/useApiCall";
+import { POST } from "../../config/URLs";
+import Icon from "../../components/elements/Icon";
 
-export default function NewRequestAdd() {
+const NewRequestAdd = ({
+    match: {
+        params: {
+            member_id,
+            request_id = false,
+        },
+    },
+    history,
+}) => {
+    const [{ loading: saving = true }, fireCreateRequest] = useApiCall({
+        method: POST,
+        url: `/member/${member_id}/member-requests`,
+    });
+    const [{ loading = true, data }, fireLoadRequest] = useApiCall({
+        url: `/member/${member_id}/member-requests/${request_id}`,
+    });
+
+    useEffect(() => {
+        (async () => {
+            if (!request_id) {
+                let id = null;
+                try {
+                    const { id: newReportId } = await fireCreateRequest();
+                    id = newReportId;
+                } catch (e) {
+
+                }
+                if (!id) {
+                    history.push(`/404?message=bad-member-id`);
+                    return;
+                }
+                history.push(`/member/${member_id}/request/${id}/edit`);
+            } else {
+                fireLoadRequest();
+            }
+        })();
+    }, []);
+
+    const { member = {} } = data;
+
+    console.log({ member, data });
+
+    const name = useMemo(() => {
+        const { title = "", last_name = "", first_name = "" } = member || {};
+
+        return `${title} ${first_name} ${last_name}`;
+    }, [data]);
+
     return (
         <PageLayout>
             <div className="content-box" style={{ backgroundColor: "#fff" }}>
-                <h1 className="box-title mb-0">New Request</h1>
+                <h1 className="box-title mb-0">
+                    New Request{" "}
+                    {(loading || saving) && <Icon icon="spinner" size="1x" spin={true} />}
+                </h1>
                 <p className="box-legenda mb-3">
                     Please fill the request sections
                 </p>
 
                 <div className="row">
                     <div className="col-md-12">
-                        <h1 className="box-subtitle mt-5">Test M Smith</h1>
+                        <h1 className="box-subtitle mt-5">{name}</h1>
 
-                        <Stepper />
+                        <Stepper data={data} />
                     </div>
                 </div>
             </div>
         </PageLayout>
     );
-}
+};
+export default NewRequestAdd;

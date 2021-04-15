@@ -15,6 +15,7 @@ class CreatePhonesTable extends Migration
     {
         Schema::create('phones', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid');
             $table->morphs('phoneable');
             $table->string('number', 24)->comment('The phone number.');
             $table->boolean('is_primary')->default(0);

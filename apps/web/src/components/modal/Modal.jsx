@@ -1,116 +1,217 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { useHistory } from "react-router";
+import { isEmpty } from "lodash";
 
 import Modal from "../elements/Modal";
 import InputText from "../inputs/InputText";
 import Select from "../inputs/Select";
 import Button from "../inputs/Button";
+import useApiCall from "../../hooks/useApiCall";
 
 import "./Modal.css";
 
-const FormModal = ({ title, nameField }) => {
+const FormModal = ({ title, nameField, data, member_id, payerProfile }) => {
+    const history = useHistory();
     const [open, setOpen] = useState(false);
+    const [editData, setEditData] = useState(null);
+
+    const [{ data: memberData, loading, error }, fireSubmit] = useApiCall({
+        method: "put",
+        url: `member/${member_id}`,
+    });
 
     const handleClickOpen = () => {
         setOpen(true);
+        setEditData(data);
     };
 
     const handleClose = () => {
         setOpen(false);
     };
 
+    const handleUpdate = async (nameField, editData) => {
+        let submitData;
+        switch (nameField) {
+            case "address":
+                submitData = editData;
+                break;
+
+            case "phone":
+                submitData = { phone: editData.number };
+                break;
+
+            case "plan":
+                submitData = { plan: editData.id };
+                break;
+
+            case "line_of_business":
+                submitData = { line_of_business: editData.id };
+                break;
+
+            case "member_number":
+                submitData = {
+                    member_number: editData.member_number,
+                };
+                break;
+        }
+
+        if (loading) {
+            return false;
+        }
+
+        try {
+            const result = await fireSubmit({ params: submitData });
+            if (result) {
+                history.go(0);
+            }
+        } catch (e) {
+            console.log("Member update error:", e);
+        }
+    };
+
+    const handleCancel = () => {
+        handleClose();
+    };
+
+    const updateData = ({ target: { name, value } }) => {
+        setEditData({ ...editData, [name]: value });
+    };
+
+    const planOptions = useMemo(() => {
+        if (isEmpty(payerProfile) || !payerProfile.payers.length) {
+            return [];
+        }
+
+        return payerProfile.payers.map(({ id, company_name }) => {
+            return { id, title: company_name, val: id };
+        });
+    }, [payerProfile]);
+
+    const lobOptions = useMemo(() => {
+        if (isEmpty(payerProfile) || !payerProfile.lines_of_business.length) {
+            return [];
+        }
+
+        return payerProfile.lines_of_business.map(({ id, name }) => {
+            return { id, title: name, val: id };
+        });
+    }, [payerProfile]);
+
     const content = (nameField) => {
         switch (nameField) {
-            case "Address":
+            case "address":
                 return (
                     <div className="row">
                         <div className="col-md-6">
-                            <InputText name="address_1" label="Address 1" />
+                            <InputText
+                                name="address_1"
+                                value={editData ? editData.address_1 : ""}
+                                label="Address 1"
+                                onChange={updateData}
+                            />
                         </div>
 
                         <div className="col-md-6">
-                            <InputText name="address_2" label="Address 2" />
+                            <InputText
+                                name="address_2"
+                                value={editData ? editData.address_2 : ""}
+                                label="Address 2"
+                                onChange={updateData}
+                            />
                         </div>
 
                         <div className="col-md-6">
-                            <InputText name="Zip" label="Zip" />
+                            <InputText
+                                name="postal_code"
+                                value={editData ? editData.postal_code : ""}
+                                label="Zip"
+                                onChange={updateData}
+                            />
                         </div>
 
                         <div className="col-md-6">
-                            <InputText name="City" label="City" />
+                            <InputText
+                                name="city"
+                                value={editData ? editData.city : ""}
+                                label="City"
+                                onChange={updateData}
+                            />
                         </div>
 
                         <div className="col-md-6">
-                            <InputText name="State" label="State" />
+                            <InputText
+                                name="state"
+                                value={editData ? editData.state : ""}
+                                label="State"
+                                onChange={updateData}
+                            />
                         </div>
 
                         <div className="col-md-6">
-                            <Select
-                                name="country"
-                                label="Country"
-                                options={[
-                                    {
-                                        id: "eua",
-                                        title: "EUA",
-                                        val: "EUA",
-                                    },
-                                ]}
+                            <InputText
+                                name="county"
+                                value={editData ? editData.county : ""}
+                                label="County"
+                                onChange={updateData}
                             />
                         </div>
                     </div>
                 );
 
-            case "Phone":
+            case "phone":
                 return (
                     <div className="row">
                         <div className="col-md-12">
-                            <InputText name="phone" label="Phone" />
+                            <InputText
+                                name="number"
+                                value={editData ? editData.number : ""}
+                                label="Phone"
+                                onChange={updateData}
+                            />
                         </div>
                     </div>
                 );
 
-            case "Plan":
+            case "plan":
                 return (
                     <div className="row">
                         <div className="col-md-12">
                             <Select
-                                name="member_plan"
+                                name="id"
                                 label="Member Plan"
-                                options={[
-                                    {
-                                        id: "Molina Healthcare Washington",
-                                        title: "Molina Healthcare Washington",
-                                        val: "Molina Healthcare Washington",
-                                    },
-                                ]}
+                                value={editData ? editData.id : null}
+                                options={planOptions}
+                                onChange={updateData}
                             />
                         </div>
                     </div>
                 );
 
-            case "Business":
+            case "line_of_business":
                 return (
                     <div className="row">
                         <div className="col-md-12">
                             <Select
-                                name="line_of_business"
+                                name="id"
                                 label="Line of business"
-                                options={[
-                                    {
-                                        id: "Medicaid (Apple Health / IMC)",
-                                        title: "Medicaid (Apple Health / IMC)",
-                                        val: "Medicaid (Apple Health / IMC)",
-                                    },
-                                ]}
+                                value={editData ? editData.id : null}
+                                options={lobOptions}
+                                onChange={updateData}
                             />
                         </div>
                     </div>
                 );
 
-            case "id":
+            case "member_number":
                 return (
                     <div className="row">
                         <div className="col-md-12">
-                            <InputText name="member_id" label="Member ID" />
+                            <InputText
+                                name="member_number"
+                                value={editData ? editData.member_number : ""}
+                                label="Member ID"
+                                onChange={updateData}
+                            />
                         </div>
                     </div>
                 );
@@ -133,7 +234,7 @@ const FormModal = ({ title, nameField }) => {
                             <Button
                                 outline
                                 label="Cancel"
-                                onClick={handleClose}
+                                onClick={handleCancel}
                             />
                         </div>
 
@@ -141,7 +242,10 @@ const FormModal = ({ title, nameField }) => {
                             <Button
                                 className="btn-blue text-btn"
                                 label="Update"
-                                onClick={handleClose}
+                                onClick={() => {
+                                    handleUpdate(nameField, editData);
+                                    handleClose();
+                                }}
                             />
                         </div>
                     </div>
