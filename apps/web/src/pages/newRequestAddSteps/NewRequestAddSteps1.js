@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { isEmpty } from "lodash";
 
 import Switch from "../../components/inputs/Switch";
@@ -91,15 +91,15 @@ const NewRequestAddSteps1 = ({ memberData, payerProfile }) => {
                             </div>
 
                             <div className="col-md-5">
-                                <p className="text-checkbox">
+                                {address && <p className="text-checkbox">
                                     {address.address_1 +
-                                        " " +
-                                        address.city +
-                                        ", " +
-                                        address.state +
-                                        " " +
-                                        address.postal_code}
-                                </p>
+                                    " " +
+                                    address.city +
+                                    ", " +
+                                    address.state +
+                                    " " +
+                                    address.postal_code}
+                                </p> || ""}
                             </div>
 
                             <div className="col-md-2 my-auto">

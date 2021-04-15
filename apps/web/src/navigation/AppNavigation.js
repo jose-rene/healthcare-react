@@ -91,6 +91,11 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     component={NewRequestAdd}
                 />
                 <PrivateRoute
+                    path="/member/:member_id/request/:request_id/edit"
+                    middleware={["hp_user", "hp_champion"]}
+                    component={NewRequestAdd}
+                />
+                <PrivateRoute
                     exact
                     path="/admin/test/table"
                     middleware={[ADMIN]}

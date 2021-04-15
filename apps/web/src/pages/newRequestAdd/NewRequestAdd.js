@@ -1,36 +1,67 @@
 import React, { useEffect, useMemo } from "react";
 import PageLayout from "../../layouts/PageLayout";
 import Stepper from "../../components/elements/Stepper";
-import useApiCall from "../../hooks/useApiCall";
 
 import "./newRequestAdd.css";
+import useApiCall from "../../hooks/useApiCall";
+import { POST } from "../../config/URLs";
+import Icon from "../../components/elements/Icon";
 
 const NewRequestAdd = ({
     match: {
-        params: { member_id },
+        params: {
+            member_id,
+            request_id = false,
+        },
     },
+    history,
 }) => {
-    const [{ data }, dataRequest] = useApiCall({
-        method: "post",
+    const [{ loading: saving = true }, fireCreateRequest] = useApiCall({
+        method: POST,
         url: `/member/${member_id}/member-requests`,
     });
+    const [{ loading = true, data }, fireLoadRequest] = useApiCall({
+        url: `/member/${member_id}/member-requests/${request_id}`,
+    });
+
+    useEffect(() => {
+        (async () => {
+            if (!request_id) {
+                let id = null;
+                try {
+                    const { id: newReportId } = await fireCreateRequest();
+                    id = newReportId;
+                } catch (e) {
+
+                }
+                if (!id) {
+                    history.push(`/404?message=bad-member-id`);
+                    return;
+                }
+                history.push(`/member/${member_id}/request/${id}/edit`);
+            } else {
+                fireLoadRequest();
+            }
+        })();
+    }, []);
 
     const { member = {} } = data;
 
-    useEffect(() => {
-        dataRequest();
-    }, []);
+    console.log({ member, data });
 
     const name = useMemo(() => {
-        const { last_name = "", first_name = "" } = member || {};
+        const { title = "", last_name = "", first_name = "" } = member || {};
 
-        return `${first_name} ${last_name}`;
-    }, [member]);
+        return `${title} ${first_name} ${last_name}`;
+    }, [data]);
 
     return (
         <PageLayout>
             <div className="content-box" style={{ backgroundColor: "#fff" }}>
-                <h1 className="box-title mb-0">New Request</h1>
+                <h1 className="box-title mb-0">
+                    New Request{" "}
+                    {(loading || saving) && <Icon icon="spinner" size="1x" spin={true} />}
+                </h1>
                 <p className="box-legenda mb-3">
                     Please fill the request sections
                 </p>
@@ -46,5 +77,4 @@ const NewRequestAdd = ({
         </PageLayout>
     );
 };
-
 export default NewRequestAdd;
