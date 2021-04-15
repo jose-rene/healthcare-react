@@ -19,8 +19,6 @@ class MemberResource extends JsonResource
         $address = $this->addresses->filter(function ($value, $key) {
             return $value->is_primary;
         })->first();
-        $phone   = $this->phones->sortByDesc('is_primary')->first();
-        $email   = $this->emails->sortByDesc('is_primary')->first();
 
         return [
             'id'            => $this->uuid,
