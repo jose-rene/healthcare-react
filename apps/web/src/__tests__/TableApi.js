@@ -18,13 +18,13 @@ describe("<TableAPI />", () => {
             },
         };
 
-        const pagination = renderer.create(<TablePagination {...props} />).
-            toJSON();
+        const pagination = renderer
+            .create(<TablePagination {...props} />)
+            .toJSON();
         expect(pagination).toMatchSnapshot();
     });
 
     it("renders regular pagination", () => {
-
         const props = {
             onChange: jest.fn(),
             totalPages: 9,
@@ -35,8 +35,9 @@ describe("<TableAPI />", () => {
             },
         };
 
-        const pagination = renderer.create(<TablePagination {...props} />).
-            toJSON();
+        const pagination = renderer
+            .create(<TablePagination {...props} />)
+            .toJSON();
         expect(pagination).toMatchSnapshot();
     });
 
@@ -70,8 +71,9 @@ describe("<TableAPI />", () => {
             searchObj: {},
         };
 
-        const tableHeader = renderer.create(<TableHeaders {...props} />).
-            toJSON();
+        const tableHeader = renderer
+            .create(<TableHeaders {...props} />)
+            .toJSON();
         expect(tableHeader).toMatchSnapshot();
     });
 });

@@ -33,14 +33,16 @@ const SearchMember = () => {
             columnMap: "address",
             label: "Address",
             type: String,
-            formatter (address) {
-                return !address ? "" : [
-                    `${address.street}`,
-                    `${address.city},`,
-                    `${address.county}`,
-                    `${address.state}`,
-                    `${address.zip_code}`,
-                ].join(" ");
+            formatter(address) {
+                return !address
+                    ? ""
+                    : [
+                          `${address.street}`,
+                          `${address.city},`,
+                          `${address.county}`,
+                          `${address.state}`,
+                          `${address.zip_code}`,
+                      ].join(" ");
             },
         },
     ]);

@@ -1,11 +1,32 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useMemo } from "react";
 import PageLayout from "../../layouts/PageLayout";
 import Stepper from "../../components/elements/Stepper";
+import useApiCall from "../../hooks/useApiCall";
 
 import "./newRequestAdd.css";
 
-export default function NewRequestAdd() {
+const NewRequestAdd = ({
+    match: {
+        params: { member_id },
+    },
+}) => {
+    const [{ data }, dataRequest] = useApiCall({
+        method: "post",
+        url: `/member/${member_id}/member-requests`,
+    });
+
+    const { member = {} } = data;
+
+    useEffect(() => {
+        dataRequest();
+    }, []);
+
+    const name = useMemo(() => {
+        const { last_name = "", first_name = "" } = member || {};
+
+        return `${first_name} ${last_name}`;
+    }, [member]);
+
     return (
         <PageLayout>
             <div className="content-box" style={{ backgroundColor: "#fff" }}>
@@ -16,12 +37,14 @@ export default function NewRequestAdd() {
 
                 <div className="row">
                     <div className="col-md-12">
-                        <h1 className="box-subtitle mt-5">Test M Smith</h1>
+                        <h1 className="box-subtitle mt-5">{name}</h1>
 
-                        <Stepper />
+                        <Stepper data={data} />
                     </div>
                 </div>
             </div>
         </PageLayout>
     );
-}
+};
+
+export default NewRequestAdd;
