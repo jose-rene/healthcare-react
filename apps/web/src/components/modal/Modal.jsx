@@ -10,14 +10,10 @@ import useApiCall from "../../hooks/useApiCall";
 
 import "./Modal.css";
 
-const FormModal = ({ title, nameField, data, member_id }) => {
+const FormModal = ({ title, nameField, data, member_id, payerProfile }) => {
     const history = useHistory();
     const [open, setOpen] = useState(false);
     const [editData, setEditData] = useState(null);
-
-    const [{ data: payerProfile }, payerProfileRequest] = useApiCall({
-        url: "payer/profile",
-    });
 
     const [{ data: memberData, loading, error }, fireSubmit] = useApiCall({
         method: "put",
@@ -99,12 +95,6 @@ const FormModal = ({ title, nameField, data, member_id }) => {
         return payerProfile.lines_of_business.map(({ id, name }) => {
             return { id, title: name, val: id };
         });
-    }, [payerProfile]);
-
-    useEffect(() => {
-        if (isEmpty(payerProfile)) {
-            payerProfileRequest();
-        }
     }, [payerProfile]);
 
     const content = (nameField) => {
