@@ -348,12 +348,11 @@ const AddMember = () => {
                             <div className="col-md-6">
                                 <Select
                                     name="member_number_type"
-                                    label="Member Number Type*"
+                                    label="Member ID Type*"
                                     options={memberNumberTypesOptions}
                                     errors={errors}
                                     ref={register({
-                                        required:
-                                            "Member Number Type is required",
+                                        required: "Member ID Type is required",
                                     })}
                                 />
                             </div>
