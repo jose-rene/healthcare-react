@@ -1,5 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router";
+import moment from "moment";
+import { isEmpty } from "lodash";
 
 import InputText from "../../components/inputs/InputText";
 import Select from "../../components/inputs/Select";
@@ -11,12 +13,57 @@ import useApiCall from "../../hooks/useApiCall";
 
 import "./newRequestAddSteps.css";
 
-const NewRequestAddSteps5 = () => {
+const NewRequestAddSteps5 = ({ memberData, setParams }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const location = useLocation();
     const hiddenFileInput = useRef(null);
 
-    const [{ data, loading, error: fileError }, fileSubmit] = useApiCall({
+    const [data, setData] = useState({
+        type_name: "due",
+        due_at: "",
+    });
+
+    const [dueDate, setDueDate] = useState(moment().format("YYYY-MM-DD"));
+    const [dueTime, setDueTime] = useState(
+        moment("00:00", "HH:mm").format("HH:mm")
+    );
+
+    useEffect(() => {
+        if (!isEmpty(memberData)) {
+            setData({
+                type_name: "due",
+
+                due_at: memberData.due_at || "",
+            });
+        }
+    }, [memberData]);
+
+    useEffect(() => {
+        let dueAt = dueDate + " " + dueTime;
+        setData({
+            type_name: "due",
+            due_at: dueAt,
+        });
+    }, [dueDate, dueTime, setData]);
+
+    useEffect(() => {
+        setParams(data);
+    }, [data, setParams]);
+
+    const updateData = ({ target: { name, value } }) => {
+        if (name === "due_date") {
+            setDueDate(moment(value).format("YYYY-MM-DD"));
+        }
+
+        if (name === "due_time") {
+            setDueTime(moment(value, "HH:mm").format("HH:mm"));
+        }
+    };
+
+    const [
+        { data: requestData, loading, error: fileError },
+        fileSubmit,
+    ] = useApiCall({
         method: "post",
         url: "/api/uploadFile", // need to change the correct api
     });
@@ -43,6 +90,27 @@ const NewRequestAddSteps5 = () => {
         setSelectedFile(fileUploaded);
     };
 
+    const generateTimes = () => {
+        var x = 30;
+        var times = [];
+        var tt = 0;
+
+        for (var i = 0; tt < 24 * 60; i++) {
+            var hh = Math.floor(tt / 60);
+            var mm = tt % 60;
+            const time =
+                ("0" + (hh % 24)).slice(-2) + ":" + ("0" + mm).slice(-2);
+            times[i] = {
+                id: time,
+                title: time,
+                value: time,
+            };
+            tt = tt + x;
+        }
+
+        return times;
+    };
+
     return (
         <>
             <div className="container-info">
@@ -63,20 +131,26 @@ const NewRequestAddSteps5 = () => {
                                 type="date"
                                 name="due_date"
                                 label="Due date"
+                                value={
+                                    data.due_at
+                                        ? data.due_at.split(" ")[0]
+                                        : dueDate
+                                }
+                                onChange={updateData}
                             />
                         </div>
 
                         <div className="col-md-6">
                             <Select
-                                name="time"
+                                name="due_time"
                                 label="Time"
-                                options={[
-                                    {
-                                        id: "05:00 PM",
-                                        title: "05:00 PM",
-                                        val: "05:00 PM",
-                                    },
-                                ]}
+                                value={
+                                    data.due_at
+                                        ? data.due_at.split(" ")[1]
+                                        : dueTime
+                                }
+                                options={generateTimes()}
+                                onChange={updateData}
                             />
                         </div>
                     </div>
