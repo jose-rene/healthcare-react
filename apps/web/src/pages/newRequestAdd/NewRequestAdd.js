@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo } from "react";
-import PageLayout from "../../layouts/PageLayout";
-import Stepper from "../../components/elements/Stepper";
+import React, { useEffect, useMemo } from 'react';
+import PageLayout from '../../layouts/PageLayout';
+import Stepper from '../../components/elements/Stepper';
 
-import "./newRequestAdd.css";
-import useApiCall from "../../hooks/useApiCall";
-import { POST } from "../../config/URLs";
-import Icon from "../../components/elements/Icon";
+import './newRequestAdd.css';
+import useApiCall from '../../hooks/useApiCall';
+import { POST } from '../../config/URLs';
+import Icon from '../../components/elements/Icon';
 
 const NewRequestAdd = ({
     match: {
@@ -46,8 +46,6 @@ const NewRequestAdd = ({
     }, []);
 
     const { member = {} } = data;
-
-    console.log({ member, data });
 
     const name = useMemo(() => {
         const { title = "", last_name = "", first_name = "" } = member || {};
