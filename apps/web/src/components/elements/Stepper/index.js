@@ -44,7 +44,12 @@ const getStepContent = (step, data, editData, payerProfile, setParams) => {
         case 3:
             return <NewRequestAddSteps4 data={data} setParams={setParams} />;
         case 4:
-            return <NewRequestAddSteps5 data={data} />;
+            return (
+                <NewRequestAddSteps5
+                    memberData={editData}
+                    setParams={setParams}
+                />
+            );
     }
 };
 
@@ -123,7 +128,7 @@ const Stepper = ({ data }) => {
                                         data,
                                         editData,
                                         payerProfile,
-                                        setParams,
+                                        setParams
                                     )}
                                     <div className="form-row mt-5">
                                         <div className="col-md-6">
@@ -134,7 +139,7 @@ const Stepper = ({ data }) => {
                                                     setActiveStep(
                                                         index > 0
                                                             ? index - 1
-                                                            : index,
+                                                            : index
                                                     )
                                                 }
                                             >
@@ -153,7 +158,7 @@ const Stepper = ({ data }) => {
                                                     setActiveStep(
                                                         index < 5
                                                             ? index + 1
-                                                            : index,
+                                                            : index
                                                     );
                                                 }}
                                             >

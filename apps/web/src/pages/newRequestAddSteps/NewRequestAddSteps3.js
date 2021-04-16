@@ -14,10 +14,6 @@ const NewRequestAddSteps3 = ({ setParams }) => {
         return setData({ ...data, [name]: value });
     };
 
-    useEffect(() => {
-        setParams(data);
-    }, [data, setParams]);
-
     return (
         <>
             <div className="container-info">
