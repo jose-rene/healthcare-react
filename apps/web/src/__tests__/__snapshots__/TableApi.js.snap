@@ -18,7 +18,9 @@ exports[`<TableAPI /> renders pagination with a select 1`] = `
     onChange={[Function]}
     value={1}
   >
-    <option>
+    <option
+      value={1}
+    >
       1
     </option>
   </select>
