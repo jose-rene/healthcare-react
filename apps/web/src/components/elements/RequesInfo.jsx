@@ -26,7 +26,7 @@ const Info = () => {
             <div className="col-6 col-sm-3 margin-box margin-box-bottom">
                 <div className="info-box">
                     <p style={{ color: "#2E94E6" }} className="title-info-box">
-                        {loading ? "*" : data?.in_progress ?? "n/a"}
+                        {loading ? "*" : data?.assigned ?? "n/a"}
                     </p>
                     <p className="subtitle-info-box">In Progress</p>
                 </div>

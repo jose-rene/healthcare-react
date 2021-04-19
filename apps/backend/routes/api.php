@@ -22,6 +22,7 @@ Route::get('/ssologin/{email}', [LoginController::class, 'requestToken'])->name(
 
 Route::middleware('auth:api')->group(function ($router) {
     $router->get('/payer/profile', 'PayerController@profile')->name('company.profile');
+    $router->get('/icd10code/lookup', 'Icd10CodeController@lookup')->name('icd10code.lookup');
     // @todo deprecate these test routes, will be supersceded by payer and lobs
     $router->get('/plan/plans', 'PlanController@plans');
     $router->get('/plan/lobs', 'PlanController@lobs');
