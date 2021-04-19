@@ -1,15 +1,15 @@
-import React from "react";
-import { Form } from "react-bootstrap";
+import React from 'react';
+import { Form } from 'react-bootstrap';
 
 const Select = (
     {
         name,
-        label = "",
+        label = '',
         inlineLabel = false,
         options = [],
         autocomplete = false,
         className = false,
-        classNameAppend = "",
+        classNameAppend = '',
         helpText = false,
         errors = {},
         labelClass = "",
@@ -22,15 +22,15 @@ const Select = (
 ) => {
     const { [name]: { message = false } = {} } = errors;
     const hasError = !!message;
-    const selectOptions = options.map((option) => (
-        <option key={option.id} value={option[valueKey]}>
-            {option[labelKey]}
+    const selectOptions = options.map(({ id, [valueKey]: optionValue, [labelKey]: optionLabel, ...otherProps }) => (
+        <option key={id} value={optionValue} {...otherProps}>
+            {optionLabel}
         </option>
     ));
     return (
         <div
-            className={`${wrapperClass ? "wrapperClass" : "form-group"} ${
-                inlineLabel ? "d-flex" : ""
+            className={`${wrapperClass ? 'wrapperClass' : 'form-group'} ${
+                inlineLabel ? 'd-flex' : ''
             }`}
         >
             {label && (

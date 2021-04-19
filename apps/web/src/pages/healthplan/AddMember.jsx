@@ -26,10 +26,6 @@ const AddMember = () => {
         url: "payer/profile",
     });
 
-    const [{ data: memberIdTypes }, memberIdTypesRequest] = useApiCall({
-        url: "plan/idtypes",
-    });
-
     const [{ data, loading, error: formError }, fireSubmit] = useApiCall({
         method: "post",
         url: "member",
@@ -42,7 +38,6 @@ const AddMember = () => {
     }, [data]);
 
     useEffect(() => {
-        memberIdTypesRequest();
         payerProfileRequest();
     }, []);
 
@@ -63,6 +58,15 @@ const AddMember = () => {
 
         return payerProfile.lines_of_business.map(({ id, name }) => {
             return { id, title: name, val: id };
+        });
+    }, [payerProfile]);
+
+    const memberNumberTypesOptions = useMemo(() => {
+        if (isEmpty(payerProfile) || !payerProfile.member_number_types.length) {
+            return [];
+        }
+        return payerProfile.member_number_types.map(({ id, title }) => {
+            return { id, title, val: id };
         });
     }, [payerProfile]);
 
@@ -116,16 +120,6 @@ const AddMember = () => {
 
         return result;
     }, [titles]);
-
-    const memberIdTypesOptions = useMemo(() => {
-        if (isEmpty(memberIdTypes)) {
-            return [];
-        }
-
-        return memberIdTypes.map(({ id, title }) => {
-            return { id, title, val: id };
-        });
-    }, [memberIdTypes]);
 
     const {
         register,
@@ -355,7 +349,7 @@ const AddMember = () => {
                                 <Select
                                     name="member_number_type"
                                     label="Member ID Type*"
-                                    options={memberIdTypesOptions}
+                                    options={memberNumberTypesOptions}
                                     errors={errors}
                                     ref={register({
                                         required: "Member ID Type is required",

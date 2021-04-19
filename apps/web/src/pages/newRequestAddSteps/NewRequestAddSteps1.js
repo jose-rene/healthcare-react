@@ -1,20 +1,18 @@
-import React, { useState, useMemo } from "react";
-import { isEmpty } from "lodash";
+import React, { useState, useMemo } from 'react';
+import { isEmpty } from 'lodash';
 
-import Switch from "../../components/inputs/Switch";
-import Modal from "../../components/modal/Modal";
+import Switch from '../../components/inputs/Switch';
+import Modal from '../../components/modal/Modal';
 
-import useApiCall from "../../hooks/useApiCall";
-
-import "./newRequestAddSteps.css";
+import './newRequestAddSteps.css';
 
 const NewRequestAddSteps1 = ({ memberData, payerProfile }) => {
     const [data, setData] = useState({
-        type_name: "verify",
+        type_name: 'verify',
 
         address: {
-            address_1: "",
-            address_2: "",
+            address_1: '',
+            address_2: '',
             city: "",
             county: "",
             state: "",
@@ -123,7 +121,7 @@ const NewRequestAddSteps1 = ({ memberData, payerProfile }) => {
                             </div>
 
                             <div className="col-md-5">
-                                <p className="text-checkbox">{phone.number}</p>
+                                <p className="text-checkbox">{phone?.number}</p>
                             </div>
 
                             <div className="col-md-2 my-auto">
