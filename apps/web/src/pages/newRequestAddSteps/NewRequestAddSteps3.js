@@ -16,32 +16,11 @@ const NewRequestAddSteps3 = ({ setParams }) => {
         return setData({ ...data, [name]: value });
     };
 
-    const logChange = (e) => {
-        console.log(e);
-    };
-
-    const [
-        { loading, data: codeData, error: codeError },
-        fireSearch,
-    ] = useApiCall({
-        method: "post",
+    const [{ loading }, fireSearch] = useApiCall({
+        method: "get",
         url: "icd10code/lookup",
     });
 
-    const getOptions = function (input, callback) {
-        console.log("fire ", input);
-        setTimeout(function () {
-            callback(null, {
-                options: [
-                    { value: "one", label: "One" },
-                    { value: "two", label: "Two" },
-                ],
-                // CAREFUL! Only set this to true when there are no more options,
-                // or more specific queries will not be sent to the server.
-                complete: true,
-            });
-        }, 500);
-    };
     const lookupCodes = (input, callback) => {
         if (input.length < 2) {
             return null;

@@ -33,7 +33,7 @@ class Icd10CodeTest extends TestCase
             'clinicaltables.nlm.nih.gov/api/*' => Http::response($mocked = $this->getMockResponse(), 200, []),
         ]);
         $expected = array_map(fn ($item) => ['value' => $item[0], 'label' => $item[0] . ' - ' . $item[1]], $mocked[3]);
-        $response = $this->json('POST', $route, ['term' => 'A2']);
+        $response = $this->json('GET', $route, ['term' => 'A2']);
         // validate response code
         $response->assertStatus(200);
         // expected response
