@@ -3,6 +3,7 @@
     line-height: 180%;
     color: #475866;
 }
+.accordion > .card.step {overflow:visible}
 
 .attention-alert {
     display: flex;
