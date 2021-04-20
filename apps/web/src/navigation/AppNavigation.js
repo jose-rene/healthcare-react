@@ -11,6 +11,7 @@ import HpEditUser from "../pages/healthplan/EditUser";
 import HpAddMember from "../pages/healthplan/AddMember";
 import HpSearchMember from "../pages/healthplan/SearchMember";
 import NewRequestAdd from "../pages/newRequestAdd/NewRequestAdd";
+import RequestLookup from "../pages/RequestLookup/RequestLookup";
 import Assessment from "../pages/Assessment";
 import Error401 from "../pages/Errors/401";
 import Federated from "../pages/Federated";
@@ -94,6 +95,11 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     path="/member/:member_id/request/:request_id/edit"
                     middleware={["hp_user", "hp_champion"]}
                     component={NewRequestAdd}
+                />
+                <PrivateRoute
+                    path="/healthplan/requests"
+                    middleware={["hp_user", "hp_champion"]}
+                    component={RequestLookup}
                 />
                 <PrivateRoute
                     exact
