@@ -44,6 +44,8 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->get('/request/inspire', 'RequestController@inspire');
     $router->get('/request/list', 'RequestController@inspire');
     $router->get('/request/types', [RequestTypesController::class, 'index'])->name('request.types.index');
+    $router->get('/requesttype', 'RequestTypeController@index')->name('requesttypes.index');
+
     // protected crud routes
     Route::apiResource('questionnaire', 'QuestionnaireController');
     Route::apiResource('assessment', 'AssessmentController');

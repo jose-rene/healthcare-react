@@ -25,6 +25,13 @@ const getSteps = () => {
 
 const getStepContent = (step, data, editData, payerProfile, setParams) => {
     switch (step) {
+        case 0:
+            return (
+                <NewRequestAddSteps1
+                    memberData={data}
+                    payerProfile={payerProfile}
+                />
+            );
         case 1:
             return (
                 <NewRequestAddSteps2
@@ -33,18 +40,17 @@ const getStepContent = (step, data, editData, payerProfile, setParams) => {
                 />
             );
         case 2:
-            return <NewRequestAddSteps3 data={data} setParams={setParams} />;
+            return <NewRequestAddSteps3 data={data} />;
         case 3:
-            return <NewRequestAddSteps4 data={data} setParams={setParams} />;
-        case 4:
-            return <NewRequestAddSteps5 data={data} />;
-        default:
             return (
-                <NewRequestAddSteps1
-                    memberData={data}
+                <NewRequestAddSteps4
+                    data={data}
                     payerProfile={payerProfile}
+                    setParams={setParams}
                 />
             );
+        case 4:
+            return <NewRequestAddSteps5 data={data} />;
     }
 };
 

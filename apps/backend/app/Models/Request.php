@@ -58,14 +58,14 @@ class Request extends Model
         return $this->belongsTo(RequestStatus::class);
     }
 
-    public function requestType()
+    public function requestTypes()
     {
-        return $this->hasOne(RequestType::class, 'request_type_id');
+        return $this->hasManyThrough(RequestType::class, RequestItem::class);
     }
 
     public function requestItems()
     {
-        return $this->hasMany(RequestItem::class, 'request_id');
+        return $this->hasMany(RequestItem::class);
     }
 
     public function relevantDiagnoses()
@@ -146,6 +146,6 @@ class Request extends Model
 
     public function getMemberVerifiedAttribute()
     {
-        return (bool)$this->member_verified_at;
+        return (bool) $this->member_verified_at;
     }
 }

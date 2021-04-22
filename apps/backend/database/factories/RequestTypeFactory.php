@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Payer;
 use App\Models\RequestType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,7 +23,8 @@ class RequestTypeFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
+            'name'     => $this->faker->bs,
+            'payer_id' => fn () => Payer::factory()->create(),
         ];
     }
 }

@@ -39,8 +39,8 @@ class RequestSectionSaveJob
      */
     public function handle()
     {
-        $request   = $this->request;
-        $section   = $this->section;
+        $request = $this->request;
+        $section = $this->section;
         $type_name = Str::slug($section['type_name']);
 
         switch ($type_name) {
@@ -79,7 +79,7 @@ class RequestSectionSaveJob
 
     protected function relevantDiagnosisSection()
     {
-        $request           = $this->request;
+        $request = $this->request;
         $relevantDiagnosis = request()->input('relevantDiagnosis');
 
         $trackedCodes = $request->relevantDiagnoses->keyBy('code')->map(function ($c) {
@@ -111,7 +111,7 @@ class RequestSectionSaveJob
         $request = $this->request;
         try {
             $this->request->update(request()->validate([
-                'auth_number' => Rule::unique('requests')->where(fn($query) => $query->where('payer_id',
+                'auth_number' => Rule::unique('requests')->where(fn ($query) => $query->where('payer_id',
                     $request->payer_id)),
             ]));
         } catch (ValidationException $e) {
@@ -123,17 +123,17 @@ class RequestSectionSaveJob
     {
         $this->request->update(request()->validate([
             'due_at' => ['date', 'after:today'],
-            'notes'  => [],// form - due_date + time
+            'notes'  => [], // form - due_date + time
         ]));
     }
 
     protected function verify()
     {
         $request = $this->request;
-        $member  = $request->member;
+        $member = $request->member;
 
-        $addressForm     = request()->input('address', []);
-        $memberForm      = request()->only('member_number', 'line_of_business', 'dob');
+        $addressForm = request()->input('address', []);
+        $memberForm = request()->only('member_number', 'line_of_business', 'dob');
         $memberPhoneForm = request()->only('phone');
 
         request()->validate([
@@ -167,5 +167,14 @@ class RequestSectionSaveJob
 
     protected function categorySection()
     {
+        $this->request->requestItems();
+        $rules = [
+            'request_items'   => ['bail', 'required', 'min:1'],
+            'request_items.*' => ['bail', 'required', 'exists:request_item_detail,uuid'],
+        ];
+        $validator = Validator::make($input, $rules, $messages = [
+            'required'   => 'A valid request item is required.',
+            'required.*' => 'An invalid request item was entered.',
+        ]);
     }
 }

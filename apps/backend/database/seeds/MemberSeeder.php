@@ -17,8 +17,12 @@ class MemberSeeder extends Seeder
     {
         $payer = Payer::firstWhere(['name' => 'Test Health Plan']);
         if (Member::where('payer_id', $payer->id)->get()->count()) {
-            return;
+            // return;
         }
-        Member::factory(['payer_id' => $payer])->hasPhones(1)->hasAddresses(1)->count(1)->create();
+        Member::factory(['payer_id' => $payer])
+            ->hasPhones(1)
+            ->hasAddresses(1)
+            ->count(1)
+            ->create(['lob_id' => $payer->lobs->first()]);
     }
 }

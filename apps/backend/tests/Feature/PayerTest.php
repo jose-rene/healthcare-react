@@ -26,16 +26,12 @@ class PayerTest extends TestCase
      */
     public function testProfile()
     {
-        $this->withoutExceptionHandling();
-        Passport::actingAs(
-            $this->user
-        );
         // fetch the payer profile
         $response = $this->get('/v1/payer/profile');
 
         $response
             ->assertOk()
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types']);
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types']);
     }
 
     /**
@@ -45,9 +41,6 @@ class PayerTest extends TestCase
      */
     public function testGetPayer()
     {
-        Passport::actingAs(
-            $this->user
-        );
         // get the payer
         $response = $this->json('GET', 'v1/payer/' . $this->payer->uuid);
         // validate response code and structure
@@ -63,9 +56,6 @@ class PayerTest extends TestCase
      */
     public function testGetPayerWithChildren()
     {
-        Passport::actingAs(
-            $this->user
-        );
         // add child records
         $this->payer->children()->saveMany(
             Payer::factory()->hasLobs(3)->count($payerCount = 3)->create()
@@ -87,9 +77,6 @@ class PayerTest extends TestCase
      */
     public function testPayerChildHierarchy()
     {
-        Passport::actingAs(
-            $this->user
-        );
         // child record with children
         $child = Payer::factory()->hasLobs(3)->create();
         // add children to child
@@ -116,10 +103,16 @@ class PayerTest extends TestCase
         Artisan::call('db:seed', [
             '--class' => 'Database\Seeders\BouncerSeeder',
         ]);
+        Artisan::call('db:seed', [
+            '--class' => 'Database\Seeders\RequestTypeSeeder',
+        ]);
         $this->payer = Payer::factory()->hasLobs(5, ['is_tat_enabled' => 1])->count(1)->create()->first();
-        $this->user  = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
+        $this->user = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
         $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create());
         Bouncer::sync($this->user)->roles(['hp_user']);
         $this->user->save();
+        Passport::actingAs(
+            $this->user
+        );
     }
 }
