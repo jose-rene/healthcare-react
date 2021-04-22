@@ -82,10 +82,6 @@ const SearchMember = () => {
         }
     );
 
-    if (loading) {
-        return <div>Loading</div>;
-    }
-
     return (
         <PageLayout>
             <div className="content-box">
@@ -183,6 +179,7 @@ const SearchMember = () => {
                                             searchObj={searchObj}
                                             headers={headers}
                                             data={data}
+                                            loading={loading}
                                             dataMeta={meta}
                                             onChange={handleTableChange}
                                         />
