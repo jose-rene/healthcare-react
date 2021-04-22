@@ -10,11 +10,13 @@ import Checkbox from "../../components/inputs/Checkbox";
 import Button from "../../components/inputs/Button";
 import PageAlert from "../../components/elements/PageAlert";
 import useApiCall from "../../hooks/useApiCall";
+import { validateFile } from "../../helpers/validate";
 
 import "./newRequestAddSteps.css";
 
 const NewRequestAddSteps5 = ({ memberData, setParams }) => {
     const [selectedFile, setSelectedFile] = useState(null);
+    const [fileUploadError, setFileUploadError] = useState(null);
     const location = useLocation();
     const hiddenFileInput = useRef(null);
 
@@ -50,6 +52,12 @@ const NewRequestAddSteps5 = ({ memberData, setParams }) => {
         setParams(data);
     }, [data, setParams]);
 
+    useEffect(() => {
+        if (selectedFile) {
+            handleFile();
+        }
+    }, [selectedFile]);
+
     const updateData = ({ target: { name, value } }) => {
         if (name === "due_date") {
             setDueDate(moment(value).format("YYYY-MM-DD"));
@@ -60,24 +68,29 @@ const NewRequestAddSteps5 = ({ memberData, setParams }) => {
         }
     };
 
+    const request_uuid = memberData.id;
+
     const [
-        { data: requestData, loading, error: fileError },
+        { data: fileData, loading, error: fileError },
         fileSubmit,
     ] = useApiCall({
         method: "post",
-        url: "/api/uploadFile", // need to change the correct api
+        url: `request/${request_uuid}/document`,
     });
 
-    const handleFile = () => {
+    const handleFile = async () => {
         const formData = new FormData();
 
         formData.append("file", selectedFile);
-        formData.append("request_item_id", location.pathname.split("/")[2]);
-        formData.append("document_type_id", 1); // need to change the correct value
+        formData.append("document_type_id", 1);
         formData.append("name", selectedFile.name);
         formData.append("mime_type", selectedFile.type);
 
-        fileSubmit({ params: formData });
+        try {
+            const result = await fileSubmit({ params: formData });
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const onFileUpload = () => {
@@ -85,7 +98,14 @@ const NewRequestAddSteps5 = ({ memberData, setParams }) => {
     };
 
     const onFileChange = (event) => {
+        setFileUploadError(null);
         const fileUploaded = event.target.files[0];
+        const error = validateFile(fileUploaded);
+
+        if (error) {
+            setFileUploadError(error);
+            return;
+        }
 
         setSelectedFile(fileUploaded);
     };
@@ -177,7 +197,7 @@ const NewRequestAddSteps5 = ({ memberData, setParams }) => {
                             </p>
                         </div>
                         {fileError ? (
-                            <div className="white-box">
+                            <div className="col-md-12">
                                 <PageAlert
                                     className="mt-3"
                                     variant="warning"
@@ -185,6 +205,18 @@ const NewRequestAddSteps5 = ({ memberData, setParams }) => {
                                     dismissible
                                 >
                                     Error: {fileError}
+                                </PageAlert>
+                            </div>
+                        ) : null}
+                        {fileUploadError ? (
+                            <div className="col-md-12">
+                                <PageAlert
+                                    className="mt-3"
+                                    variant="warning"
+                                    timeout={5000}
+                                    dismissible
+                                >
+                                    Error: {fileUploadError}
                                 </PageAlert>
                             </div>
                         ) : null}
@@ -199,7 +231,7 @@ const NewRequestAddSteps5 = ({ memberData, setParams }) => {
                                 Send This File:
                             </label>
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-4 d-flex">
                             {!selectedFile ? (
                                 <>
                                     <Button
@@ -218,15 +250,9 @@ const NewRequestAddSteps5 = ({ memberData, setParams }) => {
                                     />
                                 </>
                             ) : (
-                                <>
-                                    <p>Filename: {selectedFile.name}</p>
-                                    <Button
-                                        block
-                                        outline
-                                        label="Submit"
-                                        onClick={handleFile}
-                                    />
-                                </>
+                                <p className="mt-2">
+                                    Filename: {selectedFile.name}
+                                </p>
                             )}
                         </div>
                         <div className="col-md-6" />

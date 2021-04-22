@@ -37,7 +37,12 @@ const getStepContent = (step, data, editData, payerProfile, setParams) => {
         case 3:
             return <NewRequestAddSteps4 data={data} setParams={setParams} />;
         case 4:
-            return <NewRequestAddSteps5 data={data} />;
+            return (
+                <NewRequestAddSteps5
+                    memberData={editData}
+                    setParams={setParams}
+                />
+            );
         default:
             return (
                 <NewRequestAddSteps1
