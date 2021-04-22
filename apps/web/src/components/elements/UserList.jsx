@@ -114,6 +114,7 @@ const List = () => {
                 searchObj={searchObj}
                 headers={headers}
                 data={data}
+                loading={loading}
                 dataMeta={meta}
                 onChange={handleTableChange}
             />

@@ -82,10 +82,6 @@ const TablePage = () => {
         redoSearch({ ...searchObj, ...props });
     };
 
-    if (loading) {
-        return <div>Loading</div>;
-    }
-
     return (
         <PageLayout>
             <div className="container">
@@ -143,6 +139,7 @@ const TablePage = () => {
                     searchObj={searchObj}
                     headers={headers}
                     data={data}
+                    loading={loading}
                     dataMeta={meta}
                     onChange={handleTableChange}
                 />

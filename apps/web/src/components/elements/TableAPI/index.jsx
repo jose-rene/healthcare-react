@@ -13,6 +13,8 @@ const TableAPI = ({
     searchObj,
     headers = [],
     data = [],
+    loading = true,
+    loadingMessage = "Loading...",
     onChange,
     emptyMessage = "No Records Found.",
     dataMeta: {
@@ -83,6 +85,10 @@ const TableAPI = ({
     const paginationOptions = useMemo(() => {
         return [10, 20, 50, 100].map((n) => ({ id: n, title: n, val: n }));
     }, []);
+
+    if (loading) {
+        return <div>{loadingMessage}</div>;
+    }
 
     return (
         <>
