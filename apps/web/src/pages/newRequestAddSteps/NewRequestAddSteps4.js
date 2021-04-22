@@ -9,11 +9,7 @@ import Icon from "../../components/elements/Icon";
 
 const NewRequestAddSteps4 = ({ data, payerProfile }) => {
     // console.log(payerProfile.request_types);
-    // request type selects
-    const [requestSelects, setRequestSelects] = useState([]);
-    // request detail selects
-    const [requestDetails, setRequestDetail] = useState(null);
-    // combine these into a single group
+    // combine request type selects and request detail select into a group
     const [requestItemGroups, setRequestItemGroups] = useState([]);
     // map id / name objects to react select value / label objects
     const mapOptions = (values) => {
@@ -46,87 +42,7 @@ const NewRequestAddSteps4 = ({ data, payerProfile }) => {
     useEffect(() => {
         addNewItemsCard();
     }, [payerProfile]);
-    // placeholder data
-    const [apiItem, setApiItem] = useState([
-        {
-            id: "Select option",
-            title: "Select option",
-            val: "",
-            types: [],
-        },
-        {
-            id: "test 1",
-            val: "test 1",
-            title: "Test option 1",
-            types: ["wheels", "skittles"],
-        },
-        {
-            id: "test 2",
-            val: "test 2",
-            title: "Test option 2",
-            types: ["shoes", "skittles"],
-        },
-        {
-            id: "test 3",
-            val: "test 3",
-            title: "Test option 3",
-            types: ["cats", "wheels", "skittles"],
-        },
-    ]);
 
-    const [itemTemplate] = useState({
-        id: "",
-        types: [],
-    });
-
-    const [item, setItem] = useState([itemTemplate]);
-
-    const values = useMemo(() => {
-        return item.filter((d) => !!d.id);
-    }, [item]);
-
-    /* useEffect(() => {
-        console.log({ values });
-    }, [values]); */
-
-    const handleAppendItem = (originalDiag = item) => {
-        if (originalDiag.length != 0) {
-            if (!originalDiag[originalDiag.length - 1].id) {
-                return;
-            }
-        }
-
-        const oldDiag = [...originalDiag, itemTemplate];
-        // oldDiag.push(itemTemplate);
-
-        setItem(oldDiag);
-    };
-
-    const handleOnChange = async (
-        { target: { name, value, ...otherProps } },
-        index
-    ) => {
-        // If the user removed the type it, then delete this row from the form.
-        if (name == "id" && !value) {
-            return handleRemoveItemIndex(index);
-        }
-        const { types: selectedTypes = [] } = apiItem[
-            apiItem.findIndex(({ id }) => id == value)
-        ];
-
-        const newDiag = item.map((d, idx) =>
-            idx == index ? { ...d, [name]: value, types: selectedTypes } : d
-        );
-        await setItem(newDiag);
-        handleAppendItem(newDiag);
-        return true;
-    };
-
-    const handleRemoveItemIndex = async (index) => {
-        const originalDiag = [...item];
-        originalDiag.splice(index, 1);
-        await setItem(originalDiag);
-    };
     const handleSelectChange = (selected, action, index, groupIndex) => {
         let i;
         // request types
@@ -240,7 +156,6 @@ const NewRequestAddSteps4 = ({ data, payerProfile }) => {
         currentGroups.splice(index, 1);
         setRequestItemGroups(currentGroups);
     };
-    console.log(requestSelects);
     return (
         <>
             <div className="container-info">
