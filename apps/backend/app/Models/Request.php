@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property RequestItem requestItems
  * @property int         id
  * @property Member      member
+ * @property Document    documents
  */
 class Request extends Model
 {
@@ -46,6 +47,11 @@ class Request extends Model
     public function assessments()
     {
         return $this->hasMany(Assessment::class)->orderBy('id', 'desc');
+    }
+
+    public function documents()
+    {
+        return $this->morphMany(Document::class, 'documentable');
     }
 
     public function requestDate()

@@ -1,0 +1,19 @@
+{
+    "name": "sample-lambda",
+    "version": "1.0.0",
+    "main": "src/index.js",
+    "private": true,
+    "scripts": {
+        "build:package:deploy": "yarn build:package && yarn deploy",
+        "build:package:deploy-production": "yarn build:package && yarn deploy:production",
+        "build:package": "serverless package",
+        "deploy": "AWS_PROFILE=dme_dev aws lambda update-function-code --function-name $npm_package_name --zip-file fileb://.serverless/$npm_package_name.zip",
+        "deploy:production": "AWS_PROFILE=dme_prod aws lambda update-function-code --function-name $npm_package_name --zip-file fileb://.serverless/$npm_package_name.zip",
+        "test:handler": "AWS_PROFILE=dme_dev AWS_SDK_LOAD_CONFIG=1 node tests/handler.js"
+    },
+    "devDependencies": {
+        "@dme/pkg-serverless": "1.0.0",
+        "enzyme": "^3.11.0",
+        "jest": "^26.5.3"
+    }
+}

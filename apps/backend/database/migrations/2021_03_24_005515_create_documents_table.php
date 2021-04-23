@@ -18,7 +18,7 @@ class CreateDocumentsTable extends Migration
             $table->uuid('uuid');
 
             $table->nullableMorphs('documentable');
-            $table->unsignedBigInteger('request_item_id');
+            $table->unsignedBigInteger('request_item_id')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->unsignedBigInteger('document_type_id');
             $table->string('name');

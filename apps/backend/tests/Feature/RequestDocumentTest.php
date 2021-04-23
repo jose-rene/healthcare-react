@@ -29,12 +29,7 @@ class RequestDocumentTest extends TestCase
     private $user;
     private $member;
 
-    /**
-     * A basic feature test example.
-     *
-     * @group document
-     * @return void
-     */
+
     public function testUploadingADocument()
     {
         $this->withoutExceptionHandling();
@@ -79,6 +74,55 @@ class RequestDocumentTest extends TestCase
 
         self::assertNotEquals($updatedDocumentFromResponse['id'], $documentFromResponse['id']);
         self::assertCount(2, Document::all());
+    }
+
+    /**
+     * @group requestDocumentUpload
+     */
+    public function testUploadingADocumentToRequest()
+    {
+        $this->withoutExceptionHandling();
+        Storage::fake('document');
+        $documentFile = UploadedFile::fake()->create('somePdfThing.pdf', 1000, 'application/pdf');
+//        $documentFile1 = UploadedFile::fake()->create('somePdfThing1.pdf', 1001, 'application/pdf');
+
+        $request = Request::factory()->hasRequestItems(1)->create();
+
+        // Make sure I can upload the file
+        $response = $this->post(route('api.request.document.store', $request), [
+            'request_item_id'  => '1',
+            'document_type_id' => '1',
+            'name'             => 'somePdfThing.pdf',
+            'mime_type'        => 'application/pdf',
+            'file'             => $documentFile,
+        ]);
+        $response->assertSuccessful();
+        $documentFromResponse = $response->json();
+
+        Storage::disk('document')->assertExists($documentFromResponse['id']);
+
+        // Make sure I can request the file
+        $response = $this->get($documentFromResponse['url']);
+        $response
+            ->assertOk()
+            ->assertHeader('Content-Type', $documentFromResponse['mime_type']);
+
+//        // When I update the file I expect 2 entries in the datbase and 2 files on disk
+//        $response = $this->put(route('api.document.update', [
+//            'document' => $documentFromResponse['id'],
+//            'name'     => 'somePdfThing1.pdf',
+//        ]), [
+//            'request_item_id'  => '1',
+//            'document_type_id' => '1',
+//            'name'             => 'somePdfThing1.pdf',
+//            'mime_type'        => 'application/pdf',
+//            'file'             => $documentFile1,
+//        ]);
+//        $response->assertSuccessful();
+//        $updatedDocumentFromResponse = $response->json();
+//
+//        self::assertNotEquals($updatedDocumentFromResponse['id'], $documentFromResponse['id']);
+//        self::assertCount(2, Document::all());
     }
 
     /**
