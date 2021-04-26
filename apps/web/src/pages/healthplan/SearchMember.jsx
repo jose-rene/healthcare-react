@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import { useLocation } from "react-router-dom";
 
 import PageLayout from "../../layouts/PageLayout";
 import InputText from "../../components/inputs/InputText";
 import PageAlert from "../../components/elements/PageAlert";
 import TableAPI from "../../components/elements/TableAPI";
 import Button from "../../components/inputs/Button";
+import Flash from "../../components/flash/Flash";
 
 import useApiCall from "../../hooks/useApiCall";
 import useSearch from "../../hooks/useSearch";
@@ -89,6 +91,8 @@ const SearchMember = () => {
                     Enter New Request
                 </h1>
 
+                <Flash />
+
                 {searchError ? (
                     <PageAlert
                         className="mt-3"
@@ -99,7 +103,6 @@ const SearchMember = () => {
                         Error: {searchError}
                     </PageAlert>
                 ) : null}
-
                 <div className="row">
                     <div className="col-md-12">
                         <div className="first-div mt-3">

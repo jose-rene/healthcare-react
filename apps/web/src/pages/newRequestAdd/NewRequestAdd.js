@@ -1,18 +1,15 @@
-import React, { useEffect, useMemo } from 'react';
-import PageLayout from '../../layouts/PageLayout';
-import Stepper from '../../components/elements/Stepper';
+import React, { useState, useEffect, useMemo } from "react";
+import PageLayout from "../../layouts/PageLayout";
+import Stepper from "../../components/elements/Stepper";
 
-import './newRequestAdd.css';
-import useApiCall from '../../hooks/useApiCall';
-import { POST } from '../../config/URLs';
-import Icon from '../../components/elements/Icon';
+import "./newRequestAdd.css";
+import useApiCall from "../../hooks/useApiCall";
+import { POST } from "../../config/URLs";
+import Icon from "../../components/elements/Icon";
 
 const NewRequestAdd = ({
     match: {
-        params: {
-            member_id,
-            request_id = false,
-        },
+        params: { member_id, request_id = false },
     },
     history,
 }) => {
@@ -24,6 +21,8 @@ const NewRequestAdd = ({
         url: `/member/${member_id}/member-requests/${request_id}`,
     });
 
+    const [memberData, setMemberData] = useState(null);
+
     useEffect(() => {
         (async () => {
             if (!request_id) {
@@ -31,13 +30,22 @@ const NewRequestAdd = ({
                 try {
                     const { id: newReportId } = await fireCreateRequest();
                     id = newReportId;
-                } catch (e) {
+                } catch (e) {}
 
-                }
-                if (!id) {
-                    history.push(`/404?message=bad-member-id`);
+                const { member = {} } = data;
+
+                if (!id || !member) {
+                    history.push({
+                        pathname: "/healthplan/start-request",
+                        state: {
+                            message: "Invalid Member",
+                            type: "error",
+                        },
+                    });
                     return;
                 }
+
+                setMemberData(member);
                 history.push(`/member/${member_id}/request/${id}/edit`);
             } else {
                 fireLoadRequest();
@@ -45,20 +53,21 @@ const NewRequestAdd = ({
         })();
     }, []);
 
-    const { member = {} } = data;
-
     const name = useMemo(() => {
-        const { title = "", last_name = "", first_name = "" } = member || {};
+        const { title = "", last_name = "", first_name = "" } =
+            memberData || {};
 
         return `${title} ${first_name} ${last_name}`;
-    }, [data]);
+    }, [memberData]);
 
     return (
         <PageLayout>
             <div className="content-box" style={{ backgroundColor: "#fff" }}>
                 <h1 className="box-title mb-0">
                     New Request{" "}
-                    {(loading || saving) && <Icon icon="spinner" size="1x" spin={true} />}
+                    {(loading || saving) && (
+                        <Icon icon="spinner" size="1x" spin={true} />
+                    )}
                 </h1>
                 <p className="box-legenda mb-3">
                     Please fill the request sections
