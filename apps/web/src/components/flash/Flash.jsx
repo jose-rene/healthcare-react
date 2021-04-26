@@ -1,16 +1,31 @@
 import React, { useEffect, useState } from "react";
+import { useLocation, useHistory } from "react-router-dom";
 
 import "./Flash.css";
 
-const Flash = ({ message, type }) => {
+const Flash = () => {
     // type : 'success', 'error'
     const [visibility, setVisibility] = useState(false);
+
+    const location = useLocation();
+    const history = useHistory();
+
+    const { message, type } = location?.state || {};
+
+    const clearState = () => {
+        setVisibility(false);
+        delete location.state;
+
+        history.replace(location);
+    };
 
     useEffect(() => {
         if (document.querySelector(".flash-close") !== null) {
             document
                 .querySelector(".flash-close")
-                .addEventListener("click", () => setVisibility(false));
+                .addEventListener("click", () => {
+                    clearState();
+                });
         }
     });
 
@@ -18,7 +33,7 @@ const Flash = ({ message, type }) => {
         if (message) {
             setVisibility(true);
             setTimeout(() => {
-                setVisibility(false);
+                clearState();
             }, 4000);
         }
     }, [message, type, setVisibility]);
