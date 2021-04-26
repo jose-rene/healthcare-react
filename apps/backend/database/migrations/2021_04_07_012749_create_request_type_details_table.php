@@ -17,7 +17,7 @@ class CreateRequestTypeDetailsTable extends Migration
             $table->id();
             $table->foreignId('request_type_id')->comment('Relationship to request types');
             $table->string('name')->comment('The name of the request type');
-            $table->boolean('is_default')->default(0)->comment('Flag is automatically populated  as a default value');
+            $table->boolean('is_default')->default(0)->comment('Flag is automatically populated as a default value');
 
             $table->timestamps();
             $table->softDeletes();

@@ -36,6 +36,11 @@ class RequestItem extends Model
         return $this->belongsTo(RequestType::class);
     }
 
+    public function requestTypeDetails()
+    {
+        return $this->belongsToMany(RequestTypeDetail::class);
+    }
+
     public function outcome()
     {
         return $this->belongsTo(RequestOutcome::class);

@@ -16,9 +16,10 @@ class RequestItemResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'      => $this->uuid,
-            'name'    => $this->name,
-            'details' => $this->typeDetails->pluck('name', 'name'),
+            'id'              => $this->uuid,
+            'name'            => $this->name,
+            'request_type_id' => $this->request_type_id,
+            'details'         => $this->requestTypeDetails->pluck('name', 'id'),
         ];
     }
 }

@@ -29,18 +29,18 @@ class RequestItemFactory extends Factory
         ];
 
         return [
-            'request_type_id'          => function () {
+            'request_type_id' => function () {
                 return RequestType::factory();
             },
-            'name'                     => $this->faker->randomElement($itemNames),
-            'request_outcome_id'       => $this->faker->numberBetween(1, 4),
-            'hcpcs'                    => '',
-            'note'                     => $this->faker->realText(),
-            'clinician_summary'        => $this->faker->realText(),
-            'assessment'               => $this->faker->realText(),
-            'decision'                 => $this->faker->realText(),
-            'json_data'                => [],
-            'additional_consideration' => $this->faker->boolean(70),
+            'name'                        => $this->faker->randomElement($itemNames),
+            'request_outcome_id'          => $this->faker->numberBetween(1, 4),
+            'hcpcs'                       => '',
+            'note'                        => $this->faker->realText(),
+            'clinician_summary'           => $this->faker->realText(),
+            'assessment'                  => $this->faker->realText(),
+            'decision'                    => $this->faker->realText(),
+            'json_data'                   => [],
+            'is_additional_consideration' => $this->faker->boolean(70),
         ];
     }
 }

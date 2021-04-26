@@ -3,9 +3,12 @@
 namespace App\Jobs;
 
 use App\Models\Request;
+use App\Models\RequestItem;
+use App\Models\RequestTypeDetail;
 use Carbon\Carbon;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -59,8 +62,8 @@ class RequestSectionSaveJob
                 $this->authNumberSection();
                 break;
 
-            case 'category':
-                $this->categorySection();
+            case 'request-items':
+                $this->requestItemsSection();
                 break;
 
             case 'due':
@@ -127,6 +130,13 @@ class RequestSectionSaveJob
         ]));
     }
 
+    /**
+     * Verify and save changed information.
+     *
+     * @todo user the member Job for this
+     *
+     * @return void
+     */
     protected function verify()
     {
         $request = $this->request;
@@ -165,16 +175,48 @@ class RequestSectionSaveJob
         $request->update(['member_verified_at' => Carbon::now()]);
     }
 
-    protected function categorySection()
+    protected function requestItemsSection()
     {
-        $this->request->requestItems();
         $rules = [
-            'request_items'   => ['bail', 'required', 'min:1'],
-            'request_items.*' => ['bail', 'required', 'exists:request_item_detail,uuid'],
+            'request_type_details'     => ['bail', 'required', 'array', 'min:1'],
+            'request_type_details.*'   => ['bail', 'required', 'array', 'min:1'],
+            'request_type_details.*.*' => ['bail', 'integer', 'exists:request_type_details,id'],
         ];
-        $validator = Validator::make($input, $rules, $messages = [
-            'required'   => 'A valid request item is required.',
-            'required.*' => 'An invalid request item was entered.',
+        $validator = Validator::make($params = request()->all(), $rules, [
+            'required' => 'A valid request item is required.',
+            'exists'   => 'An invalid request item was entered',
         ]);
+        if ($validator->fails()) {
+            throw new HttpResponseException(response()->json(['errors' => $validator->errors()->first()], 422));
+
+            return;
+        }
+        $requestTypes = [];
+        $requestTypeDetails = [];
+        // each group of request type details will have a common request type
+        foreach (request()->input('request_type_details') as $details) {
+            // get the request type id from the first element
+            $type = RequestTypeDetail::firstWhere('id', $details[0])->requestType;
+            // add to stack
+            $requestTypes[] = $type;
+            // key the request type details by request type id for later reference
+            $requestTypeDetails[$type['id']] = $details;
+        }
+        // create the request items from the request types
+        $requestTypes = collect($requestTypes)->map(fn ($item) => RequestItem::firstOrCreate([
+            'request_id'      => $this->request->id,
+            'request_type_id' => $item['id'],
+            'name'            => $item['name'],
+        ]));
+        // @todo, add sync macro and sync instead of save
+        $this->request
+            ->requestItems()
+            ->saveMany($requestTypes);
+        // refresh to reload relationships
+        $this->request->refresh();
+        // sync the associated request type details for each request item
+        $this->request->requestItems
+            ->each(fn ($detail) => $detail->requestTypeDetails()->sync($requestTypeDetails[$detail['request_type_id']]));
+        $this->request->refresh();
     }
 }

@@ -23,8 +23,13 @@ class RequestTypeDetail extends Model
 
     protected $casts = ['is_default' => 'boolean'];
 
-    public function request_type()
+    public function requestType()
     {
         return $this->belongsTo(RequestType::class);
+    }
+
+    public function requestItems()
+    {
+        return $this->belongsToMany(RequestItem::class);
     }
 }

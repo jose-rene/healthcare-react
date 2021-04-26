@@ -18,7 +18,7 @@ class CreateRequestItemsTable extends Migration
             $table->uuid('uuid');
 
             $table->string('name');
-            $table->foreignId('request_id')->comment('The related equest');
+            $table->foreignId('request_id')->comment('The related request');
             $table->foreignId('request_type_id')->comment('The associated request type');
             $table->unsignedBigInteger('request_outcome_id')->nullable();
             $table->string('hcpcs')->nullable()->comment('The HPCS code');

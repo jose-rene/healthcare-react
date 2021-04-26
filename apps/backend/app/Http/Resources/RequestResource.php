@@ -22,6 +22,7 @@ class RequestResource extends JsonResource
             'member_verified' => $this->member_verified,
             'request_date'    => $this->requested_at->format('m/d/Y'),
             'auth_number'     => $this->auth_number,
+            'request_items'   => RequestItemResource::collection($this->requestItems),
         ];
     }
 }
