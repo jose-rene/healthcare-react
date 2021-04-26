@@ -44,21 +44,27 @@ const Icon = ({
 
     const mainIcon = (
         <i
-            className={`${className} icon fa${iconType} fa-${mappedIcon.toLowerCase().
-                trim()} ${stacked ? "fa-stack-1x" : `fa-${size} ${spin
-                ? "fa-spin"
-                : ""}`}`}
+            className={`${className} icon fa${iconType} fa-${mappedIcon
+                .toLowerCase()
+                .trim()} ${
+                stacked ? "fa-stack-1x" : `fa-${size} ${spin ? "fa-spin" : ""}`
+            }`}
             {...props}
         />
     );
 
     return stacked ? (
         <span className={`fa-stack`}>
-            {stacked &&
-            <i className={`${stacked_className} fa fa-circle fa-stack-2x`} />}
+            {stacked && (
+                <i
+                    className={`${stacked_className} fa fa-circle fa-stack-2x`}
+                />
+            )}
             {mainIcon}
         </span>
-    ) : mainIcon;
+    ) : (
+        mainIcon
+    );
 };
 
 Icon.displayName = "Icon";
