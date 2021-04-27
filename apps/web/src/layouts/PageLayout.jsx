@@ -103,7 +103,12 @@ const PageLayout = ({
                         className="header-avatar"
                         src="/images/icons/user.png"
                     />
-                    <NavDropdown data-testid="userinfo" alignRight id="user-options" title={full_name}>
+                    <NavDropdown
+                        data-testid="userinfo"
+                        alignRight
+                        id="user-options"
+                        title={full_name}
+                    >
                         <NavDropdown.ItemText>{email}</NavDropdown.ItemText>
                         <NavDropdown.Divider />
                         {roles && roles.length > 1 && (
@@ -143,15 +148,24 @@ const PageLayout = ({
                             <img src="/images/icons/home.png" alt="Home" />
                         </Link>
                     </li>
-                    {checkMiddleware(["hp_manager", "hp_champion"], primaryRole, abilities) && (
-                        <li className={page === "requests" ? "sidebar-active" : ""}>
+                    {checkMiddleware(
+                        ["hp_manager", "hp_champion"],
+                        primaryRole,
+                        abilities
+                    ) && (
+                        <li
+                            className={
+                                page === "requests" ? "sidebar-active" : ""
+                            }
+                        >
                             <Link to="/healthplan/start-request">
                                 <img
                                     src="/images/icons/request.png"
                                     alt="Requests"
                                 />
                             </Link>
-                        </li>)}
+                        </li>
+                    )}
                     <li className={page === "account" ? "sidebar-active" : ""}>
                         <Link to="/account">
                             <img src="/images/icons/user.png" alt="Account" />
@@ -167,6 +181,30 @@ const PageLayout = ({
                             <img src="/images/icons/video.png" alt="Videos" />
                         </Link>
                     </li>
+                    {checkMiddleware(
+                        ["hp_manager", "hp_champion", "hp_user"],
+                        primaryRole,
+                        abilities
+                    ) && (
+                        <li
+                            className={
+                                page === "healthplan/requests"
+                                    ? "sidebar-active"
+                                    : ""
+                            }
+                        >
+                            <Link to="/healthplan/requests">
+                                <Icon
+                                    icon="search"
+                                    className="nav-lookup-icon"
+                                />
+                                {/* <img
+                                    src="/images/icons/search.png"
+                                    alt="Search"
+                                /> */}
+                            </Link>
+                        </li>
+                    )}
                     <li className={page === "help" ? "sidebar-active" : ""}>
                         <Link to="/help">
                             <img src="/images/icons/question.png" alt="Help" />
