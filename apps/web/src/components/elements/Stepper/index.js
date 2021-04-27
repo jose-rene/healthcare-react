@@ -47,6 +47,7 @@ const getStepContent = (step, data, editData, payerProfile, setParams) => {
                     data={data}
                     payerProfile={payerProfile}
                     setParams={setParams}
+                    requestData={editData}
                 />
             );
         case 4:

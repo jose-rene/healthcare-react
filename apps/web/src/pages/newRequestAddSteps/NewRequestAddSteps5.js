@@ -39,16 +39,16 @@ const NewRequestAddSteps5 = ({ memberData, setParams }) => {
     }, [memberData]);
 
     useEffect(() => {
-        let dueAt = dueDate + " " + dueTime;
+        const dueAt = `${dueDate} ${dueTime}`;
         setData({
             type_name: "due",
             due_at: dueAt,
         });
     }, [dueDate, dueTime, setData]);
 
-    useEffect(() => {
+    /* useEffect(() => {
         setParams(data);
-    }, [data, setParams]);
+    }, [data, setParams]); */
 
     const updateData = ({ target: { name, value } }) => {
         if (name === "due_date") {
@@ -91,21 +91,20 @@ const NewRequestAddSteps5 = ({ memberData, setParams }) => {
     };
 
     const generateTimes = () => {
-        var x = 30;
-        var times = [];
-        var tt = 0;
+        const x = 30;
+        const times = [];
+        let tt = 0;
 
-        for (var i = 0; tt < 24 * 60; i++) {
-            var hh = Math.floor(tt / 60);
-            var mm = tt % 60;
-            const time =
-                ("0" + (hh % 24)).slice(-2) + ":" + ("0" + mm).slice(-2);
+        for (let i = 0; tt < 24 * 60; i++) {
+            const hh = Math.floor(tt / 60);
+            const mm = tt % 60;
+            const time = `${`0${hh % 24}`.slice(-2)}:${`0${mm}`.slice(-2)}`;
             times[i] = {
                 id: time,
                 title: time,
                 value: time,
             };
-            tt = tt + x;
+            tt += x;
         }
 
         return times;

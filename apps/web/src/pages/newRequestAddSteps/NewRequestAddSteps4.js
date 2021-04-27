@@ -1,16 +1,53 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Select2 from "react-select";
-import Select from "../../components/inputs/Select";
 
 import "./newRequestAddSteps.css";
-import Button from "../../components/inputs/Button";
 import { Card } from "react-bootstrap";
+import { flattenDeep } from "lodash";
 import Icon from "../../components/elements/Icon";
 
-const NewRequestAddSteps4 = ({ data, payerProfile }) => {
+const NewRequestAddSteps4 = ({ payerProfile, requestData, setParams }) => {
+    const findObject = (array, key, value) => {
+        let o;
+        array.some(function iter(a) {
+            if (a.id == value) {
+                o = a;
+                return true;
+            }
+            return Array.isArray(a[key]) && a[key].some(iter);
+        });
+        return o;
+    };
+    const [data, setData] = useState({
+        type_name: "request-items",
+        request_type_details: [],
+    });
+
     // console.log(payerProfile.request_types);
     // combine request type selects and request detail select into a group
     const [requestItemGroups, setRequestItemGroups] = useState([]);
+    // handle request details update
+    const updateRequestDetails = (groups) => {
+        setRequestItemGroups(groups);
+        const requestDetails = [];
+        groups.forEach((item) => {
+            if (item?.requestDetails?.value) {
+                requestDetails.push(
+                    item.requestDetails.value.map((val) => val.value)
+                );
+            }
+        });
+        if (data.request_type_details !== requestDetails) {
+            console.log("set data", requestDetails);
+            setData((prevData) => {
+                return {
+                    ...prevData,
+                    request_type_details: requestDetails,
+                };
+            });
+        }
+    };
+    // console.log(data);
     // map id / name objects to react select value / label objects
     const mapOptions = (values) => {
         if (!values) {
@@ -40,8 +77,28 @@ const NewRequestAddSteps4 = ({ data, payerProfile }) => {
     };
     // populate the initial group select
     useEffect(() => {
+        // if there is previously saved data
+        if (requestData?.request_items) {
+            // build the requestitem groups from the bottom to top level
+            console.log("set items from request ", requestData.request_items);
+            requestData.request_items.forEach((item) => {
+                console.log(
+                    "found",
+                    findObject(
+                        payerProfile.request_types,
+                        "request_types",
+                        item.request_id
+                    )
+                );
+            });
+        }
+        // otherwise add a new card
         addNewItemsCard();
     }, [payerProfile]);
+    // set params when request items change
+    useEffect(() => {
+        setParams(data);
+    }, [data]);
 
     const handleSelectChange = (selected, action, index, groupIndex) => {
         let i;
@@ -68,7 +125,7 @@ const NewRequestAddSteps4 = ({ data, payerProfile }) => {
             // set the value of this type to blank
             currentGroups[groupIndex].typeSelects[index].value = "";
             // update state
-            setRequestItemGroups(currentGroups);
+            updateRequestDetails(currentGroups);
             return;
         }
         // populate the next select or request types
@@ -101,7 +158,7 @@ const NewRequestAddSteps4 = ({ data, payerProfile }) => {
                 },
             ];
             // set state
-            setRequestItemGroups(currentGroups);
+            updateRequestDetails(currentGroups);
         } else if (foundReqType?.details) {
             // show the request details
             console.log("details => ", foundReqType.details);
@@ -111,7 +168,8 @@ const NewRequestAddSteps4 = ({ data, payerProfile }) => {
                     foundReqType.details.filter((detail) => detail.is_default)
                 ),
             };
-            setRequestItemGroups(currentGroups);
+            console.log("current groups update details", currentGroups);
+            updateRequestDetails(currentGroups);
             // auto add the next card to enter another request type
             if (!currentGroups[groupIndex + 1]) {
                 addNewItemsCard();
@@ -123,7 +181,7 @@ const NewRequestAddSteps4 = ({ data, payerProfile }) => {
         // setRequestDetail((prevDetail) => ({ ...prevDetail, value: selected }));
         const currentGroups = [...requestItemGroups];
         currentGroups[index].requestDetails.value = selected;
-        setRequestItemGroups(currentGroups);
+        updateRequestDetails(currentGroups);
         // can probably be done with es6?
         /* setRequestItemGroups((prevItems) => ([
             ...prevItems,
@@ -149,12 +207,12 @@ const NewRequestAddSteps4 = ({ data, payerProfile }) => {
                 currentGroups[index].typeSelects.length = 1;
                 currentGroups[index].typeSelects[0].value = null;
                 currentGroups[index].details = null;
-                setRequestItemGroups(currentGroups);
+                updateRequestDetails(currentGroups);
             }
             return;
         }
         currentGroups.splice(index, 1);
-        setRequestItemGroups(currentGroups);
+        updateRequestDetails(currentGroups);
     };
     return (
         <>

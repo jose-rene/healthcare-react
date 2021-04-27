@@ -162,10 +162,8 @@ class RequestAddTest extends TestCase
 
         // invalid request items, should fail with error
         $response = $this->put($route, [
-            'type_name'     => 'request-items',
-            'request_items' => [
-                ['request_type_details' => ['one', 'two', 'three']],
-            ],
+            'type_name'       => 'request-items',
+            'request_details' => ['one', 'two', 'three'],
         ]);
 
         $response->assertStatus(422);

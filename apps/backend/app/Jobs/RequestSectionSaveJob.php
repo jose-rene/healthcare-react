@@ -202,9 +202,10 @@ class RequestSectionSaveJob
             // key the request type details by request type id for later reference
             $requestTypeDetails[$type['id']] = $details;
         }
+        // dd($requestTypes);
         // see if the request item exists, add id
         $requestTypes = collect($requestTypes)->map(fn ($item) => [
-            'id' => ($first = RequestItem::first([
+            'id' => ($first = RequestItem::firstWhere([
                 'request_id'      => $this->request->id,
                 'request_type_id' => $item['id'],
             ])) ? $first->id : null,
