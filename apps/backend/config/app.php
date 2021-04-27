@@ -177,6 +177,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        // Eloquent macros
+        App\Providers\MacroServiceProvider::class,
+
         /*
          * Swagger
          */
@@ -186,7 +189,6 @@ return [
          * AWS
          */
         Aws\Laravel\AwsServiceProvider::class,
-
     ],
 
     /*

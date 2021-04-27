@@ -202,16 +202,20 @@ class RequestSectionSaveJob
             // key the request type details by request type id for later reference
             $requestTypeDetails[$type['id']] = $details;
         }
-        // create the request items from the request types
-        $requestTypes = collect($requestTypes)->map(fn ($item) => RequestItem::firstOrCreate([
+        // see if the request item exists, add id
+        $requestTypes = collect($requestTypes)->map(fn ($item) => [
+            'id' => ($first = RequestItem::first([
+                'request_id'      => $this->request->id,
+                'request_type_id' => $item['id'],
+            ])) ? $first->id : null,
             'request_id'      => $this->request->id,
             'request_type_id' => $item['id'],
             'name'            => $item['name'],
-        ]));
-        // @todo, add sync macro and sync instead of save
+        ]);
+        // sync request items
         $this->request
             ->requestItems()
-            ->saveMany($requestTypes);
+            ->sync($requestTypes->toArray());
         // refresh to reload relationships
         $this->request->refresh();
         // sync the associated request type details for each request item

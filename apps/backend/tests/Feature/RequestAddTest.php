@@ -146,6 +146,7 @@ class RequestAddTest extends TestCase
      */
     public function testUpdateRequestItems()
     {
+        $this->withoutExceptionHandling();
         $requestId = $this->getRequest();
         $route = route('api.request.update', [
             'request' => $requestId,
