@@ -19,8 +19,8 @@ class RequestItemResource extends JsonResource
             'id'                   => $this->uuid,
             'name'                 => $this->name,
             'request_type_id'      => $this->request_type_id,
-            'request_type_parents' => array_reverse($this->mapParents($this->requestType->ancestors)),
-            'details'              => $this->requestTypeDetails, // ->pluck('name', 'id'),
+            'request_type_parents' => array_reverse($this->mapParents($this->requestType->ancestors, true)),
+            'details'              => RequestTypeDetailResource::collection($this->requestTypeDetails), // ->pluck('name', 'id'),
         ];
     }
 
@@ -30,9 +30,12 @@ class RequestItemResource extends JsonResource
      * @param mixed $requestType
      * @return array
      */
-    protected function mapParents($requestType)
+    protected function mapParents($requestType, $reset = false)
     {
         static $parents = [];
+        if (true === $reset) {
+            $parents = [];
+        }
         if (!$requestType) {
             return $parents;
         }

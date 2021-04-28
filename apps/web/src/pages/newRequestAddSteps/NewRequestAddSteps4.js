@@ -3,7 +3,6 @@ import Select2 from "react-select";
 
 import "./newRequestAddSteps.css";
 import { Card } from "react-bootstrap";
-import { flattenDeep } from "lodash";
 import Icon from "../../components/elements/Icon";
 
 const NewRequestAddSteps4 = ({ payerProfile, requestData, setParams }) => {
@@ -85,6 +84,10 @@ const NewRequestAddSteps4 = ({ payerProfile, requestData, setParams }) => {
                     // build the menus for each request type from the parent chain;
                     item.request_type_parents.forEach((typeId, i) => {
                         // console.log("parent ", i, typeId);
+                        if (!foundReqTypes?.request_types) {
+                            // this would only happen with bad data in
+                            return false;
+                        }
                         currentGroups[groupIndex].typeSelects.push({
                             options: mapOptions(foundReqTypes.request_types),
                             value: typeId,
@@ -98,14 +101,17 @@ const NewRequestAddSteps4 = ({ payerProfile, requestData, setParams }) => {
                     });
                 }
                 // the last select in the chain is the request type id for the request item
-                currentGroups[groupIndex].typeSelects.push({
-                    options: mapOptions(foundReqTypes.request_types),
-                    value: item.request_type_id,
-                });
-                // the last in the chain will have the detail
-                foundReqTypes = foundReqTypes.request_types.find(
-                    (type) => type.id === item.request_type_id
-                );
+                // the check here only wards against bad data, there should always be request_types here
+                if (foundReqTypes?.request_types) {
+                    currentGroups[groupIndex].typeSelects.push({
+                        options: mapOptions(foundReqTypes.request_types),
+                        value: item.request_type_id,
+                    });
+                    // the last in the chain will have the detail
+                    foundReqTypes = foundReqTypes.request_types.find(
+                        (type) => type.id === item.request_type_id
+                    );
+                }
                 if (foundReqTypes?.details) {
                     currentGroups[groupIndex].requestDetails = {
                         options: mapOptions(foundReqTypes.details),

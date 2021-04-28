@@ -188,10 +188,11 @@ class RequestAddTest extends TestCase
         $response->assertSuccessful();
         // verify data
         $data = $response->json();
-        // dd($data['request_items'], $params);
+        // dd($params, $data['request_items'][0]['details']);
         $this->assertEquals(1, count($data['request_items']));
+        $requestDetailIds = collect($data['request_items'][0]['details'])->map(fn ($item) => $item['id'])->toArray();
         // check that the request item details are the same ones that were passed in params
-        $this->assertEquals($params, array_keys($data['request_items'][0]['details']));
+        $this->assertEquals($params, $requestDetailIds);
     }
 
     protected function getRequest()
