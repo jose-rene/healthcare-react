@@ -42,4 +42,24 @@ class RequestType extends Model
     {
         return $this->hasMany(self::class, 'parent_id')->with('children');
     }
+
+    /**
+     * Will return one level of children or child sections.
+     *
+     * @return RequestType
+     */
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    /**
+     * Will return one level of children or child sections.
+     *
+     * @return RequestType
+     */
+    public function ancestors()
+    {
+        return $this->belongsTo(self::class, 'parent_id')->with('parent');
+    }
 }

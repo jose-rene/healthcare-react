@@ -7,17 +7,6 @@ import { flattenDeep } from "lodash";
 import Icon from "../../components/elements/Icon";
 
 const NewRequestAddSteps4 = ({ payerProfile, requestData, setParams }) => {
-    const findObject = (array, key, value) => {
-        let o;
-        array.some(function iter(a) {
-            if (a.id == value) {
-                o = a;
-                return true;
-            }
-            return Array.isArray(a[key]) && a[key].some(iter);
-        });
-        return o;
-    };
     const [data, setData] = useState({
         type_name: "request-items",
         request_type_details: [],
@@ -38,7 +27,7 @@ const NewRequestAddSteps4 = ({ payerProfile, requestData, setParams }) => {
             }
         });
         if (data.request_type_details !== requestDetails) {
-            console.log("set data", requestDetails);
+            // console.log("set data", requestDetails);
             setData((prevData) => {
                 return {
                     ...prevData,
@@ -57,7 +46,7 @@ const NewRequestAddSteps4 = ({ payerProfile, requestData, setParams }) => {
         const options = values.map((item) => {
             return { label: item.name, value: item.id };
         });
-        console.log("options ", options);
+        // console.log("options ", options);
         return options;
     };
     // add a new card for request items
@@ -75,24 +64,66 @@ const NewRequestAddSteps4 = ({ payerProfile, requestData, setParams }) => {
             },
         ]);
     };
-    // populate the initial group select
+    // populate the initial request type selects
     useEffect(() => {
         // if there is previously saved data
         if (requestData?.request_items) {
-            // build the requestitem groups from the bottom to top level
-            console.log("set items from request ", requestData.request_items);
-            requestData.request_items.forEach((item) => {
-                console.log(
-                    "found",
-                    findObject(
-                        payerProfile.request_types,
-                        "request_types",
-                        item.request_id
-                    )
+            // the array from which state will be constructed based upon the passed data
+            const currentGroups = [];
+            // build the requestitem groups from the top level
+            requestData.request_items.forEach((item, groupIndex) => {
+                let foundReqTypes = payerProfile;
+                if (
+                    item.request_type_parents &&
+                    item.request_type_parents.length
+                ) {
+                    // the group at this index
+                    currentGroups[groupIndex] = {
+                        typeSelects: [],
+                        requestDetails: null,
+                    };
+                    // build the menus for each request type from the parent chain;
+                    item.request_type_parents.forEach((typeId, i) => {
+                        // console.log("parent ", i, typeId);
+                        currentGroups[groupIndex].typeSelects.push({
+                            options: mapOptions(foundReqTypes.request_types),
+                            value: typeId,
+                        });
+                        // find in the request types for the options for the next iteration
+                        foundReqTypes = foundReqTypes.request_types.find(
+                            (type) => type.id === typeId
+                        );
+                        // console.log(foundReqTypes);
+                        // return false;
+                    });
+                }
+                // the last select in the chain is the request type id for the request item
+                currentGroups[groupIndex].typeSelects.push({
+                    options: mapOptions(foundReqTypes.request_types),
+                    value: item.request_type_id,
+                });
+                // the last in the chain will have the detail
+                foundReqTypes = foundReqTypes.request_types.find(
+                    (type) => type.id === item.request_type_id
                 );
+                if (foundReqTypes?.details) {
+                    currentGroups[groupIndex].requestDetails = {
+                        options: mapOptions(foundReqTypes.details),
+                        value: mapOptions(
+                            foundReqTypes.details.filter((detail) =>
+                                item.details.some(
+                                    (itemDetail) => itemDetail.id === detail.id
+                                )
+                            )
+                        ),
+                    };
+                }
             });
+            // set state
+            updateRequestDetails(currentGroups);
+            // return;
         }
-        // otherwise add a new card
+        // otherwise populate the initial group select by adding a new card
         addNewItemsCard();
     }, [payerProfile]);
     // set params when request items change
@@ -112,10 +143,7 @@ const NewRequestAddSteps4 = ({ payerProfile, requestData, setParams }) => {
         if (currentGroups[groupIndex].typeSelects.length > index + 1) {
             // when this select changes, remove the selects above this index
             currentGroups[groupIndex].typeSelects.length = index + 1;
-            console.log(
-                "reset index -> ",
-                currentGroups[groupIndex].typeSelects
-            );
+            // console.log("reset index -> ", currentGroups[groupIndex].typeSelects);
         }
         // if there are details they would no longer be shown, since a request type changed, reset to null
         currentGroups[groupIndex].requestDetails = null;
@@ -138,7 +166,7 @@ const NewRequestAddSteps4 = ({ payerProfile, requestData, setParams }) => {
                         currentGroups[groupIndex].typeSelects[i].value
                 );
                 if (found?.request_types) {
-                    reqTypes = found?.request_types;
+                    reqTypes = found.request_types;
                 }
             }
         }
@@ -161,21 +189,21 @@ const NewRequestAddSteps4 = ({ payerProfile, requestData, setParams }) => {
             updateRequestDetails(currentGroups);
         } else if (foundReqType?.details) {
             // show the request details
-            console.log("details => ", foundReqType.details);
+            // console.log("details => ", foundReqType.details);
             currentGroups[groupIndex].requestDetails = {
                 options: mapOptions(foundReqType.details),
                 value: mapOptions(
                     foundReqType.details.filter((detail) => detail.is_default)
                 ),
             };
-            console.log("current groups update details", currentGroups);
+            // console.log("current groups update details", currentGroups);
             updateRequestDetails(currentGroups);
             // auto add the next card to enter another request type
             if (!currentGroups[groupIndex + 1]) {
                 addNewItemsCard();
             }
         }
-        console.log("found -> ", index, foundReqType);
+        // console.log("found -> ", index, foundReqType);
     };
     const handleDetailChange = (selected, action, index) => {
         // setRequestDetail((prevDetail) => ({ ...prevDetail, value: selected }));

@@ -16,10 +16,31 @@ class RequestItemResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'              => $this->uuid,
-            'name'            => $this->name,
-            'request_type_id' => $this->request_type_id,
-            'details'         => $this->requestTypeDetails->pluck('name', 'id'),
+            'id'                   => $this->uuid,
+            'name'                 => $this->name,
+            'request_type_id'      => $this->request_type_id,
+            'request_type_parents' => array_reverse($this->mapParents($this->requestType->ancestors)),
+            'details'              => $this->requestTypeDetails, // ->pluck('name', 'id'),
         ];
+    }
+
+    /**
+     * Recursively creates an array of parent ids.
+     *
+     * @param mixed $requestType
+     * @return array
+     */
+    protected function mapParents($requestType)
+    {
+        static $parents = [];
+        if (!$requestType) {
+            return $parents;
+        }
+        $parents[] = $requestType['id'];
+        if ($requestType['parent']) {
+            return $this->mapParents($requestType['parent']);
+        }
+
+        return $parents;
     }
 }
