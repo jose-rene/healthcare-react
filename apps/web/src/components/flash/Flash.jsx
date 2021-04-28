@@ -1,52 +1,59 @@
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { useLocation, useHistory } from "react-router-dom";
 
-import "./Flash.css";
-
 const Flash = () => {
-    // type : 'success', 'error'
-    const [visibility, setVisibility] = useState(false);
-
     const location = useLocation();
     const history = useHistory();
 
     const { message, type } = location?.state || {};
 
+    const notify = (type) => {
+        switch (type) {
+            case "success":
+                toast.success(message);
+                return;
+
+            case "error":
+                toast.error(message);
+                return;
+
+            case "info":
+                toast.info(message);
+                return;
+
+            case "warning":
+                toast.warning(message);
+                return;
+
+            case "dark":
+                toast.dark(message);
+                return;
+
+            default:
+                toast(message);
+        }
+    };
+
     const clearState = () => {
-        setVisibility(false);
         delete location.state;
 
         history.replace(location);
     };
 
     useEffect(() => {
-        if (document.querySelector(".flash-close") !== null) {
-            document
-                .querySelector(".flash-close")
-                .addEventListener("click", () => {
-                    clearState();
-                });
-        }
-    });
-
-    useEffect(() => {
         if (message) {
-            setVisibility(true);
-            setTimeout(() => {
-                clearState();
-            }, 4000);
+            notify(type);
+            clearState();
         }
-    }, [message, type, setVisibility]);
+    }, [message, type]);
 
     return (
-        visibility && (
-            <div className={`flash flash-${type}`}>
-                <span className="flash-close">
-                    <strong>X</strong>
-                </span>
-                <p>{message}</p>
-            </div>
-        )
+        <div>
+            <ToastContainer />
+        </div>
     );
 };
 
