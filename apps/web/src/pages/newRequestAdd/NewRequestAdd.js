@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import PageLayout from "../../layouts/PageLayout";
 import Stepper from "../../components/elements/Stepper";
 
@@ -17,11 +17,19 @@ const NewRequestAdd = ({
         method: POST,
         url: `/member/${member_id}/member-requests`,
     });
-    const [{ loading = true, data }, fireLoadRequest] = useApiCall({
+    const [{ loading = true, data, error }, fireLoadRequest] = useApiCall({
         url: `/member/${member_id}/member-requests/${request_id}`,
     });
 
-    const [memberData, setMemberData] = useState(null);
+    const goToSearch = () => {
+        history.push({
+            pathname: "/healthplan/start-request",
+            state: {
+                message: "Invalid Member",
+                type: "error",
+            },
+        });
+    };
 
     useEffect(() => {
         (async () => {
@@ -32,33 +40,32 @@ const NewRequestAdd = ({
                     id = newReportId;
                 } catch (e) {}
 
-                const { member = {} } = data;
-
-                if (!id || !member) {
-                    history.push({
-                        pathname: "/healthplan/start-request",
-                        state: {
-                            message: "Invalid Member",
-                            type: "error",
-                        },
-                    });
+                if (!id) {
+                    goToSearch();
                     return;
                 }
 
-                setMemberData(member);
                 history.push(`/member/${member_id}/request/${id}/edit`);
+                window.location.reload();
             } else {
                 fireLoadRequest();
             }
         })();
     }, []);
 
+    useEffect(() => {
+        if (error) {
+            goToSearch();
+        }
+    }, []);
+
+    const { member = {} } = data;
+
     const name = useMemo(() => {
-        const { title = "", last_name = "", first_name = "" } =
-            memberData || {};
+        const { title = "", last_name = "", first_name = "" } = member || {};
 
         return `${title} ${first_name} ${last_name}`;
-    }, [memberData]);
+    }, [member]);
 
     return (
         <PageLayout>
