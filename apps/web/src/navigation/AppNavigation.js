@@ -70,7 +70,7 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                 </PrivateRoute>
                 <PrivateRoute
                     path="/healthplan/start-request"
-                    middleware={["hp_manager", "hp_champion"]}
+                    middleware={["hp_manager", "hp_champion", "hp_user"]}
                 >
                     <HpSearchMember />
                 </PrivateRoute>

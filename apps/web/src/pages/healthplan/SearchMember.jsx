@@ -7,6 +7,7 @@ import InputText from "../../components/inputs/InputText";
 import PageAlert from "../../components/elements/PageAlert";
 import TableAPI from "../../components/elements/TableAPI";
 import Button from "../../components/inputs/Button";
+import useToast from "../../hooks/useToast";
 
 import useApiCall from "../../hooks/useApiCall";
 import useSearch from "../../hooks/useSearch";
@@ -14,6 +15,8 @@ import useSearch from "../../hooks/useSearch";
 import "../../styles/healthplan.scss";
 
 const SearchMember = () => {
+    const { generalError } = useToast();
+
     const [
         { loading, data: { data = [], meta = {} } = {}, error: searchError },
         memberSearch,
@@ -65,6 +68,7 @@ const SearchMember = () => {
             setSearchStatus(true);
         } catch (e) {
             // console.log(e);
+            generalError();
         }
     };
 
@@ -99,7 +103,6 @@ const SearchMember = () => {
                         Error: {searchError}
                     </PageAlert>
                 ) : null}
-
                 <div className="row">
                     <div className="col-md-12">
                         <div className="first-div mt-3">
