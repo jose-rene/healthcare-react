@@ -6,6 +6,7 @@ import "./newRequestAdd.css";
 import useApiCall from "../../hooks/useApiCall";
 import { POST } from "../../config/URLs";
 import Icon from "../../components/elements/Icon";
+import useToast from "../../hooks/useToast";
 
 const NewRequestAdd = ({
     match: {
@@ -13,6 +14,8 @@ const NewRequestAdd = ({
     },
     history,
 }) => {
+    const { error: errorMessage } = useToast();
+
     const [{ loading: saving = true }, fireCreateRequest] = useApiCall({
         method: POST,
         url: `/member/${member_id}/member-requests`,
@@ -22,12 +25,10 @@ const NewRequestAdd = ({
     });
 
     const goToSearch = () => {
+        errorMessage('Invalid Member');
+
         history.push({
             pathname: "/healthplan/start-request",
-            state: {
-                message: "Invalid Member",
-                type: "error",
-            },
         });
     };
 
