@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useLocation } from "react-router-dom";
 
 import PageLayout from "../../layouts/PageLayout";
 import InputText from "../../components/inputs/InputText";
 import PageAlert from "../../components/elements/PageAlert";
 import TableAPI from "../../components/elements/TableAPI";
 import Button from "../../components/inputs/Button";
-import Flash from "../../components/flash/Flash";
+import useToast from "../../hooks/useToast";
 
 import useApiCall from "../../hooks/useApiCall";
 import useSearch from "../../hooks/useSearch";
@@ -16,6 +15,8 @@ import useSearch from "../../hooks/useSearch";
 import "../../styles/healthplan.scss";
 
 const SearchMember = () => {
+    const { generalError } = useToast();
+
     const [
         { loading, data: { data = [], meta = {} } = {}, error: searchError },
         memberSearch,
@@ -67,6 +68,7 @@ const SearchMember = () => {
             setSearchStatus(true);
         } catch (e) {
             // console.log(e);
+            generalError();
         }
     };
 
@@ -90,8 +92,6 @@ const SearchMember = () => {
                 <h1 className="box-title" style={{ marginBottom: "0px" }}>
                     Enter New Request
                 </h1>
-
-                <Flash />
 
                 {searchError ? (
                     <PageAlert
