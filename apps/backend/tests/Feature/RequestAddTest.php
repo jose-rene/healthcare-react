@@ -109,17 +109,37 @@ class RequestAddTest extends TestCase
         /**
          * diagnosis 3rd step.
          */
-        $response = $this->put($route, [
-            'type_name'         => 'diagnosis',
-            'relevantDiagnosis' => [
+        $response = $this->put($route, $params = [
+            'type_name' => 'diagnosis',
+            'codes'     => [
                 ['code' => '1234', 'description' => 'welcome'],
                 ['code' => '4321', 'description' => 'emoclew'],
+                ['code' => '5555', 'description' => 'helloworld'],
             ],
         ]);
         $response->assertSuccessful();
-
         // make sure that relevantDiagnosis actually saved in the database
-        self::assertCount(2, $newRequest->relevantDiagnoses);
+        $response->assertJsonCount(count($params['codes']), 'codes');
+        // verify values
+        foreach ($params['codes'] as $key => $code) {
+            $response->assertJsonPath('codes.' . $key . '.code', $code['code']);
+        }
+
+        // this should update the first two and remove the 2nd
+        $response = $this->put($route, $params = [
+            'type_name' => 'diagnosis',
+            'codes'     => [
+                ['code' => '1233', 'description' => 'welcome'],
+                ['code' => '3321', 'description' => 'emoclew'],
+            ],
+        ]);
+        $response->assertSuccessful();
+        // verify extraneous code was removed
+        $response->assertJsonCount(count($params['codes']), 'codes');
+        // verify updated values
+        foreach ($params['codes'] as $key => $code) {
+            $response->assertJsonPath('codes.' . $key . '.code', $code['code']);
+        }
 
         /**
          * due 5th and final step.

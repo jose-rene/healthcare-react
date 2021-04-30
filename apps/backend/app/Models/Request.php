@@ -70,7 +70,7 @@ class Request extends Model
 
     public function relevantDiagnoses()
     {
-        return $this->hasMany(RelevantDiagnoses::class, 'request_id');
+        return $this->hasMany(RelevantDiagnoses::class)->orderBy('id');
     }
 
     public function requestQuestionnaireSection()

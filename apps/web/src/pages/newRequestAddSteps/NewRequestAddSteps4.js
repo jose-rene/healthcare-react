@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import Select2 from "react-select";
 
 import "./newRequestAddSteps.css";

@@ -82,31 +82,33 @@ class RequestSectionSaveJob
 
     protected function relevantDiagnosisSection()
     {
+        // the codes are saved by position, otherwise they'll keep stacking
         $request = $this->request;
-        $relevantDiagnosis = request()->input('relevantDiagnosis');
+        $inputCodes = array_filter(request()->input('codes'), fn ($item) => !empty($item['code']));
 
-        $trackedCodes = $request->relevantDiagnoses->keyBy('code')->map(function ($c) {
-            return false;
-        })->toArray();
-
-        foreach ($relevantDiagnosis as $item) {
-            $request->relevantDiagnoses()->updateOrCreate(['code' => $item['code']], [
-                'code'        => $item['code'],
-                'description' => $item['description'],
-                'weighted'    => true,
-            ]);
-            $trackedCodes[$item['code']] = true;
+        // check if there are more codes that what was posted
+        if ($request->relevantDiagnoses->count() > ($count = count($inputCodes))) {
+            // remove the ones that are no longer tracked
+            $request->relevantDiagnoses()
+                ->whereIn('id', $request->relevantDiagnoses->slice($count)->map(fn ($item) => $item['id'])->values()->all())
+                ->delete();
         }
 
-        $noLongerTracked = array_filter($trackedCodes, function ($c) {
-            return $c === false;
-        });
-
-        // remove items that were removed from the form
-        if (count($noLongerTracked) > 0) {
-            $ids = array_keys($noLongerTracked);
-            $request->relevantDiagnoses()->whereIn('id', $ids)->delete();
+        // insert or update the rest
+        $currentCodes = $request->relevantDiagnoses->toArray();
+        foreach ($inputCodes as $i => $item) {
+            // check if it's already there
+            if (!empty($currentCodes[$i])) {
+                // either update or do nothing
+                if ($currentCodes[$i]['code'] !== $item['code']) {
+                    $request->relevantDiagnoses()->find($currentCodes[$i]['id'])->update($item);
+                }
+                continue;
+            }
+            // create a new one
+            $request->relevantDiagnoses()->create($item);
         }
+        $request->refresh();
     }
 
     protected function authNumberSection()
