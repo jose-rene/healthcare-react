@@ -64,10 +64,20 @@ const NewRequestAddSteps3 = ({ setParams, requestData }) => {
             return;
         }
         if (action?.action && action.action === "clear") {
-            currentCodes[index] = {
-                code: "",
-                description: "",
-            };
+            // may just remove all together
+            if (
+                currentCodes.length > 1 &&
+                index !== currentCodes.length - 1 &&
+                currentCodes[currentCodes.length - 1].code === ""
+            ) {
+                currentCodes.splice(index, 1);
+            } else {
+                // simply clear
+                currentCodes[index] = {
+                    code: "",
+                    description: "",
+                };
+            }
         } else {
             currentCodes[index] = {
                 code: selected.value,
