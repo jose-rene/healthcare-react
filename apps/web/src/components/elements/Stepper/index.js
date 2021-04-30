@@ -33,9 +33,22 @@ const getStepContent = (step, data, editData, payerProfile, setParams) => {
                 />
             );
         case 2:
-            return <NewRequestAddSteps3 data={data} setParams={setParams} />;
+            return (
+                <NewRequestAddSteps3
+                    data={data}
+                    setParams={setParams}
+                    requestData={editData}
+                />
+            );
         case 3:
-            return <NewRequestAddSteps4 data={data} setParams={setParams} />;
+            return (
+                <NewRequestAddSteps4
+                    data={data}
+                    payerProfile={payerProfile}
+                    setParams={setParams}
+                    requestData={editData}
+                />
+            );
         case 4:
             return (
                 <NewRequestAddSteps5
@@ -43,6 +56,7 @@ const getStepContent = (step, data, editData, payerProfile, setParams) => {
                     setParams={setParams}
                 />
             );
+
         default:
             return (
                 <NewRequestAddSteps1

@@ -3,9 +3,12 @@
 namespace App\Jobs;
 
 use App\Models\Request;
+use App\Models\RequestItem;
+use App\Models\RequestTypeDetail;
 use Carbon\Carbon;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -39,8 +42,8 @@ class RequestSectionSaveJob
      */
     public function handle()
     {
-        $request   = $this->request;
-        $section   = $this->section;
+        $request = $this->request;
+        $section = $this->section;
         $type_name = Str::slug($section['type_name']);
 
         switch ($type_name) {
@@ -59,8 +62,8 @@ class RequestSectionSaveJob
                 $this->authNumberSection();
                 break;
 
-            case 'category':
-                $this->categorySection();
+            case 'request-items':
+                $this->requestItemsSection();
                 break;
 
             case 'due':
@@ -79,31 +82,33 @@ class RequestSectionSaveJob
 
     protected function relevantDiagnosisSection()
     {
-        $request           = $this->request;
-        $relevantDiagnosis = request()->input('relevantDiagnosis');
+        // the codes are saved by position, otherwise they'll keep stacking
+        $request = $this->request;
+        $inputCodes = array_filter(request()->input('codes'), fn ($item) => !empty($item['code']));
 
-        $trackedCodes = $request->relevantDiagnoses->keyBy('code')->map(function ($c) {
-            return false;
-        })->toArray();
-
-        foreach ($relevantDiagnosis as $item) {
-            $request->relevantDiagnoses()->updateOrCreate(['code' => $item['code']], [
-                'code'        => $item['code'],
-                'description' => $item['description'],
-                'weighted'    => true,
-            ]);
-            $trackedCodes[$item['code']] = true;
+        // check if there are more codes that what was posted
+        if ($request->relevantDiagnoses->count() > ($count = count($inputCodes))) {
+            // remove the ones that are no longer tracked
+            $request->relevantDiagnoses()
+                ->whereIn('id', $request->relevantDiagnoses->slice($count)->map(fn ($item) => $item['id'])->values()->all())
+                ->delete();
         }
 
-        $noLongerTracked = array_filter($trackedCodes, function ($c) {
-            return $c === false;
-        });
-
-        // remove items that were removed from the form
-        if (count($noLongerTracked) > 0) {
-            $ids = array_keys($noLongerTracked);
-            $request->relevantDiagnoses()->whereIn('id', $ids)->delete();
+        // insert or update the rest
+        $currentCodes = $request->relevantDiagnoses->toArray();
+        foreach ($inputCodes as $i => $item) {
+            // check if it's already there
+            if (!empty($currentCodes[$i])) {
+                // either update or do nothing
+                if ($currentCodes[$i]['code'] !== $item['code']) {
+                    $request->relevantDiagnoses()->find($currentCodes[$i]['id'])->update($item);
+                }
+                continue;
+            }
+            // create a new one
+            $request->relevantDiagnoses()->create($item);
         }
+        $request->refresh();
     }
 
     protected function authNumberSection()
@@ -111,7 +116,7 @@ class RequestSectionSaveJob
         $request = $this->request;
         try {
             $this->request->update(request()->validate([
-                'auth_number' => Rule::unique('requests')->where(fn($query) => $query->where('payer_id',
+                'auth_number' => Rule::unique('requests')->where(fn ($query) => $query->where('payer_id',
                     $request->payer_id)),
             ]));
         } catch (ValidationException $e) {
@@ -123,17 +128,24 @@ class RequestSectionSaveJob
     {
         $this->request->update(request()->validate([
             'due_at' => ['date', 'after:today'],
-            'notes'  => [],// form - due_date + time
+            'notes'  => [], // form - due_date + time
         ]));
     }
 
+    /**
+     * Verify and save changed information.
+     *
+     * @todo user the member Job for this
+     *
+     * @return void
+     */
     protected function verify()
     {
         $request = $this->request;
-        $member  = $request->member;
+        $member = $request->member;
 
-        $addressForm     = request()->input('address', []);
-        $memberForm      = request()->only('member_number', 'line_of_business', 'dob');
+        $addressForm = request()->input('address', []);
+        $memberForm = request()->only('member_number', 'line_of_business', 'dob');
         $memberPhoneForm = request()->only('phone');
 
         request()->validate([
@@ -165,7 +177,53 @@ class RequestSectionSaveJob
         $request->update(['member_verified_at' => Carbon::now()]);
     }
 
-    protected function categorySection()
+    protected function requestItemsSection()
     {
+        $rules = [
+            'request_type_details'     => ['bail', 'required', 'array', 'min:1'],
+            'request_type_details.*'   => ['bail', 'required', 'array', 'min:1'],
+            'request_type_details.*.*' => ['bail', 'integer', 'exists:request_type_details,id'],
+        ];
+        $validator = Validator::make($params = request()->all(), $rules, [
+            'required' => 'A valid request item is required.',
+            'exists'   => 'An invalid request item was entered',
+        ]);
+        if ($validator->fails()) {
+            throw new HttpResponseException(response()->json(['errors' => $validator->errors()->first()], 422));
+
+            return;
+        }
+        $requestTypes = [];
+        $requestTypeDetails = [];
+        // each group of request type details will have a common request type
+        foreach (request()->input('request_type_details') as $details) {
+            // get the request type id from the first element
+            $type = RequestTypeDetail::firstWhere('id', $details[0])->requestType;
+            // add to stack
+            $requestTypes[] = $type;
+            // key the request type details by request type id for later reference
+            $requestTypeDetails[$type['id']] = $details;
+        }
+        // dd($requestTypes);
+        // see if the request item exists, add id
+        $requestTypes = collect($requestTypes)->map(fn ($item) => [
+            'id' => ($first = RequestItem::firstWhere([
+                'request_id'      => $this->request->id,
+                'request_type_id' => $item['id'],
+            ])) ? $first->id : null,
+            'request_id'      => $this->request->id,
+            'request_type_id' => $item['id'],
+            'name'            => $item['name'],
+        ]);
+        // sync request items
+        $this->request
+            ->requestItems()
+            ->sync($requestTypes->toArray());
+        // refresh to reload relationships
+        $this->request->refresh();
+        // sync the associated request type details for each request item
+        $this->request->requestItems
+            ->each(fn ($detail) => $detail->requestTypeDetails()->sync($requestTypeDetails[$detail['request_type_id']]));
+        $this->request->refresh();
     }
 }

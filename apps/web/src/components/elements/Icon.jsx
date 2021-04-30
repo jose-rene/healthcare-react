@@ -35,6 +35,7 @@ const Icon = ({
         email: "envelope",
         cancel: "ban",
         loading: "spinner",
+        delete: "times-circle",
     };
 
     const mappedIcon = map[name] || name;
@@ -54,12 +55,8 @@ const Icon = ({
     );
 
     return stacked ? (
-        <span className={`fa-stack`}>
-            {stacked && (
-                <i
-                    className={`${stacked_className} fa fa-circle fa-stack-2x`}
-                />
-            )}
+        <span className="fa-stack">
+            <i className={`${stacked_className} fa fa-circle fa-stack-2x`} />
             {mainIcon}
         </span>
     ) : (

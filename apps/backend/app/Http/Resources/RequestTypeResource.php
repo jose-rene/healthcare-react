@@ -16,8 +16,10 @@ class RequestTypeResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'   => $this->id,
-            'name' => $this->name,
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'request_types' => self::collection($this->childRequestTypes),
+            'details'       => RequestTypeDetailResource::collection($this->requestTypeDetails),
         ];
     }
 }

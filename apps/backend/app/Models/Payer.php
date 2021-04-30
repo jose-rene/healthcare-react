@@ -67,6 +67,16 @@ class Payer extends Model
     }
 
     /**
+     * Relationship to request types.
+     *
+     * @return Illuminate\Database\Eloquent\Collection of RequestType
+     */
+    public function requestTypes()
+    {
+        return $this->hasMany(RequestType::class)->orderBy('name');
+    }
+
+    /**
      * Returns one level of children or child payers.
      *
      * @return Illuminate\Database\Eloquent\Collection of Payer

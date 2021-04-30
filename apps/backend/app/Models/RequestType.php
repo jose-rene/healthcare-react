@@ -11,12 +11,55 @@ class RequestType extends Model
 {
     use HasFactory, SoftDeletes, Uuidable;
 
-    protected $fillable = [
-        'name',
-    ];
+    protected $guarded = ['id'];
 
-    public function typeDetails()
+    /**
+     * Relationship to request type details.
+     *
+     * @return Illuminate\Database\Eloquent\Collection of RequestTypeDetail
+     */
+    public function requestTypeDetails()
     {
-        return $this->hasMany(RequestTypeDetail::class, 'request_type_id');
+        return $this->hasMany(RequestTypeDetail::class)->orderBy('name');
+    }
+
+    /**
+     * Will return one level of children or child sections.
+     *
+     * @return Illuminate\Database\Eloquent\Collection of RequestType
+     */
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id')->orderBy('name');
+    }
+
+    /**
+     * Will implement the recursive relationship and return the hiarchy of child sections.
+     *
+     * @return Illuminate\Database\Eloquent\Collection of RequestType
+     */
+    public function childRequestTypes()
+    {
+        return $this->hasMany(self::class, 'parent_id')->with('children');
+    }
+
+    /**
+     * Will return one level of children or child sections.
+     *
+     * @return RequestType
+     */
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    /**
+     * Will return one level of children or child sections.
+     *
+     * @return RequestType
+     */
+    public function ancestors()
+    {
+        return $this->belongsTo(self::class, 'parent_id')->with('parent');
     }
 }

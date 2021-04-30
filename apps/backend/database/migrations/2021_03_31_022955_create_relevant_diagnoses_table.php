@@ -19,7 +19,7 @@ class CreateRelevantDiagnosesTable extends Migration
             $table->unsignedBigInteger('request_id');
             $table->string('code');
             $table->string('description');
-            $table->boolean('weighted');
+            $table->boolean('weighted')->default(1);
 
             $table->timestamps();
             $table->softDeletes();

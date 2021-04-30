@@ -16,8 +16,12 @@ class CreateRequestTypesTable extends Migration
         Schema::create('request_types', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid');
-
-            $table->string('name');
+            $table->foreignId('payer_id')->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable()->comment('The id of the parent request type');
+            $table->foreign('parent_id')->references('id')->on('request_types')->onDelete('set null');
+            $table->string('name')->comment('The name of the request type');
+            $table->boolean('is_requestable')->default(1)->comment('Flag can be requested');
+            $table->boolean('is_consideration')->default(1)->comment('Flag can be added to considerations');
 
             $table->timestamps();
             $table->softDeletes();

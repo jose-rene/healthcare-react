@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\RequestType;
 use App\Models\RequestTypeDetail;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -30,7 +31,9 @@ class RequestTypeDetailFactory extends Factory
         ];
 
         return [
-            'name' => $this->faker->randomElement($randomDetails),
+            'request_type_id' => fn () => RequestType::factory()->create(),
+            'name'            => 'RD ' . $this->faker->catchPhrase(), // $this->faker->randomElement($randomDetails),
+            'is_default'      => (int) $this->faker->boolean(30),
         ];
     }
 }

@@ -21,19 +21,24 @@ class RequestItem extends Model
         'assessment',
         'decision',
         'json_data',
-        'new_request_json',
-        'additional_consideration',
+        // 'new_request_json',
+        'is_additional_consideration',
         'name',
     ];
 
     protected $casts = [
-        'new_request_json' => 'json',
-        'json_data'        => 'json',
+        // 'new_request_json' => 'json',
+        'json_data' => 'json',
     ];
 
     public function requestType()
     {
         return $this->belongsTo(RequestType::class);
+    }
+
+    public function requestTypeDetails()
+    {
+        return $this->belongsToMany(RequestTypeDetail::class);
     }
 
     public function outcome()
@@ -43,7 +48,7 @@ class RequestItem extends Model
 
     public function itemDetails()
     {
-        return $this->hasMany(RequestItemDetail::class, 'request_item_id');
+        return $this->belongsTo(RequestItemDetail::class, 'request_item_id');
     }
 
     /*
