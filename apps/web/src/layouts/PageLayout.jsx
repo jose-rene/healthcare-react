@@ -143,6 +143,8 @@ const PageLayout = ({
                 <ul className="sidebar-items">
                     <li
                         className={page === "dashboard" ? "sidebar-active" : ""}
+                        data-toggle="tooltip"
+                        title="Dashboard"
                     >
                         <Link to="/dashboard">
                             <img src="/images/icons/home.png" alt="Home" />
@@ -157,6 +159,8 @@ const PageLayout = ({
                             className={
                                 page === "requests" ? "sidebar-active" : ""
                             }
+                            data-toggle="tooltip"
+                            title="Search Member"
                         >
                             <Link to="/healthplan/start-request">
                                 <img
@@ -166,17 +170,29 @@ const PageLayout = ({
                             </Link>
                         </li>
                     )}
-                    <li className={page === "account" ? "sidebar-active" : ""}>
+                    <li
+                        className={page === "account" ? "sidebar-active" : ""}
+                        data-toggle="tooltip"
+                        title="Account"
+                    >
                         <Link to="/account">
                             <img src="/images/icons/user.png" alt="Account" />
                         </Link>
                     </li>
-                    <li className={page === "payments" ? "sidebar-active" : ""}>
+                    <li
+                        className={page === "payments" ? "sidebar-active" : ""}
+                        data-toggle="tooltip"
+                        title="Payments"
+                    >
                         <Link to="/payments">
                             <img src="/images/icons/pay.png" alt="Pay" />
                         </Link>
                     </li>
-                    <li className={page === "training" ? "sidebar-active" : ""}>
+                    <li
+                        className={page === "training" ? "sidebar-active" : ""}
+                        data-toggle="tooltip"
+                        title="Training"
+                    >
                         <Link to="/training">
                             <img src="/images/icons/video.png" alt="Videos" />
                         </Link>
@@ -192,6 +208,8 @@ const PageLayout = ({
                                     ? "sidebar-active"
                                     : ""
                             }
+                            data-toggle="tooltip"
+                            title="RequestLookup"
                         >
                             <Link to="/healthplan/requests">
                                 <Icon
@@ -205,7 +223,11 @@ const PageLayout = ({
                             </Link>
                         </li>
                     )}
-                    <li className={page === "help" ? "sidebar-active" : ""}>
+                    <li
+                        className={page === "help" ? "sidebar-active" : ""}
+                        data-toggle="tooltip"
+                        title="Help"
+                    >
                         <Link to="/help">
                             <img src="/images/icons/question.png" alt="Help" />
                         </Link>
