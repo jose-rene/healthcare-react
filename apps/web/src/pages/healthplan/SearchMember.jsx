@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 
 import PageLayout from "../../layouts/PageLayout";
 import InputText from "../../components/inputs/InputText";
@@ -15,6 +16,7 @@ import useSearch from "../../hooks/useSearch";
 import "../../styles/healthplan.scss";
 
 const SearchMember = () => {
+    const history = useHistory();
     const { generalError } = useToast();
 
     const [
@@ -75,6 +77,10 @@ const SearchMember = () => {
     const handleTableChange = (props) => {
         updateSearchObj(props);
         redoSearch({ ...searchObj, ...props });
+    };
+
+    const handleAddMember = () => {
+        history.push("/healthplan/addmember");
     };
 
     const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
@@ -192,6 +198,7 @@ const SearchMember = () => {
                                                 <Button
                                                     variant="primary"
                                                     label="Add New Member"
+                                                    onClick={handleAddMember}
                                                 />
                                             </div>
                                         </>
