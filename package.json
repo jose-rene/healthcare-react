@@ -15,7 +15,8 @@
         "do:web": "lerna --scope=@dme/web exec yarn",
         "watchman:reset": "watchman watch-del-all",
         "pre-commit:message": "echo '\r\nYou can use this to run scripts pre commit or whatever git hook. You can call \"test\"\r\n' && exit 0",
-        "postinstall": "lerna bootstrap --no-progress"
+        "postinstall": "lerna bootstrap --no-progress",
+        "branch:gen": "branch_gen"
     },
     "pre-commit": [
         "pre-commit:message"

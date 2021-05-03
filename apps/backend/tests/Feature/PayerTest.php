@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Payer;
+use App\Models\TrainingDocument;
 use App\Models\User;
 use App\Models\UserType\HealthPlanUser;
 use Artisan;
@@ -92,6 +93,32 @@ class PayerTest extends TestCase
             ->assertStatus(200)
             ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types'])
             ->assertJsonCount($payerCount, 'payers.0.payers');
+    }
+
+    /**
+     * @group training
+     * @group document
+     * @group functional
+     */
+    public function testLoadingTrainingDocuments()
+    {
+        Passport::actingAs(
+            $this->user
+        );
+
+        TrainingDocument::factory()->count(4)->create(['training_document_type_id' => '2']);
+
+        // Make sure I can get training documents by correct type.
+        $response = $this->get(route('api.training_document.index') . '?training_document_type_id=2');
+        $response->assertSuccessful();
+        $data = $response->json();
+        self::assertCount(4, $data);
+
+        // Make sure I get n o training documents by wrong type.
+        $response = $this->get(route('api.training_document.index') . '?training_document_type_id=1');
+        $response->assertSuccessful();
+        $data = $response->json();
+        self::assertCount(0, $data);
     }
 
     protected function setUp(): void

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Builder;
 use Illuminate\Support\Facades\Schema;
 
 class CreateOauthPersonalAccessClientsTable extends Migration
@@ -9,7 +10,7 @@ class CreateOauthPersonalAccessClientsTable extends Migration
     /**
      * The database schema.
      *
-     * @var \Illuminate\Database\Schema\Builder
+     * @var Builder
      */
     protected $schema;
 
@@ -31,7 +32,7 @@ class CreateOauthPersonalAccessClientsTable extends Migration
     public function up()
     {
         $this->schema->create('oauth_personal_access_clients', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->unsignedBigInteger('client_id');
             $table->timestamps();
         });
