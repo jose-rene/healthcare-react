@@ -19,6 +19,7 @@ class CreateActivityTypesTable extends Migration
             $table->string('permission');
             $table->integer('visible')->comment('1 = private, 2 = internal, 3 = financial, 4 = all');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

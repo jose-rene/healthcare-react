@@ -11,6 +11,8 @@ use App\Listeners\MemberCreatedListener;
 use App\Listeners\PayerCreatedListener;
 use App\Listeners\TrackDatabaseChangeListener;
 use App\Listeners\TrackPasswordResets;
+use App\Models\Request;
+use App\Observers\RequestObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Database\Events\DatabaseRefreshed;
@@ -54,5 +56,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
+
+        Request::observe(RequestObserver::class);
     }
 }

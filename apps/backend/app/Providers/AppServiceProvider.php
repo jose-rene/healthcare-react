@@ -7,6 +7,7 @@ use App\Models\Role;
 use Bouncer;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
+use Route;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,5 +37,10 @@ class AppServiceProvider extends ServiceProvider
         JsonResource::withoutWrapping();
         // use custom role class with bouncer
         Bouncer::useRoleModel(Role::class);
+
+        Route::macro('frontendUrl', function ($path = '/') {
+            $url = rtrim(config('app.frontend_url', 'http://localhost'), '/');
+            return $url . '/' . ltrim($path, '/');
+        });
     }
 }

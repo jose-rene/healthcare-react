@@ -141,6 +141,11 @@ class Member extends Model
         return $this->emails()->first();
     }
 
+    public function getNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
     public function getTrainingDocumentsAttribute()
     {
         return $this->payer->trainingDocuments;

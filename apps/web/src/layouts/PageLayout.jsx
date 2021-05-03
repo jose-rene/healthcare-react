@@ -1,16 +1,16 @@
-import React, { useMemo, useState } from "react";
-import { NavDropdown } from "react-bootstrap";
-import { connect } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
-import { signOut } from "../actions/authAction";
-import Icon from "../components/elements/Icon";
-import TimeoutModal from "../components/elements/TimeoutModal";
-import Select from "../components/inputs/Select";
-import { INACTIVITY_TIMEOUT, LOGOUT_COUNTDOWN_TIME } from "../config/Login";
-import { PUT } from "../config/URLs";
-import useApiCall from "../hooks/useApiCall";
-import useIdleTimeout from "../hooks/useIdleTimeout";
-import checkMiddleware from "../helpers/user";
+import React, { useMemo, useState } from 'react';
+import { NavDropdown } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
+import { signOut } from '../actions/authAction';
+import Icon from '../components/elements/Icon';
+import TimeoutModal from '../components/elements/TimeoutModal';
+import Select from '../components/inputs/Select';
+import { INACTIVITY_TIMEOUT, LOGOUT_COUNTDOWN_TIME } from '../config/Login';
+import { PUT } from '../config/URLs';
+import useApiCall from '../hooks/useApiCall';
+import useIdleTimeout from '../hooks/useIdleTimeout';
+import checkMiddleware from '../helpers/user';
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const PageLayout = ({
@@ -142,7 +142,7 @@ const PageLayout = ({
             <div className={`sidebar ${showMenu ? "d-block" : ""}`}>
                 <ul className="sidebar-items">
                     <li
-                        className={page === "dashboard" ? "sidebar-active" : ""}
+                        className={page === 'dashboard' ? 'sidebar-active' : ''}
                         data-toggle="tooltip"
                         title="Dashboard"
                     >
@@ -152,7 +152,7 @@ const PageLayout = ({
                         </Link>
                     </li>
                     {checkMiddleware(
-                        ["hp_manager", "hp_champion"],
+                        ['hp_user', 'hp_manager', 'hp_champion'],
                         primaryRole,
                         abilities
                     ) && (
@@ -174,8 +174,18 @@ const PageLayout = ({
                             </Link>
                         </li>
                     )}
+                    {checkMiddleware(['hp_user', 'hp_manager', 'hp_champion'], primaryRole, abilities) && (
+                        <li className={page === 'requests' ? 'sidebar-active' : ''} title="Search Requests">
+                            <Link to="/healthplan/requests">
+                                <img
+                                    src="/images/icons/search.png"
+                                    alt="Search Requests"
+                                />
+                            </Link>
+                        </li>
+                    )}
                     <li
-                        className={page === "account" ? "sidebar-active" : ""}
+                        className={page === 'account' ? 'sidebar-active' : ''}
                         data-toggle="tooltip"
                         title="Account"
                     >
@@ -185,7 +195,7 @@ const PageLayout = ({
                         </Link>
                     </li>
                     <li
-                        className={page === "payments" ? "sidebar-active" : ""}
+                        className={page === 'payments' ? 'sidebar-active' : ''}
                         data-toggle="tooltip"
                         title="Payments"
                     >

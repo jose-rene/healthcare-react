@@ -1,44 +1,89 @@
-import React, { useState, useEffect } from "react";
-
-import PageLayout from "../../layouts/PageLayout";
-import InputText from "../../components/inputs/InputText";
-import Button from "../../components/inputs/Button";
-import Select from "../../components/inputs/Select";
-import TableAPI from "../../components/elements/TableAPI";
-
-import useSearch from "../../hooks/useSearch";
+import React, { useState, useEffect } from 'react';
+import PageLayout from '../../layouts/PageLayout';
+import InputText from '../../components/inputs/InputText';
+import Button from '../../components/inputs/Button';
+import Select from '../../components/inputs/Select';
+import TableAPI from '../../components/elements/TableAPI';
+import useSearch from '../../hooks/useSearch';
+import useApiCall from '../../hooks/useApiCall';
+import Form from '../../components/elements/Form';
+import { Link } from 'react-router-dom';
+import Icon from '../../components/elements/Icon';
+import { ACTIONS } from '../../helpers/table';
 
 const RequestLookup = () => {
-    const [headers] = useState([
-        { columnMap: "name", label: "Name", type: String },
-        { columnMap: "status", label: "Status", type: String },
-        { columnMap: "type", label: "Type", type: String },
-        { columnMap: "received", label: "Received", type: String },
-        { columnMap: "schedule_date", label: "Schedule Date", type: String },
-        { columnMap: "activity", label: "Activity", type: String },
-        { columnMap: "report", label: "Report", type: String },
-    ]);
+    const [{ loading, data: { data = [], meta = {} } }, fireDoSearch] = useApiCall({
+        url: '/request',
+    });
 
     const [statusOptions] = useState([
-        { id: "", title: "", val: "" },
-        { id: "received", title: "Received", val: "received" },
-        { id: "assigned", title: "Assigned", val: "assigned" },
-        { id: "scheduled", title: "Scheduled", val: "scheduled" },
-        { id: "assessed", title: "Assessed", val: "assessed" },
-        { id: "submitted", title: "Submitted", val: "submitted" },
-        { id: "completed", title: "Completed", val: "completed" },
-        { id: "on_hold", title: "On_hold", val: "on_hold" },
-        { id: "cancelled", title: "Cancelled", val: "cancelled" },
-        { id: "reopened", title: "Reopened", val: "reopened" },
+        { id: 'received', value: '1', title: 'Received' },
+        { id: 'assigned', value: '2', title: 'Assigned' },
+        { id: 'scheduled', value: '3', title: 'Scheduled' },
+        { id: 'assessed', value: '4', title: 'Assessed' },
+        { id: 'submitted', value: '5', title: 'Submitted' },
+        { id: 'completed', value: '6', title: 'Completed' },
+        { id: 'on_hold', value: '7', title: 'On Hold' },
+        { id: 'cancelled', value: '8', title: 'Cancelled' },
+        { id: 'reopened', value: '9', title: 'Reopened' },
+    ]);
+
+    const [headers] = useState([
+        { columnMap: 'member.name', label: 'Name', type: String },
+        {
+            columnMap: 'request_status_id',
+            formatter: request_status_id => {
+                const found = statusOptions.find(({ value }) => value == request_status_id);
+
+                return found?.title || '';
+            },
+            label: 'Status',
+            type: String,
+        },
+        {
+            columnMap: 'request_type_name',
+            label: 'Type',
+            type: String,
+        },
+        {
+            columnMap: 'created_at',
+            label: 'Received',
+            type: Date,
+            //formatter: date => moment(date).format('mm/dd/YYYY')
+        },
+        { columnMap: 'due_at', label: 'Schedule Date', type: String },
+
+        // TODO :: DEV :: NOTE :: this will basically show the last status change
+        { columnMap: 'activity', label: 'Activity', type: String },
+
+        // TODO :: DEV :: NOTE :: link to the narrative report (once it's completed)
+        { columnMap: 'report', label: 'Report', type: String },
+
+        {
+            label: 'Actions',
+            columnMap: 'member.id',
+            type: ACTIONS,
+            disableSortBy: true,
+            formatter (member_id, { id: request_id }) {
+                return (<>
+                    <Link class="pl-1" to={`/member/${member_id}/request/${request_id}/edit`}><Icon size="1x"
+                                                                                                    icon="edit" /></Link>
+                </>);
+            },
+        },
     ]);
 
     const [dateRangeOptions] = useState([
-        { id: "7", title: "Last 7 Days", val: "7" },
-        { id: "30", title: "Last 30 Days", val: "30" },
-        { id: "90", title: "Last 90 Days", val: "90" },
+        { id: '7', title: 'Last 7 Days', val: '7' },
+        { id: '30', title: 'Last 30 Days', val: '30' },
+        { id: '90', title: 'Last 90 Days', val: '90' },
     ]);
 
     const [searchStatus, setSearchStatus] = useState(false);
+
+    useEffect(() => {
+        console.log({ data });
+    }, [data]);
 
     useEffect(() => {
         setSearchStatus(false);
@@ -46,8 +91,9 @@ const RequestLookup = () => {
 
     const redoSearch = async (params = searchObj) => {
         try {
+            console.log({ params });
             // need to implement api here
-
+            await fireDoSearch({ params });
             setSearchStatus(true);
         } catch (e) {
             console.log(e);
@@ -59,13 +105,15 @@ const RequestLookup = () => {
         redoSearch({ ...searchObj, ...props });
     };
 
+    const handleFormSubmit = (e) => redoSearch();
+
     const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
         {
             searchObj: {
                 sortColumn: headers[0].columnMap,
-                sortDirection: "asc",
+                sortDirection: 'asc',
             },
-        }
+        },
     );
 
     return (
@@ -75,64 +123,73 @@ const RequestLookup = () => {
 
                 <div className="form-row">
                     <div className="col-md-12">
-                        <div className="white-box white-box-small">
-                            <div className="row m-0">
-                                <div className="col-md-3">
-                                    <Select
-                                        name="status"
-                                        label="Status"
-                                        options={statusOptions}
-                                    />
-                                </div>
+                        <Form onSubmit={handleFormSubmit}>
+                            <div className="white-box white-box-small">
+                                <div className="row m-0">
+                                    <div className="col-md-3">
+                                        <Select
+                                            name="request_status_id"
+                                            label="Status"
+                                            options={statusOptions}
+                                            onChange={formUpdateSearchObj}
+                                        />
+                                    </div>
 
-                                <div className="col-md-3">
-                                    <InputText
-                                        name="from_date"
-                                        label="From Date"
-                                        type="date"
-                                    />
-                                </div>
+                                    <div className="col-md-3">
+                                        <InputText
+                                            name="from_date"
+                                            label="From Date"
+                                            type="date"
+                                            onChange={formUpdateSearchObj}
+                                        />
+                                    </div>
 
-                                <div className="col-md-3">
-                                    <InputText
-                                        name="to_date"
-                                        label="To Date"
-                                        type="date"
-                                    />
-                                </div>
+                                    <div className="col-md-3">
+                                        <InputText
+                                            name="to_date"
+                                            label="To Date"
+                                            type="date"
+                                            onChange={formUpdateSearchObj}
+                                        />
+                                    </div>
 
-                                <div className="col-md-3">
-                                    <Select
-                                        name="date_range"
-                                        label="Date Range"
-                                        options={dateRangeOptions}
-                                    />
-                                </div>
+                                    <div className="col-md-3">
+                                        <Select
+                                            name="date_range"
+                                            label="Date Range"
+                                            options={dateRangeOptions}
+                                            onChange={formUpdateSearchObj}
+                                        />
+                                    </div>
 
-                                <div className="col-md-3">
-                                    <InputText
-                                        name="member_id"
-                                        label="Member ID"
-                                    />
-                                </div>
+                                    <div className="col-md-3">
+                                        <InputText
+                                            name="member_id"
+                                            label="Member ID"
+                                            onChange={formUpdateSearchObj}
+                                        />
+                                    </div>
 
-                                <div className="col-md-3">
-                                    <InputText
-                                        name="auth_number"
-                                        label="Auth#"
-                                    />
-                                </div>
+                                    <div className="col-md-3">
+                                        <InputText
+                                            name="auth_number"
+                                            label="Auth #"
+                                            onChange={formUpdateSearchObj}
+                                        />
+                                    </div>
 
-                                <div className="col-md-3 align-self-end">
-                                    <Button className="btn btn-block btn-primary mb-md-3 py-2">
-                                        Search{" "}
-                                        <span className="d-inline-block d-md-none d-lg-none d-xl-inline-block">
-                                            Requests
-                                        </span>
-                                    </Button>
+                                    <div className="col-md-3 align-self-end">
+                                        <Button
+                                            type="submit"
+                                            disable={loading}
+                                            className="btn btn-block btn-primary mb-md-3 py-2"
+                                            onClick={() => redoSearch()}>
+                                            Search Requests
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </Form>
                     </div>
 
                     <div className="col-md-12">
@@ -150,17 +207,9 @@ const RequestLookup = () => {
                                         <TableAPI
                                             searchObj={searchObj}
                                             headers={headers}
-                                            data={[]}
-                                            dataMeta={{
-                                                current_page: 1,
-                                                from: null,
-                                                last_page: 1,
-                                                links: [],
-                                                path: "",
-                                                per_page: 50,
-                                                to: null,
-                                                total: 0,
-                                            }}
+                                            loading={loading}
+                                            data={data}
+                                            dataMeta={meta}
                                             onChange={handleTableChange}
                                         />
                                     )}

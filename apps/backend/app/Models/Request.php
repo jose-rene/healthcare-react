@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use App\Http\SearchPipeline\AuthNumber;
+use App\Http\SearchPipeline\RequestStatusId;
 use App\Models\Activity\Activity;
 use App\Models\Assessment\Assessment;
-use App\Traits\Uuidable;
+use App\Traits\Revisionable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Pipeline\Pipeline;
+use Str;
 
 /**
  * @property Carbon      created_at
@@ -18,12 +22,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int         id
  * @property Member      member
  * @property Document    documents
+ * @property string      uuid
+ * @property Activity    activities
+ * @property User        therapist
+ * @property User        reviewer
+ * @property User        admin
+ *
+ * @observer App\Observers\RequestObserver
  */
 class Request extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use Uuidable;
+    use Revisionable;
 
     public static $received = '1';
     public static $assigned = '2';
@@ -38,6 +49,15 @@ class Request extends Model
     protected $guarded = ['id'];
 
     protected $dates = ['due_at'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->setAttribute('uuid', (string)Str::uuid());
+        });
+    }
 
     /**
      * Relationship to assessments.
@@ -124,10 +144,32 @@ class Request extends Model
         return $this->belongsTo(Payer::class);
     }
 
+    public function clinician()
+    {
+        return $this->hasOne(Payer::class, 'clinician_id');
+    }
+
+    public function hpUser()
+    {
+        return $this->hasOne(Member::class, 'payer_user_id');
+    }
+
+    public function payerUser()
+    {
+        return $this->hasOne(Member::class, 'payer_user_id');
+    }
+
     public function scopeSearch($query)
     {
         // TODO :: implement the search pipeline
-        return $query;
+
+        return app(Pipeline::class)
+            ->send($query)
+            ->through([
+                RequestStatusId::class,
+                AuthNumber::class,
+            ])
+            ->thenReturn();
     }
 
     /*
@@ -154,4 +196,5 @@ class Request extends Model
     {
         return (bool) $this->member_verified_at;
     }
+
 }

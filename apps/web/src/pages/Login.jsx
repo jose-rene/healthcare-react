@@ -114,7 +114,7 @@ const Login = ({
                                 className="btn-sign-in"
                                 disabled={loading || userLoading}
                             >
-                                Sign In
+                                Sign In{' '}
                                 {loading || userLoading ? (
                                     <Icon className="align-middle fa-spin">
                                         spinner
