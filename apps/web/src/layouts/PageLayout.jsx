@@ -143,9 +143,12 @@ const PageLayout = ({
                 <ul className="sidebar-items">
                     <li
                         className={page === "dashboard" ? "sidebar-active" : ""}
+                        data-toggle="tooltip"
+                        title="Dashboard"
                     >
                         <Link to="/dashboard">
                             <img src="/images/icons/home.png" alt="Home" />
+                            <div className="d-block d-sm-none">Home</div>
                         </Link>
                     </li>
                     {checkMiddleware(
@@ -157,28 +160,48 @@ const PageLayout = ({
                             className={
                                 page === "requests" ? "sidebar-active" : ""
                             }
+                            data-toggle="tooltip"
+                            title="Search Member"
                         >
                             <Link to="/healthplan/start-request">
                                 <img
                                     src="/images/icons/request.png"
                                     alt="Requests"
                                 />
+                                <div className="d-block d-sm-none">
+                                    Requests
+                                </div>
                             </Link>
                         </li>
                     )}
-                    <li className={page === "account" ? "sidebar-active" : ""}>
+                    <li
+                        className={page === "account" ? "sidebar-active" : ""}
+                        data-toggle="tooltip"
+                        title="Account"
+                    >
                         <Link to="/account">
                             <img src="/images/icons/user.png" alt="Account" />
+                            <div className="d-block d-sm-none">Account</div>
                         </Link>
                     </li>
-                    <li className={page === "payments" ? "sidebar-active" : ""}>
+                    <li
+                        className={page === "payments" ? "sidebar-active" : ""}
+                        data-toggle="tooltip"
+                        title="Payments"
+                    >
                         <Link to="/payments">
                             <img src="/images/icons/pay.png" alt="Pay" />
+                            <div className="d-block d-sm-none">Pay</div>
                         </Link>
                     </li>
-                    <li className={page === "training" ? "sidebar-active" : ""}>
+                    <li
+                        className={page === "training" ? "sidebar-active" : ""}
+                        data-toggle="tooltip"
+                        title="Training"
+                    >
                         <Link to="/training">
                             <img src="/images/icons/video.png" alt="Videos" />
+                            <div className="d-block d-sm-none">Videos</div>
                         </Link>
                     </li>
                     {checkMiddleware(
@@ -192,12 +215,15 @@ const PageLayout = ({
                                     ? "sidebar-active"
                                     : ""
                             }
+                            data-toggle="tooltip"
+                            title="RequestLookup"
                         >
                             <Link to="/healthplan/requests">
                                 <Icon
                                     icon="search"
                                     className="nav-lookup-icon"
                                 />
+                                <div className="d-block d-sm-none">Search</div>
                                 {/* <img
                                     src="/images/icons/search.png"
                                     alt="Search"
@@ -205,14 +231,20 @@ const PageLayout = ({
                             </Link>
                         </li>
                     )}
-                    <li className={page === "help" ? "sidebar-active" : ""}>
+                    <li
+                        className={page === "help" ? "sidebar-active" : ""}
+                        data-toggle="tooltip"
+                        title="Help"
+                    >
                         <Link to="/help">
                             <img src="/images/icons/question.png" alt="Help" />
+                            <div className="d-block d-sm-none">Help</div>
                         </Link>
                     </li>
                     <li>
                         <a href="/" title="Logout" onClick={logOut}>
                             <img src="/images/icons/logout.png" alt="Log Out" />
+                            <div className="d-block d-sm-none">Log Out</div>
                         </a>
                     </li>
                 </ul>
