@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Activity\Activity;
+use App\Models\Request;
 use App\Models\User;
 use App\Notifications\RequestActivity;
 use Artisan;
@@ -26,7 +27,15 @@ class ActivityNotificationTest extends TestCase
     {
         Notification::fake();
         // creating an activity should trigger notification
-        $this->activity = Activity::factory()->forUser()->create();
+        $request = Request::factory()->create();
+
+        $this->activity = $request->activities()->first();
+
+        $a    = Activity::with('activityType')->get();
+        $stop = $a->toArray();
+
+        Notification::send($this->activity->user, new RequestActivity($this->activity));
+
         Notification::assertSentTo(
             $this->activity->user,
             RequestActivity::class,

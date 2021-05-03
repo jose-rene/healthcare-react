@@ -1,22 +1,22 @@
-import React, { useMemo } from "react";
-import { Table } from "react-bootstrap";
-import { get } from "lodash";
-import { Link } from "react-router-dom";
-import { mapTypeToClass } from "../../../helpers/table";
-import Select from "../../inputs/Select";
-import TableHeaders from "./TableHeaders";
-import TablePagination from "./TablePagination";
-import Icon from "../Icon";
+import React, { useMemo } from 'react';
+import { Table } from 'react-bootstrap';
+import { get } from 'lodash';
+import { Link } from 'react-router-dom';
+import { mapTypeToClass } from '../../../helpers/table';
+import Select from '../../inputs/Select';
+import TableHeaders from './TableHeaders';
+import TablePagination from './TablePagination';
+import Icon from '../Icon';
 
 const TableAPI = ({
-    label = "Results",
+    label = 'Results',
     searchObj,
     headers = [],
     data = [],
     loading = true,
     loadingMessage = "Loading...",
     onChange,
-    emptyMessage = "No Records Found.",
+    emptyMessage = 'No Records Found.',
     dataMeta: {
         total: total_records = 1,
         last_page: lastPage = 1,
@@ -62,7 +62,7 @@ const TableAPI = ({
                             );
                         } else {
                             if (formatter) {
-                                column = formatter(get(d, columnMap, ""));
+                                column = formatter(get(d, columnMap, ''), d);
                             } else {
                                 column = get(d, columnMap, "");
                             }

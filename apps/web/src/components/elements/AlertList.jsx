@@ -1,19 +1,24 @@
-import { debounce } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { ListGroup, ListGroupItem } from "react-bootstrap";
-import { PUT } from "../../config/URLs";
-import useApiCall from "../../hooks/useApiCall";
-import "../../styles/AlertList.scss";
-import Button from "../inputs/Button";
-import Icon from "./Icon";
-import PageAlert from "./PageAlert";
+import { debounce, get } from 'lodash';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
+import { PUT } from '../../config/URLs';
+import useApiCall from '../../hooks/useApiCall';
+import '../../styles/AlertList.scss';
+import Button from '../inputs/Button';
+import Icon from './Icon';
+import PageAlert from './PageAlert';
 
-const subjectTypeMap = ({ type: notificationType = "" }) => {
+const subjectTypeMap = ({ action = '', type: notificationType = '', data: activityData = {}, ...others }) => {
+
     switch (true) {
+        case notificationType.match(/RequestUpdatedNotification/)?.index >= 0:
+            const id = get(activityData, 'data.request.id', 'n/a');
+
+            return `Activity Request id "${id}"`;
         case notificationType.match(/RequestActivity/)?.index >= 0:
-            return "Activity Request";
+            return 'Activity Request';
         default:
-            return "General Notification";
+            return 'General Notification';
     }
 };
 
@@ -90,6 +95,22 @@ const List = () => {
         reloadNotifications();
     }, []);
 
+    const getMessage = ({ body = false, message = false }) => {
+        if (!body && !message) {
+            return '';
+        }
+
+        if (body) {
+            if (Array.isArray(body)) {
+                return body.join('\r\n');
+            }
+
+            return body;
+        }
+
+        return message || '';
+    };
+
     return (
         <>
             <div className="box-same-line">
@@ -120,63 +141,67 @@ const List = () => {
                         )}
                         {alerts &&
                             alerts.map(
-                                ({
-                                    id,
-                                    read_at,
-                                    type,
-                                    data,
-                                    human_created_at,
-                                }) => (
-                                    <ListGroupItem
-                                        className="border-0"
-                                        key={id}
-                                        data-testid={`alert-${id}`}
-                                    >
-                                        <div className="d-flex">
-                                            <div>
-                                                {alertsLoading[id] ? (
-                                                    <Icon
-                                                        size="1x"
-                                                        icon="spinner"
-                                                        spin
-                                                    />
-                                                ) : (
-                                                    <input
-                                                        id={id}
-                                                        name={id}
-                                                        onChange={
-                                                            handleCheckChange
-                                                        }
-                                                        type="checkbox"
-                                                        value
-                                                        checked={!!read_at}
-                                                        disabled={!!read_at}
-                                                    />
-                                                )}
+                                (alert) => {
+                                    const {
+                                        id,
+                                        read_at,
+                                        type,
+                                        data,
+                                        human_created_at,
+                                    } = alert;
+
+                                    return (
+                                        <ListGroupItem
+                                            className="border-0"
+                                            key={id}
+                                            data-testid={`alert-${id}`}
+                                        >
+                                            <div className="d-flex">
+                                                <div>
+                                                    {alertsLoading[id] ? (
+                                                        <Icon
+                                                            size="1x"
+                                                            icon="spinner"
+                                                            spin
+                                                        />
+                                                    ) : (
+                                                        <input
+                                                            id={id}
+                                                            name={id}
+                                                            onChange={
+                                                                handleCheckChange
+                                                            }
+                                                            type="checkbox"
+                                                            value
+                                                            checked={!!read_at}
+                                                            disabled={!!read_at}
+                                                        />
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        htmlFor={id}
+                                                        className={`checkbox-label ${
+                                                            read_at
+                                                                ? 'text-muted'
+                                                                : ''
+                                                        }`}
+                                                    >
+                                                        {subjectTypeMap(alert)}
+                                                    </label>
+                                                </div>
+                                                <div className="ml-auto">
+                                                    <p className="checkbox-time">
+                                                        {human_created_at}
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <label
-                                                    htmlFor={id}
-                                                    className={`checkbox-label ${
-                                                        read_at
-                                                            ? "text-muted"
-                                                            : ""
-                                                    }`}
-                                                >
-                                                    {subjectTypeMap({ type })}
-                                                </label>
-                                            </div>
-                                            <div className="ml-auto">
-                                                <p className="checkbox-time">
-                                                    {human_created_at}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <p className="checkbox-subtitle">
-                                            {data.message}
-                                        </p>
-                                    </ListGroupItem>
-                                )
+                                            <p className="checkbox-subtitle">
+                                                {getMessage(data)}
+                                            </p>
+                                        </ListGroupItem>
+                                    );
+                                },
                             )}
                     </ListGroup>
                 </div>

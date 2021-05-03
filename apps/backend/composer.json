@@ -26,7 +26,8 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "nicolaslopezj/searchable": "^1.13",
-        "silber/bouncer": "v1.0.0-rc.10"
+        "silber/bouncer": "v1.0.0-rc.10",
+        "venturecraft/revisionable": "^1.38"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.7",

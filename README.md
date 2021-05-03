@@ -53,6 +53,7 @@ xterm should exist on macs and linux systems but might break in windows.
 * https://github.com/VentureCraft/revisionable
 * https://yarnpkg.com/advanced/lifecycle-scripts
 * [Laravel bouncer - roles and permissions](https://github.com/JosephSilber/bouncer#cheat-sheet)
+* [Laravel Revisionable](https://github.com/VentureCraft/revisionable#control)
 
 ## Quick tips 
 

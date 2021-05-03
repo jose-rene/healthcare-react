@@ -4,21 +4,27 @@ namespace App\Models\Activity;
 
 use App\Models\Request;
 use App\Models\User;
-use App\Notifications\RequestActivity;
-use App\Traits\Observable;
 use App\Traits\Uuidable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
+//use App\Traits\Observable;
+
+/**
+ * @property Request request
+ * @property mixed   notify_healthplan
+ * @property mixed   notify_admin
+ * @property mixed   notify_reviewer
+ * @property mixed   notify_therapist
+ * @property array   json_message
+ * @property string  message
+ * @property mixed   request_id
+ * @property User    user
+ */
 class Activity extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
-    use Uuidable;
-    use Observable;
+    use HasFactory, SoftDeletes, Uuidable;
 
     protected $fillable = [
         'parent_id',
@@ -31,6 +37,7 @@ class Activity extends Model
         'notify_healthplan',
         'notify_reviewer',
         'notify_therapist',
+        'json_message',
     ];
 
     protected $casts = [
@@ -39,6 +46,7 @@ class Activity extends Model
         'notify_healthplan' => 'boolean',
         'notify_reviewer'   => 'boolean',
         'notify_therapist'  => 'boolean',
+        'json_message'      => 'json',
     ];
 
     /**
@@ -94,28 +102,33 @@ class Activity extends Model
     /*
      * Implement onCreated from observable trait, send notifications.
      *
-     * @return void
-     */
-    public function onCreated()
-    {
-        if (null === ($users = $this->getNotificationUsers())) {
-            Log::error(sprintf('No users found for Activity [%d]', $this->id));
-
-            return;
-        }
-        Notification::send($users, new RequestActivity($this));
-    }
-
-    /*
-     * Implement onCreated from observable trait, send notifications.
-     *
      * @todo This just returns the activity creator user, should use business logic to return actual recipients.
      * Should also check user notification_prefs to make sure there are notification prefs set.
      *
      * @return array of App/Models/User
      */
-    protected function getNotificationUsers()
+    public function getNotificationUsers()
     {
-        return [$this->user];
+        $users = [];
+
+        if ($this->notify_admin) {
+            // TODO :: get admin
+            $users[] = $this->request->admin;
+        }
+
+        if ($this->notify_reviewer) {
+            // TODO :: get reviewer user
+            $users[] = $this->request->reviewer;
+        }
+
+        if ($this->notify_therapist) {
+            // TODO :: get therapist
+            $users[] = $this->request->therapist;
+        }
+
+        // TODO :: DEV remove and collect dynamically
+        $users[] = $this->user;
+
+        return $users;
     }
 }

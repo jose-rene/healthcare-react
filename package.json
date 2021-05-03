@@ -19,7 +19,7 @@
         "branch:gen": "branch_gen"
     },
     "pre-commit": [
-        "pre-commit:message"
+        "test"
     ],
     "devDependencies": {
         "dotenv": "^8.2.0",

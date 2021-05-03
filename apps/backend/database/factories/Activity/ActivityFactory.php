@@ -3,7 +3,6 @@
 namespace Database\Factories\Activity;
 
 use App\Models\Activity\Activity;
-use App\Models\Activity\ActivityType;
 use App\Models\Request;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -27,10 +26,6 @@ class ActivityFactory extends Factory
             'request_id' => function () {
                 return Request::factory();
             },
-            'activity_type_id' => function () {
-                return ActivityType::factory();
-            },
-            'message' => $this->faker->sentence(),
         ];
     }
 }
