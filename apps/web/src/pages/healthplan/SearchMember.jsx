@@ -178,14 +178,23 @@ const SearchMember = () => {
                                         </div>
                                     )}
                                     {searchStatus && (
-                                        <TableAPI
-                                            searchObj={searchObj}
-                                            headers={headers}
-                                            data={data}
-                                            loading={loading}
-                                            dataMeta={meta}
-                                            onChange={handleTableChange}
-                                        />
+                                        <>
+                                            <TableAPI
+                                                searchObj={searchObj}
+                                                headers={headers}
+                                                data={data}
+                                                loading={loading}
+                                                dataMeta={meta}
+                                                onChange={handleTableChange}
+                                            />
+
+                                            <div className="d-flex justify-content-center">
+                                                <Button
+                                                    variant="primary"
+                                                    label="Add New Member"
+                                                />
+                                            </div>
+                                        </>
                                     )}
                                 </div>
                             </div>
