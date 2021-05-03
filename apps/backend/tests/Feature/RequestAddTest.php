@@ -193,6 +193,14 @@ class RequestAddTest extends TestCase
         $requestTypes = RequestType::factory()->hasRequestTypeDetails(10)
             ->count(3)
             ->create(['payer_id' => $this->payer]);
+
+        // make sure at least one of the request type details is default
+        $params = $requestTypes
+            ->first()
+            ->requestTypeDetails
+            ->first()
+            ->update(['is_default' => true]);
+
         // get an array of params from the default request types
         $params = $requestTypes
             ->first()
