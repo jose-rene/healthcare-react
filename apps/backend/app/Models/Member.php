@@ -13,10 +13,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pipeline\Pipeline;
 
 /**
- * @property mixed  payer
- * @property Lob    lob
- * @property string member_number
- * @property string member_number_type
+ * @property mixed            payer
+ * @property Lob              lob
+ * @property string           member_number
+ * @property string           member_number_type
+ * @property TrainingDocument trainingDocuments
  */
 class Member extends Model
 {
@@ -138,6 +139,11 @@ class Member extends Model
     public function getMainEmailAttribute()
     {
         return $this->emails()->first();
+    }
+
+    public function getTrainingDocumentsAttribute()
+    {
+        return $this->payer->trainingDocuments;
     }
 
     public function scopeSearchMembers($query, User $authedUser = null)

@@ -71,10 +71,10 @@ class RequestController extends Controller
         $baseQuery = $user->healthPlanUser->requests();
 
 
-        $assigned  = $baseQuery->where('request_status_id', ModelRequest::$assigned)->count();
-        $scheduled = $baseQuery->where('request_status_id', ModelRequest::$scheduled)->count();
-        $submitted = $baseQuery->where('request_status_id', ModelRequest::$submitted)->count();
-        $new       = $baseQuery
+        $assigned  = (clone $baseQuery)->where('request_status_id', ModelRequest::$assigned)->count();
+        $scheduled = (clone $baseQuery)->where('request_status_id', ModelRequest::$scheduled)->count();
+        $submitted = (clone $baseQuery)->where('request_status_id', ModelRequest::$submitted)->count();
+        $new       = (clone $baseQuery)
             ->whereIn('request_status_id', [
                 ModelRequest::$received,
                 ModelRequest::$reopened,

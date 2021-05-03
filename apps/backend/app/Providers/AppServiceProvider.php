@@ -5,9 +5,7 @@ namespace App\Providers;
 use App\Library\FmDataApi;
 use App\Models\Role;
 use Bouncer;
-use Illuminate\Http\Client\Factory as HttpClientFactory;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(FmDataApi::class, function ($app) {
             return new FmDataApi();
         });
+
+        $storageName = config('filesystems.defaultTraining');
+        config()->push('filesystems.trainingStorage', config("filesystems.disks.{$storageName}"));
     }
 
     /**

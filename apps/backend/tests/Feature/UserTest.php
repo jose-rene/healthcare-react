@@ -24,6 +24,7 @@ class UserTest extends TestCase
     /**
      * Test profile route.
      *
+     * @group functional
      * @return void
      */
     public function testProfile()
@@ -216,6 +217,7 @@ class UserTest extends TestCase
     /**
      * Test update user.
      *
+     * @group functional
      * @return void
      */
     public function testUpdate()
@@ -410,7 +412,7 @@ class UserTest extends TestCase
         $user->save();
         $user->forbid('apply-any-role');
         Passport::actingAs(
-           $user
+            $user
         );
         // fetch the available roles
         $response = $this->get('/v1/user/available_roles');
@@ -420,6 +422,7 @@ class UserTest extends TestCase
     /**
      * Get test form data.
      *
+     * @group functional
      * @return array
      */
     protected function getFormData()

@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Class Payer
+ * @package App\Models
+ * @property TrainingDocument trainingDocuments
+ */
 class Payer extends Model
 {
     use HasFactory, Uuidable, SoftDeletes;
@@ -94,6 +99,16 @@ class Payer extends Model
     public function payers()
     {
         return $this->hasMany(self::class, 'parent_id')->with('children');
+    }
+
+    public function getTrainingDocumentsAttribute()
+    {
+        return TrainingDocument::query()
+            ->whereNull('payer_id')->orWhere('payer_id', $this->id)
+            ->orderBy('training_document_type_id')
+            ->orderBy('mime_type')
+            ->orderBy('name', 'desc')
+            ->get();
     }
 
     /*
