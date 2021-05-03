@@ -14,7 +14,7 @@ import useSearch from "../../hooks/useSearch";
 
 import "../../styles/healthplan.scss";
 
-const SearchMember = () => {
+const SearchMember = (props) => {
     const { generalError } = useToast();
 
     const [
@@ -75,6 +75,10 @@ const SearchMember = () => {
     const handleTableChange = (props) => {
         updateSearchObj(props);
         redoSearch({ ...searchObj, ...props });
+    };
+
+    const handleAddMember = () => {
+        props.history.push("/healthplan/addmember");
     };
 
     const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
@@ -178,14 +182,24 @@ const SearchMember = () => {
                                         </div>
                                     )}
                                     {searchStatus && (
-                                        <TableAPI
-                                            searchObj={searchObj}
-                                            headers={headers}
-                                            data={data}
-                                            loading={loading}
-                                            dataMeta={meta}
-                                            onChange={handleTableChange}
-                                        />
+                                        <>
+                                            <TableAPI
+                                                searchObj={searchObj}
+                                                headers={headers}
+                                                data={data}
+                                                loading={loading}
+                                                dataMeta={meta}
+                                                onChange={handleTableChange}
+                                            />
+
+                                            <div className="d-flex justify-content-center">
+                                                <Button
+                                                    variant="primary"
+                                                    label="Add New Member"
+                                                    onClick={handleAddMember}
+                                                />
+                                            </div>
+                                        </>
                                     )}
                                 </div>
                             </div>
