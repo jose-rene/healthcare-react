@@ -5,11 +5,13 @@ import "./newRequestAddSteps.css";
 import { Card } from "react-bootstrap";
 import Icon from "../../components/elements/Icon";
 
-const NewRequestAddSteps4 = ({ payerProfile, requestData, setParams }) => {
+const NewRequestAddSteps4 = ({ requestData, setParams }) => {
     const [data, setData] = useState({
         type_name: "request-items",
         request_type_details: [],
     });
+
+    const payerProfile = requestData.payer;
 
     // console.log(payerProfile.request_types);
     // combine request type selects and request detail select into a group
