@@ -15,14 +15,8 @@ class CreateRequestItemDetailsTable extends Migration
     {
         Schema::create('request_item_details', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid');
-
-            $table->string('name');
-            $table->unsignedBigInteger('request_item_id');
-            $table->unsignedBigInteger('request_type_id');
-            $table->unsignedBigInteger('request_outcome_id')->nullable();
-            $table->text('hcpcs')->nullable();
-            $table->text('note')->nullable();
+            $table->foreignId('request_item_id')->comment('The related request item');
+            $table->foreignId('request_type_detail_id')->comment('The related request type item');
 
             $table->timestamps();
             $table->softDeletes();
