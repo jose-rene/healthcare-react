@@ -65,7 +65,7 @@ class HealthPlanUserTest extends TestCase
             ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'primary_role', 'roles', 'abilities', 'payer']);
 
         // the user has the view reports ability
-        $response->assertJsonPath('abilities', ['view-reports']);
+        $this->assertContains('view-reports', $response->json('abilities'));
         // verify user currently can view reports
         $user = User::firstWhere('uuid', $response->json('id'));
         $this->assertTrue($user->can('view-reports'));
@@ -143,7 +143,7 @@ class HealthPlanUserTest extends TestCase
             ->assertOk()
             ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'roles', 'abilities']);
 
-        $this->assertEmpty($response->json('abilities'));
+        $this->assertNotContains('view-reports', $response->json('abilities'));
         $this->assertFalse($this->user->can('view-invoices'));
         $this->assertFalse($this->user->can('view-reports'));
     }

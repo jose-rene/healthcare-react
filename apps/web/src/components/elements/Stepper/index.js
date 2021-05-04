@@ -44,7 +44,6 @@ const getStepContent = (step, data, editData, payerProfile, setParams) => {
             return (
                 <NewRequestAddSteps4
                     data={data}
-                    payerProfile={payerProfile}
                     setParams={setParams}
                     requestData={editData}
                 />

@@ -135,7 +135,7 @@ class PayerTest extends TestCase
         ]);
         $this->payer = Payer::factory()->hasLobs(5, ['is_tat_enabled' => 1])->count(1)->create()->first();
         $this->user = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
-        $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create());
+        $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create(['payer_id' => $this->payer]));
         Bouncer::sync($this->user)->roles(['hp_user']);
         $this->user->save();
         Passport::actingAs(

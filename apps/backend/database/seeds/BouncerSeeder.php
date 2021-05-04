@@ -37,6 +37,12 @@ class BouncerSeeder extends Seeder
         // apply to supers
         Bouncer::allow($super)->to($applyAnyRole);
 
+        // healthplan abilites
+        $hpPermissions = ['View Invoices', 'View Reports', 'View Members', 'View Payers'];
+        foreach ($hpPermissions as $title) {
+            Bouncer::ability()->firstOrCreate(['name' => Str::snake($title, '-'), 'title' => $title]);
+        }
+
         // add health plan user roles
         $hpRoles = [
             'hp_user'     => 'HP User',
@@ -50,14 +56,10 @@ class BouncerSeeder extends Seeder
                 'name'   => $name,
                 'title'  => $title,
             ]);
+            Bouncer::allow($name)->to('view-members');
+            Bouncer::allow($name)->to('view-payers');
         }
         // allow HP Manager to create users
         Bouncer::allow($role)->to($create);
-
-        // healthplan permissions
-        $hpPermissions = ['View Invoices', 'View Reports'];
-        foreach ($hpPermissions as $title) {
-            Bouncer::ability()->firstOrCreate(['name' => Str::snake($name, '-'), 'title' => $title]);
-        }
     }
 }

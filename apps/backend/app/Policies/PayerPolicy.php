@@ -30,8 +30,30 @@ class PayerPolicy
      */
     public function view(User $user, Payer $payer)
     {
-        // @todo create a view-members ability and apply to roles, then only check ability
-        return $user->isa('software_engineer', 'hp_user', 'hp_champion');
+        // check ability
+        if (!$user->can('view-payers')) {
+            return false;
+        }
+        // healthplan users must be associated with a payer
+        if (2 === $user->user_type && !$user->payer) {
+            return false;
+        }
+        // check payer restrictions
+        if ($user->payer) {
+            // check parent payer
+            if ($user->payer->id === $payer->id) {
+                return true;
+            }
+            // check child payers
+            if (!$user->payer->payers) {
+                return false;
+            }
+            $payerIds = $user->payer->payers->flatten()->pluck('id');
+
+            return in_array($payer->id, $payerIds);
+        }
+        // another user type with view-payer ability
+        return true;
     }
 
     /**
@@ -53,7 +75,7 @@ class PayerPolicy
      */
     public function create(User $user)
     {
-        // @todo create a create-members ability and apply to roles, then only check ability
+        // @todo create a create-payers ability and apply to roles, then only check ability
         return $user->isa('software_engineer', 'hp_user', 'hp_champion');
     }
 
