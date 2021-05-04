@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -66,7 +65,7 @@ class LoginController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        return $this->authenticatedResponse($request);
+        return response()->json(auth()->user()->getAuthTokens($request));
     }
 
     /**
@@ -84,7 +83,7 @@ class LoginController extends Controller
         if (null !== ($user = User::select('id')->where('email', $email)->first()) && !empty($user)) {
             Auth::login($user);
 
-            return $this->authenticatedResponse($request);
+            return response()->json(auth()->user()->getAuthTokens($request));
         }
 
         return response()->json(['message' => 'Unauthorized: user not found.'], 401);
@@ -97,30 +96,5 @@ class LoginController extends Controller
         $user->token()->revoke();
 
         return response()->json(['error' => false, 'message' => 'logged-out']);
-    }
-
-    /**
-     * Return authenticated response with bearer token.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    protected function authenticatedResponse(Request $request)
-    {
-        $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
-
-        if ($request->get('remember_me', false)) {
-            $token->expires_at = Carbon::now()->addWeeks(1);
-        }
-
-        $token->save();
-
-        return response()->json([
-            'access_token' => $tokenResult->accessToken,
-            'token_type'   => 'Bearer',
-            'expires_at'   => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString(),
-        ]);
     }
 }

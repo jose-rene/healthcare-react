@@ -31,7 +31,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
         Passport::routes();
 
         parent::boot();
@@ -48,7 +47,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        //
+        $this->mapAdminApiRoutes();
     }
 
     /**
@@ -77,7 +76,23 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('v1')
             ->middleware(['api'])
             ->name('api.')
-             ->namespace($this->namespace . '\Api')
+            ->namespace($this->namespace . '\Api')
             ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * Define the "admin api" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void1
+     */
+    protected function mapAdminApiRoutes()
+    {
+        Route::prefix('v1/admin/')
+            ->middleware(['api', 'can:work-gryphon'])
+            ->name('api.admin.')
+            ->namespace($this->namespace . '\Api\Admin')
+            ->group(base_path('routes/admin-api.php'));
     }
 }

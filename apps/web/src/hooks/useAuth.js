@@ -11,6 +11,9 @@ const useAuth = () => {
         url: "login",
         method: POST,
     });
+    const [{ loading: abilityLoading }, fireCheckAbility] = useApiCall({
+        url: "permissions/check",
+    });
     const [{ loading: ssoLoading }, fireSso] = useApiCall();
 
     const [authState, setAuthed] = useState({
@@ -145,9 +148,18 @@ const useAuth = () => {
         }
     };
 
+    const permissionCheck = async ({ requiredAbility = false }) => {
+        if (!requiredAbility) {
+            return true; // nothing to check
+        }
+
+        const { passed = false } = await fireCheckAbility({ params: { ability: requiredAbility } });
+        return passed;
+    };
+
     return [
-        { ...authState, userLoading, authLoading, ssoLoading },
-        { authUser, authSsoUser },
+        { ...authState, userLoading, authLoading, ssoLoading, abilityLoading },
+        { authUser, authSsoUser, permissionCheck },
     ];
 };
 

@@ -468,4 +468,19 @@ class UserController extends Controller
 
         return new MyUserResource($user);
     }
+
+    public function permissionCheck(Request $request)
+    {
+        if (!$request->get('ability')) {
+            return response()->json(['passed' => true]);
+        }
+
+        if ($request->has('id')) {
+            $passed = auth()->user()->can($request->get('ability'), $request->get('id'));
+            return response()->json(compact('passed'));
+        }
+
+        $passed = auth()->user()->can($request->get('ability'));
+        return response()->json(compact('passed'));
+    }
 }

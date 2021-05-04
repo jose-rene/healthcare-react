@@ -4,14 +4,7 @@ import { generate as generateRandomString } from "randomstring";
 import React from "react";
 import { AUTH_TOKEN_NAME } from "../config/URLs";
 import AppNavigation from "../navigation/AppNavigation";
-import {
-    axiosMock,
-    fireEvent,
-    profileResponse,
-    render,
-    screen,
-    wait,
-} from "../testUtils";
+import { axiosMock, fireEvent, profileResponse, render, screen, wait } from "../testUtils";
 import { notificationResponse } from "./AlertList";
 
 // mock the window location
@@ -78,7 +71,7 @@ describe("App Navigation", () => {
         });
         await wait(() =>
             expect(window.location.assign).toHaveBeenCalledWith(
-                "/access-denied"
+                "/access-denied?redirect=%2Fdashboard",
             )
         );
     });
