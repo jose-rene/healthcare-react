@@ -19,7 +19,7 @@ class CreateTrainingDocumentTypesTable extends Migration
         });
 
         $types = [
-            'Compliance Polices Procedures',
+            'Compliance Policies Procedures',
             'Portal Training',
             'Resources',
         ];

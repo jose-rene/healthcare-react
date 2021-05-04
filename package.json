@@ -16,7 +16,8 @@
         "watchman:reset": "watchman watch-del-all",
         "pre-commit:message": "echo '\r\nYou can use this to run scripts pre commit or whatever git hook. You can call \"test\"\r\n' && exit 0",
         "postinstall": "lerna bootstrap --no-progress",
-        "branch:gen": "branch_gen"
+        "branch:gen": "branch_gen",
+        "clean": "lerna clean"
     },
     "pre-commit": [
         "test"
@@ -35,7 +36,7 @@
         "yarn": "^1.22.0"
     },
     "workspaces": [
-        "apps/*",
+        "apps/project-cli",
         "apps/aws/pkgs/*",
         "apps/aws/projects/**"
     ]

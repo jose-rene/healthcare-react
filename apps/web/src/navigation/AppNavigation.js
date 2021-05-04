@@ -22,6 +22,7 @@ import Questionnaire from '../pages/Questionnaire';
 import SetForgotPassword from '../pages/SetForgotPassword';
 import PrivateRoute from '../route/PrivateRoute';
 import RoleRouteRouter from '../route/RoleRoute';
+import AdminPayer from "../pages/Test/AdminPayer";
 
 const AppNavigation = ({ initializing, initializeUser }) => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -105,6 +106,12 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     path="/admin/test/table"
                     middleware={[ADMIN]}
                     page={<Table />}
+                />
+                <PrivateRoute
+                    exact
+                    path="/admin/test/payer"
+                    requiredAbility="can:edit-payer"
+                    page={<AdminPayer />}
                 />
                 <PrivateRoute path="/questionnaire/:id">
                     <Questionnaire />

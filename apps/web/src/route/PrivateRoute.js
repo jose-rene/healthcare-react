@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import { Redirect, Route } from "react-router-dom";
 import checkMiddleware from "../helpers/user";
+import useAuth from "../hooks/useAuth";
 
 const PrivateRoute = ({
     page: component = false,
@@ -10,26 +11,46 @@ const PrivateRoute = ({
     middleware = false,
     roles,
     abilities,
+    requiredAbility = false,
     location,
     reset_password,
     primaryRole,
     ...rest
 }) => {
+    const [{}, { permissionCheck }] = useAuth();
+
+    const path = useMemo(() => {
+        return encodeURIComponent(
+            `${location.pathname}${location.search}`,
+        );
+    }, [location]);
+
+    // If the user needs to reset their password then push the user to the
+    // reset password screen and when they are done bring them back
     useEffect(() => {
         if (reset_password) {
-            const path = encodeURIComponent(
-                `${location.pathname}${location.search}`
-            );
             window.location.assign(`/password/change?redirect=${path}`);
         }
     }, [reset_password]);
+
+    useEffect(() => {
+        if (requiredAbility) {
+            (async () => {
+                const passed = await permissionCheck({ requiredAbility });
+
+                if (!passed) {
+                    window.location.assign(`/access-denied?redirect=${path}`);
+                }
+            })();
+        }
+    }, [requiredAbility]);
 
     if (
         authed &&
         middleware &&
         (!roles.length || !checkMiddleware(middleware, primaryRole, abilities))
     ) {
-        window.location.assign("/access-denied");
+        window.location.assign(`/access-denied?redirect=${path}`);
         return false;
     }
 
