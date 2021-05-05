@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from "react";
+import { isEmpty } from "lodash";
 import PageLayout from "../../layouts/PageLayout";
 import Stepper from "../../components/elements/Stepper";
 
@@ -25,7 +26,11 @@ const NewRequestAdd = ({
     });
 
     const goToSearch = () => {
-        errorMessage('Invalid Member');
+        if (request_id) {
+            errorMessage("Request not found");
+        } else {
+            errorMessage("Member not found");
+        }
 
         history.push({
             pathname: "/healthplan/start-request",
@@ -55,7 +60,7 @@ const NewRequestAdd = ({
     }, []);
 
     useEffect(() => {
-        if (error) {
+        if (isEmpty(data)) {
             goToSearch();
         }
     }, []);
