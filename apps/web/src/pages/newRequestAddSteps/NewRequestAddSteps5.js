@@ -48,15 +48,17 @@ const NewRequestAddSteps5 = ({ memberData, setParams }) => {
         });
     }, [dueDate, dueTime, setData]);
 
-    /* useEffect(() => {
-        setParams(data);
-    }, [data, setParams]); */
-
     useEffect(() => {
         if (selectedFile) {
             handleFile();
         }
     }, [selectedFile]);
+
+    useEffect(() => {
+        if (data.dueAt) {
+            setParams(data);
+        }
+    }, [data, setParams]);
 
     const updateData = ({ target: { name, value } }) => {
         if (name === "due_date") {

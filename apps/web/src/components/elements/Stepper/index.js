@@ -8,6 +8,7 @@ import NewRequestAddSteps2 from "../../../pages/newRequestAddSteps/NewRequestAdd
 import NewRequestAddSteps3 from "../../../pages/newRequestAddSteps/NewRequestAddSteps3";
 import NewRequestAddSteps4 from "../../../pages/newRequestAddSteps/NewRequestAddSteps4";
 import NewRequestAddSteps5 from "../../../pages/newRequestAddSteps/NewRequestAddSteps5";
+import { validate } from "../../../pages/newRequestAddSteps/validate";
 
 import useApiCall from "../../../hooks/useApiCall";
 
@@ -71,6 +72,7 @@ const Stepper = ({ data }) => {
     const [activeStep, setActiveStep] = useState(0);
     const [params, setParams] = useState();
     const [editData, setEditData] = useState();
+    const [activeStatus, setActiveStatus] = useState([0, 0, 0, 0, 0]);
 
     const request_uuid = data.id;
 
@@ -100,6 +102,11 @@ const Stepper = ({ data }) => {
         }
     };
 
+    const setStatus = (index) => {
+        activeStatus[index] = validate(index, data) ? 1 : 0;
+        setActiveStatus(activeStatus);
+    };
+
     return (
         <>
             {steps.map((label, index) => {
@@ -111,12 +118,15 @@ const Stepper = ({ data }) => {
                     >
                         <Card className="step">
                             <Accordion.Toggle
-                                onClick={() => setActiveStep(index)}
+                                onClick={() => {
+                                    setStatus(activeStep);
+                                    setActiveStep(index);
+                                }}
                                 className="step-header c-pointer"
                                 as={Card.Header}
                                 eventKey={`${index}`}
                             >
-                                {index < activeStep ? (
+                                {activeStatus[index] ? (
                                     <div className="step-header-active-circle">
                                         <i className="fas fa-check" />
                                     </div>
@@ -165,6 +175,7 @@ const Stepper = ({ data }) => {
                                                 variant="primary"
                                                 className="btn-lg"
                                                 onClick={() => {
+                                                    setStatus(activeStep);
                                                     if (activeStep !== 0) {
                                                         handleUpdate();
                                                     }
