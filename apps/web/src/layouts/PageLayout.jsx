@@ -158,7 +158,9 @@ const PageLayout = ({
                     ) && (
                         <li
                             className={
-                                page === "requests" ? "sidebar-active" : ""
+                                page === "healthplan/start-request"
+                                    ? "sidebar-active"
+                                    : ""
                             }
                             data-toggle="tooltip"
                             title="Search Member"
@@ -181,7 +183,9 @@ const PageLayout = ({
                     ) && (
                         <li
                             className={
-                                page === "requests" ? "sidebar-active" : ""
+                                page === "healthplan/requests"
+                                    ? "sidebar-active"
+                                    : ""
                             }
                             title="Search Requests"
                         >
