@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -60,6 +61,11 @@ class Handler extends ExceptionHandler
         // give a friendly 403 message when resources are denied for permissions
         if ($exception instanceof AuthorizationException && $request->acceptsJson()) {
             return response()->json(['message' => $exception->getMessage()], 403);
+        }
+
+        // invalid or expired signature
+        if ($exception instanceof InvalidSignatureException && $request->acceptsJson()) {
+            return response()->json(['message' => 'Invalid Signature.'], 403);
         }
 
         return parent::render($request, $exception);

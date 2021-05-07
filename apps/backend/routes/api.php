@@ -73,6 +73,7 @@ Route::middleware('auth:api')->group(function ($router) {
 });
 
 Route::post('login', 'LoginController@login')->name('login');
+Route::post('login/otp', 'LoginController@otp')->name('login_otp');
 Route::get('password/history/check', 'PasswordController@check');
 
 // add OPTIONS route to fire cors middleware for preflight

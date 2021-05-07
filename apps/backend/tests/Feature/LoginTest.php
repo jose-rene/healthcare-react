@@ -5,6 +5,7 @@ namespace Tests\Feature;
 // use App\Models\Phone;
 use App\Models\User;
 use Artisan;
+use Google2FA;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -88,6 +89,158 @@ class LoginTest extends TestCase
             ->assertStatus(401)
             ->assertJsonStructure(['message'])
             ->assertJson(['message' => 'Unauthorized']);
+    }
+
+    /**
+     * Test one time password authentication.
+     *
+     * @return void
+     */
+    public function testOtpLogin()
+    {
+        // set 2fa to true
+        $this->user->update(['is_2fa' => true]);
+        // login
+        $response = $this->postJson(
+            '/v1/login',
+            [
+                'email'    => $this->user->email,
+                'password' => 'password',
+            ]
+        );
+
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['qr_image', 'otp_url', 'otp_token']);
+
+        // refresh the user, the secret key was set on the previous request
+        $this->user->refresh();
+        // $this->user->assign('admin');
+        $data = $response->json();
+        $path = parse_url($data['otp_url'], \PHP_URL_PATH);
+        $response = $this->postJson(
+            $path,
+            [
+                'email' => $this->user->email,
+                'code'  => Google2FA::getCurrentOtp($this->user->google2fa_secret),
+                'token' => $data['otp_token'],
+            ]
+        );
+        // assert 2fa was successful and a bearer token is returned
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['token_type', 'expires_at', 'access_token']);
+    }
+
+    /**
+     * Test one time password authentication.
+     *
+     * @return void
+     */
+    public function testBadOtpLogin()
+    {
+        // set 2fa to true
+        $this->user->update(['is_2fa' => true]);
+        // login
+        $response = $this->postJson(
+            '/v1/login',
+            [
+                'email'    => $this->user->email,
+                'password' => 'password',
+            ]
+        );
+
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['qr_image', 'otp_url', 'otp_token']);
+
+        // refresh the user, the secret key was set on the previous request
+        $this->user->refresh();
+        // $this->user->assign('admin');
+        $data = $response->json();
+        $path = parse_url($data['otp_url'], \PHP_URL_PATH);
+        $response = $this->postJson(
+            $path,
+            [
+                'email' => $this->user->email,
+                'code'  => '1234567',
+                'token' => $data['otp_token'],
+            ]
+        );
+        // assert opt fail and a retry token is returned
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure(['message', 'retry_token']);
+
+        // test the retry token
+        $response = $this->postJson(
+            $path,
+            [
+                'email' => $this->user->email,
+                'code'  => Google2FA::getCurrentOtp($this->user->google2fa_secret),
+                'token' => $response->json('retry_token'),
+            ]
+        );
+        // assert 2fa was successful and a bearer token is returned
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['token_type', 'expires_at', 'access_token']);
+    }
+
+    /**
+     * Test one time password token.
+     *
+     * @return void
+     */
+    public function testBadOtpToken()
+    {
+        // set 2fa to true
+        $this->user->update(['is_2fa' => true]);
+        // login
+        $response = $this->postJson(
+            '/v1/login',
+            [
+                'email'    => $this->user->email,
+                'password' => 'password',
+            ]
+        );
+
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['qr_image', 'otp_url', 'otp_token']);
+
+        // refresh the user, the secret key was set on the previous request
+        $this->user->refresh();
+        // $this->user->assign('admin');
+        $data = $response->json();
+        $path = parse_url($data['otp_url'], \PHP_URL_PATH);
+        $response = $this->postJson(
+            $path,
+            [
+                'email' => $this->user->email,
+                'code'  => '1234567',
+                'token' => $data['otp_token'],
+            ]
+        );
+        // assert otp fail and a retry token is returned
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure(['message', 'retry_token']);
+
+        // use previous one time token instead of the retry token, should give token error
+        $response = $this->postJson(
+            $path,
+            [
+                'email' => $this->user->email,
+                'code'  => Google2FA::getCurrentOtp($this->user->google2fa_secret),
+                'token' => $data['otp_token'],
+            ]
+        );
+        // assert 2fa failed with token mismatch
+        $response
+            ->assertStatus(401)
+            ->assertJsonStructure(['message'])
+            ->assertJsonPath('message', 'OTP Token Mismatch.');
     }
 
     /**
