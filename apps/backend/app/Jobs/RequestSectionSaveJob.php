@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Http\Requests\MemberRequest;
 use App\Models\Request;
 use App\Models\RequestItem;
 use App\Models\RequestTypeDetail;
@@ -145,33 +146,14 @@ class RequestSectionSaveJob
         $member = $request->member;
 
         $addressForm = request()->input('address', []);
-        $memberForm = request()->only('member_number', 'line_of_business', 'dob');
-        $memberPhoneForm = request()->only('phone');
-
-        request()->validate([
-            'dob'                 => 'date',
-            'phone'               => '',
-            'member_id'           => '',
-            'address.address_1'   => '',
-            'address.address_2'   => '',
-            'address.city'        => '',
-            'address.county'      => '',
-            'address.state'       => '',
-            'address.postal_code' => '',
-            'address.is_primary'  => 'boolean',
-        ]);
+        $memberForm = request()->only('member_number', 'line_of_business', 'plan', 'phone');
 
         if ($addressForm) {
-            // only update the values that are passed in
-            $member->addresses()->first()->update($addressForm);
-        }
-
-        if ($memberPhoneForm) {
-            $member->phones()->firstOrCreate(['number' => $memberPhoneForm['phone']]);
+            $memberForm += $addressForm;
         }
 
         if ($memberForm) {
-            $member->update($memberForm);
+            $this->updateMember($memberForm, $member);
         }
 
         $request->update(['member_verified_at' => Carbon::now()]);
@@ -224,6 +206,26 @@ class RequestSectionSaveJob
         // sync the associated request type details for each request item
         $this->request->requestItems
             ->each(fn ($detail) => $detail->requestTypeDetails()->sync($requestTypeDetails[$detail['request_type_id']]));
+        $this->request->refresh();
+    }
+
+    protected function updateMember($data, $member)
+    {
+        // use the member form request for validation
+        $memberRequest = new MemberRequest();
+        $validator = Validator::make(
+            $data,
+            $memberRequest->rules(),
+            $memberRequest->messages()
+        );
+        // validate
+        if ($validator->fails()) {
+            throw new HttpResponseException(response()->json(['errors' => $validator->errors()->first()], 422));
+
+            return;
+        }
+        // call member update job
+        dispatch(new MemberUpdateJob($data, $member));
         $this->request->refresh();
     }
 }
