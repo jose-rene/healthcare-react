@@ -52,7 +52,6 @@ const NewRequestAdd = ({
                 }
 
                 history.push(`/member/${member_id}/request/${id}/edit`);
-                window.location.reload();
             } else {
                 fireLoadRequest();
             }
@@ -60,10 +59,10 @@ const NewRequestAdd = ({
     }, []);
 
     useEffect(() => {
-        if (isEmpty(data)) {
+        if (isEmpty(data) && error !== false) {
             goToSearch();
         }
-    }, []);
+    }, [error, data]);
 
     const { member = {} } = data;
 
