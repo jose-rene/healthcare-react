@@ -62,6 +62,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'notification_type',
         'reset_password',
+        'is_2fa',
+        'google2fa_secret',
     ];
 
     protected $appends = ['full_name'];
@@ -86,6 +88,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at'  => 'datetime',
         'notification_prefs' => 'json',
         'reset_password'     => 'boolean',
+        'is_2fa'             => 'boolean',
     ];
 
     protected static $userTypeMap = [

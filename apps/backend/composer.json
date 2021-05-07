@@ -26,6 +26,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "nicolaslopezj/searchable": "^1.13",
+        "pragmarx/google2fa-laravel": "^1.4",
         "silber/bouncer": "v1.0.0-rc.10",
         "venturecraft/revisionable": "^1.38"
     },
