@@ -1,32 +1,32 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { signOut } from '../actions/authAction';
-import { ADMIN, initializeUser } from '../actions/userAction';
-import useApiCall from '../hooks/useApiCall';
-import Account from '../pages/Account';
-import Table from '../pages/Test/Table';
-import HpAddUser from '../pages/healthplan/AddUser';
-import HpEditUser from '../pages/healthplan/EditUser';
-import HpAddMember from '../pages/healthplan/AddMember';
-import HpSearchMember from '../pages/healthplan/SearchMember';
-import NewRequestAdd from '../pages/newRequestAdd/NewRequestAdd';
-import RequestLookup from '../pages/RequestLookup/RequestLookup';
-import Assessment from '../pages/Assessment';
-import Error401 from '../pages/Errors/401';
-import Federated from '../pages/Federated';
-import ForgotPassword from '../pages/ForgotPassword';
-import Login from '../pages/Login';
-import Error from '../pages/NotFound';
-import Questionnaire from '../pages/Questionnaire';
-import SetForgotPassword from '../pages/SetForgotPassword';
-import PrivateRoute from '../route/PrivateRoute';
-import RoleRouteRouter from '../route/RoleRoute';
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { signOut } from "../actions/authAction";
+import { ADMIN, initializeUser } from "../actions/userAction";
+import useApiCall from "../hooks/useApiCall";
+import Account from "../pages/Account";
+import Table from "../pages/Test/Table";
+import HpAddUser from "../pages/healthplan/AddUser";
+import HpEditUser from "../pages/healthplan/EditUser";
+import HpAddMember from "../pages/healthplan/AddMember";
+import HpSearchMember from "../pages/healthplan/SearchMember";
+import NewRequestAdd from "../pages/newRequestAdd/NewRequestAdd";
+import RequestLookup from "../pages/RequestLookup/RequestLookup";
+import Assessment from "../pages/Assessment";
+import Error401 from "../pages/Errors/401";
+import Federated from "../pages/Federated";
+import ForgotPassword from "../pages/ForgotPassword";
+import Login from "../pages/Login";
+import Error from "../pages/NotFound";
+import Questionnaire from "../pages/Questionnaire";
+import SetForgotPassword from "../pages/SetForgotPassword";
+import PrivateRoute from "../route/PrivateRoute";
+import RoleRouteRouter from "../route/RoleRoute";
 import AdminPayer from "../pages/Test/AdminPayer";
 
 const AppNavigation = ({ initializing, initializeUser }) => {
     const [{ loading }, fireInitializeUser] = useApiCall({
-        url: 'user/profile',
+        url: "user/profile",
     });
 
     useEffect(() => {
@@ -93,12 +93,12 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                 />
                 <PrivateRoute
                     path="/member/:member_id/request/:request_id/edit"
-                    middleware={['hp_user', 'hp_manager', 'hp_champion']}
+                    middleware={["hp_user", "hp_manager", "hp_champion"]}
                     component={NewRequestAdd}
                 />
                 <PrivateRoute
                     path="/healthplan/requests"
-                    middleware={['hp_user', 'hp_manager', 'hp_champion']}
+                    middleware={["hp_user", "hp_manager", "hp_champion"]}
                     component={RequestLookup}
                 />
                 <PrivateRoute
