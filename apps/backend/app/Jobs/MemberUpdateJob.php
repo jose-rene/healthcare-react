@@ -17,11 +17,13 @@ class MemberUpdateJob
     /**
      * Create a new job instance.
      *
+     * @note add typehint when php is upgraded to 8.x MemberRequest | array $request
+     *
      * @return void
      */
-    public function __construct(MemberRequest $request, Member $member)
+    public function __construct($request, Member $member)
     {
-        $this->data   = $request->validated();
+        $this->data = $request instanceof MemberRequest ? $request->validated() : $request;
         $this->member = $member;
     }
 
@@ -53,12 +55,12 @@ class MemberUpdateJob
     {
         // get primary address and set to non-primary
         $this->member->addresses
-            ->filter(fn($address) => $address->is_primary)
-            ->each(fn($address) => $address->update(['is_primary' => 0]));
+            ->filter(fn ($address) => $address->is_primary)
+            ->each(fn ($address)   => $address->update(['is_primary' => 0]));
         // add new primary address
         $this->member->addresses()->create([
             'address_1'   => $this->data['address_1'],
-            'address_2'   => $this->data['address_2'],
+            'address_2'   => $this->data['address_2'] ?? '',
             'city'        => $this->data['city'],
             'state'       => $this->data['state'],
             'county'      => $this->data['county'],
@@ -73,8 +75,8 @@ class MemberUpdateJob
     {
         // get primary phone and set to non-primary
         $this->member->phones
-            ->filter(fn($phone) => $phone->is_primary)
-            ->each(fn($phone) => $phone->update(['is_primary' => 0]));
+            ->filter(fn ($phone) => $phone->is_primary)
+            ->each(fn ($phone)   => $phone->update(['is_primary' => 0]));
         // add new primary phone contact
         $this->member->phones()->create([
             'number'         => $this->data['phone'],

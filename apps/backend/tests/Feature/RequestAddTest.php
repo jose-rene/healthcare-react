@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Address;
+use App\Models\Lob;
 use App\Models\Member;
 use App\Models\Payer;
 use App\Models\Request;
 use App\Models\RequestType;
-use App\Models\RequestTypeDetail;
 use App\Models\User;
 use Artisan;
 use Bouncer;
@@ -58,7 +59,7 @@ class RequestAddTest extends TestCase
      *
      * @return void
      */
-    public function testRequestSectionAddressWithUpdate()
+    public function testRequestSectionSteps()
     {
         $requestId = $this->getRequest();
         /** @var Request $newRequest */
@@ -69,42 +70,33 @@ class RequestAddTest extends TestCase
             'request' => $requestId,
         ]);
 
-        $response = $this->put($route, [
-            'type_name'     => 'verify',
-            'phone'         => '1112223333',
-            'member_number' => 'this was changed',
-            'dob'           => '1984-12-20',
+        // test step 1 verify / update member
+        $newAddress = Address::factory()->make()->only('address_1', 'city', 'county', 'state', 'postal_code');
+        $response = $this->put($route, $params = [
+            'type_name'        => 'verify',
+            'address'          => $newAddress,
+            'phone'            => $this->faker->phoneNumber,
+            'member_number'    => $this->faker->ean8,
+            'plan'             => Payer::factory()->create()->uuid,
+            'line_of_business' => Lob::factory()->create()->id,
         ]);
         $response->assertSuccessful();
-
-        self::assertEquals('1112223333', $newRequest->member->mainPhone->number);
-
-        /**
-         * personal information verification, first step.
-         */
-        $newStreet = $this->faker->streetAddress . '.new';
-
-        $response = $this->put($route, [
-            'type_name' => 'verify',
-
-            'address' => [
-                'address_1' => $newStreet,
-            ],
-        ]);
-        $response->assertSuccessful();
-
-        $memberRequest = Request::with('member.addresses')->first();
-        $memberAddress = $memberRequest->member->addresses()->first();
-        self::assertEquals($newStreet, $memberAddress->address_1);
+        // verify that data was updated
+        $response->assertJsonPath('member.address.address_1', $newAddress['address_1']);
+        $response->assertJsonPath('member.phone.number', $params['phone']);
+        $response->assertJsonPath('member.member_number', $params['member_number']);
+        $response->assertJsonPath('member.lob.id', $params['line_of_business']);
+        $response->assertJsonPath('member.payer.id', $params['plan']);
 
         /**
          * assessment 2nd step.
          */
-        $response = $this->put($route, [
+        $response = $this->put($route, $params = [
             'type_name'   => ' auth-id',
             'auth_number' => '1234',
         ]);
         $response->assertSuccessful();
+        $response->assertJsonPath('auth_number', $params['auth_number']);
 
         /**
          * diagnosis 3rd step.
@@ -151,8 +143,8 @@ class RequestAddTest extends TestCase
         ]);
         $response->assertSuccessful();
 
-        // Reload values from the database and make sure the last pieces were updated
-        $memberRequest->refresh();
+        // Load values from the database and make sure the last pieces were updated
+        $memberRequest = Request::with('member.addresses')->first();
 
         self::assertEquals('Received', $memberRequest->statusName);
         self::assertEquals($due_at, $memberRequest->due_at);
@@ -166,7 +158,6 @@ class RequestAddTest extends TestCase
      */
     public function testUpdateRequestItems()
     {
-        $this->withoutExceptionHandling();
         $requestId = $this->getRequest();
         $route = route('api.request.update', [
             'request' => $requestId,
