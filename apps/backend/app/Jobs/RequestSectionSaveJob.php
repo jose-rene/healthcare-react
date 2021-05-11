@@ -45,6 +45,11 @@ class RequestSectionSaveJob
     {
         $request = $this->request;
         $section = $this->section;
+
+        if (empty($section['type_name'])) {
+            throw new HttpResponseException(response()->json(['errors' => 'Action was not specified.'], 422));
+        }
+
         $type_name = Str::slug($section['type_name']);
 
         switch ($type_name) {
@@ -117,8 +122,11 @@ class RequestSectionSaveJob
         $request = $this->request;
         try {
             $this->request->update(request()->validate([
-                'auth_number' => Rule::unique('requests')->where(fn ($query) => $query->where('payer_id',
-                    $request->payer_id)),
+                'auth_number' => Rule::unique('requests')->where(fn ($query) => $query->where([
+                    ['payer_id', '=', $request->payer_id],
+                    ['id', '<>', $request->id],
+                ])
+                ),
             ]));
         } catch (ValidationException $e) {
             throw new HttpResponseException(response()->json(['errors' => 'The Auth ID provided is not unique.'], 422));

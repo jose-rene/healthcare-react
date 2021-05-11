@@ -14,39 +14,29 @@ import { validateFile } from "../../helpers/validate";
 
 import "./newRequestAddSteps.css";
 
-const NewRequestAddSteps5 = ({ memberData, setParams }) => {
+const NewRequestAddSteps5 = ({ memberData, handleUpdate }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileUploadError, setFileUploadError] = useState(null);
     const location = useLocation();
     const hiddenFileInput = useRef(null);
 
-    const [data, setData] = useState({
-        type_name: "due",
-        due_at: "",
-    });
-
-    const [dueDate, setDueDate] = useState(moment().format("YYYY-MM-DD"));
-    const [dueTime, setDueTime] = useState(
-        moment("00:00", "HH:mm").format("HH:mm")
-    );
+    const [dueDate, setDueDate] = useState(null);
+    const [dueTime, setDueTime] = useState(null);
 
     useEffect(() => {
         if (!isEmpty(memberData)) {
-            setData({
-                type_name: "due",
-
-                due_at: memberData.due_at || "",
-            });
+            setDueDate(
+                memberData.due_at
+                    ? moment(memberData.due_at).format("YYYY-MM-DD")
+                    : moment().format("YYYY-MM-DD")
+            );
+            setDueTime(
+                memberData.due_at
+                    ? moment(memberData.due_at).format("HH:mm")
+                    : moment("00:00", "HH:mm").format("HH:mm")
+            );
         }
     }, [memberData]);
-
-    useEffect(() => {
-        const dueAt = `${dueDate} ${dueTime}`;
-        setData({
-            type_name: "due",
-            due_at: dueAt,
-        });
-    }, [dueDate, dueTime, setData]);
 
     useEffect(() => {
         if (selectedFile) {
@@ -54,20 +44,31 @@ const NewRequestAddSteps5 = ({ memberData, setParams }) => {
         }
     }, [selectedFile]);
 
-    useEffect(() => {
-        if (data.dueAt) {
-            setParams(data);
-        }
-    }, [data, setParams]);
-
     const updateData = ({ target: { name, value } }) => {
+        let updateData = {
+            type_name: "due",
+            due_at: "",
+        };
+
         if (name === "due_date") {
             setDueDate(moment(value).format("YYYY-MM-DD"));
+
+            updateData = {
+                ...updateData,
+                due_at: `${moment(value).format("YYYY-MM-DD")} ${dueTime}`,
+            };
         }
 
         if (name === "due_time") {
             setDueTime(moment(value, "HH:mm").format("HH:mm"));
+
+            updateData = {
+                ...updateData,
+                due_at: `${dueDate} ${moment(value, "HH:mm").format("HH:mm")}`,
+            };
         }
+
+        handleUpdate(updateData, true);
     };
 
     const request_uuid = memberData.id;
@@ -152,11 +153,7 @@ const NewRequestAddSteps5 = ({ memberData, setParams }) => {
                                 type="date"
                                 name="due_date"
                                 label="Due date"
-                                value={
-                                    data.due_at
-                                        ? data.due_at.split(" ")[0]
-                                        : dueDate
-                                }
+                                value={dueDate}
                                 onChange={updateData}
                             />
                         </div>
@@ -165,11 +162,7 @@ const NewRequestAddSteps5 = ({ memberData, setParams }) => {
                             <Select
                                 name="due_time"
                                 label="Time"
-                                value={
-                                    data.due_at
-                                        ? data.due_at.split(" ")[1]
-                                        : dueTime
-                                }
+                                value={dueTime}
                                 options={generateTimes()}
                                 onChange={updateData}
                             />
