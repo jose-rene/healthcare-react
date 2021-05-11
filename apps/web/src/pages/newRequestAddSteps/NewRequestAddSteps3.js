@@ -11,7 +11,10 @@ const NewRequestAddSteps3 = ({ setParams, requestData }) => {
 
     const [codes, setCodes] = useState([]);
 
-    // add a new card for request items
+    // set params when diagnosis codes change
+    useEffect(() => {
+        setParams(data);
+    }, [data]);
 
     useEffect(() => {
         // console.log(requestData.codes);
@@ -27,11 +30,6 @@ const NewRequestAddSteps3 = ({ setParams, requestData }) => {
             },
         ]);
     }, []);
-
-    // set params when diagnosis codes change
-    useEffect(() => {
-        setParams(data);
-    }, [data]);
 
     const updateData = (codeData) => {
         setCodes(codeData);

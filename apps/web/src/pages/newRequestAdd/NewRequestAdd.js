@@ -27,7 +27,11 @@ const NewRequestAdd = ({
 
     const goToSearch = () => {
         if (request_id) {
-            errorMessage("Request not found");
+            if (data.request_status_id === 1) {
+                errorMessage("Request has already been submitted");
+            } else {
+                errorMessage("Request not found");
+            }
         } else {
             errorMessage("Member not found");
         }
@@ -60,6 +64,10 @@ const NewRequestAdd = ({
 
     useEffect(() => {
         if (isEmpty(data) && error !== false) {
+            goToSearch();
+        }
+
+        if (!isEmpty(data) && data.request_status_id === 1) {
             goToSearch();
         }
     }, [error, data]);

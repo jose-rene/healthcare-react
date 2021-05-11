@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { isEmpty } from "lodash";
 import { Accordion, Card } from "react-bootstrap";
 
 import Button from "../../inputs/Button";
@@ -11,6 +13,7 @@ import NewRequestAddSteps5 from "../../../pages/newRequestAddSteps/NewRequestAdd
 import { validate } from "../../../pages/newRequestAddSteps/validate";
 
 import useApiCall from "../../../hooks/useApiCall";
+import useToast from "../../../hooks/useToast";
 
 import "./stepper.css";
 
@@ -24,7 +27,14 @@ const getSteps = () => {
     ];
 };
 
-const getStepContent = (step, data, editData, payerProfile, setParams) => {
+const getStepContent = (
+    step,
+    data,
+    editData,
+    payerProfile,
+    setParams,
+    handleUpdate
+) => {
     switch (step) {
         case 1:
             return (
@@ -53,7 +63,7 @@ const getStepContent = (step, data, editData, payerProfile, setParams) => {
             return (
                 <NewRequestAddSteps5
                     memberData={editData}
-                    setParams={setParams}
+                    handleUpdate={handleUpdate}
                 />
             );
 
@@ -74,6 +84,10 @@ const Stepper = ({ data }) => {
     const [editData, setEditData] = useState();
     const [activeStatus, setActiveStatus] = useState([0, 0, 0, 0, 0]);
 
+    const { success: successMessage } = useToast();
+
+    const history = useHistory();
+
     const request_uuid = data.id;
 
     const [{ data: requestData, loading, error }, fireSubmit] = useApiCall({
@@ -93,18 +107,54 @@ const Stepper = ({ data }) => {
         payerProfileRequest();
     }, []);
 
-    const handleUpdate = async () => {
+    useEffect(() => {
+        setStatus(data);
+    }, [data]);
+
+    const handleUpdate = async (updateData = false, updateOnly = false) => {
+        // need to implement this final step
+        let finalStep = null;
+        if (activeStep === 4 && updateData) {
+            finalStep = { type_name: "final_step", request_status_id: 1 };
+        }
+
         try {
-            const result = await fireSubmit({ params });
+            // need to check response when due_at save in the database.
+            const result = await fireSubmit(
+                updateData ? { params: updateData } : { params }
+            );
+
             setEditData(result);
+            setStatus(result);
+            if (activeStep === 4 && !updateOnly) {
+                const status = validateStatus();
+                if (status) {
+                    history.push("/healthplan/requests");
+                    successMessage("Reuqest Received.");
+                }
+            }
         } catch (e) {
             console.log("Request update error:", e);
         }
     };
 
-    const setStatus = (index) => {
-        activeStatus[index] = validate(index, data) ? 1 : 0;
-        setActiveStatus(activeStatus);
+    const setStatus = (param) => {
+        if (!isEmpty(param)) {
+            const temp = [];
+            for (let i = 0; i < 5; i++) {
+                temp[i] = validate(i, param) ? 1 : 0;
+            }
+
+            setActiveStatus(temp);
+        }
+    };
+
+    const validateStatus = () => {
+        if (activeStatus.indexOf(0) >= 0) {
+            return false;
+        }
+
+        return true;
     };
 
     return (
@@ -119,7 +169,6 @@ const Stepper = ({ data }) => {
                         <Card className="step">
                             <Accordion.Toggle
                                 onClick={() => {
-                                    setStatus(activeStep);
                                     setActiveStep(index);
                                 }}
                                 className="step-header c-pointer"
@@ -151,7 +200,8 @@ const Stepper = ({ data }) => {
                                         data,
                                         editData,
                                         payerProfile,
-                                        setParams
+                                        setParams,
+                                        handleUpdate
                                     )}
                                     <div className="form-row mt-5">
                                         <div className="col-md-6">
@@ -174,8 +224,18 @@ const Stepper = ({ data }) => {
                                                 block
                                                 variant="primary"
                                                 className="btn-lg"
+                                                label={
+                                                    activeStep === 4
+                                                        ? "Submit Request"
+                                                        : "Next"
+                                                }
+                                                disabled={
+                                                    !!(
+                                                        activeStep === 4 &&
+                                                        !validateStatus()
+                                                    )
+                                                }
                                                 onClick={() => {
-                                                    setStatus(activeStep);
                                                     if (activeStep !== 0) {
                                                         handleUpdate();
                                                     }
@@ -185,9 +245,7 @@ const Stepper = ({ data }) => {
                                                             : index
                                                     );
                                                 }}
-                                            >
-                                                Next
-                                            </Button>
+                                            />
                                         </div>
                                     </div>
                                 </Card.Body>
