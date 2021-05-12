@@ -114,9 +114,6 @@ const Stepper = ({ data }) => {
         if (data?.member_verified) {
             setMemberVerified([1, 1, 1, 1, 1]);
         }
-    }, [data]);
-
-    useEffect(() => {
         setEditData(data);
     }, [data]);
 
@@ -126,7 +123,7 @@ const Stepper = ({ data }) => {
 
     useEffect(() => {
         setStatus(data);
-    }, [data]);
+    }, [data, memberVerified]);
 
     const handleUpdate = async (updateData = false, updateOnly = false) => {
         // need to implement this final step
@@ -232,19 +229,21 @@ const Stepper = ({ data }) => {
                                     )}
                                     <div className="form-row mt-5">
                                         <div className="col-md-6">
-                                            <Button
-                                                block
-                                                outline
-                                                onClick={() =>
-                                                    setActiveStep(
-                                                        index > 0
-                                                            ? index - 1
-                                                            : index
-                                                    )
-                                                }
-                                            >
-                                                Back
-                                            </Button>
+                                            {activeStep !== 0 && (
+                                                <Button
+                                                    block
+                                                    outline
+                                                    onClick={() =>
+                                                        setActiveStep(
+                                                            index > 0
+                                                                ? index - 1
+                                                                : index
+                                                        )
+                                                    }
+                                                >
+                                                    Back
+                                                </Button>
+                                            )}
                                         </div>
                                         <div className="col-md-6">
                                             <Button
