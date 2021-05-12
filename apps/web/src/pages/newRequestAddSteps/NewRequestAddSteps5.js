@@ -249,22 +249,6 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate }) => {
                                 </p>
                             )}
                         </div>
-                        <div className="col-md-6" />
-
-                        <div className="col-md-12">
-                            <p className="app-input-label title-label">
-                                Complete the Assessment Request
-                            </p>
-                        </div>
-                        <div className="col-md-12">
-                            <div className="ml-3">
-                                <Checkbox
-                                    labelLeft
-                                    name="another_request"
-                                    label="Enter another request for this member"
-                                />
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -67,12 +67,7 @@ const NewRequestAddSteps1 = ({
                     <div className="row">
                         <div className="col-md-6 pl-0">
                             <p className="title-info">
-                                Verify Member Information
-                            </p>
-                            <p className="subtitle-info">
-                                <i className="fas fa-exclamation-triangle" />{" "}
-                                Verify the member information using the toggles
-                                bellow
+                                Verify member using the toggles below
                             </p>
                         </div>
 
