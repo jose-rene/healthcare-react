@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { isEmpty } from "lodash";
 
 import Switch from "../../components/inputs/Switch";
@@ -6,25 +6,12 @@ import Modal from "../../components/modal/Modal";
 
 import "./newRequestAddSteps.css";
 
-const NewRequestAddSteps1 = ({ memberData, payerProfile }) => {
-    const [data, setData] = useState({
-        type_name: "verify",
-
-        address: {
-            address_1: "",
-            address_2: "",
-            city: "",
-            county: "",
-            state: "",
-            postal_code: "",
-        },
-
-        member_number: "",
-        plan: "",
-        line_of_business: "",
-        phone: "",
-    });
-
+const NewRequestAddSteps1 = ({
+    memberData,
+    payerProfile,
+    memberVerified,
+    setMemberVerified,
+}) => {
     const address = useMemo(() => {
         if (isEmpty(memberData)) {
             return "";
@@ -65,6 +52,14 @@ const NewRequestAddSteps1 = ({ memberData, payerProfile }) => {
         return memberData.member;
     }, [memberData]);
 
+    const handleToggle = (checked, index) => {
+        setMemberVerified((prevData) => {
+            const verified = [...prevData];
+            verified[index] = checked;
+            return verified;
+        });
+    };
+
     return (
         <>
             <div className="container-info">
@@ -91,20 +86,19 @@ const NewRequestAddSteps1 = ({ memberData, payerProfile }) => {
                             <div className="col-md-5">
                                 {(address && (
                                     <p className="text-checkbox">
-                                        {address.address_1 +
-                                            " " +
-                                            address.city +
-                                            ", " +
-                                            address.state +
-                                            " " +
-                                            address.postal_code}
+                                        {`${address.address_1} ${address.city}, ${address.state} ${address.postal_code}`}
                                     </p>
                                 )) ||
                                     ""}
                             </div>
 
                             <div className="col-md-2 my-auto">
-                                <Switch />
+                                <Switch
+                                    checked={!!memberVerified[0]}
+                                    onChange={(e) =>
+                                        handleToggle(e.target.checked, 0)
+                                    }
+                                />
                             </div>
 
                             <div className="col-md-1 my-auto">
@@ -128,7 +122,12 @@ const NewRequestAddSteps1 = ({ memberData, payerProfile }) => {
                             </div>
 
                             <div className="col-md-2 my-auto">
-                                <Switch />
+                                <Switch
+                                    checked={!!memberVerified[1]}
+                                    onChange={(e) =>
+                                        handleToggle(e.target.checked, 1)
+                                    }
+                                />
                             </div>
 
                             <div className="col-md-1 my-auto">
@@ -154,7 +153,12 @@ const NewRequestAddSteps1 = ({ memberData, payerProfile }) => {
                             </div>
 
                             <div className="col-md-2 my-auto">
-                                <Switch />
+                                <Switch
+                                    checked={!!memberVerified[2]}
+                                    onChange={(e) =>
+                                        handleToggle(e.target.checked, 2)
+                                    }
+                                />
                             </div>
 
                             <div className="col-md-1 my-auto">
@@ -180,7 +184,12 @@ const NewRequestAddSteps1 = ({ memberData, payerProfile }) => {
                             </div>
 
                             <div className="col-md-2 my-auto">
-                                <Switch />
+                                <Switch
+                                    checked={!!memberVerified[3]}
+                                    onChange={(e) =>
+                                        handleToggle(e.target.checked, 3)
+                                    }
+                                />
                             </div>
 
                             <div className="col-md-1 my-auto">
@@ -208,7 +217,12 @@ const NewRequestAddSteps1 = ({ memberData, payerProfile }) => {
                             </div>
 
                             <div className="col-md-2 my-auto">
-                                <Switch />
+                                <Switch
+                                    checked={!!memberVerified[4]}
+                                    onChange={(e) =>
+                                        handleToggle(e.target.checked, 4)
+                                    }
+                                />
                             </div>
 
                             <div className="col-md-1 my-auto">
