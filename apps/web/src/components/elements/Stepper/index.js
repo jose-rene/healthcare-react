@@ -32,8 +32,10 @@ const getStepContent = (
     data,
     editData,
     payerProfile,
-    setParams,
-    handleUpdate
+    memberVerified,
+    setMemberVerified,
+    handleUpdate,
+    setParams
 ) => {
     switch (step) {
         case 1:
@@ -72,6 +74,8 @@ const getStepContent = (
                 <NewRequestAddSteps1
                     memberData={data}
                     payerProfile={payerProfile}
+                    memberVerified={memberVerified}
+                    setMemberVerified={setMemberVerified}
                 />
             );
     }
@@ -83,6 +87,7 @@ const Stepper = ({ data }) => {
     const [params, setParams] = useState();
     const [editData, setEditData] = useState();
     const [activeStatus, setActiveStatus] = useState([0, 0, 0, 0, 0]);
+    const [memberVerified, setMemberVerified] = useState([0, 0, 0, 0, 0]);
 
     const { success: successMessage } = useToast();
 
@@ -98,6 +103,18 @@ const Stepper = ({ data }) => {
     const [{ data: payerProfile }, payerProfileRequest] = useApiCall({
         url: "payer/profile",
     });
+
+    // checks that member has been verified by the user
+    const isVerified = (verified) => {
+        const count = verified.reduce((sum, value) => sum + value);
+        return count === verified.length;
+    };
+
+    useEffect(() => {
+        if (data?.member_verified) {
+            setMemberVerified([1, 1, 1, 1, 1]);
+        }
+    }, [data]);
 
     useEffect(() => {
         setEditData(data);
@@ -121,7 +138,11 @@ const Stepper = ({ data }) => {
         try {
             // need to check response when due_at save in the database.
             const result = await fireSubmit(
-                updateData ? { params: updateData } : { params }
+                updateData
+                    ? { params: updateData }
+                    : activeStep === 0
+                    ? { params: { type_name: "verify" } }
+                    : { params }
             );
 
             setEditData(result);
@@ -142,7 +163,11 @@ const Stepper = ({ data }) => {
         if (!isEmpty(param)) {
             const temp = [];
             for (let i = 0; i < 5; i++) {
-                temp[i] = validate(i, param) ? 1 : 0;
+                if (i === 0) {
+                    temp[i] = isVerified(memberVerified) ? 1 : 0;
+                } else {
+                    temp[i] = validate(i, param) ? 1 : 0;
+                }
             }
 
             setActiveStatus(temp);
@@ -200,8 +225,10 @@ const Stepper = ({ data }) => {
                                         data,
                                         editData,
                                         payerProfile,
-                                        setParams,
-                                        handleUpdate
+                                        memberVerified,
+                                        setMemberVerified,
+                                        handleUpdate,
+                                        setParams
                                     )}
                                     <div className="form-row mt-5">
                                         <div className="col-md-6">
@@ -236,7 +263,13 @@ const Stepper = ({ data }) => {
                                                     )
                                                 }
                                                 onClick={() => {
-                                                    if (activeStep !== 0) {
+                                                    setStatus(activeStep);
+                                                    if (
+                                                        activeStep !== 0 ||
+                                                        isVerified(
+                                                            memberVerified
+                                                        )
+                                                    ) {
                                                         handleUpdate();
                                                     }
                                                     setActiveStep(

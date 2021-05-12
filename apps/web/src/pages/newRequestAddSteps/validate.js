@@ -5,8 +5,8 @@ export const validate = (index, data) => {
             if (
                 !member.address ||
                 !member.phone.number ||
-                !member.payer ||
-                !member.lob ||
+                !member.payer.company_name ||
+                !member.lob.name ||
                 !member.member_number ||
                 !member.id
             )
