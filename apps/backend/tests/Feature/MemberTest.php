@@ -109,6 +109,39 @@ class MemberTest extends TestCase
     }
 
     /**
+     * Test search plan members that belong to a child payer.
+     *
+     * @return void
+     */
+    public function testSearchSubMembers()
+    {
+        // make a child payer
+        $childPayer = Payer::factory(['parent_id' => $this->user->payer])->hasLobs(5)->create();
+        // create members to search
+        $members = Member::factory(['payer_id' => $childPayer])->count(2)->create();
+        // get a dob to search
+        $member = $members->first();
+
+        $search = [
+            'dob'        => $member->dob->format('Y-m-d'),
+            'first_name' => $member->first_name,
+            'last_name'  => $member->last_name,
+        ];
+
+        // dd($this->user->isA('hp_user'), $this->user->healthPlanUser->payer->id);
+        $response = $this->post('/v1/member/search', $search);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(['data', 'meta']);
+
+        // there should be 1 member
+        $response->assertJsonPath('meta.total', 1);
+        $response->assertJsonPath('data.0.dob', $member->dob->format('m/d/Y'));
+        $response->assertJsonPath('data.0.first_name', $search['first_name']);
+        $response->assertJsonPath('data.0.last_name', $search['last_name']);
+    }
+
+    /**
      * Test search plan members.
      *
      * @return void
@@ -206,12 +239,12 @@ class MemberTest extends TestCase
     public function testMemberUpdatePayer()
     {
         // test update payer
-        $payer        = $this->payer->children->first();
-        $formData     = [
+        $payer = $this->payer->children->first();
+        $formData = [
             'plan' => $payer->uuid,
         ];
         $historyCount = $this->member->history->count();
-        $response     = $this->put('/v1/member/' . $this->member->uuid, $formData);
+        $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
         $response
             ->assertStatus(200)
             ->assertJsonPath('payer.id', $payer->uuid);
@@ -232,12 +265,12 @@ class MemberTest extends TestCase
     public function testMemberUpdateLob()
     {
         // test update payer
-        $formData     = [
+        $formData = [
             'line_of_business' => $lobId = $this->payer->lobs()->whereNotIn('id',
                 [$memberLobId = $this->member->lob->id])->first()->id,
         ];
         $historyCount = $this->member->history->count();
-        $response     = $this->put('/v1/member/' . $this->member->uuid, $formData);
+        $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
         $response
             ->assertStatus(200)
             ->assertJsonPath('lob.id', $lobId);
@@ -258,9 +291,9 @@ class MemberTest extends TestCase
     public function testMemberUpdateMemberId()
     {
         // test update payer
-        $formData     = ['member_number' => $memberId = $this->faker->isbn10];
+        $formData = ['member_number' => $memberId = $this->faker->isbn10];
         $historyCount = $this->member->history->count();
-        $response     = $this->put('/v1/member/' . $this->member->uuid, $formData);
+        $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
         $response
             ->assertStatus(200)
             ->assertJsonPath('member_number', $memberId);
@@ -275,11 +308,11 @@ class MemberTest extends TestCase
 
     protected function getFormData()
     {
-        $member   = Member::factory()->hasPhones(1)->hasAddresses(1)->count(1)->create()->first();
-        $address  = $member->addresses->first();
-        $phone    = ['type' => 'Phone', 'value' => $member->phones->first()->number];
+        $member = Member::factory()->hasPhones(1)->hasAddresses(1)->count(1)->create()->first();
+        $address = $member->addresses->first();
+        $phone = ['type' => 'Phone', 'value' => $member->phones->first()->number];
         $phoneAlt = ['type' => 'Phone', 'value' => $this->faker->phonenumber];
-        $email    = ['type' => 'Home Email', 'value' => $this->faker->email];
+        $email = ['type' => 'Home Email', 'value' => $this->faker->email];
 
         return [
             'title'              => $member->name_title,
@@ -312,7 +345,7 @@ class MemberTest extends TestCase
             '--class' => 'Database\Seeders\BouncerSeeder',
         ]);
         $this->member = Member::factory()->hasPhones(1)->hasAddresses(1)->count(1)->create()->first();
-        $this->payer  = Payer::factory()->hasLobs(5)->hasChildren(5)->count(1)->create()->first();
+        $this->payer = Payer::factory()->hasLobs(5)->hasChildren(5)->count(1)->create()->first();
         $this->member->payer()->associate($this->payer);
         $this->member->lob()->associate($this->payer->lobs()->first()->id);
         $this->member->save();
