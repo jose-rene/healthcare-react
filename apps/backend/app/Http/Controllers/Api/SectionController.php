@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assessment\Section;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use \Exception;
-use \Illuminate\Http\JsonResponse;
 
 class SectionController extends Controller
 {
@@ -18,7 +18,7 @@ class SectionController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Section::pagination($request->get('perPage', 50));
+        $data = Section::paginate($request->get('perPage', 50));
 
         return response()->json(compact('data'));
     }

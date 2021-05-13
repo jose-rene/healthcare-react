@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\RequestType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -24,6 +23,8 @@ class PayerResource extends JsonResource
             'payers'              => self::collection($this->children),
             'member_number_types' => PayerMemberNumberResource::collection($this->memberNumberTypes),
             'request_types'       => RequestTypeResource::collection($this->requestTypes->whereNull('parent_id')),
+            'address'             => new AddressResource($this->mainAddress),
+            'phone' => new PhoneResource($this->mainPhone),
         ];
     }
 }

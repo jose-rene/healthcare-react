@@ -3,11 +3,16 @@
 namespace App\Models;
 
 use App\Events\PayerCreated;
+use App\Http\SearchPipeline\Address as AddressSearchPipe;
+use App\Http\SearchPipeline\Name;
+use App\Http\SearchPipeline\Phone as PhoneSearchPipe;
+use App\Http\SearchPipeline\Sort;
 use App\Models\UserType\HealthPlanUser;
 use App\Traits\Uuidable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Pipeline\Pipeline;
 
 /**
  * Class Payer
@@ -39,6 +44,11 @@ class Payer extends Model
             'id',     // Local key on the Payer table...
             'user_id' // Local key on the HealthPlanUser table...
         );
+    }
+
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
     }
 
     /**
@@ -101,6 +111,11 @@ class Payer extends Model
         return $this->hasMany(self::class, 'parent_id')->with('children');
     }
 
+    public function phones()
+    {
+        return $this->morphMany(Phone::class, 'phoneable')->orderBy('is_primary', 'desc');
+    }
+
     public function getTrainingDocumentsAttribute()
     {
         return TrainingDocument::query()
@@ -109,6 +124,29 @@ class Payer extends Model
             ->orderBy('mime_type')
             ->orderBy('name', 'desc')
             ->get();
+    }
+
+    public function getMainAddressAttribute()
+    {
+        return $this->addresses()->orderBy('is_primary')->first();
+    }
+
+    public function getMainPhoneAttribute()
+    {
+        return $this->phones()->first();
+    }
+
+    public function scopeSearchPayers($query)
+    {
+        return app(Pipeline::class)
+            ->send($query)
+            ->through([
+                Name::class,
+                PhoneSearchPipe::class,
+                AddressSearchPipe::class,
+                Sort::class,
+            ])
+            ->thenReturn();
     }
 
     /*

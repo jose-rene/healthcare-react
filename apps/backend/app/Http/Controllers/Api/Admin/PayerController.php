@@ -20,7 +20,9 @@ class PayerController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Payer::pagination($request->get('perPage', 50));
+        $data  = Payer::searchPayers()->paginate($request->get('perPage', 50));
+        $query = Payer::searchPayers();
+        $test  = Payer::searchPayers()->toSql();
 
         return PayerResource::collection($data);
     }

@@ -16,13 +16,16 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 // handle sso login triggering subdomain
 Route::domain(env('DME_SSO_DOMAIN'))->group(function (Router $router) {
     $router->get('/', function () {
         $saml2Auth = new Saml2Auth(Saml2Auth::loadOneLoginAuthFromIpdConfig('dme'));
         // redirect to external auth provider to initiate saml login process
-        return $saml2Auth->login(env('FRONTEND_SSO_URL',
-            '/')); // URL::full() is original url, but will make infinite loop if it is also the sso triggering url
+        return $saml2Auth->login(env(
+            'FRONTEND_SSO_URL',
+            '/'
+        )); // URL::full() is original url, but will make infinite loop if it is also the sso triggering url
     })->where('any', '^(?!saml2).*');
 });
 

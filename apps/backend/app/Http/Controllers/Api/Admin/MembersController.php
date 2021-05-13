@@ -21,7 +21,7 @@ class MembersController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Member::pagination($request->get('perPage', 50));
+        $data = Member::paginate($request->get('perPage', 50));
 
         return MemberResource::collection($data);
     }
