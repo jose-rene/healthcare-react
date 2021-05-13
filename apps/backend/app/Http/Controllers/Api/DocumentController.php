@@ -21,7 +21,7 @@ class DocumentController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Document::pagination($request->get('perPage', 50));
+        $data = Document::paginate($request->get('perPage', 50));
 
         return response()->json(compact('data'));
     }

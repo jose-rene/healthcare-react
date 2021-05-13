@@ -18,7 +18,7 @@ class {{ class }} extends Controller
      */
     public function index(Request $request)
     {
-        $data = {{ model }}::pagination($request->get('perPage', 50));
+        $data = {{ model }}::paginate($request->get('perPage', 50));
 
         return response()->json(compact('data'));
     }

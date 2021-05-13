@@ -69,7 +69,7 @@ module.exports = {
             name: "web:start",
             cwd: "./apps/web",
             // import defaults
-            script: "../../node_modules/react-scripts/scripts/start.js",
+            script: "./node_modules/react-scripts/scripts/start.js",
             args: `${defaultArgs}`,
 
             node_args: `--inspect`,
