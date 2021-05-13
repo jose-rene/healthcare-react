@@ -156,8 +156,20 @@ class Member extends Model
         if (empty($authedUser)) {
             $authedUser = auth()->user();
         }
-        if (1 !== $authedUser->user_type) {// limit search to their own plan
-            $query->where('payer_id', $authedUser->healthPlanUser->payer->id);
+
+        if (1 !== $authedUser->user_type) {
+            // limit search to their own plan
+            if (!$authedUser->payer) {
+                return null;
+            }
+            // check for payer children
+            if ($authedUser->payer->payers->count()) {
+                $payerIds = $authedUser->payer->payers->flatten()->pluck('id');
+                $payerIds->push($authedUser->payer->id);
+                $query->whereIn('payer_id', $payerIds);
+            } else {
+                $query->where('payer_id', $authedUser->payer->id);
+            }
         }
 
         return app(Pipeline::class)
