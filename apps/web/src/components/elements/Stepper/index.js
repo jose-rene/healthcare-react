@@ -33,6 +33,8 @@ const getStepContent = (
     editData,
     payerProfile,
     memberVerified,
+    dueNa,
+    setDueNa,
     setMemberVerified,
     handleUpdate,
     setParams
@@ -66,6 +68,8 @@ const getStepContent = (
                 <NewRequestAddSteps5
                     memberData={editData}
                     handleUpdate={handleUpdate}
+                    dueNa={dueNa}
+                    setDueNa={setDueNa}
                 />
             );
 
@@ -88,6 +92,7 @@ const Stepper = ({ data }) => {
     const [editData, setEditData] = useState();
     const [activeStatus, setActiveStatus] = useState([0, 0, 0, 0, 0]);
     const [memberVerified, setMemberVerified] = useState([0, 0, 0, 0, 0]);
+    const [dueNa, setDueNa] = useState(false);
 
     const { success: successMessage } = useToast();
 
@@ -126,12 +131,6 @@ const Stepper = ({ data }) => {
     }, [data, memberVerified]);
 
     const handleUpdate = async (updateData = false, updateOnly = false) => {
-        // need to implement this final step
-        let finalStep = null;
-        if (activeStep === 4 && updateData) {
-            finalStep = { type_name: "final_step", request_status_id: 1 };
-        }
-
         try {
             // need to check response when due_at save in the database.
             const result = await fireSubmit(
@@ -143,7 +142,10 @@ const Stepper = ({ data }) => {
             );
 
             setEditData(result);
-            setStatus(result);
+            setStatus({
+                ...result,
+                due_na: "due_na" in updateData ? updateData.due_na : dueNa,
+            });
             if (activeStep === 4 && !updateOnly) {
                 const status = validateStatus();
                 if (status) {
@@ -223,6 +225,8 @@ const Stepper = ({ data }) => {
                                         editData,
                                         payerProfile,
                                         memberVerified,
+                                        dueNa,
+                                        setDueNa,
                                         setMemberVerified,
                                         handleUpdate,
                                         setParams

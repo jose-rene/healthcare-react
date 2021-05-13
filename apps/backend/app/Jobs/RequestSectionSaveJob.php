@@ -135,6 +135,15 @@ class RequestSectionSaveJob
 
     protected function dueSection()
     {
+        if ('' === request()->input('due_at')) {
+            // set date to null
+            $this->request->update([
+                'due_at' => null,
+            ]);
+
+            return;
+        }
+        // update date if valid
         $this->request->update(request()->validate([
             'due_at' => ['date', 'after:today'],
             'notes'  => [], // form - due_date + time

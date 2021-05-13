@@ -19,6 +19,6 @@ export const validate = (index, data) => {
         case 3:
             return !!data.request_items.length;
         case 4:
-            return !!data.due_at;
+            return data.due_na || !!data.due_at;
     }
 };

@@ -11,6 +11,16 @@ const NewRequestAddSteps3 = ({ setParams, requestData }) => {
 
     const [codes, setCodes] = useState([]);
 
+    const updateData = (codeData) => {
+        setCodes(codeData);
+        setData((prevData) => {
+            return {
+                ...prevData,
+                codes: codeData.filter((item) => item.code !== ""),
+            };
+        });
+    };
+
     // set params when diagnosis codes change
     useEffect(() => {
         setParams(data);
@@ -19,7 +29,7 @@ const NewRequestAddSteps3 = ({ setParams, requestData }) => {
     useEffect(() => {
         // console.log(requestData.codes);
         if (requestData?.codes && requestData.codes.length) {
-            setCodes(requestData.codes);
+            updateData(requestData.codes);
         }
         // add a blank field
         setCodes((prevCodes) => [
@@ -30,16 +40,6 @@ const NewRequestAddSteps3 = ({ setParams, requestData }) => {
             },
         ]);
     }, []);
-
-    const updateData = (codeData) => {
-        setCodes(codeData);
-        setData((prevData) => {
-            return {
-                ...prevData,
-                codes: codeData.filter((item) => item.code !== ""),
-            };
-        });
-    };
 
     const [{ loading }, fireSearch] = useApiCall({
         method: "get",

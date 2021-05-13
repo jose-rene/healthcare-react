@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router";
 import moment from "moment";
-import { isEmpty } from "lodash";
-
 import InputText from "../../components/inputs/InputText";
 import Select from "../../components/inputs/Select";
 import Textarea from "../../components/inputs/Textarea";
@@ -14,27 +11,18 @@ import { validateFile } from "../../helpers/validate";
 
 import "./newRequestAddSteps.css";
 
-const NewRequestAddSteps5 = ({ memberData, handleUpdate }) => {
+const NewRequestAddSteps5 = ({ memberData, handleUpdate, dueNa, setDueNa }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileUploadError, setFileUploadError] = useState(null);
-    const location = useLocation();
     const hiddenFileInput = useRef(null);
-
-    const [dueDate, setDueDate] = useState(null);
-    const [dueTime, setDueTime] = useState(null);
+    const [dueDate, setDueDate] = useState({ date: "", time: "" });
 
     useEffect(() => {
-        if (!isEmpty(memberData)) {
-            setDueDate(
-                memberData.due_at
-                    ? moment(memberData.due_at).format("YYYY-MM-DD")
-                    : moment().format("YYYY-MM-DD")
-            );
-            setDueTime(
-                memberData.due_at
-                    ? moment(memberData.due_at).format("HH:mm")
-                    : moment("00:00", "HH:mm").format("HH:mm")
-            );
+        if (memberData?.due_at) {
+            setDueDate({
+                date: moment(memberData.due_at).format("YYYY-MM-DD"),
+                time: moment(memberData.due_at).format("HH:mm"),
+            });
         }
     }, [memberData]);
 
@@ -44,31 +32,46 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate }) => {
         }
     }, [selectedFile]);
 
-    const updateData = ({ target: { name, value } }) => {
-        let updateData = {
-            type_name: "due",
-            due_at: "",
-        };
+    const updateData = ({ target: { name, value, checked } }) => {
+        let currentDueDate = { ...dueDate };
 
         if (name === "due_date") {
-            setDueDate(moment(value).format("YYYY-MM-DD"));
-
-            updateData = {
-                ...updateData,
-                due_at: `${moment(value).format("YYYY-MM-DD")} ${dueTime}`,
+            currentDueDate = {
+                ...dueDate,
+                date: moment(value).format("YYYY-MM-DD"),
             };
         }
 
         if (name === "due_time") {
-            setDueTime(moment(value, "HH:mm").format("HH:mm"));
-
-            updateData = {
-                ...updateData,
-                due_at: `${dueDate} ${moment(value, "HH:mm").format("HH:mm")}`,
+            currentDueDate = {
+                ...dueDate,
+                time: moment(value, "HH:mm").format("HH:mm"),
             };
         }
 
-        handleUpdate(updateData, true);
+        if (name === "due_na") {
+            currentDueDate = {
+                ...dueDate,
+                date: "",
+                time: "",
+            };
+            if (checked) {
+                handleUpdate(
+                    { type_name: "due", due_at: "", due_na: checked },
+                    true
+                );
+            }
+            setDueNa(checked);
+        } else if (currentDueDate.date && currentDueDate.time) {
+            handleUpdate(
+                {
+                    type_name: "due",
+                    due_at: `${currentDueDate.date} ${currentDueDate.time}`,
+                },
+                true
+            );
+        }
+        setDueDate(currentDueDate);
     };
 
     const request_uuid = memberData.id;
@@ -113,23 +116,22 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate }) => {
         setSelectedFile(fileUploaded);
     };
 
-    const generateTimes = () => {
-        const x = 30;
-        const times = [];
-        let tt = 0;
-
-        for (let i = 0; tt < 24 * 60; i++) {
-            const hh = Math.floor(tt / 60);
-            const mm = tt % 60;
-            const time = `${`0${hh % 24}`.slice(-2)}:${`0${mm}`.slice(-2)}`;
-            times[i] = {
-                id: time,
-                title: time,
-                value: time,
-            };
-            tt += x;
+    const getTimes = () => {
+        const times = [{ value: "", text: "" }];
+        // start at 7AM
+        const today = moment(
+            `${moment().format("YYYYMMDD")}07:00`,
+            "YYYYMMDDHH:mm"
+        );
+        // half hour increments until 9PM
+        for (let i = 0; i < 29; i++) {
+            times.push({
+                id: i,
+                value: today.format("HH:mm"),
+                title: today.format("LT"),
+            });
+            today.add(30, "minutes");
         }
-
         return times;
     };
 
@@ -144,7 +146,13 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate }) => {
 
                         <div className="col-md-6">
                             <div className="ml-3">
-                                <Checkbox labelLeft name="N/A" label="N/A" />
+                                <Checkbox
+                                    labelLeft
+                                    name="due_na"
+                                    label="N/A"
+                                    checked={dueNa}
+                                    onChange={updateData}
+                                />
                             </div>
                         </div>
 
@@ -153,8 +161,9 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate }) => {
                                 type="date"
                                 name="due_date"
                                 label="Due date"
-                                value={dueDate}
+                                value={dueDate.date}
                                 onChange={updateData}
+                                disabled={dueNa}
                             />
                         </div>
 
@@ -162,9 +171,10 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate }) => {
                             <Select
                                 name="due_time"
                                 label="Time"
-                                value={dueTime}
-                                options={generateTimes()}
+                                value={dueDate.time}
+                                options={getTimes()}
                                 onChange={updateData}
+                                disabled={dueNa}
                             />
                         </div>
                     </div>
