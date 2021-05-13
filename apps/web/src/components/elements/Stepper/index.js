@@ -144,7 +144,10 @@ const Stepper = ({ data }) => {
             setEditData(result);
             setStatus({
                 ...result,
-                due_na: "due_na" in updateData ? updateData.due_na : dueNa,
+                due_na:
+                    updateData !== false && "due_na" in updateData
+                        ? updateData.due_na
+                        : dueNa,
             });
             if (activeStep === 4 && !updateOnly) {
                 const status = validateStatus();
