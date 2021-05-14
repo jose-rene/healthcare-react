@@ -64,6 +64,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'reset_password',
         'is_2fa',
         'google2fa_secret',
+        'gender',
     ];
 
     protected $appends = ['full_name'];

@@ -24,6 +24,7 @@ class CreateActivitiesTable extends Migration
                 ->comment('On activity update a new one will be created and reference its parent');
             $table->foreignId('request_id')->comment('Which request this is attached to');
             $table->foreignId('user_id')->comment('Who is this activity attached to');
+            $table->foreignId('activity_reason_id')->nullable()->comment('ID of related activity reason (if any)');
             $table->foreignId('activity_type_id')->nullable();
             $table->string('message')->nullable()->comment('Could be activity type or formatted message');
             $table->json('json_message')->nullable()->comment('Data needed for the notifications');

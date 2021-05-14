@@ -2,10 +2,22 @@
 
 namespace App\Models;
 
+use Arr;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property boolean     is_primary
+ * @property string      address_1
+ * @property string      address_2
+ * @property string      city
+ * @property string      county
+ * @property string      state
+ * @property string      postal_code
+ * @property integer     address_type_id
+ * @property AddressType addressType
+ */
 class Address extends Model
 {
     use HasFactory;
@@ -19,7 +31,10 @@ class Address extends Model
         'county',
         'state',
         'postal_code',
+        'address_type_id',
     ];
+
+    protected $casts = ['is_primary'];
 
     /**
      * Polymorphic relationship.
@@ -27,5 +42,15 @@ class Address extends Model
     public function addressable()
     {
         return $this->morphTo();
+    }
+
+    public function getTypeNameAttribute()
+    {
+        return Arr::get($this->addressType, 'name', '');
+    }
+
+    public function type()
+    {
+        return $this->hasOne(AddressType::class, 'address_type_id');
     }
 }

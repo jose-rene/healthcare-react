@@ -3,9 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Silber\Bouncer\Database\Models;
 
-class AddDomainBouncerRoles extends Migration
+class CreateStringablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +13,13 @@ class AddDomainBouncerRoles extends Migration
      */
     public function up()
     {
-        Schema::table(Models::table('roles'), function (Blueprint $table) {
-            $table->string('domain')->after('id')->nullable();
+        Schema::create('stringables', function (Blueprint $table) {
+            $table->id();
+
+            // TODO :: fill out migration for __TABLE__
+
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -26,8 +30,6 @@ class AddDomainBouncerRoles extends Migration
      */
     public function down()
     {
-        Schema::table(Models::table('roles'), function (Blueprint $table) {
-            $table->dropColumn('domain');
-        });
+        Schema::dropIfExists('stringables');
     }
 }

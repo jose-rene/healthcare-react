@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeMembersMemberId extends Migration
+class CreateBillingUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,13 @@ class ChangeMembersMemberId extends Migration
      */
     public function up()
     {
-        Schema::table('members', function (Blueprint $table) {
-            $table->renameColumn('member_id', 'member_number');
+        Schema::create('billing_users', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('user_id')->comment('id of related user record');
+
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -25,8 +30,6 @@ class ChangeMembersMemberId extends Migration
      */
     public function down()
     {
-        Schema::table('members', function (Blueprint $table) {
-            $table->renameColumn('member_number', 'member_id');
-        });
+        Schema::dropIfExists('billing_users');
     }
 }

@@ -15,7 +15,7 @@ class RequestItem extends Model
         'request_id',
         'request_type_id',
         'request_outcome_id',
-        'hcpcs',
+        'hcpcs_id',
         'note',
         'clinician_summary',
         'assessment',
@@ -44,6 +44,11 @@ class RequestItem extends Model
     public function outcome()
     {
         return $this->belongsTo(RequestOutcome::class);
+    }
+
+    public function hcpcs()
+    {
+        return $this->belongsTo(Hcpc::class, 'hcpcs_id');
     }
 
     public function itemDetails()

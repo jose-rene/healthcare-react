@@ -18,11 +18,26 @@ class RequestItemDetail extends Model
         'hcpcs',
         'note',
         'name',
+        'is_default',
+        'request_type_detail_template_id',
+        'request_type_id',
     ];
+
+    protected $casts = ['is_default' => 'boolean'];
 
     public function outcome()
     {
         return $this->hasMany(RequestOutcome::class, 'outcome_id')
             ->orderBy('id', 'desc'); // newest outcome first
+    }
+
+    public function template()
+    {
+        return $this->belongsTo(NarrativeReportTemplate::class, 'narrative_report_template_id');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(RequestType::class, 'request_type_id');
     }
 }

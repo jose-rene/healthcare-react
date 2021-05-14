@@ -62,4 +62,14 @@ class RequestType extends Model
     {
         return $this->belongsTo(self::class, 'parent_id')->with('parent');
     }
+
+    public function hcpcs()
+    {
+        return $this->belongsTo(Hcpc::class, 'hcpcs_id');
+    }
+
+    public function requestTypeDetailTemplate()
+    {
+        return $this->belongsTo(RequestTypeDetailTemplate::class, 'request_type_template_id');
+    }
 }

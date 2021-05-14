@@ -25,11 +25,26 @@ class Member extends Model
     use SoftDeletes;
     use Uuidable;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'payer_id',
+        'lob_id',
+        'member_number',
+        'language',
+        'line_of_business',
+        'member_number_type',
+        'gender',
+        'name_title',
+        'first_name',
+        'last_name',
+        'dob',
+        'is_test',
+    ];
 
     protected $dispatchesEvents = [
         'created' => MemberCreated::class,
     ];
+
+    protected $casts = ['is_test' => 'boolean'];
 
     /**
      * Relationship to requests.

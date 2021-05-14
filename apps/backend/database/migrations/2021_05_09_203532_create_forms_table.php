@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddMembersPayer extends Migration
+class CreateFormsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,14 @@ class AddMembersPayer extends Migration
      */
     public function up()
     {
-        Schema::table('members', function (Blueprint $table) {
-            $table->foreignId('payer_id')->after('uuid')->nullable()->comment('The associated payer for this member.');
+        Schema::create('forms', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('name')->comment('form name');
+            $table->string('description')->comment('description');
+
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -25,8 +31,6 @@ class AddMembersPayer extends Migration
      */
     public function down()
     {
-        Schema::table(Models::table('roles'), function (Blueprint $table) {
-            $table->dropColumn('payer_id');
-        });
+        Schema::dropIfExists('forms');
     }
 }

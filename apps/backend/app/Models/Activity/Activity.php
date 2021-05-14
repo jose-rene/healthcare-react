@@ -38,6 +38,7 @@ class Activity extends Model
         'notify_reviewer',
         'notify_therapist',
         'json_message',
+        'activity_reason_id',
     ];
 
     protected $casts = [
@@ -130,5 +131,10 @@ class Activity extends Model
         $users[] = $this->user;
 
         return $users;
+    }
+
+    public function activityReason()
+    {
+        return $this->hasOne(ActivityReason::class, 'activity_reason_id');
     }
 }

@@ -18,9 +18,9 @@ class CreateRequestStatusesTable extends Migration
         Schema::create('request_statuses', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name');
-            $table->string('slug')->nullable();
-            $table->integer('sort');
+            $table->string('name')->comment('status name');
+            $table->string('slug')->nullable()->comment('received, assigned, scheduled, assessed, submitted, completed, on_hold, cancelled, reopened');
+            $table->integer('sort')->comment('sort order');
 
             $table->timestamps();
             $table->softDeletes();
@@ -42,8 +42,7 @@ class CreateRequestStatusesTable extends Migration
             $name = Str::of($status)->replace('_', ' ')->title();
             $slug = Str::of($status)->lower();
 
-            RequestStatus::firstOrCreate(
-                compact('slug'),
+            RequestStatus::create(
                 compact('name', 'slug', 'sort')
             );
         }

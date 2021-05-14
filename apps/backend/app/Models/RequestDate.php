@@ -12,6 +12,7 @@ class RequestDate extends Model
     protected $fillable = [
         'request_id',
         'request_date_type_id',
+        'note',
         'date',
     ];
 

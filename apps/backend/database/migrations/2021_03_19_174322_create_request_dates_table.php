@@ -16,9 +16,10 @@ class CreateRequestDatesTable extends Migration
         Schema::create('request_dates', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('request_id')->constrained();
-            $table->unsignedBigInteger('request_date_type_id');
-            $table->dateTime('date');
+            $table->foreignId('request_id')->constrained()->comment('id of parent request');
+            $table->unsignedBigInteger('request_date_type_id')->comment('id of related request date type');
+            $table->string('note')->nullable()->comment('note, if applicable');
+            $table->dateTime('date')->comment('date');
 
             $table->timestamps();
         });

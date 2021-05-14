@@ -18,8 +18,8 @@ class CreateDocumentTypesTable extends Migration
         Schema::create('document_types', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name');
-            $table->string('slug')->nullable();
+            $table->string('name')->comment('name');
+            $table->string('slug')->nullable()->comment('request/narrative/media_picture/media_video/internal');
 
             $table->timestamps();
             $table->softDeletes();

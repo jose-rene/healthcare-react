@@ -21,13 +21,13 @@ class CreateRequestItemsTable extends Migration
             $table->foreignId('request_id')->comment('The related request');
             $table->foreignId('request_type_id')->comment('The associated request type');
             $table->unsignedBigInteger('request_outcome_id')->nullable();
-            $table->string('hcpcs')->nullable()->comment('The HPCS code');
+            $table->foreignId('hcpcs_id')->nullable()->comment('hcpcs id, looked up from the related request type');
             $table->string('note')->nullable()->comment('A note');
             $table->string('clinician_summary')->nullable()->comment('A summary provided by the clinician');
             $table->string('assessment')->nullable()->comment('The assessment summary provided by the clinician');
             $table->string('decision')->nullable()->comment('The decision ascertained by the clinician');
-            $table->json('json_data')->nullable()->comment('The data of the associated assessment');
             $table->boolean('is_additional_consideration')->nullable()->comment('If there are additional considerations');
+            $table->json('json_data')->nullable()->comment('The data of the associated assessment');
 
             $table->timestamps();
             $table->softDeletes();

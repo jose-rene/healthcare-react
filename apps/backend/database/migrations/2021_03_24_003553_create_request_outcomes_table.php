@@ -18,9 +18,9 @@ class CreateRequestOutcomesTable extends Migration
         Schema::create('request_outcomes', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('parent_id')->nullable();
-            $table->string('name');
-            $table->string('slug');
+            $table->unsignedBigInteger('parent_id')->nullable()->comment('id of parent request outcome');
+            $table->string('name')->comment('name');
+            $table->string('slug')->comment('recommended/modified_up/modified_down/not_recommended');
 
             $table->timestamps();
             $table->softDeletes();

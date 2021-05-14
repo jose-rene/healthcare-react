@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddPhonesContactType extends Migration
+class CreateNotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,14 @@ class AddPhonesContactType extends Migration
      */
     public function up()
     {
-        Schema::table('phones', function (Blueprint $table) {
-            $table->string('contact_type', 48)->after('number')->default('')->comment('The contact type for the phone number.');
+        Schema::create('notes', function (Blueprint $table) {
+            $table->id();
+
+            $table->longText('note')->comment('note text');
+            $table->morphs('notable');
+
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -25,8 +31,6 @@ class AddPhonesContactType extends Migration
      */
     public function down()
     {
-        Schema::table('phones', function (Blueprint $table) {
-            $table->dropColumn('contact_type');
-        });
+        Schema::dropIfExists('notes');
     }
 }

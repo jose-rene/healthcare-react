@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- *
- **/
+ * @property string  code
+ * @property string  description
+ * @property bool is_weighted
+ * @property Request $request
+ */
 class RelevantDiagnoses extends Model
 {
     use HasFactory, SoftDeletes;
@@ -19,13 +22,18 @@ class RelevantDiagnoses extends Model
      * @var array
      */
     protected $fillable = [
-        'request_id',
         'code',
         'description',
-        'weighted',
+        'is_weighted',
+        'request_id',
     ];
 
     protected $casts = [
-        'weighted' => 'boolean',
+        'is_weighted' => 'boolean',
     ];
+
+    public function request()
+    {
+        return $this->belongsTo(Request::class, 'request_id');
+    }
 }

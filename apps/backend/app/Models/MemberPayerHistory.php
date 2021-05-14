@@ -10,7 +10,13 @@ class MemberPayerHistory extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'member_id',
+        'payer_id',
+        'lob_id',
+        'member_number',
+        'member_number_type_id',
+    ];
 
     /**
      * Relationship to member.
@@ -30,5 +36,15 @@ class MemberPayerHistory extends Model
     public function payer()
     {
         return $this->belongsTo(Payer::class);
+    }
+
+    public function lob()
+    {
+        return $this->belongsTo(Lob::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(MemberNumberType::class);
     }
 }
