@@ -16,6 +16,7 @@ class AddUser2faColumns extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_2fa')->after('notification_prefs')->default(0)->comment('Flag to enable 2 factor authentication');
             $table->string('google2fa_secret')->after('notification_prefs')->nullable()->comment('The google 2 factor secret');
+            $table->string('twofactor_method')->after('notification_prefs')->nullable()->comment('The two factor method preference');
         });
     }
 

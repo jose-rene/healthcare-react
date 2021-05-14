@@ -37,7 +37,7 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property PasswordHistory last_n_passwords
  * @property Carbon          created_at
  * @property string          password
- * @property boolean         reset_password
+ * @property bool         reset_password
  * @property HealthPlanUser  healthPlanUser
  * @link https://github.com/JosephSilber/bouncer#cheat-sheet
  */
@@ -64,6 +64,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'reset_password',
         'is_2fa',
         'google2fa_secret',
+        'twofactor_method',
         'gender',
     ];
 
@@ -237,7 +238,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getAuthTokens($remember_me = false)
     {
         $tokenResult = $this->createToken('Personal Access Token');
-        $token       = $tokenResult->token;
+        $token = $tokenResult->token;
 
         if ($remember_me) {
             $token->expires_at = Carbon::now()->addWeeks(1);
