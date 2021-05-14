@@ -16,10 +16,15 @@ class CreatePhonesTable extends Migration
         Schema::create('phones', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid');
+
             $table->morphs('phoneable');
+
             $table->string('number', 24)->comment('The phone number.');
-            $table->boolean('is_primary')->default(0);
-            $table->boolean('is_mobile')->default(0);
+            $table->string('contact_type', 48)->default('')->comment('The contact type for the phone number.');
+
+            $table->boolean('is_primary')->default(0)->comment('flag for primary phone');
+            $table->boolean('is_mobile')->default(0)->comment('flag for mobile phone');
+
             $table->timestamps();
             $table->softDeletes();
         });

@@ -28,10 +28,11 @@ class CreateBouncerTables extends Migration
 
         Schema::create(Models::table('roles'), function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('title')->nullable();
-            $table->integer('level')->unsigned()->nullable();
-            $table->integer('scope')->nullable()->index();
+            $table->string('domain')->nullable()->comment('domain');
+            $table->string('name')->comment('name');
+            $table->string('title')->nullable()->comment('title');
+            $table->integer('level')->unsigned()->nullable()->comment('level');
+            $table->integer('scope')->nullable()->index()->comment('scope');
             $table->timestamps();
 
             $table->unique(

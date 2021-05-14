@@ -13,5 +13,6 @@ class Consultant extends Model
     protected $fillable = [
         'request_id',
         'clinician_id',
+        'clinical_user_id',
     ];
 }

@@ -23,6 +23,8 @@ class CreateDocumentsTable extends Migration
             $table->unsignedBigInteger('document_type_id');
             $table->string('name');
             $table->string('mime_type');
+            $table->string('object_name')->nullable();
+            $table->foreignId('request_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

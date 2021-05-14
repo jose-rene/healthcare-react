@@ -17,15 +17,20 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->uuid('uuid')->index();
             $table->tinyInteger('user_type')->unsigned()->default(0);
-            $table->string('first_name');
-            $table->string('middle_name')->nullable();
-            $table->string('last_name');
+            $table->string('first_name')->comment('first name');
+            $table->string('middle_name')->nullable()->comment('middle name');
+            $table->string('last_name')->comment('last name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('gender')->nullable();
             $table->rememberToken();
             $table->date('dob')->nullable();
             $table->json('notification_prefs')->nullable();
+
+            $table->string('name_prefix')->nullable()->default('')->comment('salutation (Mr/Mrs/Ms/Miss/Dr/etc)');
+            $table->string('name_suffix')->nullable()->default('')->comment('name suffix (Jr/III/Esq/Md/etc');
+
             $table->timestamps();
             $table->softDeletes();
         });

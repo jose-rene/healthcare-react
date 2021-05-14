@@ -30,6 +30,8 @@ class Document extends Model
         'document_type_id',
         'name',
         'mime_type',
+        'request_id',
+        'object_name',
     ];
 
     protected $appends = ['url'];
@@ -75,6 +77,11 @@ class Document extends Model
     public function requestItem()
     {
         return $this->belongsTo(RequestItem::class);
+    }
+
+    public function request()
+    {
+        return $this->belongsTo(Request::class);
     }
 
     /*

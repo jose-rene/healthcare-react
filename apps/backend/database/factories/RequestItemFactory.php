@@ -34,7 +34,7 @@ class RequestItemFactory extends Factory
             },
             'name'                        => $this->faker->randomElement($itemNames),
             'request_outcome_id'          => $this->faker->numberBetween(1, 4),
-            'hcpcs'                       => '',
+            //            'hcpcs'                       => '',
             'note'                        => $this->faker->realText(),
             'clinician_summary'           => $this->faker->realText(),
             'assessment'                  => $this->faker->realText(),

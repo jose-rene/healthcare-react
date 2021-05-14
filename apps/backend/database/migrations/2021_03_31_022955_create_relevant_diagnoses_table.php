@@ -16,10 +16,10 @@ class CreateRelevantDiagnosesTable extends Migration
         Schema::create('relevant_diagnoses', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('request_id');
-            $table->string('code');
-            $table->string('description');
-            $table->boolean('weighted')->default(1);
+            $table->string('code')->comment('icd-10 code');
+            $table->string('description')->comment('icd-10 description');
+            $table->boolean('is_weighted')->default(true)->comment('boolean value for whether it is a critical factor in clinician evaluation');
+            $table->foreignId('request_id')->comment('id of parent request');
 
             $table->timestamps();
             $table->softDeletes();

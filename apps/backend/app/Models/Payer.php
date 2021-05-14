@@ -18,10 +18,36 @@ class Payer extends Model
 {
     use HasFactory, Uuidable, SoftDeletes;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'name',
+        'abbreviation',
+        'assessment_label',
+        'billing_document_type',
+        'coupa_business_name',
+        'coupa_cxml_template',
+        'coupa_identity',
+        'coupa_shared_secret',
+        'coupa_url',
+        'criteria',
+        'per_request_average_high',
+        'per_request_average_low',
+        'tat_default_time',
+        'tat_lead_red',
+        'tat_lead_yellow',
+
+        'is_test',
+
+        'billing_frequency_id', // TODO needs relationship
+        'email_security_option_id', // TODO needs relationship
+        'payer_type_id', // TODO needs relationship
+    ];
 
     protected $dispatchesEvents = [
         'created' => PayerCreated::class,
+    ];
+
+    protected $casts = [
+        'is_test' => 'boolean',
     ];
 
     /**

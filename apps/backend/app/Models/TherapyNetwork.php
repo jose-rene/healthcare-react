@@ -10,6 +10,8 @@ class TherapyNetwork extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $fillable = ['name'];
+
     public function address()
     {
         return $this->morphOne(Address::class, 'addressable');

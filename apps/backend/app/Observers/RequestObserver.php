@@ -49,7 +49,6 @@ class RequestObserver
             ];
         }
 
-
         if (!empty($json_message)) {
             /** @var Activity $activity */
             $activity = $request->activities()->create([
@@ -64,9 +63,10 @@ class RequestObserver
                 'notify_therapist'  => false,
             ]);
 
-            $activityType = ActivityType::firstOrCreate(['name'       => 'request.updated',
-                                                         'permission' => 'TBD',
-                                                         'visible'    => true,
+            $activityType = ActivityType::firstOrCreate([
+                'name'          => 'request.updated',
+                'permission'    => 'TBD',
+                'privacy_level' => 2,
             ]);
             $activity->activityType()->associate($activityType);
 

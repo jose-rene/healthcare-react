@@ -19,8 +19,9 @@ class CreateConsultantsTable extends Migration
         Schema::create('consultants', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('request_id');
-            $table->unsignedBigInteger('clinician_id');
+            $table->foreignId('request_id')->comment('id of parent request');
+            $table->foreignId('clinician_id')->comment('id of parent request');
+            $table->foreignId('clinical_user_id')->comment('id of related clinical user');
 
             $table->timestamps();
             $table->softDeletes();

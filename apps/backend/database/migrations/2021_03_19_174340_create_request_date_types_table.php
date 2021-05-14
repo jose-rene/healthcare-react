@@ -17,6 +17,7 @@ class CreateRequestDateTypesTable extends Migration
             $table->id();
 
             $table->string('name');
+            $table->string('slug')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

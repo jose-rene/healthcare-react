@@ -17,9 +17,13 @@ class CreateEmailsTable extends Migration
             $table->id();
 
             $table->string('email');
+            $table->foreignId('email_type_id')->nullable()->comment('id of related email type');
+            $table->boolean('is_primary')->default(0)->comment('Flag for primary contact method');
+            $table->string('contact_type', 48)->default('')->comment('The contact type for the email.');
             $table->morphs('emailable');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

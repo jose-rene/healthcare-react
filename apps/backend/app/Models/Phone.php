@@ -11,7 +11,17 @@ class Phone extends Model
 {
     use SoftDeletes, HasFactory, Uuidable;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'number',
+        'is_primary',
+        'is_mobile',
+        'contact_type',
+    ];
+
+    protected $casts = [
+        'is_primary' => 'boolean',
+        'is_mobile'  => 'boolean',
+    ];
 
     public function phoneable()
     {

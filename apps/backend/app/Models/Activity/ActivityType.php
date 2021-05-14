@@ -2,13 +2,14 @@
 
 namespace App\Models\Activity;
 
+use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ActivityType extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Sluggable;
 
     /**
      * The attributes that are mass assignable.
@@ -16,6 +17,7 @@ class ActivityType extends Model
      * @var array
      */
     protected $fillable = [
+        'slug',
         'name',
         'permission',
         'visible',
