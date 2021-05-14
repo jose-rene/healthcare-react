@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Google2FA;
+use App\Services\TwoFactorAuthApp;
+use App\Services\TwoFactorAuthMessage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
  * @OA\Post(
@@ -69,20 +68,8 @@ class LoginController extends Controller
         }
 
         if (auth()->user()->is_2fa) {
-            $params = [];
-            // there is not a secret yet, send the qr code so that user can set up 2fa
-            if (!auth()->user()->google2fa_secret) {
-                // generate the secret and show QR code
-                auth()->user()->update(['google2fa_secret' => Google2FA::generateSecretKey(32)]);
-                $params['qr_image'] = Google2FA::getQRCodeInline(
-                    'DME-CG',
-                    $email = auth()->user()->email,
-                    auth()->user()->google2fa_secret
-                );
-            }
-            $params['otp_url'] = route('api.login_otp');
-            $params['otp_token'] = Str::random(40);
-            Cache::put('otp_' . $email, Hash::make($params['otp_token']), 300);
+            $class = 'email' === auth()->user()->twofactor_method ? TwoFactorAuthMessage::class : TwoFactorAuthApp::class;
+            $params = App::make($class)->send(auth()->user());
 
             return response()->json($params, 200);
         }
@@ -103,30 +90,9 @@ class LoginController extends Controller
             'code'  => 'required|string|min:6|max:8',
             'token' => 'required|string|min:8|max:64',
         ]);
-        // retrieve temporary token
-        if (null === ($token = Cache::get('otp_' . $request['email']))) {
-            return response()->json(['message' => 'OTP Token Expired.'], 401);
-        }
-        // verify the token
-        if (!Hash::check($request['token'], $token)) {
-            return response()->json(['message' => 'OTP Token Mismatch.'], 401);
-        }
-        // fetch the user
-        if (null === ($user = User::firstWhere('email', $request['email']))) {
-            return response()->json(['message' => 'User Not Found.'], 401);
-        }
-        // clear the one time token
-        Cache::forget('otp_', $request['email']);
-        // check the otp, clean code in case the user adds the space
-        if (!Google2FA::verifyGoogle2FA($user->google2fa_secret, preg_replace('~[^0-9]~', '', $request['code']))) {
-            $token = Str::random(40);
-            Cache::put('otp_' . $user->email, Hash::make($token), 300);
-
-            return response()->json([
-                'message'     => 'OTP Bad Code',
-                'retry_token' => $token,
-            ], 422);
-        }
+        // validate the two factor auth
+        $class = 0 === strpos($request['token'], 'tfn:') ? TwoFactorAuthMessage::class : TwoFactorAuthApp::class;
+        $user = App::make($class)->validate($request['code'], $request['email'], $request['token']);
         // user 2fa successful, send bearer token
         auth()->login($user);
 

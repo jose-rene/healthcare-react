@@ -2,12 +2,13 @@
 
 namespace Tests\Feature;
 
-// use App\Models\Phone;
 use App\Models\User;
+use App\Notifications\TwoFactorNotification;
 use Artisan;
 use Google2FA;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -133,7 +134,7 @@ class LoginTest extends TestCase
     }
 
     /**
-     * Test one time password authentication.
+     * Test invalid one time password authentication.
      *
      * @return void
      */
@@ -188,7 +189,7 @@ class LoginTest extends TestCase
     }
 
     /**
-     * Test one time password token.
+     * Test invalid one time password token.
      *
      * @return void
      */
@@ -241,6 +242,112 @@ class LoginTest extends TestCase
             ->assertStatus(401)
             ->assertJsonStructure(['message'])
             ->assertJsonPath('message', 'OTP Token Mismatch.');
+    }
+
+    /**
+     * Test one time password authentication via notification.
+     *
+     * @return void
+     */
+    public function testOtpNotification()
+    {
+        // set 2fa to true, method to email
+        $this->user->update(['is_2fa' => true, 'twofactor_method' => 'email']);
+        // a notification will be generated on with otp
+        Notification::fake();
+        // login
+        $response = $this->postJson(
+            '/v1/login',
+            [
+                'email'    => $this->user->email,
+                'password' => 'password',
+            ]
+        );
+
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['otp_url', 'otp_token']);
+
+        $code = '';
+        // verify notification sent and get the code
+        Notification::assertSentTo(
+            $this->user,
+            function (TwoFactorNotification $notification, $channels) use (&$code) {
+                $code = $notification->getCode();
+
+                return strlen($code) === 6;
+            }
+        );
+
+        // login with the otp token and code returned in notification
+        $data = $response->json();
+        $path = parse_url($data['otp_url'], \PHP_URL_PATH);
+        $response = $this->postJson(
+            $path,
+            [
+                'email' => $this->user->email,
+                'code'  => $code,
+                'token' => $data['otp_token'],
+            ]
+        );
+        // assert 2fa was successful and a bearer token is returned
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['token_type', 'expires_at', 'access_token']);
+    }
+
+    /**
+     * Test bad code authentication via notification.
+     *
+     * @return void
+     */
+    public function testBadOtpNotification()
+    {
+        // set 2fa to true, method to email
+        $this->user->update(['is_2fa' => true, 'twofactor_method' => 'email']);
+        // a notification will be generated on with otp
+        Notification::fake();
+        // login
+        $response = $this->postJson(
+            '/v1/login',
+            [
+                'email'    => $this->user->email,
+                'password' => 'password',
+            ]
+        );
+
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['otp_url', 'otp_token']);
+
+        $code = '';
+        // verify notification sent and get the code
+        Notification::assertSentTo(
+            $this->user,
+            function (TwoFactorNotification $notification, $channels) use (&$code) {
+                $code = $notification->getCode();
+
+                return strlen($code) === 6;
+            }
+        );
+
+        // make an invalid code
+        $code = '111111' === $code ? '111112' : '111111';
+        // login with the otp token and bad code
+        $data = $response->json();
+        $path = parse_url($data['otp_url'], \PHP_URL_PATH);
+        $response = $this->postJson(
+            $path,
+            [
+                'email' => $this->user->email,
+                'code'  => $code,
+                'token' => $data['otp_token'],
+            ]
+        );
+        // assert error response
+        $response->assertStatus(401)
+            ->assertJsonStructure(['message'])
+            ->assertJsonPath('message', 'OTP Token or Code Mismatch.');
     }
 
     /**
@@ -320,13 +427,5 @@ class LoginTest extends TestCase
         // this will store a new user with random attributes in the database.
         /* @var User $user */
         $this->user = User::factory(['password' => Hash::make('password')])->create();
-
-        // this is an example of how to make multiple
-        /*factory(User::class, 1000000)->make()->each(function ($user) {
-
-            $user->phone->create(factory(Phone::class)->make()->toArray());
-
-            $user->save();
-        });*/
     }
 }
