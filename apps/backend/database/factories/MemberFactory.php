@@ -24,17 +24,17 @@ class MemberFactory extends Factory
     public function definition()
     {
         $genderOptions = ['male', 'female'];
-        $gender        = $genderOptions[$genderType = rand(0, 1)];
-        $titleOptions  = [['Mr.', 'Dr.', 'Sir'], ['Ms.', 'Mrs.', 'Miss.', 'Dr.']];
-        $title         = $titleOptions[$genderType][rand(0, $genderType ? 3 : 2)];
-        $payer         = Payer::factory()->hasLobs(5, ['is_tat_enabled' => 1])->count(1)->create()->first();
+        $gender = $genderOptions[$genderType = rand(0, 1)];
+        $titleOptions = [['Mr.', 'Dr.', 'Sir'], ['Ms.', 'Mrs.', 'Miss.', 'Dr.']];
+        $title = $titleOptions[$genderType][rand(0, $genderType ? 3 : 2)];
+        $payer = Payer::factory()->hasLobs(5, ['is_tat_enabled' => 1])->count(1)->create()->first();
 
         return [
             'member_number'      => $this->faker->isbn10,
             'payer_id'           => $payer->id,
             'lob_id'             => $payer->lobs->first(),
             'member_number_type' => 'Member ID',
-            'language'           => 'english',
+            'language'           => 'Pig Latin',
             'gender'             => $gender,
             'name_title'         => $title,
             'first_name'         => $genderType ? $this->faker->firstNameFemale : $this->faker->firstNameMale,

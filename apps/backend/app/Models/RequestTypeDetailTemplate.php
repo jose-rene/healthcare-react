@@ -24,6 +24,8 @@ class RequestTypeDetailTemplate extends Model
         'is_requestable',
         'hcpcs_id',
         'parent_id',
+        'request_type_template_id',
+        'is_auto_include',
     ];
 
     protected $casts = [
@@ -44,5 +46,10 @@ class RequestTypeDetailTemplate extends Model
     public function hcpcs()
     {
         return $this->belongsTo(Hcpc::class, 'hcpcs_id');
+    }
+
+    public function requestTypeTemplate()
+    {
+        return $this->belongsTo(RequestTypeTemplate::class, 'request_type_template_id');
     }
 }
