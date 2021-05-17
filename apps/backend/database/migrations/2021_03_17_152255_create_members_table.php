@@ -18,8 +18,8 @@ class CreateMembersTable extends Migration
             $table->uuid('uuid')->index();
 
             $table->foreignId('payer_id')->nullable()->comment('The associated payer for this member.');
-            $table->foreignId('lob_id')->after('payer_id')->nullable()->comment('The lob associated with this member.');
-            $table->foreignId('language_id')->nullable()->comment('id of preferred language');
+            $table->foreignId('lob_id')->nullable()->comment('The lob associated with this member.');
+            $table->foreignId('language_id')->nullable()->comment('The associated preferred language');
             $table->string('language', 50)->nullable()->comment('text of prefered language if other');
             $table->string('member_number')->comment('The plan specified member ID');
             $table->string('member_number_type')->nullable()->comment('The member ID type for the plan specified member id number.');
