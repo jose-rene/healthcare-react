@@ -25,7 +25,7 @@ class PayerResource extends JsonResource
             'request_types'       => RequestTypeResource::collection($this->requestTypes->whereNull('parent_id')),
             'address'             => new AddressResource($this->mainAddress),
             'phone'               => new PhoneResource($this->mainPhone),
-            'languages'           => Language::all()->pluck('name'),
+            'languages'           => Language::all()->map(fn($lang) => ['id' => $lang['id'], 'name' => $lang['name']]),
         ];
     }
 }
