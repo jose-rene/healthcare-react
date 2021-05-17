@@ -34,6 +34,7 @@ class MemberResource extends JsonResource
             'address'       => new AddressResource($address),
             'phone'         => new PhoneResource($this->mainPhone),
             'email'         => new EmailResource($this->mainEmail),
+            'language'      => optional($this->language)->name ?? 'en',
         ];
     }
 }

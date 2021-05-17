@@ -29,7 +29,7 @@ class Member extends Model
         'payer_id',
         'lob_id',
         'member_number',
-        'language',
+        'language_id',
         'line_of_business',
         'member_number_type',
         'gender',
@@ -114,6 +114,11 @@ class Member extends Model
     public function payer()
     {
         return $this->belongsTo(Payer::class);
+    }
+
+    public function language()
+    {
+        return $this->hasOne(Language::class);
     }
 
     /**

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  *
  **/
-class Note extends Model
+class Language extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -19,11 +19,6 @@ class Note extends Model
      * @var array
      */
     protected $fillable = [
-        'note',
+        'name',
     ];
-
-    public function noteable()
-    {
-        return $this->morphTo();
-    }
 }
