@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Language;
 use App\Models\Payer;
 use App\Models\TrainingDocument;
 use App\Models\User;
@@ -32,7 +33,8 @@ class PayerTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types']);
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types', 'languages'])
+            ->assertJsonCount(Language::all()->count(), 'languages');
     }
 
     /**
@@ -47,7 +49,8 @@ class PayerTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types']);
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types', 'languages'])
+            ->assertJsonCount(Language::all()->count(), 'languages');
     }
 
     /**
@@ -128,10 +131,13 @@ class PayerTest extends TestCase
         Artisan::call('passport:install');
         // seed the Bouncer roles
         Artisan::call('db:seed', [
-            '--class' => 'Database\Seeders\BouncerSeeder',
+            '--class' => 'BouncerSeeder',
         ]);
         Artisan::call('db:seed', [
-            '--class' => 'Database\Seeders\RequestTypeSeeder',
+            '--class' => 'RequestTypeSeeder',
+        ]);
+        Artisan::call('db:seed', [
+            '--class' => 'LanguageSeeder',
         ]);
         $this->payer = Payer::factory()->hasLobs(5, ['is_tat_enabled' => 1])->count(1)->create()->first();
         $this->user = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);

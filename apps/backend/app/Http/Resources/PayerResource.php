@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,7 +16,6 @@ class PayerResource extends JsonResource
      */
     public function toArray($request)
     {
-        // @todo set up payer request type relationship
         return [
             'id'                  => $this->uuid,
             'company_name'        => $this->name,
@@ -24,7 +24,8 @@ class PayerResource extends JsonResource
             'member_number_types' => PayerMemberNumberResource::collection($this->memberNumberTypes),
             'request_types'       => RequestTypeResource::collection($this->requestTypes->whereNull('parent_id')),
             'address'             => new AddressResource($this->mainAddress),
-            'phone' => new PhoneResource($this->mainPhone),
+            'phone'               => new PhoneResource($this->mainPhone),
+            'languages'           => Language::all()->pluck('name'),
         ];
     }
 }

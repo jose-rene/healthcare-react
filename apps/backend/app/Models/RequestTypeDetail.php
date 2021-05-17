@@ -16,9 +16,10 @@ class RequestTypeDetail extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
         'request_type_id',
+        'name',
         'is_default',
+        'request_type_detail_template_id',
     ];
 
     protected $casts = ['is_default' => 'boolean'];
@@ -31,5 +32,10 @@ class RequestTypeDetail extends Model
     public function requestItems()
     {
         return $this->belongsToMany(RequestItem::class, 'request_item_details');
+    }
+
+    public function requestTypeDetailTemplate()
+    {
+        return $this->belongsToMany(RequestTypeDetailTemplate::class, 'request_type_detail_template_id');
     }
 }

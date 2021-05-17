@@ -28,8 +28,9 @@ class Member extends Model
     protected $fillable = [
         'payer_id',
         'lob_id',
-        'member_number',
+        'language_id',
         'language',
+        'member_number',
         'line_of_business',
         'member_number_type',
         'gender',
@@ -114,6 +115,11 @@ class Member extends Model
     public function payer()
     {
         return $this->belongsTo(Payer::class);
+    }
+
+    public function language()
+    {
+        return $this->hasOne(Language::class);
     }
 
     /**
