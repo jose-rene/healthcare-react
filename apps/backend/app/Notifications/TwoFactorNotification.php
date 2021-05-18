@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Channels\Messages\SmsMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -32,7 +33,7 @@ class TwoFactorNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return 'email' === $notifiable->twofactor_method ? ['mail'] : ['sms'];
     }
 
     /**
@@ -48,6 +49,18 @@ class TwoFactorNotification extends Notification
             ->greeting(sprintf('Hello %s!', $notifiable->full_name))
             ->line(sprintf('This is your authentication code: %s', $this->code))
             ->line('Thank you for using our application!');
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return MailMessage
+     */
+    public function toSms($notifiable)
+    {
+        return (new SmsMessage)
+            ->content(sprintf('This is your authentication code: %s', $this->code));
     }
 
     /**

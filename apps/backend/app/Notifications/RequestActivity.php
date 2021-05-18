@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Channels\Messages\SmsMessage;
 use App\Models\Activity\Activity;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -32,7 +33,7 @@ class RequestActivity extends Notification
      */
     public function via($notifiable)
     {
-        $prefs   = $notifiable->notification_prefs ?? [];
+        $prefs = $notifiable->notification_prefs ?? [];
         $prefs[] = 'database';
 
         return $prefs;
@@ -52,11 +53,16 @@ class RequestActivity extends Notification
             ->line('Thank you.');
     }
 
-    public function toSMS($notifiable)
+    /**
+     * Get the SMS representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return SmsMessage
+     */
+    public function toSms($notifiable)
     {
-        // TODO :: We need to set the sms service
-        return (new NexmoMessage)
-            ->content("You hve new activity view detail " . Route::frontendUrl('/activity/' . $this->activity->uuid));
+        return (new SmsMessage)
+            ->content('You have a new activity, view detail ' . Route::frontendUrl('/activity/' . $this->activity->uuid));
     }
 
     /**

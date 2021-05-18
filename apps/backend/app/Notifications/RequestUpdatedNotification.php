@@ -2,9 +2,9 @@
 
 namespace App\Notifications;
 
+use App\Channels\Messages\SmsMessage;
 use App\Models\Activity\Activity;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +25,7 @@ class RequestUpdatedNotification extends Notification
      */
     public function via($notifiable)
     {
-        $prefs   = $notifiable->notification_prefs ?? [];
+        $prefs = $notifiable->notification_prefs ?? [];
         $prefs[] = 'database';
 
         return $prefs;
@@ -49,7 +49,7 @@ class RequestUpdatedNotification extends Notification
         $message
             ->action(
                 'View detail: ',
-                Route::frontendUrl('/healthplan/requests?request_id=' . $this->activity->request->uuid)
+                url('/healthplan/requests?request_id=' . $this->activity->request->uuid)
             )
             ->line('Thank you.');
 
@@ -57,15 +57,15 @@ class RequestUpdatedNotification extends Notification
     }
 
     /**
-     * Get the Nexmo / SMS representation of the notification.
+     * Get the SMS representation of the notification.
      *
      * @param mixed $notifiable
-     * @return NexmoMessage
+     * @return SmsMessage
      */
-    public function toSMS($notifiable)
+    public function toSms($notifiable)
     {
-        return (new NexmoMessage)
-            ->content("A request has updated " . Route::frontendUrl('/healthplan/requests?request_id' . $this->activity->json_message['request_id']));
+        return (new SmsMessage)
+            ->content('A request has been updated ' . url('/healthplan/requests?request_id' . $this->activity->json_message['request_id']));
     }
 
     /**
