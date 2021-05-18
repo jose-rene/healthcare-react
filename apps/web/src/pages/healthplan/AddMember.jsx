@@ -70,6 +70,18 @@ const AddMember = () => {
         });
     }, [payerProfile]);
 
+    const languageOptions = useMemo(() => {
+        if (!payerProfile?.languages?.length) {
+            return [];
+        }
+
+        return payerProfile.languages.map(({ id, name }) => {
+            return name === "English"
+                ? { id, title: name, val: id, selected: "selected" }
+                : { id, title: name, val: id };
+        });
+    }, [payerProfile]);
+
     const statesOptions = useMemo(() => {
         if (isEmpty(states)) {
             return [];
@@ -452,18 +464,7 @@ const AddMember = () => {
                                 <Select
                                     name="language"
                                     label="Language*"
-                                    options={[
-                                        {
-                                            id: "english",
-                                            title: "English",
-                                            val: "english",
-                                        },
-                                        {
-                                            id: "spanish",
-                                            title: "Spanish",
-                                            val: "spanish",
-                                        },
-                                    ]}
+                                    options={languageOptions}
                                     errors={errors}
                                     ref={register({
                                         required: "Language is required",
