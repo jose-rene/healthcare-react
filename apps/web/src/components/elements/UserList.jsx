@@ -101,7 +101,7 @@ const List = () => {
         handleSearch(clear);
     };
 
-    return !loading ? (
+    return (
         <>
             <UserTopSearch
                 handleSearch={handleSearch}
@@ -119,12 +119,6 @@ const List = () => {
                 onChange={handleTableChange}
             />
         </>
-    ) : error ? (
-        <PageAlert>{error.message ?? "No Users Found."}</PageAlert>
-    ) : (
-        <div className="text-center">
-            <Icon icon="spinner" />
-        </div>
     );
 };
 
