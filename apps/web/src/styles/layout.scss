@@ -165,6 +165,10 @@
 .sidebar-active {
     background: #ebf5fd;
     border-left: 5px solid #2e94e5 !important;
+
+    & img:first-child {
+        margin-left: -5px;
+    }
 }
 
 .content-container {
