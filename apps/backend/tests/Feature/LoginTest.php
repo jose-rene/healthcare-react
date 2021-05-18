@@ -297,6 +297,57 @@ class LoginTest extends TestCase
     }
 
     /**
+     * Test one time password authentication via notification.
+     *
+     * @return void
+     */
+    public function testOtpNotificationSms()
+    {
+        // set 2fa to true, method to email
+        $this->user->update(['is_2fa' => true, 'twofactor_method' => 'sms']);
+        // a notification will be generated on with otp
+        Notification::fake();
+        // login
+        $response = $this->postJson(
+            '/v1/login',
+            [
+                'email'    => $this->user->email,
+                'password' => 'password',
+            ]
+        );
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['otp_url', 'otp_token']);
+
+        $code = '';
+        // verify notification sent and get the code
+        Notification::assertSentTo(
+            $this->user,
+            function (TwoFactorNotification $notification, $channels) use (&$code) {
+                $code = $notification->getCode();
+
+                return strlen($code) === 6;
+            }
+        );
+
+        // login with the otp token and code returned in notification
+        $data = $response->json();
+        $path = parse_url($data['otp_url'], \PHP_URL_PATH);
+        $response = $this->postJson(
+            $path,
+            [
+                'email' => $this->user->email,
+                'code'  => $code,
+                'token' => $data['otp_token'],
+            ]
+        );
+        // assert 2fa was successful and a bearer token is returned
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['token_type', 'expires_at', 'access_token']);
+    }
+
+    /**
      * Test bad code authentication via notification.
      *
      * @return void
