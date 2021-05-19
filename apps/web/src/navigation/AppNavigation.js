@@ -10,6 +10,7 @@ import HpAddUser from "../pages/healthplan/AddUser";
 import HpEditUser from "../pages/healthplan/EditUser";
 import HpAddMember from "../pages/healthplan/AddMember";
 import HpSearchMember from "../pages/healthplan/SearchMember";
+import HpTraining from "../pages/Training/Training";
 import NewRequestAdd from "../pages/newRequestAdd/NewRequestAdd";
 import RequestLookup from "../pages/RequestLookup/RequestLookup";
 import Assessment from "../pages/Assessment";
@@ -100,6 +101,11 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     path="/healthplan/requests"
                     middleware={["hp_user", "hp_manager", "hp_champion"]}
                     component={RequestLookup}
+                />
+                <PrivateRoute
+                    path="/healthplan/training"
+                    middleware={["hp_user", "hp_champion"]}
+                    component={HpTraining}
                 />
                 <PrivateRoute
                     exact
