@@ -2,17 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
+import { Link } from "react-router-dom";
 import PageLayout from "../../layouts/PageLayout";
 import InputText from "../../components/inputs/InputText";
 import PageAlert from "../../components/elements/PageAlert";
 import TableAPI from "../../components/elements/TableAPI";
 import Button from "../../components/inputs/Button";
 import useToast from "../../hooks/useToast";
-
 import useApiCall from "../../hooks/useApiCall";
 import useSearch from "../../hooks/useSearch";
+import { ACTIONS } from "../../helpers/table";
 
 import "../../styles/healthplan.scss";
+import Icon from "../../components/elements/Icon";
 
 const SearchMember = (props) => {
     const { generalError } = useToast();
@@ -26,26 +28,47 @@ const SearchMember = (props) => {
     });
 
     const [headers] = useState([
-        { columnMap: "id", label: "ID", type: String },
+        { columnMap: "member_number", label: "ID", type: String },
+        { columnMap: "title", label: "Title", type: String },
         { columnMap: "first_name", label: "First Name", type: String },
         { columnMap: "last_name", label: "Last Name", type: String },
         { columnMap: "gender", label: "Gender", type: String },
-        { columnMap: "title", label: "Title", type: String },
         { columnMap: "dob", label: "Date of Birth", type: String },
         {
             columnMap: "address",
             label: "Address",
             type: String,
             formatter(address) {
-                return !address
-                    ? ""
-                    : [
-                          `${address.street}`,
-                          `${address.city},`,
-                          `${address.county}`,
-                          `${address.state}`,
-                          `${address.zip_code}`,
-                      ].join(" ");
+                if (!address) return "";
+                return [
+                    address.address_1,
+                    address.address_2,
+                    `${address.city},`,
+                    address.county,
+                    address.state,
+                    address.postal_code,
+                ]
+                    .filter(($item) => {
+                        return !!$item;
+                    })
+                    .join(" ");
+            },
+        },
+        {
+            columnMap: "id",
+            label: "Request",
+            type: ACTIONS,
+            disableSortBy: true,
+            formatter(id) {
+                return (
+                    <Link
+                        className="btn btn-primary btn-icon btn-sm"
+                        to={`/member/${id}/request/add`}
+                    >
+                        <Icon icon="plus" className="mr-1" size="sm" />
+                        New Request
+                    </Link>
+                );
             },
         },
     ]);
