@@ -25,11 +25,12 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->get('/plan/plans', 'PlanController@plans');
     $router->get('/plan/lobs', 'PlanController@lobs');
     $router->get('/plan/idtypes', 'PlanController@idtypes');
+
     // user routes
     $router->get('/user/profile', 'UserController@profile');
     $router->put('/user/profile', 'UserController@profileSave');
-
-    Route::put('/user/password', 'PasswordController@authedChangePassword');
+    $router->put('/user/profile-image', 'UserController@profileImageSave')->name('user.profile.image.save');
+    $router->put('/user/password', 'PasswordController@authedChangePassword');
 
     $router->post('/member/search', 'MemberController@search')->middleware('can:viewAny,' . Member::class);
     $router->post('/user/search', 'UserController@search');
@@ -37,6 +38,7 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->get('logout', 'LoginController@logout');
     $router->get('notifications', 'NotificationsController@index');
     $router->put('notifications', 'NotificationsController@update');
+
     // request info
     $router->get('/request/summary', 'RequestController@summary');
     $router->get('/request/inspire', 'RequestController@inspire');

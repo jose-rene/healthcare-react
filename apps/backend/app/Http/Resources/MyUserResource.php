@@ -38,6 +38,7 @@ class MyUserResource extends JsonResource
             'primary_role'   => $this->primary_role ?? $this->roles->first()->name ?? '',
             'abilities'      => $abilities->count() > 0 ? $abilities->map(fn($item, $key) => $item['name']) : [],
             'reset_password' => (bool)$this->reset_password,
+            'avatar_url'     => $this->avatar_url,
         ];
     }
 }

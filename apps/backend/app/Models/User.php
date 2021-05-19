@@ -23,6 +23,7 @@ use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
+use LasseRafn\InitialAvatarGenerator\InitialAvatar;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
@@ -37,8 +38,10 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property PasswordHistory last_n_passwords
  * @property Carbon          created_at
  * @property string          password
- * @property bool         reset_password
+ * @property bool            reset_password
  * @property HealthPlanUser  healthPlanUser
+ * @property Image           profileImage
+ * @property mixed           avatar
  * @link https://github.com/JosephSilber/bouncer#cheat-sheet
  */
 class User extends Authenticatable implements MustVerifyEmail
@@ -141,6 +144,37 @@ class User extends Authenticatable implements MustVerifyEmail
     public function phones()
     {
         return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    public function profileImage()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+    public function getAvatarAttribute()
+    {
+        $image = $this->profileImage;
+
+        if ($image && $image->fileExists) {
+            return $image->file;
+        }
+
+        $avatar = new InitialAvatar();
+
+        return $avatar
+            ->name($this->name)
+            ->background('#f5f9fc')
+            ->color('#475866')
+            ->preferBold()
+            ->height(250)
+            ->width(250)
+            ->generate()
+            ->stream('png');
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        return route('profile.image.show', ['user' => $this, 'user_name' => $this->name]);
     }
 
     /**

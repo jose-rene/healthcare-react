@@ -39,6 +39,7 @@ class DocumentController extends Controller
 
         // store file
         $document->file = $request->file('file');
+        $document->save();
 
         return new DocumentResource($document);
     }

@@ -1,5 +1,5 @@
 default:
-  image: gryphon/php-yarn:7.4
+  image: gryphon/php-yarn:8.0
 cache:
   key:
     files:

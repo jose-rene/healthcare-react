@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\ImageResource;
 use App\Http\Resources\MyUserResource;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
@@ -467,6 +468,23 @@ class UserController extends Controller
         $user->update($data);
 
         return new MyUserResource($user);
+    }
+
+    public function profileImageSave(Request $request)
+    {
+        $user = auth()->user();
+
+        $file = $request->file('file');
+
+        $profileImage = $user->profileImage()->updateOrCreate([
+            'name'      => $file->getClientOriginalName(),
+            'mime_type' => $file->getMimeType(),
+        ]);
+
+        $profileImage->file = $request->file('file');
+        $profileImage->save();
+
+        return new ImageResource($profileImage);
     }
 
     public function permissionCheck(Request $request)
