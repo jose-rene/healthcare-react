@@ -9,7 +9,7 @@ import Button from "../../components/inputs/Button";
 import Icon from "../../components/elements/Icon";
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
-const TabAccount = () => {
+const TabAccount = ({ user: { avatar_url, first_name, last_name } }) => {
     return (
         <Row>
             <Col lg={8}>
@@ -37,7 +37,10 @@ const TabAccount = () => {
                                                 >
                                                     <img
                                                         className="account-img"
-                                                        src="images/icons/user.png"
+                                                        src={
+                                                            avatar_url ||
+                                                            "/images/icons/user.png"
+                                                        }
                                                         alt=""
                                                     />
                                                 </OverlayTrigger>
@@ -69,11 +72,17 @@ const TabAccount = () => {
                                         </Col>
 
                                         <Col lg={6}>
-                                            <InputText label="First Name" />
+                                            <InputText
+                                                label="First Name"
+                                                value={first_name}
+                                            />
                                         </Col>
 
                                         <Col lg={6}>
-                                            <InputText label="Last Name" />
+                                            <InputText
+                                                label="Last Name"
+                                                value={last_name}
+                                            />
                                         </Col>
 
                                         <Col lg={6}>
@@ -136,11 +145,26 @@ const TabAccount = () => {
                                                     <td>(321) 555-555</td>
                                                     <td width="80">
                                                         <center>
-                                                            <Button useButton={false} variant="icon">
-                                                                <img alt="Edit" src="/images/icons/edit.png"/>
+                                                            <Button
+                                                                useButton={
+                                                                    false
+                                                                }
+                                                                variant="icon"
+                                                            >
+                                                                <img
+                                                                    alt="Edit"
+                                                                    src="/images/icons/edit.png"
+                                                                />
                                                             </Button>
-                                                            <Button useButton={false} variant="icon">
-                                                                <Icon>trash</Icon>
+                                                            <Button
+                                                                useButton={
+                                                                    false
+                                                                }
+                                                                variant="icon"
+                                                            >
+                                                                <Icon>
+                                                                    trash
+                                                                </Icon>
                                                             </Button>
                                                         </center>
                                                     </td>
@@ -303,7 +327,11 @@ const TabAccount = () => {
                                 </Col>
 
                                 <Col lg={12}>
-                                    <Button variant="primary" block label="Deactivate Your Account" />
+                                    <Button
+                                        variant="primary"
+                                        block
+                                        label="Deactivate Your Account"
+                                    />
                                 </Col>
                             </Row>
                         </div>
@@ -328,7 +356,11 @@ const TabAccount = () => {
                                 </Col>
 
                                 <Col lg={12}>
-                                    <Button variant="primary" block label="DME Direct Deposit Form" />
+                                    <Button
+                                        variant="primary"
+                                        block
+                                        label="DME Direct Deposit Form"
+                                    />
                                 </Col>
                             </Row>
                         </div>
