@@ -8,7 +8,7 @@ import TabSecurity from "./tabs/TabSecurity";
 import "../styles/account.scss";
 import BroadcastAlert from "../components/elements/BroadcastAlert";
 
-const Account = ({ email, full_name }) => {
+const Account = ({ user }) => {
     return (
         <PageLayout>
             <BroadcastAlert />
@@ -17,7 +17,7 @@ const Account = ({ email, full_name }) => {
 
                 <Tabs defaultActiveKey="account">
                     <Tab eventKey="account" title="Account Info">
-                        <TabAccount />
+                        <TabAccount user={user} />
                     </Tab>
                     <Tab eventKey="documents" title="Documents & Licenses">
                         <TabDocuments />
@@ -32,10 +32,9 @@ const Account = ({ email, full_name }) => {
     );
 };
 
-const mapStateToProps = ({ auth, user: { email, full_name } }) => ({
+const mapStateToProps = ({ auth, user }) => ({
     localAuth: auth,
-    email,
-    full_name,
+    user,
 });
 
 export default connect(mapStateToProps)(Account);
