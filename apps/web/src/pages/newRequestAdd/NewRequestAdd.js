@@ -2,12 +2,12 @@ import React, { useEffect, useMemo } from "react";
 import { isEmpty } from "lodash";
 import PageLayout from "../../layouts/PageLayout";
 import Stepper from "../../components/elements/Stepper";
-
 import "./newRequestAdd.css";
 import useApiCall from "../../hooks/useApiCall";
 import { POST } from "../../config/URLs";
 import Icon from "../../components/elements/Icon";
 import useToast from "../../hooks/useToast";
+/* eslint-disable react-hooks/exhaustive-deps */
 
 const NewRequestAdd = ({
     match: {
@@ -16,14 +16,11 @@ const NewRequestAdd = ({
     history,
 }) => {
     const { error: errorMessage } = useToast();
-
     const [{ loading: saving = true }, fireCreateRequest] = useApiCall({
         method: POST,
         url: `/member/${member_id}/member-requests`,
     });
-    const [{ loading = true, data, error }, fireLoadRequest] = useApiCall({
-        url: `/member/${member_id}/member-requests/${request_id}`,
-    });
+    const [{ loading = true, data, error }, fireLoadRequest] = useApiCall();
 
     const goToSearch = () => {
         if (request_id) {
@@ -56,11 +53,17 @@ const NewRequestAdd = ({
                 }
 
                 history.push(`/member/${member_id}/request/${id}/edit`);
-            } else {
-                fireLoadRequest();
             }
         })();
     }, []);
+
+    useEffect(() => {
+        if (request_id) {
+            fireLoadRequest({
+                url: `/member/${member_id}/member-requests/${request_id}`,
+            });
+        }
+    }, [request_id]);
 
     useEffect(() => {
         if (isEmpty(data) && error !== false) {
@@ -86,7 +89,7 @@ const NewRequestAdd = ({
                 <h1 className="box-title mb-0">
                     New Request{" "}
                     {(loading || saving) && (
-                        <Icon icon="spinner" size="1x" spin={true} />
+                        <Icon icon="spinner" size="1x" spin />
                     )}
                 </h1>
                 <p className="box-legenda mb-3">
