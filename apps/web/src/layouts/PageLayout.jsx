@@ -218,11 +218,15 @@ const PageLayout = ({
                         </Link>
                     </li>
                     <li
-                        className={page === "training" ? "sidebar-active" : ""}
+                        className={
+                            page === "healthplan/training"
+                                ? "sidebar-active"
+                                : ""
+                        }
                         data-toggle="tooltip"
                         title="Training"
                     >
-                        <Link to="/training">
+                        <Link to="/healthplan/training">
                             <img src="/images/icons/video.png" alt="Videos" />
                             <div className="d-block d-sm-none">Videos</div>
                         </Link>
