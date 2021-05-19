@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Jobs\PasswordExpireCheckJob;
+use App\Models\Image;
 use App\Models\User;
 use App\Models\UserType\EngineeringUser;
 use Artisan;
@@ -10,7 +11,9 @@ use Bouncer;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Laravel\Passport\Passport;
+use Storage;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -378,6 +381,41 @@ class UserTest extends TestCase
         $this->assertEquals($formData['last_name'], $response->json('last_name'));
         // make sure the user type is changed to health plan when the user domain is changed
         $this->assertEquals('HealthPlanUser', $response->json('user_type'));
+    }
+
+    /**
+     * @group file-upload
+     */
+    public function testUploadingAProfileImage()
+    {
+        $imageDiskName = config('filesystems.defaultImageImage', 'image');
+        Passport::actingAs(
+            $this->user
+        );
+
+        $this->withoutExceptionHandling();
+        Storage::fake($imageDiskName);
+        $profileImage = UploadedFile::fake()->create('someProfileImage.png', 1001, 'image/png');
+
+        // Make sure I can upload the file
+        $response = $this->put(route('api.user.profile.image.save'), [
+            'name'      => 'someProfileImage.png',
+            'mime_type' => 'image/png',
+            'file'      => $profileImage,
+        ]);
+        $response->assertSuccessful();
+        $imageFromResponse = $response->json();
+
+        // make sure the image is tracked in the database and exists in the filesystem
+        self::assertCount(1, Image::all());
+        Storage::disk($imageDiskName)->assertExists($imageFromResponse['id']);
+
+        // request the file using the user profile image url
+        $test = $this->get(route('profile.image.show', [
+            'user'      => $this->user,
+            'user_name' => 'test user',
+        ]));
+        $test->assertOk();
     }
 
     /**

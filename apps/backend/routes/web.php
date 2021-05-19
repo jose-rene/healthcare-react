@@ -3,6 +3,7 @@
 use Aacotroneo\Saml2\Saml2Auth;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\ImageController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,15 @@ Route::domain(env('DME_SSO_DOMAIN'))->group(function (Router $router) {
 
 Route::middleware(['api'])->group(function ($router) {
     $router->get('document/{document}/name/{name}', [DocumentController::class, 'show'])->name('document.request');
+});
+
+Route::get('/image/{image}/request/{name}', [ImageController::class, 'show'])->name('image.show');
+Route::get('/image/{user}/profile/{user_name}', [ImageController::class, 'profileImageShow'])->name('profile.image.show');
+
+Route::middleware('auth:api')->group(function ($router) {
+    $router->get('/image/me', function (Request $request) {
+        return (new ImageController)->profileImageShow($request->user());
+    })->name('images.me');
 });
 
 Route::get('/', 'HomeController@welcome');

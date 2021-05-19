@@ -16,6 +16,7 @@ import checkMiddleware from "../helpers/user";
 const PageLayout = ({
     full_name,
     email,
+    avatar_url,
     signOut,
     children,
     primaryRole,
@@ -98,16 +99,19 @@ const PageLayout = ({
                         <Icon icon="notification" className="header-icon" />
                     </a>
 
-                    <img
-                        alt=""
-                        className="header-avatar"
-                        src="/images/icons/user.png"
-                    />
                     <NavDropdown
                         data-testid="userinfo"
                         alignRight
                         id="user-options"
-                        title={full_name}
+                        title={(
+                            <>
+                                <img
+                                    alt="Me"
+                                    className="header-avatar"
+                                    src={avatar_url || "/images/icons/user.png"}
+                                />
+                                {full_name}
+                            </>)}
                     >
                         <NavDropdown.ItemText>{email}</NavDropdown.ItemText>
                         <NavDropdown.Divider />
@@ -262,13 +266,14 @@ const PageLayout = ({
 };
 
 const mapStateToProps = ({
-    user: { email, full_name, primaryRole, roles, abilities },
+    user: { email, full_name, primaryRole, roles, abilities, avatar_url },
 }) => ({
     email,
     full_name,
     roles,
     abilities,
     primaryRole,
+    avatar_url,
 });
 
 const mapDispatchToProps = {
