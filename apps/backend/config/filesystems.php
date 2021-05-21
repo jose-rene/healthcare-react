@@ -40,10 +40,10 @@ return [
     | Supported Drivers: "local", "ftp", "sftp", "s3"
     |
     */
-    'defaultDocument' => env('FILESYSTEM_DOCUMENT', 'document'),
+    'defaultDocument'             => env('FILESYSTEM_DOCUMENT', 'document'),
     'defaultProfessionalDocument' => env('FILESYSTEM_DOCUMENT', 'professionalDocument'),
-    'defaultTraining' => env('FILESYSTEM_TRAINING', 'training'),
-    'defaultImageImage' => env('FILESYSTEM_IMAGE', 'images'),
+    'defaultTraining'             => env('FILESYSTEM_TRAINING', 'training'),
+    'defaultImageImage'           => env('FILESYSTEM_IMAGE', 'image'),
 
     'disks' => [
 

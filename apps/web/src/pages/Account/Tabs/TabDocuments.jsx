@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import Button from "../../components/inputs/Button";
+import Button from "../../../components/inputs/Button";
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 const TabDocuments = () => {
@@ -51,12 +51,14 @@ const TabDocuments = () => {
                                                     to="#"
                                                     useButton={false}
                                                     variant="icon"
-                                                    icon="download" />
+                                                    icon="download"
+                                                />
                                                 <Button
                                                     to="#"
                                                     useButton={false}
                                                     variant="icon"
-                                                    icon="play" />
+                                                    icon="play"
+                                                />
                                             </td>
                                         </tr>
                                         <tr>
@@ -67,12 +69,14 @@ const TabDocuments = () => {
                                                     to="#"
                                                     useButton={false}
                                                     variant="icon"
-                                                    icon="download" />
+                                                    icon="download"
+                                                />
                                                 <Button
                                                     to="#"
                                                     useButton={false}
                                                     variant="icon"
-                                                    icon="play" />
+                                                    icon="play"
+                                                />
                                             </td>
                                         </tr>
                                     </tbody>

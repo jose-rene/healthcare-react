@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { signOut } from "../actions/authAction";
 import { ADMIN, initializeUser } from "../actions/userAction";
 import useApiCall from "../hooks/useApiCall";
-import Account from "../pages/Account";
+import Account from "../pages/Account/Account";
 import Table from "../pages/Test/Table";
 import HpAddUser from "../pages/healthplan/AddUser";
 import HpEditUser from "../pages/healthplan/EditUser";

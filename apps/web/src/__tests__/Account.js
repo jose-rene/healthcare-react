@@ -1,22 +1,33 @@
-import AsyncStorage from '@react-native-community/async-storage';
-import '@testing-library/jest-dom';
-import { generate as generateRandomString } from 'randomstring';
-import React from 'react';
-import { AUTH_TOKEN_NAME } from '../config/URLs';
-import Account from '../pages/Account';
-import { axiosMock, profileResponse, renderWithRouter, screen } from '../testUtils';
-import { notificationResponse } from './AlertList';
+import AsyncStorage from "@react-native-community/async-storage";
+import "@testing-library/jest-dom";
+import { generate as generateRandomString } from "randomstring";
+import React from "react";
+import { AUTH_TOKEN_NAME } from "../config/URLs";
+import Account from "../pages/Account/Account";
+import {
+    axiosMock,
+    profileResponse,
+    renderWithRouter,
+    screen,
+} from "../testUtils";
+import { notificationResponse } from "./AlertList";
 
-describe('My Account Page', () => {
+describe("My Account Page", () => {
     const authToken = generateRandomString({
         length: 24,
-        charset: 'alphanumeric',
+        charset: "alphanumeric",
     });
-    it('can render with redux state defaults', async () => {
+    it("can render with redux state defaults", async () => {
         await AsyncStorage.setItem(AUTH_TOKEN_NAME, authToken);
-        axiosMock().onGet(/profile/).reply(200, profileResponse).onGet(/inspire/).reply(200, {
-            message: 'Fly a kite in a thunderstorm. - Benjamin Franklin',
-        }).onGet(/notifications/).reply(200, notificationResponse);
+        axiosMock()
+            .onGet(/profile/)
+            .reply(200, profileResponse)
+            .onGet(/inspire/)
+            .reply(200, {
+                message: "Fly a kite in a thunderstorm. - Benjamin Franklin",
+            })
+            .onGet(/notifications/)
+            .reply(200, notificationResponse);
         // render with redux
         renderWithRouter(<Account />, {
             user: {
@@ -34,9 +45,13 @@ describe('My Account Page', () => {
     });
     it("links to main dashboard", async () => {
         await AsyncStorage.setItem(AUTH_TOKEN_NAME, authToken);
-        axiosMock().onGet(/profile/).reply(200, profileResponse).onGet(/inspire/).reply(200, {
-            message: 'Fly a kite in a thunderstorm. - Benjamin Franklin',
-        });
+        axiosMock()
+            .onGet(/profile/)
+            .reply(200, profileResponse)
+            .onGet(/inspire/)
+            .reply(200, {
+                message: "Fly a kite in a thunderstorm. - Benjamin Franklin",
+            });
         // render with redux
         renderWithRouter(<Account />, {
             user: {

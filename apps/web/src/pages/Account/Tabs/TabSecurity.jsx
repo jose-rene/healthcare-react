@@ -1,10 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { Col, Row } from "react-bootstrap";
-import InputText from "../../components/inputs/InputText";
-import Button from "../../components/inputs/Button";
+import InputText from "../../../components/inputs/InputText";
+import Button from "../../../components/inputs/Button";
 
-const TabSecurity = () => {
+const TabSecurity = ({ currentUser }) => {
+    const { email } = currentUser;
+
+    const { errors, register } = useForm();
+
     return (
         <Row>
             <Col lg={8}>
@@ -35,6 +39,25 @@ const TabSecurity = () => {
 
                         <Col lg={6}>
                             <InputText
+                                name="email"
+                                label="Email"
+                                type="email"
+                                value={email}
+                                errors={errors}
+                                ref={register({
+                                    pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        message:
+                                            "Please enter a valid email address",
+                                    },
+                                })}
+                            />
+                        </Col>
+
+                        <Col lg={6} />
+
+                        <Col lg={6}>
+                            <InputText
                                 type="password"
                                 label="Current Password"
                             />
@@ -57,7 +80,11 @@ const TabSecurity = () => {
 
                         <Col lg={12} style={{ textAlign: "center" }}>
                             <Button label="Cancel" variant="cancel" />
-                            <Button label="Change Password" variant="primary" className="ml-3" />
+                            <Button
+                                label="Change Password"
+                                variant="primary"
+                                className="ml-3"
+                            />
                         </Col>
                     </Row>
                 </div>

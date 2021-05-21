@@ -74,7 +74,7 @@ class UserTest extends TestCase
     {
         // create a condition where the user will be required to change their password
         $this->admin->reset_password = false;
-        $this->admin->created_at     = Carbon::now()->subYears(2); // 2 years since they registered
+        $this->admin->created_at = Carbon::now()->subYears(2); // 2 years since they registered
         $this->admin->save();
 
         // as old as the created user is this should set the reset_password to true
@@ -101,7 +101,7 @@ class UserTest extends TestCase
     public function testRequirePasswordResetUserWithHistory()
     {
         // create a condition where the user will be required to change their password
-        $this->admin->reset_password = false;// 2 years since they registered
+        $this->admin->reset_password = false; // 2 years since they registered
         $this->admin->save();
         $this->admin->password_history()->create(
             [
@@ -109,7 +109,7 @@ class UserTest extends TestCase
             ]
         );
 
-        $ph             = $this->admin->password_history->first();
+        $ph = $this->admin->password_history->first();
         $ph->created_at = Carbon::now()->subYears(2);
         $ph->save();
 
@@ -398,7 +398,7 @@ class UserTest extends TestCase
         $profileImage = UploadedFile::fake()->create('someProfileImage.png', 1001, 'image/png');
 
         // Make sure I can upload the file
-        $response = $this->put(route('api.user.profile.image.save'), [
+        $response = $this->post(route('api.user.profile.image.save'), [
             'name'      => 'someProfileImage.png',
             'mime_type' => 'image/png',
             'file'      => $profileImage,
