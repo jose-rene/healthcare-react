@@ -60,7 +60,7 @@ class UserTest extends TestCase
         // will have the field gitlab_name for an engineering user
         $response
             ->assertOk()
-            ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'gitlab_name', 'roles']);
+            ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'gitlab_name', 'roles', 'abilities', 'two_factor_options']);
 
         $this->assertEquals($this->user->email, $response->json('email'));
     }
@@ -229,9 +229,10 @@ class UserTest extends TestCase
             $this->admin
         );
         $formData = [
-            'first_name' => $this->faker->firstName,
-            'last_name'  => $this->faker->lastName,
-            'phone'      => $this->faker->phoneNumber,
+            'first_name'        => $this->faker->firstName,
+            'last_name'         => $this->faker->lastName,
+            'phone'             => $this->faker->phoneNumber,
+            'two_factor_method' => 'app',
         ];
         // update user with data
         $response = $this->put('/v1/user/' . $this->user->uuid, $formData);

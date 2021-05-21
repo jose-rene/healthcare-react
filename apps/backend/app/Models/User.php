@@ -100,6 +100,7 @@ class User extends Authenticatable implements MustVerifyEmail
         1 => 'EngineeringUser',
         2 => 'HealthPlanUser',
         3 => 'ClinicalServicesUser',
+        4 => 'BusinessOperationsUser',
     ];
 
     protected $searchable = [
@@ -267,6 +268,28 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return ucwords(Str::snake(str_replace('User', '', $name), ' '));
+    }
+
+    /**
+     * Returns the domain of the user type class.
+     *
+     * @return string
+     */
+    public function getTwoFactorOptionsAttribute()
+    {
+        switch ($this->user_type) {
+            case 2: // health plan
+                $methods = ['email'];
+                break;
+            case 1: // engineering
+                $methods = ['app'];
+                break;
+            default: // all others
+                $methods = ['app', 'sms'];
+                break;
+        }
+
+        return $methods;
     }
 
     public function getAuthTokens($remember_me = false)
