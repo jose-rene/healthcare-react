@@ -23,6 +23,7 @@ const RequestLookup = () => {
     });
 
     const [statusOptions] = useState([
+        { id: "all", value: "0", title: "All" },
         { id: "received", value: "1", title: "Received" },
         { id: "assigned", value: "2", title: "Assigned" },
         { id: "scheduled", value: "3", title: "Scheduled" },
