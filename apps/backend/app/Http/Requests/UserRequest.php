@@ -7,6 +7,7 @@ use Bouncer;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class UserRequest extends FormRequest
 {
@@ -33,6 +34,7 @@ class UserRequest extends FormRequest
             'last_name'         => ['bail', 'required', 'min:1'],
             'phone'             => ['min:10'],
             'job_title'         => ['min:2'],
+            'two_factor_method' => Rule::in(auth()->user()->two_factor_options),
             'can_view_invoices' => ['boolean', 'nullable'],
             'can_view_reports'  => ['boolean', 'nullable'],
             'can_create_users'  => ['boolean', 'nullable'],

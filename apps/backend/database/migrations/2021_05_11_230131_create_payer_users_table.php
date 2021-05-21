@@ -19,6 +19,7 @@ class CreatePayerUsersTable extends Migration
             $table->string('title')->comment('job title');
             $table->foreignId('payer_id')->comment('id of parent payer');
             $table->foreignId('user_id')->comment('id of related user record');
+            $table->string('job_title')->default('')->comment('The job title of the user');
             $table->boolean('is_locked')->comment('prevented from entering new requests');
             $table->boolean('is_test')->comment('test record');
 
