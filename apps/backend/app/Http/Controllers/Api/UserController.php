@@ -474,6 +474,10 @@ class UserController extends Controller
     {
         $user = auth()->user();
 
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+        ]);
+
         $file = $request->file('file');
 
         $profileImage = $user->profileImage()->updateOrCreate([
@@ -495,10 +499,12 @@ class UserController extends Controller
 
         if ($request->has('id')) {
             $passed = auth()->user()->can($request->get('ability'), $request->get('id'));
+
             return response()->json(compact('passed'));
         }
 
         $passed = auth()->user()->can($request->get('ability'));
+
         return response()->json(compact('passed'));
     }
 }

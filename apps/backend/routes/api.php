@@ -29,7 +29,7 @@ Route::middleware('auth:api')->group(function ($router) {
     // user routes
     $router->get('/user/profile', 'UserController@profile');
     $router->put('/user/profile', 'UserController@profileSave');
-    $router->put('/user/profile-image', 'UserController@profileImageSave')->name('user.profile.image.save');
+    $router->post('/user/profile-image', 'UserController@profileImageSave')->name('user.profile.image.save');
     $router->put('/user/password', 'PasswordController@authedChangePassword');
 
     $router->post('/member/search', 'MemberController@search')->middleware('can:viewAny,' . Member::class);
