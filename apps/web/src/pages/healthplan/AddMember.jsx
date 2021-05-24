@@ -565,7 +565,7 @@ const AddMember = () => {
 
                             {renderContactMethod()}
 
-                            <div className="col-md-12 mb-5">
+                            <div className="col-md-12 mb-3">
                                 <Button
                                     className="btn btn-block btn-add-method"
                                     onClick={() => addNewContactMethod()}
@@ -574,7 +574,7 @@ const AddMember = () => {
                                 </Button>
                             </div>
 
-                            <div className="white-box">
+                            <div className="col-md-12">
                                 {formError ? (
                                     <PageAlert
                                         className="mt-3"
