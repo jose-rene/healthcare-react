@@ -547,12 +547,10 @@ const AddMember = () => {
                             <div className="col-md-6">
                                 <Select
                                     name="county"
-                                    label="County*"
+                                    label="County"
                                     options={countyOptions}
                                     errors={errors}
-                                    ref={register({
-                                        required: "County is required",
-                                    })}
+                                    ref={register()}
                                 />
                             </div>
 
