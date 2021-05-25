@@ -101,7 +101,10 @@ const SearchMember = (props) => {
     };
 
     const handleAddMember = () => {
-        props.history.push("/healthplan/addmember");
+        props.history.push({
+            pathname: "/healthplan/addmember",
+            state: searchObj,
+        });
     };
 
     const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(

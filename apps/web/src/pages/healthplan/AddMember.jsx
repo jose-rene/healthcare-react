@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useHistory } from "react-router";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
@@ -10,6 +9,7 @@ import PageLayout from "../../layouts/PageLayout";
 import Select from "../../components/inputs/Select";
 import InputText from "../../components/inputs/InputText";
 import FormButtons from "../../components/elements/FormButtons";
+import Icon from "../../components/elements/Icon";
 import useApiCall from "../../hooks/useApiCall";
 import { BASE_URL, API_KEY } from "../../config/Map";
 import states from "../../config/States.json";
@@ -19,10 +19,13 @@ import titles from "../../config/Titles.json";
 import "../../styles/home.scss";
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-const AddMember = () => {
-    const history = useHistory();
+const AddMember = (props) => {
+    const { first_name, last_name, dob } = props.history.location.state;
 
-    const [{ data: payerProfile }, payerProfileRequest] = useApiCall({
+    const [
+        { data: payerProfile, loading: pageLoading },
+        payerProfileRequest,
+    ] = useApiCall({
         url: "payer/profile",
     });
 
@@ -33,7 +36,7 @@ const AddMember = () => {
 
     useEffect(() => {
         if (!isEmpty(data)) {
-            history.push(`/member/${data.id}/request/add`);
+            props.history.push(`/member/${data.id}/request/add`);
         }
     }, [data]);
 
@@ -299,303 +302,317 @@ const AddMember = () => {
                     with the new request. Fields marked with * are required
                 </p>
 
-                <div className="white-box">
-                    {member ? (
-                        <PageAlert
-                            className="mt-3"
-                            variant="success"
-                            timeout={5000}
-                            dismissible
-                        >
-                            Member Successfully Added.
-                        </PageAlert>
-                    ) : null}
-                    <Form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="form-row">
-                            {planOptions.length > 0 ? (
-                                <>
-                                    <div className="col-md-6">
-                                        <Select
-                                            name="plan"
-                                            label="Plan*"
-                                            options={planOptions}
-                                            errors={errors}
-                                            ref={register({
-                                                required: "Plan is required",
-                                            })}
-                                        />
-                                    </div>
+                {pageLoading ? (
+                    <div className="d-flex justify-content-center">
+                        <Icon icon="spinner" />
+                    </div>
+                ) : (
+                    <div className="white-box">
+                        {member ? (
+                            <PageAlert
+                                className="mt-3"
+                                variant="success"
+                                timeout={5000}
+                                dismissible
+                            >
+                                Member Successfully Added.
+                            </PageAlert>
+                        ) : null}
+                        <Form onSubmit={handleSubmit(onSubmit)}>
+                            <div className="form-row">
+                                {planOptions.length > 0 ? (
+                                    <>
+                                        <div className="col-md-6">
+                                            <Select
+                                                name="plan"
+                                                label="Plan*"
+                                                options={planOptions}
+                                                errors={errors}
+                                                ref={register({
+                                                    required:
+                                                        "Plan is required",
+                                                })}
+                                            />
+                                        </div>
 
-                                    <div className="col-md-6" />
-                                </>
-                            ) : (
-                                <InputText
-                                    hidden
-                                    name="plan"
-                                    value={payerProfile.id || ""}
-                                    readOnly
-                                />
-                            )}
+                                        <div className="col-md-6" />
+                                    </>
+                                ) : (
+                                    <InputText
+                                        hidden
+                                        name="plan"
+                                        value={payerProfile.id || ""}
+                                        readOnly
+                                    />
+                                )}
 
-                            <div className="col-md-12">
-                                <h1
-                                    className="box-outside-title title-second"
-                                    style={{ marginBottom: "32px" }}
-                                >
-                                    Member Identification Info
-                                </h1>
-                            </div>
+                                <div className="col-md-12">
+                                    <h1
+                                        className="box-outside-title title-second"
+                                        style={{ marginBottom: "32px" }}
+                                    >
+                                        Member Identification Info
+                                    </h1>
+                                </div>
 
-                            <div className="col-md-6">
-                                <InputText
-                                    name="member_number"
-                                    label="Member ID*"
-                                    errors={errors}
-                                    ref={register({
-                                        required: "Member ID is required",
-                                    })}
-                                />
-                            </div>
+                                <div className="col-md-6">
+                                    <InputText
+                                        name="member_number"
+                                        label="Member ID*"
+                                        errors={errors}
+                                        ref={register({
+                                            required: "Member ID is required",
+                                        })}
+                                    />
+                                </div>
 
-                            <div className="col-md-6">
-                                <Select
-                                    name="member_number_type"
-                                    label="Member ID Type*"
-                                    options={memberNumberTypesOptions}
-                                    errors={errors}
-                                    ref={register({
-                                        required: "Member ID Type is required",
-                                    })}
-                                />
-                            </div>
+                                <div className="col-md-6">
+                                    <Select
+                                        name="member_number_type"
+                                        label="Member ID Type*"
+                                        options={memberNumberTypesOptions}
+                                        errors={errors}
+                                        ref={register({
+                                            required:
+                                                "Member ID Type is required",
+                                        })}
+                                    />
+                                </div>
 
-                            <div className="col-md-6">
-                                <Select
-                                    name="line_of_business"
-                                    label="Line of Business*"
-                                    options={lobOptions}
-                                    errors={errors}
-                                    ref={register({
-                                        required:
-                                            "Line of Business is required",
-                                    })}
-                                />
-                            </div>
+                                <div className="col-md-6">
+                                    <Select
+                                        name="line_of_business"
+                                        label="Line of Business*"
+                                        options={lobOptions}
+                                        errors={errors}
+                                        ref={register({
+                                            required:
+                                                "Line of Business is required",
+                                        })}
+                                    />
+                                </div>
 
-                            <div className="col-md-12">
-                                <h1
-                                    className="box-outside-title title-second"
-                                    style={{ marginBottom: "32px" }}
-                                >
-                                    Basic Info
-                                </h1>
-                            </div>
+                                <div className="col-md-12">
+                                    <h1
+                                        className="box-outside-title title-second"
+                                        style={{ marginBottom: "32px" }}
+                                    >
+                                        Basic Info
+                                    </h1>
+                                </div>
 
-                            <div className="col-md-6">
-                                <Select
-                                    name="title"
-                                    label="Title*"
-                                    options={titlesOptions}
-                                    errors={errors}
-                                    ref={register({
-                                        required: "Title is required",
-                                    })}
-                                />
-                            </div>
+                                <div className="col-md-6">
+                                    <Select
+                                        name="title"
+                                        label="Title*"
+                                        options={titlesOptions}
+                                        errors={errors}
+                                        ref={register({
+                                            required: "Title is required",
+                                        })}
+                                    />
+                                </div>
 
-                            <div className="col-md-6">
-                                <InputText
-                                    name="dob"
-                                    label="Date of Birth*"
-                                    type="date"
-                                    errors={errors}
-                                    ref={register({
-                                        required: "Date of Birth is required",
-                                    })}
-                                />
-                            </div>
+                                <div className="col-md-6">
+                                    <InputText
+                                        name="dob"
+                                        label="Date of Birth*"
+                                        defaultValue={dob}
+                                        type="date"
+                                        errors={errors}
+                                        ref={register({
+                                            required:
+                                                "Date of Birth is required",
+                                        })}
+                                    />
+                                </div>
 
-                            <div className="col-md-6">
-                                <InputText
-                                    name="first_name"
-                                    label="First Name*"
-                                    errors={errors}
-                                    ref={register({
-                                        required: "First Name is required",
-                                    })}
-                                />
-                            </div>
+                                <div className="col-md-6">
+                                    <InputText
+                                        name="first_name"
+                                        defaultValue={first_name}
+                                        label="First Name*"
+                                        errors={errors}
+                                        ref={register({
+                                            required: "First Name is required",
+                                        })}
+                                    />
+                                </div>
 
-                            <div className="col-md-6">
-                                <InputText
-                                    name="last_name"
-                                    label="Last Name*"
-                                    errors={errors}
-                                    ref={register({
-                                        required: "Last Name is required",
-                                    })}
-                                />
-                            </div>
+                                <div className="col-md-6">
+                                    <InputText
+                                        name="last_name"
+                                        label="Last Name*"
+                                        defaultValue={last_name}
+                                        errors={errors}
+                                        ref={register({
+                                            required: "Last Name is required",
+                                        })}
+                                    />
+                                </div>
 
-                            <div className="col-md-6">
-                                <Select
-                                    name="gender"
-                                    label="Gender*"
-                                    options={[
-                                        {
-                                            id: "male",
-                                            title: "Male",
-                                            val: "male",
-                                        },
-                                        {
-                                            id: "female",
-                                            title: "Female",
-                                            val: "female",
-                                        },
-                                    ]}
-                                    errors={errors}
-                                    ref={register({
-                                        required: "Gender is required",
-                                    })}
-                                />
-                            </div>
+                                <div className="col-md-6">
+                                    <Select
+                                        name="gender"
+                                        label="Gender*"
+                                        options={[
+                                            {
+                                                id: "male",
+                                                title: "Male",
+                                                val: "male",
+                                            },
+                                            {
+                                                id: "female",
+                                                title: "Female",
+                                                val: "female",
+                                            },
+                                        ]}
+                                        errors={errors}
+                                        ref={register({
+                                            required: "Gender is required",
+                                        })}
+                                    />
+                                </div>
 
-                            <div className="col-md-6">
-                                <Select
-                                    name="language"
-                                    label="Language*"
-                                    options={languageOptions}
-                                    errors={errors}
-                                    ref={register({
-                                        required: "Language is required",
-                                    })}
-                                />
-                            </div>
+                                <div className="col-md-6">
+                                    <Select
+                                        name="language"
+                                        label="Language*"
+                                        options={languageOptions}
+                                        errors={errors}
+                                        ref={register({
+                                            required: "Language is required",
+                                        })}
+                                    />
+                                </div>
 
-                            <div className="col-md-12">
-                                <InputText
-                                    name="address_1"
-                                    label="Address 1*"
-                                    errors={errors}
-                                    ref={register({
-                                        required: "Address 1 is required",
-                                    })}
-                                />
-                            </div>
+                                <div className="col-md-12">
+                                    <InputText
+                                        name="address_1"
+                                        label="Address 1*"
+                                        errors={errors}
+                                        ref={register({
+                                            required: "Address 1 is required",
+                                        })}
+                                    />
+                                </div>
 
-                            <div className="col-md-12">
-                                <InputText
-                                    name="address_2"
-                                    label="Address 2"
-                                    errors={errors}
-                                    ref={register()}
-                                />
-                            </div>
+                                <div className="col-md-12">
+                                    <InputText
+                                        name="address_2"
+                                        label="Address 2"
+                                        errors={errors}
+                                        ref={register()}
+                                    />
+                                </div>
 
-                            {alertMessage && (
-                                <PageAlert className="text-muted">
-                                    {alertMessage}
-                                </PageAlert>
-                            )}
+                                {alertMessage && (
+                                    <PageAlert className="text-muted">
+                                        {alertMessage}
+                                    </PageAlert>
+                                )}
 
-                            <div className="col-md-12">
-                                <div className="form-row">
-                                    <div className="col-md-6">
-                                        <InputText
-                                            name="postal_code"
-                                            label="Zip*"
-                                            errors={errors}
-                                            ref={register({
-                                                required: "Zip is required",
-                                            })}
-                                        />
-                                    </div>
+                                <div className="col-md-12">
+                                    <div className="form-row">
+                                        <div className="col-md-6">
+                                            <InputText
+                                                name="postal_code"
+                                                label="Zip*"
+                                                errors={errors}
+                                                ref={register({
+                                                    required: "Zip is required",
+                                                })}
+                                            />
+                                        </div>
 
-                                    <div className="col-md-4">
-                                        <Button
-                                            className="btn btn-block btn-zip"
-                                            onClick={() => handleLookupZip()}
-                                        >
-                                            Lookup Zip
-                                        </Button>
+                                        <div className="col-md-4">
+                                            <Button
+                                                className="btn btn-block btn-zip"
+                                                onClick={() =>
+                                                    handleLookupZip()
+                                                }
+                                            >
+                                                Lookup Zip
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="col-md-6">
-                                <InputText
-                                    name="city"
-                                    label="City*"
-                                    errors={errors}
-                                    ref={register({
-                                        required: "City is required",
-                                    })}
-                                />
-                            </div>
+                                <div className="col-md-6">
+                                    <InputText
+                                        name="city"
+                                        label="City*"
+                                        errors={errors}
+                                        ref={register({
+                                            required: "City is required",
+                                        })}
+                                    />
+                                </div>
 
-                            <div className="col-md-6">
-                                <Select
-                                    name="state"
-                                    label="State*"
-                                    options={statesOptions}
-                                    errors={errors}
-                                    ref={register({
-                                        required: "State is required",
-                                    })}
-                                />
-                            </div>
+                                <div className="col-md-6">
+                                    <Select
+                                        name="state"
+                                        label="State*"
+                                        options={statesOptions}
+                                        errors={errors}
+                                        ref={register({
+                                            required: "State is required",
+                                        })}
+                                    />
+                                </div>
 
-                            <div className="col-md-6">
-                                <Select
-                                    name="county"
-                                    label="County"
-                                    options={countyOptions}
-                                    errors={errors}
-                                    ref={register()}
-                                />
-                            </div>
+                                <div className="col-md-6">
+                                    <Select
+                                        name="county"
+                                        label="County"
+                                        options={countyOptions}
+                                        errors={errors}
+                                        ref={register()}
+                                    />
+                                </div>
 
-                            <div className="col-md-12">
-                                <h1
-                                    className="box-outside-title title-second"
-                                    style={{ marginBottom: "32px" }}
-                                >
-                                    Contact Methods
-                                </h1>
-                            </div>
-
-                            {renderContactMethod()}
-
-                            <div className="col-md-12 mb-3">
-                                <Button
-                                    className="btn btn-block btn-add-method"
-                                    onClick={() => addNewContactMethod()}
-                                >
-                                    + Add new contact method
-                                </Button>
-                            </div>
-
-                            <div className="col-md-12">
-                                {formError ? (
-                                    <PageAlert
-                                        className="mt-3"
-                                        variant="warning"
-                                        timeout={5000}
-                                        dismissible
+                                <div className="col-md-12">
+                                    <h1
+                                        className="box-outside-title title-second"
+                                        style={{ marginBottom: "32px" }}
                                     >
-                                        Error: {formError}
-                                    </PageAlert>
-                                ) : null}
-                            </div>
+                                        Contact Methods
+                                    </h1>
+                                </div>
 
-                            <div className="col-md-12">
-                                <FormButtons
-                                    submitLabel="Create New Request"
-                                    onCancel={onCancel}
-                                />
+                                {renderContactMethod()}
+
+                                <div className="col-md-12 mb-3">
+                                    <Button
+                                        className="btn btn-block btn-add-method"
+                                        onClick={() => addNewContactMethod()}
+                                    >
+                                        + Add new contact method
+                                    </Button>
+                                </div>
+
+                                <div className="col-md-12">
+                                    {formError ? (
+                                        <PageAlert
+                                            className="mt-3"
+                                            variant="warning"
+                                            timeout={5000}
+                                            dismissible
+                                        >
+                                            Error: {formError}
+                                        </PageAlert>
+                                    ) : null}
+                                </div>
+
+                                <div className="col-md-12">
+                                    <FormButtons
+                                        submitLabel="Create New Request"
+                                        onCancel={onCancel}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    </Form>
-                </div>
+                        </Form>
+                    </div>
+                )}
             </div>
         </PageLayout>
     );
