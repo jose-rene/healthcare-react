@@ -42,6 +42,7 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property HealthPlanUser  healthPlanUser
  * @property Image           profileImage
  * @property mixed           avatar
+ * @property Payer|null      payer
  * @link https://github.com/JosephSilber/bouncer#cheat-sheet
  */
 class User extends Authenticatable implements MustVerifyEmail

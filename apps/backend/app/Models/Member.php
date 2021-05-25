@@ -178,7 +178,7 @@ class Member extends Model
             $authedUser = auth()->user();
         }
 
-        if (1 !== $authedUser->user_type) {
+        if ($authedUser->cannot('admin:search') && 1 !== $authedUser->user_type) {
             // limit search to their own plan
             if (!$authedUser->payer) {
                 return null;
