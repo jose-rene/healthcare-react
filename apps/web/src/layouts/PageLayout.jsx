@@ -103,7 +103,7 @@ const PageLayout = ({
                         data-testid="userinfo"
                         alignRight
                         id="user-options"
-                        title={(
+                        title={
                             <>
                                 <img
                                     alt="Me"
@@ -111,9 +111,48 @@ const PageLayout = ({
                                     src={avatar_url || "/images/icons/user.png"}
                                 />
                                 {full_name}
-                            </>)}
+                            </>
+                        }
                     >
                         <NavDropdown.ItemText>{email}</NavDropdown.ItemText>
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item>
+                            <div className="d-flex align-items-center">
+                                <Icon
+                                    icon="user"
+                                    size="1x"
+                                    className="header-icon"
+                                />
+                                <a
+                                    href="#"
+                                    onClick={() =>
+                                        console.log("Manage Account!")
+                                    }
+                                    className="dropdown-item pl-0"
+                                    title="Manage Account"
+                                >
+                                    Manage Account
+                                </a>
+                            </div>
+                        </NavDropdown.Item>
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item>
+                            <div className="d-flex align-items-center">
+                                <Icon
+                                    icon="cog"
+                                    size="1x"
+                                    className="header-icon"
+                                />
+                                <a
+                                    href="#"
+                                    onClick={() => console.log("Settings!")}
+                                    className="dropdown-item pl-0"
+                                    title="Settings"
+                                >
+                                    Settings
+                                </a>
+                            </div>
+                        </NavDropdown.Item>
                         <NavDropdown.Divider />
                         {roles && roles.length > 1 && (
                             <>
