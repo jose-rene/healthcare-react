@@ -25,12 +25,11 @@ class RequestFactory extends Factory
     public function definition()
     {
         return [
-            'status'      => '',
             'auth_number' => Str::random(13),
             'member_id'   => function () {
                 return Member::factory()->create();
             },
-            'payer_id'    => fn() => Payer::factory()->create(),
+            'payer_id' => fn () => Payer::factory()->create(),
         ];
     }
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import PageLayout from "../../layouts/PageLayout";
 import InputText from "../../components/inputs/InputText";
 import Button from "../../components/inputs/Button";
@@ -7,7 +8,6 @@ import TableAPI from "../../components/elements/TableAPI";
 import useSearch from "../../hooks/useSearch";
 import useApiCall from "../../hooks/useApiCall";
 import Form from "../../components/elements/Form";
-import { Link } from "react-router-dom";
 import Icon from "../../components/elements/Icon";
 import { ACTIONS } from "../../helpers/table";
 
@@ -50,7 +50,7 @@ const RequestLookup = () => {
             type: String,
         },
         {
-            columnMap: "request_type_name",
+            columnMap: "request_items.0.name",
             label: "Type",
             type: String,
         },
@@ -58,12 +58,12 @@ const RequestLookup = () => {
             columnMap: "created_at",
             label: "Received",
             type: Date,
-            //formatter: date => moment(date).format('mm/dd/YYYY')
+            // formatter: date => moment(date).format('mm/dd/YYYY')
         },
         { columnMap: "due_at", label: "Schedule Date", type: String },
 
         // TODO :: DEV :: NOTE :: this will basically show the last status change
-        { columnMap: "activity", label: "Activity", type: String },
+        { columnMap: "activities.0.message", label: "Activity", type: String },
 
         // TODO :: DEV :: NOTE :: link to the narrative report (once it's completed)
         { columnMap: "report", label: "Report", type: String },

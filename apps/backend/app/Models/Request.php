@@ -7,6 +7,7 @@ use App\Http\SearchPipeline\RequestStatusId;
 use App\Models\Activity\Activity;
 use App\Models\Assessment\Assessment;
 use App\Traits\Revisionable;
+use App\Traits\Uuidable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pipeline\Pipeline;
-use Str;
 
 /**
  * @property Carbon      created_at
@@ -34,6 +34,7 @@ class Request extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use Uuidable;
     use Revisionable;
 
     public static $received = '1';
@@ -49,15 +50,6 @@ class Request extends Model
     protected $guarded = ['id'];
 
     protected $dates = ['due_at'];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->setAttribute('uuid', (string)Str::uuid());
-        });
-    }
 
     /**
      * Relationship to assessments.
@@ -189,12 +181,11 @@ class Request extends Model
 
     public function getStatusNameAttribute()
     {
-        return $this->requestStatus->name ?? '';
+        return $this->requestStatus ? $this->requestStatus->name : 'In Progress';
     }
 
     public function getMemberVerifiedAttribute()
     {
         return (bool) $this->member_verified_at;
     }
-
 }

@@ -17,13 +17,11 @@ class AssessmentSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(UserSeeder::class);
         $this->call(QuestionnaireSeeder::class);
         $this->call(RequestSeeder::class);
         $title = 'Favorites Assessment';
-
         Assessment::firstOrCreate(['id' => 1], [
-            'request_id'       => Request::firstWhere(['id' => 1])->id,
+            'request_id'       => Request::latest()->first(),
             'questionnaire_id' => Questionnaire::firstWhere(['title' => $title])->id,
             'user_id'          => User::firstWhere(['email' => 'Skylar.Langdon@dme-cg.com'])->id,
         ]);
