@@ -35,7 +35,9 @@ Route::middleware(['api'])->group(function ($router) {
 });
 
 Route::get('/image/{image}/request/{name}', [ImageController::class, 'show'])->name('image.show');
-Route::get('/image/{user}/profile/{user_name}', [ImageController::class, 'profileImageShow'])->name('profile.image.show');
+Route::get('/image/{user}/profile/{user_name}',
+    [ImageController::class, 'profileImageShow'])->name('profile.image.show');
+Route::get('/image/{payer}/avatar.png', [ImageController::class, 'payerAvatarShow'])->name('payer.avatar.show');
 
 Route::middleware('auth:api')->group(function ($router) {
     $router->get('/image/me', function (Request $request) {

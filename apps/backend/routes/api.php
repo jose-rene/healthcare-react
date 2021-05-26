@@ -46,12 +46,15 @@ Route::middleware('auth:api')->group(function ($router) {
 //    $router->get('/request/types', [RequestTypesController::class, 'index'])->name('request.types.index');
 //    $router->get('/requesttype', 'RequestTypeController@index')->name('requesttypes.index');
 
+    // Payer
+    $router->put('/payer/avatar', 'Payercontroller@avatarSave');
+
     // protected crud routes
     Route::apiResource('questionnaire', 'QuestionnaireController');
     Route::apiResource('assessment', 'AssessmentController');
     Route::apiResource('request', 'RequestController');
     Route::apiResource('member', 'MemberController');
-    Route::apiResource('payer', 'PayerController');
+    Route::apiResource('payer', 'PayerController')->except(['store', 'update', 'destroy']);
     Route::apiResource('member.member-requests', 'MemberRequestController')->only('store', 'show', 'update');
     Route::apiResource('member-request.request-item', 'RequestRequestItemController')->only('store', 'show', 'update');
     Route::apiResource('activity', 'ActivityController');
