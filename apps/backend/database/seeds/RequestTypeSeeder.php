@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Payer;
 use App\Models\RequestType;
-use App\Models\RequestTypeDetail;
 use Illuminate\Database\Seeder;
 
 class RequestTypeSeeder extends Seeder

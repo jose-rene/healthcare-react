@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Http\Requests\MemberRequest;
 use App\Models\Request;
 use App\Models\RequestItem;
+use App\Models\RequestStatus;
 use App\Models\RequestTypeDetail;
 use Carbon\Carbon;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -80,9 +81,7 @@ class RequestSectionSaveJob
 
         if (request('is_last', false) === true) {
             // if this is the last section mark the request as received.
-            $request->update([
-                'request_status_id' => Request::$received,
-            ]);
+            $request->requestStatus()->associate(RequestStatus::find(1))->save();
         }
     }
 
@@ -205,7 +204,7 @@ class RequestSectionSaveJob
         }
         // dd($requestTypes);
         // see if the request item exists, add id
-        $requestTypes = collect($requestTypes)->map(fn ($item) => [
+        $requestItems = collect($requestTypes)->map(fn ($item) => [
             'id' => ($first = RequestItem::firstWhere([
                 'request_id'      => $this->request->id,
                 'request_type_id' => $item['id'],
@@ -217,12 +216,12 @@ class RequestSectionSaveJob
         // sync request items
         $this->request
             ->requestItems()
-            ->sync($requestTypes->toArray());
+            ->sync($requestItems->toArray());
         // refresh to reload relationships
         $this->request->refresh();
         // sync the associated request type details for each request item
         $this->request->requestItems
-            ->each(fn ($detail) => $detail->requestTypeDetails()->sync($requestTypeDetails[$detail['request_type_id']]));
+            ->each(fn ($item) => $item->requestTypeDetails()->sync($requestTypeDetails[$item['request_type_id']]));
         $this->request->refresh();
     }
 

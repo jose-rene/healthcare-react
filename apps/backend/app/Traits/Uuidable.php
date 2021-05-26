@@ -2,14 +2,12 @@
 
 namespace App\Traits;
 
-use Str;
+use Illuminate\Support\Str;
 
 trait Uuidable
 {
-    protected static function boot()
+    protected static function bootUuidable()
     {
-        parent::boot();
-
         static::creating(function ($model) {
             $model->setAttribute('uuid', (string) Str::uuid());
         });
