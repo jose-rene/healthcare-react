@@ -15,7 +15,13 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Gryphon'),
+
+    'avatar_font_color' => '#475866',
+    'avatar_back_color' => '#f5f9fc',
+    'avatar_width'      => 250,
+    'avatar_height'     => 250,
+    'avatar_image_type' => 'png',
 
     /*
     |--------------------------------------------------------------------------

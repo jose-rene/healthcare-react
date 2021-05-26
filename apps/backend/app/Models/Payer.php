@@ -13,11 +13,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pipeline\Pipeline;
+use LasseRafn\InitialAvatarGenerator\InitialAvatar;
 
 /**
  * Class Payer
  * @package App\Models
  * @property TrainingDocument trainingDocuments
+ * @property mixed            avatar
+ * @property string           name
  */
 class Payer extends Model
 {
@@ -75,6 +78,32 @@ class Payer extends Model
     public function addresses()
     {
         return $this->morphMany(Address::class, 'addressable');
+    }
+
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+    public function getAvatarAttribute()
+    {
+        $image = $this->image;
+
+        if ($image && $image->fileExists) {
+            return $image->file;
+        }
+
+        $avatar = new InitialAvatar();
+
+        return $avatar
+            ->name($this->name)
+            ->color(config('app.avatar_font_color'))
+            ->background(config('app.avatar_back_color'))
+            ->height(config('app.avatar_height'))
+            ->width(config('app.avatar_width'))
+            ->preferBold()
+            ->generate()
+            ->stream(config('app.avatar_image_type'));
     }
 
     /**

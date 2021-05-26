@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ImageResource;
 use App\Http\Resources\PayerResource;
 use App\Models\Payer;
 use Illuminate\Http\Request;
@@ -75,27 +76,6 @@ class PayerController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param Payer $payer
@@ -106,37 +86,24 @@ class PayerController extends Controller
         return new PayerResource($payer);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Payer $payer
-     * @return Response
-     */
-    public function edit(Payer $payer)
+    public function avatarSave(Request $request, Payer $payer)
     {
-        //
-    }
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param Payer   $payer
-     * @return Response
-     */
-    public function update(Request $request, Payer $payer)
-    {
-        //
-    }
+        $file = $request->file('file');
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Payer $payer
-     * @return Response
-     */
-    public function destroy(Payer $payer)
-    {
-        //
+        // attach this image to this payer
+        $avatar = $payer->image()->updateOrCreate([
+            'name'      => $file->getClientOriginalName(),
+            'mime_type' => $file->getMimeType(),
+        ]);
+
+        // upload the file to the storage
+        $avatar->file = $request->file('file');
+        $avatar->save();
+
+        return new ImageResource($avatar);
     }
 }

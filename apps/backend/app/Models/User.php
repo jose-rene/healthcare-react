@@ -165,13 +165,13 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $avatar
             ->name($this->name)
-            ->background('#f5f9fc')
-            ->color('#475866')
+            ->color(config('app.avatar_font_color'))
+            ->background(config('app.avatar_back_color'))
+            ->height(config('avatar_height'))
+            ->width(config('avatar_width'))
             ->preferBold()
-            ->height(250)
-            ->width(250)
             ->generate()
-            ->stream('png');
+            ->stream(config('app.avatar_image_type'));
     }
 
     public function getAvatarUrlAttribute()
