@@ -37,6 +37,7 @@ const RequestLookup = () => {
 
     const [headers] = useState([
         { columnMap: "member.name", label: "Name", type: String },
+        { columnMap: "auth_number", label: "Auth ID", type: String },
         {
             columnMap: "request_status_id",
             formatter: (request_status_id) => {
@@ -64,15 +65,12 @@ const RequestLookup = () => {
 
         // TODO :: DEV :: NOTE :: this will basically show the last status change
         { columnMap: "activities.0.message", label: "Activity", type: String },
-
-        // TODO :: DEV :: NOTE :: link to the narrative report (once it's completed)
-        { columnMap: "report", label: "Report", type: String },
-
         {
             label: "Actions",
             columnMap: "member.id",
             type: ACTIONS,
             disableSortBy: true,
+            // need to update reports url if it is existed or not
             formatter(member_id, { id: request_id }) {
                 return (
                     <>
@@ -83,10 +81,13 @@ const RequestLookup = () => {
                             <Icon size="1x" icon="plus" />
                         </Link>
                         <Link
-                            className="pl-2"
+                            className="px-2"
                             to={`/member/${member_id}/request/${request_id}/edit`}
                         >
                             <Icon size="1x" icon="edit" />
+                        </Link>
+                        <Link className="pl-2" to="#">
+                            <Icon size="1x" icon="flag" />
                         </Link>
                     </>
                 );
@@ -204,7 +205,6 @@ const RequestLookup = () => {
                                             type="submit"
                                             disable={loading}
                                             className="btn btn-block btn-primary mb-md-3 py-2"
-                                            onClick={() => redoSearch()}
                                         >
                                             Search Requests
                                         </Button>
