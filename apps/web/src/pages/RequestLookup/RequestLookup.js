@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import PageLayout from "../../layouts/PageLayout";
 import InputText from "../../components/inputs/InputText";
@@ -10,8 +11,18 @@ import useApiCall from "../../hooks/useApiCall";
 import Form from "../../components/elements/Form";
 import Icon from "../../components/elements/Icon";
 import { ACTIONS } from "../../helpers/table";
+import { setSearch } from "../../actions/searchAction";
 
-const RequestLookup = () => {
+const RequestLookup = ({ search, setSearch }) => {
+    const {
+        auth_number,
+        date_range,
+        from_date,
+        to_date,
+        request_status_id,
+        member_id,
+    } = search;
+
     const [
         {
             loading,
@@ -113,10 +124,10 @@ const RequestLookup = () => {
 
     const redoSearch = async (params = searchObj) => {
         try {
-            console.log({ params });
             // need to implement api here
-            await fireDoSearch({ params });
+            setSearch(params);
             setSearchStatus(true);
+            await fireDoSearch({ params });
         } catch (e) {
             console.log(e);
         }
@@ -152,6 +163,7 @@ const RequestLookup = () => {
                                         <Select
                                             name="request_status_id"
                                             label="Status"
+                                            defaultValue={request_status_id}
                                             options={statusOptions}
                                             onChange={formUpdateSearchObj}
                                         />
@@ -161,6 +173,7 @@ const RequestLookup = () => {
                                         <InputText
                                             name="from_date"
                                             label="From Date"
+                                            defaultValue={from_date}
                                             type="date"
                                             onChange={formUpdateSearchObj}
                                         />
@@ -170,6 +183,7 @@ const RequestLookup = () => {
                                         <InputText
                                             name="to_date"
                                             label="To Date"
+                                            defaultValue={to_date}
                                             type="date"
                                             onChange={formUpdateSearchObj}
                                         />
@@ -179,6 +193,7 @@ const RequestLookup = () => {
                                         <Select
                                             name="date_range"
                                             label="Date Range"
+                                            defaultValue={date_range}
                                             options={dateRangeOptions}
                                             onChange={formUpdateSearchObj}
                                         />
@@ -188,6 +203,7 @@ const RequestLookup = () => {
                                         <InputText
                                             name="member_id"
                                             label="Member ID"
+                                            defaultValue={member_id}
                                             onChange={formUpdateSearchObj}
                                         />
                                     </div>
@@ -195,6 +211,7 @@ const RequestLookup = () => {
                                     <div className="col-md-3">
                                         <InputText
                                             name="auth_number"
+                                            defaultValue={auth_number}
                                             label="Auth #"
                                             onChange={formUpdateSearchObj}
                                         />
@@ -203,7 +220,7 @@ const RequestLookup = () => {
                                     <div className="col-md-3 align-self-end">
                                         <Button
                                             type="submit"
-                                            disable={loading}
+                                            disabled={loading}
                                             className="btn btn-block btn-primary mb-md-3 py-2"
                                         >
                                             Search Requests
@@ -245,4 +262,12 @@ const RequestLookup = () => {
     );
 };
 
-export default RequestLookup;
+const mapStateToProps = ({ search }) => ({
+    search,
+});
+
+const mapDispatchToProps = {
+    setSearch,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RequestLookup);

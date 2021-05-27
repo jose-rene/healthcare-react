@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-community/async-storage";
-import { RESET_TOKEN, SET_TOKEN } from "./types";
-import { CLEAR_USER } from "./userAction";
+import { RESET_TOKEN, SET_TOKEN, CLEAR_USER } from "./types";
 
 const logout = async () => {
     await AsyncStorage.clear();

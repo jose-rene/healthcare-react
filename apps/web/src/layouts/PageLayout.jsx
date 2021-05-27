@@ -114,8 +114,6 @@ const PageLayout = ({
                             </>
                         }
                     >
-                        <NavDropdown.ItemText>{email}</NavDropdown.ItemText>
-                        <NavDropdown.Divider />
                         <NavDropdown.Item>
                             <div className="d-flex align-items-center">
                                 <Icon
