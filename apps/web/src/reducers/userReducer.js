@@ -4,7 +4,7 @@ import {
     FETCH_USER,
     INITIALIZE_USER,
     UPDATE_AVATAR_URL,
-} from "../actions/userAction";
+} from "../actions/types";
 
 const initialState = {
     initializing: true,
