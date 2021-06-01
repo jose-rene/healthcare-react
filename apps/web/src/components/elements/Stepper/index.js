@@ -100,7 +100,7 @@ const Stepper = ({ data }) => {
 
     const request_uuid = data.id;
 
-    const [{ data: requestData, loading, error }, fireSubmit] = useApiCall({
+    const [{ data: requestData }, fireSubmit] = useApiCall({
         method: "put",
         url: `request/${request_uuid}`,
     });

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Jobs\PasswordExpireCheckJob;
+use App\Models\Image;
 use App\Models\User;
 use App\Models\UserType\EngineeringUser;
 use Artisan;
@@ -10,7 +11,9 @@ use Bouncer;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Laravel\Passport\Passport;
+use Storage;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -57,7 +60,7 @@ class UserTest extends TestCase
         // will have the field gitlab_name for an engineering user
         $response
             ->assertOk()
-            ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'gitlab_name', 'roles']);
+            ->assertJsonStructure(['first_name', 'last_name', 'email', 'phones', 'gitlab_name', 'roles', 'abilities', 'two_factor_options']);
 
         $this->assertEquals($this->user->email, $response->json('email'));
     }
@@ -71,7 +74,7 @@ class UserTest extends TestCase
     {
         // create a condition where the user will be required to change their password
         $this->admin->reset_password = false;
-        $this->admin->created_at     = Carbon::now()->subYears(2); // 2 years since they registered
+        $this->admin->created_at = Carbon::now()->subYears(2); // 2 years since they registered
         $this->admin->save();
 
         // as old as the created user is this should set the reset_password to true
@@ -98,7 +101,7 @@ class UserTest extends TestCase
     public function testRequirePasswordResetUserWithHistory()
     {
         // create a condition where the user will be required to change their password
-        $this->admin->reset_password = false;// 2 years since they registered
+        $this->admin->reset_password = false; // 2 years since they registered
         $this->admin->save();
         $this->admin->password_history()->create(
             [
@@ -106,7 +109,7 @@ class UserTest extends TestCase
             ]
         );
 
-        $ph             = $this->admin->password_history->first();
+        $ph = $this->admin->password_history->first();
         $ph->created_at = Carbon::now()->subYears(2);
         $ph->save();
 
@@ -226,9 +229,10 @@ class UserTest extends TestCase
             $this->admin
         );
         $formData = [
-            'first_name' => $this->faker->firstName,
-            'last_name'  => $this->faker->lastName,
-            'phone'      => $this->faker->phoneNumber,
+            'first_name'        => $this->faker->firstName,
+            'last_name'         => $this->faker->lastName,
+            'phone'             => $this->faker->phoneNumber,
+            'two_factor_method' => 'app',
         ];
         // update user with data
         $response = $this->put('/v1/user/' . $this->user->uuid, $formData);
@@ -378,6 +382,41 @@ class UserTest extends TestCase
         $this->assertEquals($formData['last_name'], $response->json('last_name'));
         // make sure the user type is changed to health plan when the user domain is changed
         $this->assertEquals('HealthPlanUser', $response->json('user_type'));
+    }
+
+    /**
+     * @group file-upload
+     */
+    public function testUploadingAProfileImage()
+    {
+        $imageDiskName = config('filesystems.defaultImageImage', 'image');
+        Passport::actingAs(
+            $this->user
+        );
+
+        $this->withoutExceptionHandling();
+        Storage::fake($imageDiskName);
+        $profileImage = UploadedFile::fake()->create('someProfileImage.png', 1001, 'image/png');
+
+        // Make sure I can upload the file
+        $response = $this->post(route('api.user.profile.image.save'), [
+            'name'      => 'someProfileImage.png',
+            'mime_type' => 'image/png',
+            'file'      => $profileImage,
+        ]);
+        $response->assertSuccessful();
+        $imageFromResponse = $response->json();
+
+        // make sure the image is tracked in the database and exists in the filesystem
+        self::assertCount(1, Image::all());
+        Storage::disk($imageDiskName)->assertExists($imageFromResponse['id']);
+
+        // request the file using the user profile image url
+        $test = $this->get(route('profile.image.show', [
+            'user'      => $this->user,
+            'user_name' => 'test user',
+        ]));
+        $test->assertOk();
     }
 
     /**

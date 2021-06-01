@@ -16,6 +16,7 @@ import checkMiddleware from "../helpers/user";
 const PageLayout = ({
     full_name,
     email,
+    avatar_url,
     signOut,
     children,
     primaryRole,
@@ -98,18 +99,58 @@ const PageLayout = ({
                         <Icon icon="notification" className="header-icon" />
                     </a>
 
-                    <img
-                        alt=""
-                        className="header-avatar"
-                        src="/images/icons/user.png"
-                    />
                     <NavDropdown
                         data-testid="userinfo"
                         alignRight
                         id="user-options"
-                        title={full_name}
+                        title={
+                            <>
+                                <img
+                                    alt="Me"
+                                    className="header-avatar"
+                                    src={avatar_url || "/images/icons/user.png"}
+                                />
+                                {full_name}
+                            </>
+                        }
                     >
-                        <NavDropdown.ItemText>{email}</NavDropdown.ItemText>
+                        <NavDropdown.Item>
+                            <div className="d-flex align-items-center">
+                                <Icon
+                                    icon="user"
+                                    size="1x"
+                                    className="header-icon"
+                                />
+                                <a
+                                    href="#"
+                                    onClick={() =>
+                                        console.log("Manage Account!")
+                                    }
+                                    className="dropdown-item pl-0"
+                                    title="Manage Account"
+                                >
+                                    Manage Account
+                                </a>
+                            </div>
+                        </NavDropdown.Item>
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item>
+                            <div className="d-flex align-items-center">
+                                <Icon
+                                    icon="cog"
+                                    size="1x"
+                                    className="header-icon"
+                                />
+                                <a
+                                    href="#"
+                                    onClick={() => console.log("Settings!")}
+                                    className="dropdown-item pl-0"
+                                    title="Settings"
+                                >
+                                    Settings
+                                </a>
+                            </div>
+                        </NavDropdown.Item>
                         <NavDropdown.Divider />
                         {roles && roles.length > 1 && (
                             <>
@@ -218,11 +259,15 @@ const PageLayout = ({
                         </Link>
                     </li>
                     <li
-                        className={page === "training" ? "sidebar-active" : ""}
+                        className={
+                            page === "healthplan/training"
+                                ? "sidebar-active"
+                                : ""
+                        }
                         data-toggle="tooltip"
                         title="Training"
                     >
-                        <Link to="/training">
+                        <Link to="/healthplan/training">
                             <img src="/images/icons/video.png" alt="Videos" />
                             <div className="d-block d-sm-none">Videos</div>
                         </Link>
@@ -258,13 +303,14 @@ const PageLayout = ({
 };
 
 const mapStateToProps = ({
-    user: { email, full_name, primaryRole, roles, abilities },
+    user: { email, full_name, primaryRole, roles, abilities, avatar_url },
 }) => ({
     email,
     full_name,
     roles,
     abilities,
     primaryRole,
+    avatar_url,
 });
 
 const mapDispatchToProps = {

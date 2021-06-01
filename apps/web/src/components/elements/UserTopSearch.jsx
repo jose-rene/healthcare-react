@@ -10,7 +10,11 @@ const UserTopSearch = ({
     resetSearch,
     searchObj,
 }) => {
-    const { register, handleSubmit, errors } = useForm();
+    const { register, handleSubmit, setValue, errors } = useForm();
+    const clearSearch = () => {
+        resetSearch();
+        setValue("search", "", { shouldValidate: false });
+    };
     return (
         <div className="d-none d-sm-block mb-2">
             <Form onSubmit={handleSubmit(handleSearch)}>
@@ -19,7 +23,7 @@ const UserTopSearch = ({
                         <InputText
                             name="search"
                             prepend="search"
-                            onClear={resetSearch}
+                            onClear={clearSearch}
                             label=""
                             errors={errors}
                             defaultValue={searchObj.search}

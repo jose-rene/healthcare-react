@@ -28,8 +28,9 @@ class Member extends Model
     protected $fillable = [
         'payer_id',
         'lob_id',
-        'member_number',
         'language_id',
+        'language_id',
+        'member_number',
         'line_of_business',
         'member_number_type',
         'gender',
@@ -177,7 +178,7 @@ class Member extends Model
             $authedUser = auth()->user();
         }
 
-        if (1 !== $authedUser->user_type) {
+        if ($authedUser->cannot('admin:search') && 1 !== $authedUser->user_type) {
             // limit search to their own plan
             if (!$authedUser->payer) {
                 return null;

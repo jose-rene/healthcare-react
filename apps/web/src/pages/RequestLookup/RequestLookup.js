@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import PageLayout from "../../layouts/PageLayout";
 import InputText from "../../components/inputs/InputText";
 import Button from "../../components/inputs/Button";
@@ -7,11 +9,20 @@ import TableAPI from "../../components/elements/TableAPI";
 import useSearch from "../../hooks/useSearch";
 import useApiCall from "../../hooks/useApiCall";
 import Form from "../../components/elements/Form";
-import { Link } from "react-router-dom";
 import Icon from "../../components/elements/Icon";
 import { ACTIONS } from "../../helpers/table";
+import { setSearch } from "../../actions/searchAction";
 
-const RequestLookup = () => {
+const RequestLookup = ({ search, setSearch }) => {
+    const {
+        auth_number,
+        date_range,
+        from_date,
+        to_date,
+        request_status_id,
+        member_id,
+    } = search;
+
     const [
         {
             loading,
@@ -23,6 +34,7 @@ const RequestLookup = () => {
     });
 
     const [statusOptions] = useState([
+        { id: "all", value: "0", title: "All" },
         { id: "received", value: "1", title: "Received" },
         { id: "assigned", value: "2", title: "Assigned" },
         { id: "scheduled", value: "3", title: "Scheduled" },
@@ -36,6 +48,7 @@ const RequestLookup = () => {
 
     const [headers] = useState([
         { columnMap: "member.name", label: "Name", type: String },
+        { columnMap: "auth_number", label: "Auth ID", type: String },
         {
             columnMap: "request_status_id",
             formatter: (request_status_id) => {
@@ -49,7 +62,7 @@ const RequestLookup = () => {
             type: String,
         },
         {
-            columnMap: "request_type_name",
+            columnMap: "request_items.0.name",
             label: "Type",
             type: String,
         },
@@ -57,21 +70,18 @@ const RequestLookup = () => {
             columnMap: "created_at",
             label: "Received",
             type: Date,
-            //formatter: date => moment(date).format('mm/dd/YYYY')
+            // formatter: date => moment(date).format('mm/dd/YYYY')
         },
         { columnMap: "due_at", label: "Schedule Date", type: String },
 
         // TODO :: DEV :: NOTE :: this will basically show the last status change
-        { columnMap: "activity", label: "Activity", type: String },
-
-        // TODO :: DEV :: NOTE :: link to the narrative report (once it's completed)
-        { columnMap: "report", label: "Report", type: String },
-
+        { columnMap: "activities.0.message", label: "Activity", type: String },
         {
             label: "Actions",
             columnMap: "member.id",
             type: ACTIONS,
             disableSortBy: true,
+            // need to update reports url if it is existed or not
             formatter(member_id, { id: request_id }) {
                 return (
                     <>
@@ -82,10 +92,13 @@ const RequestLookup = () => {
                             <Icon size="1x" icon="plus" />
                         </Link>
                         <Link
-                            className="pl-2"
+                            className="px-2"
                             to={`/member/${member_id}/request/${request_id}/edit`}
                         >
                             <Icon size="1x" icon="edit" />
+                        </Link>
+                        <Link className="pl-2" to="#">
+                            <Icon size="1x" icon="flag" />
                         </Link>
                     </>
                 );
@@ -111,10 +124,10 @@ const RequestLookup = () => {
 
     const redoSearch = async (params = searchObj) => {
         try {
-            console.log({ params });
             // need to implement api here
-            await fireDoSearch({ params });
+            setSearch(params);
             setSearchStatus(true);
+            await fireDoSearch({ params });
         } catch (e) {
             console.log(e);
         }
@@ -150,6 +163,7 @@ const RequestLookup = () => {
                                         <Select
                                             name="request_status_id"
                                             label="Status"
+                                            defaultValue={request_status_id}
                                             options={statusOptions}
                                             onChange={formUpdateSearchObj}
                                         />
@@ -159,6 +173,7 @@ const RequestLookup = () => {
                                         <InputText
                                             name="from_date"
                                             label="From Date"
+                                            defaultValue={from_date}
                                             type="date"
                                             onChange={formUpdateSearchObj}
                                         />
@@ -168,6 +183,7 @@ const RequestLookup = () => {
                                         <InputText
                                             name="to_date"
                                             label="To Date"
+                                            defaultValue={to_date}
                                             type="date"
                                             onChange={formUpdateSearchObj}
                                         />
@@ -177,6 +193,7 @@ const RequestLookup = () => {
                                         <Select
                                             name="date_range"
                                             label="Date Range"
+                                            defaultValue={date_range}
                                             options={dateRangeOptions}
                                             onChange={formUpdateSearchObj}
                                         />
@@ -186,6 +203,7 @@ const RequestLookup = () => {
                                         <InputText
                                             name="member_id"
                                             label="Member ID"
+                                            defaultValue={member_id}
                                             onChange={formUpdateSearchObj}
                                         />
                                     </div>
@@ -193,6 +211,7 @@ const RequestLookup = () => {
                                     <div className="col-md-3">
                                         <InputText
                                             name="auth_number"
+                                            defaultValue={auth_number}
                                             label="Auth #"
                                             onChange={formUpdateSearchObj}
                                         />
@@ -201,9 +220,8 @@ const RequestLookup = () => {
                                     <div className="col-md-3 align-self-end">
                                         <Button
                                             type="submit"
-                                            disable={loading}
+                                            disabled={loading}
                                             className="btn btn-block btn-primary mb-md-3 py-2"
-                                            onClick={() => redoSearch()}
                                         >
                                             Search Requests
                                         </Button>
@@ -244,4 +262,12 @@ const RequestLookup = () => {
     );
 };
 
-export default RequestLookup;
+const mapStateToProps = ({ search }) => ({
+    search,
+});
+
+const mapDispatchToProps = {
+    setSearch,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RequestLookup);

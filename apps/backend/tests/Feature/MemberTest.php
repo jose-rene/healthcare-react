@@ -78,6 +78,30 @@ class MemberTest extends TestCase
     }
 
     /**
+     * @group admins
+     */
+    public function testMemberDups()
+    {
+        Bouncer::allow('admin')->everything();
+
+        $this->user->assign('admin');
+
+        $duplicateMembers = Member::factory(['payer_id' => $this->user->healthPlanUser->payer])->count(2)->create([
+            'first_name' => 'amin',
+            'last_name'  => 'amin',
+            'dob'        => '2021-05-22',
+        ]);
+
+        $response = $this->get(route('api.admin.member.duplicates'));
+
+        // Make sure I get back my new duplicate members
+        $response
+            ->assertOk()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonFragment(['id' => $duplicateMembers->first()->uuid]);
+    }
+
+    /**
      * Test search plan members.
      *
      * @return void

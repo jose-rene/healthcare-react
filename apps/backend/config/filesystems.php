@@ -40,9 +40,10 @@ return [
     | Supported Drivers: "local", "ftp", "sftp", "s3"
     |
     */
-    'defaultDocument' => env('FILESYSTEM_DOCUMENT', 'document'),
+    'defaultDocument'             => env('FILESYSTEM_DOCUMENT', 'document'),
     'defaultProfessionalDocument' => env('FILESYSTEM_DOCUMENT', 'professionalDocument'),
-    'defaultTraining' => env('FILESYSTEM_TRAINING', 'training'),
+    'defaultTraining'             => env('FILESYSTEM_TRAINING', 'training'),
+    'defaultImageImage'           => env('FILESYSTEM_IMAGE', 'image'),
 
     'disks' => [
 
@@ -87,6 +88,21 @@ return [
         ],
 
         'trainingS3' => [
+            'driver'   => 's3',
+            'key'      => env('AWS_ACCESS_KEY_ID'),
+            'secret'   => env('AWS_SECRET_ACCESS_KEY'),
+            'region'   => env('AWS_DEFAULT_REGION'),
+            'bucket'   => env('AWS_BUCKET'),
+            'url'      => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+        ],
+
+        'image' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/training/'),
+        ],
+
+        'imageS3' => [
             'driver'   => 's3',
             'key'      => env('AWS_ACCESS_KEY_ID'),
             'secret'   => env('AWS_SECRET_ACCESS_KEY'),

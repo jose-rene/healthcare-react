@@ -67,6 +67,7 @@ class UserResource extends JsonResource
             'primary_role_title' => $primaryRole ? $primaryRole->title : '',
             'roles'              => $roles,
             'abilities'          => $abilities->count() > 0 ? $abilities->map(fn ($item, $key) => $item['name']) : [],
+            'two_factor_options' => $this->two_factor_options,
             $this->mergeWhen(!empty($userTypeResource), $userTypeResource),
         ];
     }

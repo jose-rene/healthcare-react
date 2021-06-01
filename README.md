@@ -35,8 +35,7 @@ Generate the IDE key
 ```bash
 cd apps/backend
 php artisan key:generate --ansi
-``` 
-
+```
 ### install
 * run `yarn install` I've added a postinstall hook to do everything else.
 

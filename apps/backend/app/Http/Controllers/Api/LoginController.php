@@ -68,7 +68,7 @@ class LoginController extends Controller
         }
 
         if (auth()->user()->is_2fa) {
-            $class = 'email' === auth()->user()->twofactor_method ? TwoFactorAuthMessage::class : TwoFactorAuthApp::class;
+            $class = 'email' === auth()->user()->twofactor_method || 'sms' === auth()->user()->twofactor_method ? TwoFactorAuthMessage::class : TwoFactorAuthApp::class;
             $params = App::make($class)->send(auth()->user());
 
             return response()->json($params, 200);

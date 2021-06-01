@@ -19,6 +19,7 @@
     .header-avatar {
         margin: 6px;
         border-radius: 50%;
+        height: 50px;
     }
 
     .header-name {
@@ -165,6 +166,10 @@
 .sidebar-active {
     background: #ebf5fd;
     border-left: 5px solid #2e94e5 !important;
+
+    & img:first-child {
+        margin-left: -5px;
+    }
 }
 
 .content-container {
@@ -172,7 +177,7 @@
 }
 
 .nav-tabs {
-    border-bottom: 1px solid #dadee0 !important;
+    // border-bottom: 1px solid #dadee0 !important;
 
     .nav-link.active,
     .nav-item.show .nav-link {

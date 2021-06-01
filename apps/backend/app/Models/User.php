@@ -23,6 +23,7 @@ use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
+use LasseRafn\InitialAvatarGenerator\InitialAvatar;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
@@ -37,8 +38,11 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property PasswordHistory last_n_passwords
  * @property Carbon          created_at
  * @property string          password
- * @property bool         reset_password
+ * @property bool            reset_password
  * @property HealthPlanUser  healthPlanUser
+ * @property Image           profileImage
+ * @property mixed           avatar
+ * @property Payer|null      payer
  * @link https://github.com/JosephSilber/bouncer#cheat-sheet
  */
 class User extends Authenticatable implements MustVerifyEmail
@@ -98,6 +102,7 @@ class User extends Authenticatable implements MustVerifyEmail
         1 => 'EngineeringUser',
         2 => 'HealthPlanUser',
         3 => 'ClinicalServicesUser',
+        4 => 'BusinessOperationsUser',
     ];
 
     protected $searchable = [
@@ -142,6 +147,37 @@ class User extends Authenticatable implements MustVerifyEmail
     public function phones()
     {
         return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    public function profileImage()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+    public function getAvatarAttribute()
+    {
+        $image = $this->profileImage;
+
+        if ($image && $image->fileExists) {
+            return $image->file;
+        }
+
+        $avatar = new InitialAvatar();
+
+        return $avatar
+            ->name($this->name)
+            ->color(config('app.avatar_font_color', '#475866'))
+            ->background(config('app.avatar_back_color', '#f5f9fc'))
+            ->height(config('app.avatar_height', 200))
+            ->width(config('app.avatar_width', 200))
+            ->preferBold()
+            ->generate()
+            ->stream(config('app.avatar_image_type', 'png'));
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        return route('profile.image.show', ['user' => $this, 'user_name' => $this->name]);
     }
 
     /**
@@ -234,6 +270,28 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return ucwords(Str::snake(str_replace('User', '', $name), ' '));
+    }
+
+    /**
+     * Returns the domain of the user type class.
+     *
+     * @return string
+     */
+    public function getTwoFactorOptionsAttribute()
+    {
+        switch ($this->user_type) {
+            case 2: // health plan
+                $methods = ['email'];
+                break;
+            case 1: // engineering
+                $methods = ['app'];
+                break;
+            default: // all others
+                $methods = ['app', 'sms'];
+                break;
+        }
+
+        return $methods;
     }
 
     public function getAuthTokens($remember_me = false)

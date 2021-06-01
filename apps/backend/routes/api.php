@@ -25,11 +25,12 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->get('/plan/plans', 'PlanController@plans');
     $router->get('/plan/lobs', 'PlanController@lobs');
     $router->get('/plan/idtypes', 'PlanController@idtypes');
+
     // user routes
     $router->get('/user/profile', 'UserController@profile');
     $router->put('/user/profile', 'UserController@profileSave');
-
-    Route::put('/user/password', 'PasswordController@authedChangePassword');
+    $router->post('/user/profile-image', 'UserController@profileImageSave')->name('user.profile.image.save');
+    $router->put('/user/password', 'PasswordController@authedChangePassword');
 
     $router->post('/member/search', 'MemberController@search')->middleware('can:viewAny,' . Member::class);
     $router->post('/user/search', 'UserController@search');
@@ -37,6 +38,7 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->get('logout', 'LoginController@logout');
     $router->get('notifications', 'NotificationsController@index');
     $router->put('notifications', 'NotificationsController@update');
+
     // request info
     $router->get('/request/summary', 'RequestController@summary');
     $router->get('/request/inspire', 'RequestController@inspire');
@@ -44,12 +46,15 @@ Route::middleware('auth:api')->group(function ($router) {
 //    $router->get('/request/types', [RequestTypesController::class, 'index'])->name('request.types.index');
 //    $router->get('/requesttype', 'RequestTypeController@index')->name('requesttypes.index');
 
+    // Payer
+    $router->put('/payer/avatar', 'Payercontroller@avatarSave');
+
     // protected crud routes
     Route::apiResource('questionnaire', 'QuestionnaireController');
     Route::apiResource('assessment', 'AssessmentController');
     Route::apiResource('request', 'RequestController');
     Route::apiResource('member', 'MemberController');
-    Route::apiResource('payer', 'PayerController');
+    Route::apiResource('payer', 'PayerController')->except(['store', 'update', 'destroy']);
     Route::apiResource('member.member-requests', 'MemberRequestController')->only('store', 'show', 'update');
     Route::apiResource('member-request.request-item', 'RequestRequestItemController')->only('store', 'show', 'update');
     Route::apiResource('activity', 'ActivityController');

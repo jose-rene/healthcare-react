@@ -36,7 +36,8 @@ class MemberRequest extends FormRequest
             'member_number'      => ['bail', 'required', 'min:1'],
             'member_number_type' => ['bail', 'required', 'min:1'],
             'line_of_business'   => ['bail', 'required', 'exists:lobs,id'],
-            'language'           => ['bail', 'required', 'min:1'],
+            'language'           => ['bail', 'required_without:language_id', 'min:1'],
+            'language_id'        => ['bail', 'required_without:language', 'exists:languages,id'],
             'address_1'          => ['bail', 'required', 'min:1'],
             'address_2'          => ['bail', 'min:1'],
             'city'               => ['bail', 'required', 'min:1'],
@@ -52,7 +53,7 @@ class MemberRequest extends FormRequest
         if (!$this->route() || 'api.member.update' === $this->route()->getName()) {
             // remove required from rules for updating
             $rules = array_map(function ($item) {
-                return array_filter($item, fn ($rule) => 'required' !== $rule);
+                return array_filter($item, fn ($rule) => 0 !== strpos($rule, 'required'));
             }, $rules);
             // if the phone is to be updated
             $rules['phone'] = ['bail', 'min:7'];

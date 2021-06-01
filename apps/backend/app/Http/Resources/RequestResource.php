@@ -29,6 +29,7 @@ class RequestResource extends JsonResource
             'request_type_name' => $this->requestType->name ?? '',
             'codes'             => RelevantDiagnosesResource::collection($this->relevantDiagnoses),
             'request_items'     => RequestItemResource::collection($this->requestItems),
+            'activities'        => ActivityResource::collection($this->activities),
         ];
     }
 }

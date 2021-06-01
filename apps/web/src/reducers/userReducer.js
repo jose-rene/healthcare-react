@@ -1,5 +1,10 @@
 import { get } from "lodash";
-import { CLEAR_USER, FETCH_USER, INITIALIZE_USER } from "../actions/userAction";
+import {
+    CLEAR_USER,
+    FETCH_USER,
+    INITIALIZE_USER,
+    UPDATE_AVATAR_URL,
+} from "../actions/types";
 
 const initialState = {
     initializing: true,
@@ -33,6 +38,12 @@ export default function (state = initialState, action) {
                 full_name: action.full_name,
                 roles: action.roles || [],
                 abilities: action.abilities || [],
+            };
+
+        case UPDATE_AVATAR_URL:
+            return {
+                ...state,
+                avatar_url: action.avatar_url,
             };
 
         case CLEAR_USER:

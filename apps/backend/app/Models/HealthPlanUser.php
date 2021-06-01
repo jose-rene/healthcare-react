@@ -6,10 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- *
- **/
-class PayerUser extends Model
+class HealthPlanUser extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -30,6 +27,8 @@ class PayerUser extends Model
         'is_locked' => 'boolean',
         'is_test'   => 'boolean',
     ];
+
+    protected $table = 'payer_users';
 
     public function user()
     {
