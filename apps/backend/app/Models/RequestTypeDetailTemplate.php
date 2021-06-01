@@ -26,11 +26,13 @@ class RequestTypeDetailTemplate extends Model
         'parent_id',
         'request_type_template_id',
         'is_auto_include',
+        'is_auto_include',
     ];
 
     protected $casts = [
         'is_inherit_children' => 'boolean',
         'is_requestable'      => 'boolean',
+        'is_auto_include'     => 'boolean',
     ];
 
     public function parent()

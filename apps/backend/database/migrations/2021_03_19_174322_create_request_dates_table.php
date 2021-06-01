@@ -22,6 +22,7 @@ class CreateRequestDatesTable extends Migration
             $table->dateTime('date')->comment('date');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

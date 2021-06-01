@@ -17,10 +17,12 @@ class RequestItemResource extends JsonResource
     {
         return [
             'id'                   => $this->uuid,
+            'vendor_price'         => $this->vendor_price,
             'name'                 => $this->name,
             'request_type_id'      => $this->request_type_id,
             'request_type_parents' => array_reverse($this->mapParents($this->requestType->ancestors, true)),
-            'details'              => RequestTypeDetailResource::collection($this->requestTypeDetails), // ->pluck('name', 'id'),
+            'details'              => RequestTypeDetailResource::collection($this->requestTypeDetails),
+            // ->pluck('name', 'id'),
         ];
     }
 

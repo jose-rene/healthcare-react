@@ -12,6 +12,7 @@ class RequestItem extends Model
     use HasFactory, SoftDeletes, Uuidable;
 
     protected $fillable = [
+        'vendor_price',
         'request_id',
         'request_type_id',
         'request_outcome_id',
@@ -28,7 +29,8 @@ class RequestItem extends Model
 
     protected $casts = [
         // 'new_request_json' => 'json',
-        'json_data' => 'json',
+        'json_data'    => 'json',
+        'vendor_price' => 'double',
     ];
 
     public function requestType()
