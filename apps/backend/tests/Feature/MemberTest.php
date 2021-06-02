@@ -86,11 +86,14 @@ class MemberTest extends TestCase
 
         $this->user->assign('admin');
 
-        $duplicateMembers = Member::factory(['payer_id' => $this->user->healthPlanUser->payer])->count(2)->create([
-            'first_name' => 'amin',
-            'last_name'  => 'amin',
-            'dob'        => '2021-05-22',
-        ]);
+        $duplicateMembers = Member::factory(['payer_id' => $this->user->healthPlanUser->payer])
+            ->hasAddresses(1, ['is_primary' => true])
+            ->count(2)
+            ->create([
+                'first_name' => 'amin',
+                'last_name'  => 'amin',
+                'dob'        => '2021-05-22',
+            ]);
 
         $response = $this->get(route('api.admin.member.duplicates'));
 
@@ -109,7 +112,10 @@ class MemberTest extends TestCase
     public function testSearchMembers()
     {
         // create members to search
-        $members = Member::factory(['payer_id' => $this->user->healthPlanUser->payer])->count(2)->create();
+        $members = Member::factory()
+            ->hasAddresses(1, ['is_primary' => true])
+            ->count(2)
+            ->create(['payer_id' => $this->user->healthPlanUser->payer]);
         // get a dob to search
         $member = $members->first();
 
@@ -140,9 +146,12 @@ class MemberTest extends TestCase
     public function testSearchSubMembers()
     {
         // make a child payer
-        $childPayer = Payer::factory(['parent_id' => $this->user->payer])->hasLobs(5)->create();
+        $childPayer = Payer::factory()->hasLobs(5)->create(['parent_id' => $this->user->payer]);
         // create members to search
-        $members = Member::factory(['payer_id' => $childPayer])->count(2)->create();
+        $members = Member::factory()
+            ->hasAddresses(1, ['is_primary' => true])
+            ->count(2)
+            ->create(['payer_id' => $childPayer]);
         // get a dob to search
         $member = $members->first();
 
@@ -173,7 +182,10 @@ class MemberTest extends TestCase
     public function testSearchMembersValidation()
     {
         // create members to search
-        $members = Member::factory(['payer_id' => $this->user->healthPlanUser->payer])->count(5)->create();
+        $members = Member::factory()
+            ->hasAddresses(1, ['is_primary' => true])
+            ->count(5)
+            ->create(['payer_id' => $this->user->healthPlanUser->payer]);
         // get a dob to search
         $member = $members->first();
         // set invalid dob
@@ -332,7 +344,10 @@ class MemberTest extends TestCase
 
     protected function getFormData()
     {
-        $member = Member::factory()->hasPhones(1)->hasAddresses(1)->count(1)->create()->first();
+        $member = Member::factory()
+            ->hasPhones(1)
+            ->hasAddresses(1, ['is_primary' => 1])
+            ->create();
         $address = $member->addresses->first();
         $phone = ['type' => 'Phone', 'value' => $member->phones->first()->number];
         $phoneAlt = ['type' => 'Phone', 'value' => $this->faker->phonenumber];
@@ -368,7 +383,10 @@ class MemberTest extends TestCase
         Artisan::call('db:seed', [
             '--class' => 'Database\Seeders\BouncerSeeder',
         ]);
-        $this->member = Member::factory()->hasPhones(1)->hasAddresses(1)->count(1)->create()->first();
+        $this->member = Member::factory()
+            ->hasPhones(1)
+            ->hasAddresses(1, ['is_primary' => 1])
+            ->create();
         $this->payer = Payer::factory()->hasLobs(5)->hasChildren(5)->count(1)->create()->first();
         $this->member->payer()->associate($this->payer);
         $this->member->lob()->associate($this->payer->lobs()->first()->id);

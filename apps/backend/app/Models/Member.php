@@ -68,14 +68,14 @@ class Member extends Model
      */
     public function addresses()
     {
-        return $this->morphMany(Address::class, 'addressable')->orderBy('is_primary', 'desc');
+        return $this->morphMany(Address::class, 'addressable')->orderBy('is_primary', 'desc')->orderBy('id', 'desc');
     }
 
-    public function address()
+    public function getAddressAttribute()
     {
         return $this->addresses()->firstOrCreate([
             'is_primary'  => true,
-            'street'      => '',
+            'address_1'   => '',
             'city'        => '',
             'county'      => '',
             'state'       => '',
@@ -137,7 +137,7 @@ class Member extends Model
      */
     public function history()
     {
-        return $this->hasMany(MemberPayerHistory::class);
+        return $this->hasMany(MemberPayerHistory::class)->orderBy('id', 'desc');
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Models\Member;
 use App\Models\Payer;
 use App\Models\Request;
 use App\Models\RequestStatus;
+use App\Models\User;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
@@ -59,10 +60,13 @@ class RequestSeeder extends Seeder
 
         // make a request
         $request = Request::factory()->create([
-            'auth_number'        => $this->faker->regexify('[A-Za-z0-9]{24}'),
-            'due_at'             => Carbon::now()->addWeeks(1),
-            'member_verified_at' => Carbon::now(),
-            'member_id'          => $member,
+            'auth_number'             => $this->faker->regexify('[A-Za-z0-9]{24}'),
+            'due_at'                  => Carbon::now()->addWeeks(1),
+            'member_verified_at'      => Carbon::now(),
+            'member_id'               => $member,
+            'payer_user_id'           => User::firstWhere('email', 'admin@admin.com'),
+            'member_payer_history_id' => $member->history->first(),
+            'member_address_id'       => $member->addresses->first()->id,
         ]);
 
         // add relevant diagnosis

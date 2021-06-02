@@ -19,11 +19,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        if (Bouncer::is($user)->a('software_engineer', 'hp_champion')) {
-            return true;
-        }
-
-        return false;
+        return $user->can('view-users') || $user->can('create-users');
     }
 
     /**
@@ -36,15 +32,7 @@ class UserPolicy
     public function view(User $user, User $model)
     {
         // allow users to update their own data
-        if ($user->id == $model->id) {
-            return true;
-        }
-        // allow supers
-        if (Bouncer::is($user)->a('software_engineer')) {
-            return true;
-        }
-
-        return false;
+        return $user->id == $model->id || $user->can('view-users') || $user->can('create-users');
     }
 
     /**
@@ -76,11 +64,7 @@ class UserPolicy
             return true;
         }
         // check ability
-        if ($user->can('create-users')) {
-            return true;
-        }
-
-        return false;
+        return $user->can('create-users');
     }
 
     /**
@@ -92,12 +76,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        // allow supers
-        if (Bouncer::is($user)->a('software_engineer')) {
-            return true;
-        }
-
-        return false;
+        return $user->can('create-users');
     }
 
     /**
@@ -109,7 +88,7 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-        return false;
+        return $user->can('create-users');
     }
 
     /**
@@ -121,6 +100,6 @@ class UserPolicy
      */
     public function forceDelete(User $user, User $model)
     {
-        return false;
+        return $user->can('force-delete-users');
     }
 }

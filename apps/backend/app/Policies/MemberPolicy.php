@@ -18,8 +18,7 @@ class MemberPolicy
      */
     public function viewAny(User $user)
     {
-        // @todo make an ability for viewing members and apply to roles
-        return $user->isA('software_engineer', 'hp_champion', 'hp_user');
+        return $user->can('view-members') || $user->can('create-members');
     }
 
     /**
@@ -31,8 +30,7 @@ class MemberPolicy
      */
     public function view(User $user, Member $member)
     {
-        // @todo make an ability for viewing members and apply to roles
-        return $user->isA('software_engineer', 'hp_champion', 'hp_user');
+        return $user->can('view-members') || $user->can('create-members');
     }
 
     /**
@@ -43,8 +41,7 @@ class MemberPolicy
      */
     public function create(User $user)
     {
-        // @todo make an ability for creating members and apply to roles
-        return $user->isA('software_engineer', 'hp_champion', 'hp_user');
+        return $user->can('create-members');
     }
 
     /**
@@ -56,10 +53,7 @@ class MemberPolicy
      */
     public function update(User $user, Member $member)
     {
-        // @todo make an ability for creating members and apply to roles
-        return $user->isA('software_engineer', 'hp_champion', 'hp_user');
-
-        return false;
+        return $user->can('create-members');
     }
 
     /**
@@ -71,7 +65,7 @@ class MemberPolicy
      */
     public function delete(User $user, Member $member)
     {
-        //
+        return $user->can('create-members');
     }
 
     /**
@@ -83,7 +77,7 @@ class MemberPolicy
      */
     public function restore(User $user, Member $member)
     {
-        //
+        return $user->can('create-members');
     }
 
     /**
@@ -95,6 +89,6 @@ class MemberPolicy
      */
     public function forceDelete(User $user, Member $member)
     {
-        //
+        return $user->can('force-delete-members');
     }
 }
