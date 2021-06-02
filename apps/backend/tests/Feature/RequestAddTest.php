@@ -61,6 +61,7 @@ class RequestAddTest extends TestCase
      */
     public function testRequestSectionSteps()
     {
+        $this->withoutExceptionHandling();
         $requestId = $this->getRequest();
         /** @var Request $newRequest */
         $newRequest = Request::where('uuid', $requestId)->first();

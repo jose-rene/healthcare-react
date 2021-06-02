@@ -18,6 +18,7 @@ class PayerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
+    protected $admin;
     protected $member;
     protected $user;
 
@@ -33,7 +34,7 @@ class PayerTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types', 'languages'])
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types', 'languages', 'avatar_url'])
             ->assertJsonCount(Language::all()->count(), 'languages');
     }
 
@@ -49,7 +50,7 @@ class PayerTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types', 'languages'])
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types', 'languages', 'avatar_url'])
             ->assertJsonCount(Language::all()->count(), 'languages');
     }
 
@@ -124,6 +125,40 @@ class PayerTest extends TestCase
         self::assertCount(0, $data);
     }
 
+    /**
+     * Test updating payer.
+     *
+     * @return void
+     */
+    public function testUpdatePayer()
+    {
+        Passport::actingAs(
+            $this->admin
+        );
+        // get the payer
+        $response = $this->json('GET', 'v1/admin/payer/' . $this->payer->uuid);
+        // validate response code and structure
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types', 'languages', 'avatar_url']);
+
+        // update
+        $response = $this->json('PATCH', 'v1/admin/payer/' . $this->payer->uuid, ['name' => $name = 'Green Widgets Inc']);
+        // validate response
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types', 'languages', 'avatar_url'])
+            ->assertJsonPath('company_name', $name);
+
+        // try a non admin user
+        Passport::actingAs(
+            $this->user
+        );
+        $response = $this->json('PATCH', 'v1/admin/payer/' . $this->payer->uuid, ['name' => $name = 'Red Widgets Inc']);
+        // validate response, should return unauthorized
+        $response->assertStatus(403);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -144,6 +179,9 @@ class PayerTest extends TestCase
         $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create(['payer_id' => $this->payer]));
         Bouncer::sync($this->user)->roles(['hp_user']);
         $this->user->save();
+        $this->admin = User::factory()->create(['user_type' => 4, 'primary_role' => 'client_services_specialist']);
+        Bouncer::sync($this->admin)->roles(['client_services_specialist']);
+        $this->admin->save();
         Passport::actingAs(
             $this->user
         );

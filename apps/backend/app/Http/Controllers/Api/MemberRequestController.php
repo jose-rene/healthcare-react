@@ -37,8 +37,11 @@ class MemberRequestController extends Controller
     public function store(Member $member)
     {
         $memberRequest = $member->requests()->create([
-            'status'   => 'started',
-            'payer_id' => $member->payer->id,
+            'member_id'               => $member->id,
+            'payer_id'                => $member->payer->id,
+            'payer_user_id'           => auth()->user()->id,
+            'member_payer_history_id' => $member->history->first()->id,
+            'member_address_id'       => $member->addresses->first()->id,
         ]);
 
         return new RequestResource($memberRequest);

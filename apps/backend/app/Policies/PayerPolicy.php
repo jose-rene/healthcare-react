@@ -18,7 +18,7 @@ class PayerPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('payers.view');
+        return $user->can('view-payers') || $user->can('create-payers');
     }
 
     /**
@@ -31,7 +31,7 @@ class PayerPolicy
     public function view(User $user, Payer $payer)
     {
         // check ability
-        if (!$user->can('view-payers')) {
+        if (!$user->can('view-payers') && !$user->can('create-payers')) {
             return false;
         }
         // healthplan users must be associated with a payer
@@ -75,8 +75,7 @@ class PayerPolicy
      */
     public function create(User $user)
     {
-        // @todo create a create-payers ability and apply to roles, then only check ability
-        return $user->isA('software_engineer', 'hp_user', 'hp_champion');
+        return $user->can('create-payers');
     }
 
     /**
@@ -88,7 +87,7 @@ class PayerPolicy
      */
     public function update(User $user, Payer $payer)
     {
-        return $user->can('payers.update', $payer);
+        return $user->can('create-payers', $payer);
     }
 
     /**
@@ -100,7 +99,7 @@ class PayerPolicy
      */
     public function delete(User $user, Payer $payer)
     {
-        return $user->can('payers.delete', $payer);
+        return $user->can('create-payers', $payer);
     }
 
     /**
@@ -112,7 +111,7 @@ class PayerPolicy
      */
     public function restore(User $user, Payer $payer)
     {
-        return $user->can('payers.update', $payer);
+        return $user->can('create-payers', $payer);
     }
 
     /**
@@ -124,6 +123,6 @@ class PayerPolicy
      */
     public function forceDelete(User $user, Payer $payer)
     {
-        return $user->can('payers.force-delete', $payer);
+        return $user->can('force-delete-payers', $payer);
     }
 }

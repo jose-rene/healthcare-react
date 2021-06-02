@@ -19,7 +19,7 @@ class RequestController extends Controller
     public function requestsItemsFunction()
     {
         /**
-         * on page load Jarek will need this
+         * on page load Jarek will need this.
          */
         // value from request -> request_items
 
@@ -36,11 +36,10 @@ class RequestController extends Controller
             ],
         ];
 
-
-        /**
+        /*
          * on form save
          */
-        /**
+        /*
          * request = {
          * request_items = [
          *     {
@@ -67,14 +66,13 @@ class RequestController extends Controller
     public function summary()
     {
         /** @var User $user */
-        $user      = auth()->user();
+        $user = auth()->user();
         $baseQuery = $user->healthPlanUser->requests();
 
-
-        $assigned  = (clone $baseQuery)->where('request_status_id', ModelRequest::$assigned)->count();
+        $assigned = (clone $baseQuery)->where('request_status_id', ModelRequest::$assigned)->count();
         $scheduled = (clone $baseQuery)->where('request_status_id', ModelRequest::$scheduled)->count();
         $submitted = (clone $baseQuery)->where('request_status_id', ModelRequest::$submitted)->count();
-        $new       = (clone $baseQuery)
+        $new = (clone $baseQuery)
             ->whereIn('request_status_id', [
                 ModelRequest::$received,
                 ModelRequest::$reopened,
@@ -100,16 +98,20 @@ class RequestController extends Controller
      * Store a newly created resource in storage.
      *
      * @param AssessmentRequest $request
+     * @deprecated for member request create
      * @return RequestResource
      */
     public function store(AssessmentRequest $request)
     {
+        abort(404);
         /** @var User $user */
         $user = auth()->user();
         // the request needs the payer-id, we can pull that from the logged in users healthPlanUser record
         $payer_id = $user->healthPlanUser->payer_id;
+        // the user that created the request
+        $payer_user_id = $user->id;
 
-        $data = ModelRequest::create($request->validated() + compact('payer_id'));
+        $data = ModelRequest::create($request->validated() + compact(['payer_id', 'payer_user_id']));
 
         return new RequestResource($data);
     }
