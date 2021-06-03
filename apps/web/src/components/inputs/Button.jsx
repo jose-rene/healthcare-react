@@ -3,22 +3,21 @@ import { Link } from "react-router-dom";
 import Icon from "../elements/Icon";
 
 const Button = ({
-                    useButton = true,
-                    to = "#",
-                    onClick = undefined,
-                    variant = "default",
-                    label = undefined,
-                    children,
-                    type = "button",
-                    className: classAppend = "",
-                    block = false,
-                    outline = false,
-                    bold = false,
-                    icon = undefined,
-                    iconSize = undefined,
-                    disabled = false,
-                }) => {
-
+    useButton = true,
+    to = "#",
+    onClick = undefined,
+    variant = "default",
+    label = undefined,
+    children,
+    type = "button",
+    className: classAppend = "",
+    block = false,
+    outline = false,
+    bold = false,
+    icon = undefined,
+    iconSize = undefined,
+    disabled = false,
+}) => {
     const className = useMemo(() => {
         let cName = `btn btn-ln ${classAppend}`;
 
@@ -39,7 +38,7 @@ const Button = ({
                 cName = "btn-icon";
                 break;
             default:
-                cName += outline? " btn-outline-primary": " btn-primary";
+                cName += outline ? " btn-outline-primary" : " btn-primary";
                 break;
         }
 
@@ -47,9 +46,9 @@ const Button = ({
     }, [outline, variant, block, classAppend]);
 
     const renderedLabel = useMemo(() => {
-            const lbl = label || children;
+        const lbl = label || children;
 
-            return bold ? <strong>{lbl}</strong> : lbl;
+        return bold ? <strong>{lbl}</strong> : lbl;
     }, [label, children]);
 
     return useButton ? (
@@ -60,12 +59,12 @@ const Button = ({
             onClick={onClick}
             disabled={disabled}
         >
-            {icon && <Icon className="mr-3" icon={icon} size={iconSize}/>}
+            {icon && <Icon className="mr-3" icon={icon} size={iconSize} />}
             {renderedLabel}
         </button>
     ) : (
         <Link to={to} className={className} onClick={onClick}>
-            {icon && <Icon className="mr-3" icon={icon} size={iconSize}/>}
+            {icon && <Icon className="mr-3" icon={icon} size={iconSize} />}
             {renderedLabel}
         </Link>
     );
