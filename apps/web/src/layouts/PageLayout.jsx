@@ -193,6 +193,31 @@ const PageLayout = ({
                         </Link>
                     </li>
                     {checkMiddleware(
+                        ["hp_user", "hp_manager", "hp_champion"], // need to change role with admin
+                        primaryRole,
+                        abilities
+                    ) && (
+                        <li
+                            className={
+                                page === "admin/companies"
+                                    ? "sidebar-active"
+                                    : ""
+                            }
+                            data-toggle="tooltip"
+                            title="Companies"
+                        >
+                            <Link to="/admin/companies">
+                                <img
+                                    src="/images/icons/briefcase.png"
+                                    alt="Companies"
+                                />
+                                <div className="d-block d-sm-none">
+                                    Companies
+                                </div>
+                            </Link>
+                        </li>
+                    )}
+                    {checkMiddleware(
                         ["hp_user", "hp_manager", "hp_champion"],
                         primaryRole,
                         abilities

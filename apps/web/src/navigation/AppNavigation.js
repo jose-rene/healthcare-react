@@ -25,6 +25,7 @@ import SetForgotPassword from "../pages/SetForgotPassword";
 import PrivateRoute from "../route/PrivateRoute";
 import RoleRouteRouter from "../route/RoleRoute";
 import AdminPayer from "../pages/Test/AdminPayer";
+import AdminCompanies from "../pages/Admin/Companies/Companies";
 
 const AppNavigation = ({ initializing, initializeUser }) => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -119,6 +120,12 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     requiredAbility="can:edit-payer"
                     page={<AdminPayer />}
                 />
+                <PrivateRoute
+                    path="/admin/companies"
+                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    component={AdminCompanies}
+                />
+
                 <PrivateRoute path="/questionnaire/:id">
                     <Questionnaire />
                 </PrivateRoute>
