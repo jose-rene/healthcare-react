@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import PageLayout from "../../../layouts/PageLayout";
 
 import InputText from "../../../components/inputs/InputText";
@@ -41,7 +42,7 @@ const testData = [
     },
 ];
 
-const Companies = () => {
+const Companies = (props) => {
     const [
         {
             loading,
@@ -115,7 +116,7 @@ const Companies = () => {
     const handleFormSubmit = (e) => redoSearch();
 
     const handleNewCompany = () => {
-        console.log("++++++++++++++handle new company??++++++++++++++");
+        props.history.push("/admin/add-companies");
     };
 
     const handleDuplication = () => {

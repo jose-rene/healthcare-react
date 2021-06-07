@@ -199,7 +199,8 @@ const PageLayout = ({
                     ) && (
                         <li
                             className={
-                                page === "admin/companies"
+                                page === "admin/companies" ||
+                                page === "admin/add-companies"
                                     ? "sidebar-active"
                                     : ""
                             }
