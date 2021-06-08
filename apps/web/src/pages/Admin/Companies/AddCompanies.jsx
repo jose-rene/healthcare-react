@@ -7,7 +7,8 @@ import Button from "../../../components/inputs/Button";
 
 import TabCompanyInfo from "./Tabs/TabCompanyInfo";
 import TabNarrReports from "./Tabs/TabNarrativeReports/TabNarrativeReports";
-import RequestTypes from "./Tabs/RequestTypes";
+import TabRequestTypes from "./Tabs/TabRequestTypes";
+import TabPricing from "./Tabs/TabPricing";
 
 const AddCompanies = (props) => {
     const handleBack = () => {
@@ -50,7 +51,11 @@ const AddCompanies = (props) => {
                     </Tab>
 
                     <Tab eventKey="requestTypes" title="Request Types">
-                        <RequestTypes />
+                        <TabRequestTypes />
+                    </Tab>
+
+                    <Tab eventKey="pricing" title="Pricing">
+                        <TabPricing />
                     </Tab>
                 </Tabs>
             </div>
