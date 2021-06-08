@@ -34,6 +34,8 @@ class BouncerSeeder extends Seeder
      */
     public function run()
     {
+        Bouncer::allow('software_engineer')->everything();
+
         // create abilities to apply to roles
         foreach ($this->adminPermissions as $title) {
             Bouncer::ability()->firstOrCreate(['name' => Str::snake($title, '-'), 'title' => $title]);
