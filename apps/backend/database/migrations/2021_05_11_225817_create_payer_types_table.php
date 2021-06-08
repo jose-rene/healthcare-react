@@ -10,14 +10,16 @@ class CreatePayerTypesTable extends Migration
     /**
      * Run the migrations.
      *
+     * @deprecated This will not be used.
+     *
      * @return void
      */
     public function up()
     {
         Schema::create('payer_types', function (Blueprint $table) {
-            $table->id();
+            $table->tinyIncrements('id');
 
-            $table->string('name')->comment('Health Plan, Health Plan Manager, IPA, IPA Manager, Medical Group, Medical Group Manager');
+            $table->string('name')->comment('Equipment Provider, Health Plan, Health Plan Manager, IPA, IPA Manager, Medical Group, Medical Group Manager');
             $table->string('slug')->nullable()->comment('hp, hp_manager, ipa, ipa_manager, mg, mg_manager');
 
             $table->timestamps();
@@ -25,12 +27,10 @@ class CreatePayerTypesTable extends Migration
         });
 
         $types = [
-            'hp',
-            'hp manager',
-            'ipa',
-            'ipa manager',
-            'mg',
-            'mg manager',
+            'Equipment Provider',
+            'Health Plan',
+            'IPA',
+            'Medical Group',
         ];
 
         array_walk($types, fn ($name) => PayerType::create(compact('name')));

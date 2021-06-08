@@ -27,6 +27,8 @@ class PayerResource extends JsonResource
             'phone'               => new PhoneResource($this->mainPhone),
             'languages'           => Language::all()->map(fn($lang) => ['id' => $lang['id'], 'name' => $lang['name']]),
             'avatar_url'          => route('payer.avatar.show', ['payer' => $this]),
+            'company_category'    => $this->company_category,
+            'category'            => $this->category,
         ];
     }
 }

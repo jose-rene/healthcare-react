@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('member/duplicates', 'MembersController@duplicates')->name('member.duplicates');
+Route::get('member/duplicates', 'MemberController@duplicates')->name('member.duplicates');
+Route::get('company/categories', 'CompanyCategoryController@index')->name('company.categories');
 
 Route::apiResource('payer', 'PayerController');
-Route::apiResource('members', 'MembersController');
+Route::apiResource('member', 'MemberController');
 Route::apiResource('users', 'UserController');
