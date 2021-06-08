@@ -52,6 +52,7 @@ class UserResource extends JsonResource
 
         return [
             'id'                 => $this->uuid,
+            'title'              => $this->title,
             'user_type'          => $this->user_type_name,
             'name'               => $this->full_name,
             'first_name'         => $this->first_name,
@@ -59,7 +60,8 @@ class UserResource extends JsonResource
             'last_name'          => $this->last_name,
             'email'              => $this->email,
             'phones'             => ($phoneCount = $this->phones->count()) ? new PhoneCollectionResource($this->phones) : [],
-            'phone_primary'      => $phoneCount && null !== ($phone = $this->phones->firstWhere('is_primary', 1)) ? $phone->number : '',
+            'phone_primary'      => $phoneCount && null !== ($phone = $this->phones->firstWhere('is_primary',
+                1)) ? $phone->number : '',
             'address'            => new AddressResource($this->address),
             'primary_role'       => $this->primary_role,
             'primary_role_title' => $primaryRole ? $primaryRole->title : '',
