@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Http\SearchPipeline\AuthNumber;
+use App\Http\SearchPipeline\Dates;
 use App\Http\SearchPipeline\RequestStatusId;
+use App\Http\SearchPipeline\TherapyNetworkId;
 use App\Models\Activity\Activity;
 use App\Models\Assessment\Assessment;
 use App\Traits\Revisionable;
@@ -160,6 +162,8 @@ class Request extends Model
             ->through([
                 RequestStatusId::class,
                 AuthNumber::class,
+                Dates::class,
+                TherapyNetworkId::class,
             ])
             ->thenReturn();
     }
