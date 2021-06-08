@@ -22,7 +22,7 @@ const testData = [
     },
 ];
 
-const ReuqestTypes = () => {
+const TabReuqestTypes = () => {
     const [showModal, setShowModal] = useState(false);
 
     const [headers] = useState([
@@ -266,4 +266,4 @@ const ReuqestTypes = () => {
     );
 };
 
-export default ReuqestTypes;
+export default TabReuqestTypes;
