@@ -12,6 +12,11 @@ class TherapyNetwork extends Model
 
     protected $fillable = ['name'];
 
+    public function getCategoryAttribute()
+    {
+        return 'Therapy Network';
+    }
+
     public function address()
     {
         return $this->morphOne(Address::class, 'addressable');

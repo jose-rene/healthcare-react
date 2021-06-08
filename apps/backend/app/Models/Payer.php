@@ -16,8 +16,7 @@ use Illuminate\Pipeline\Pipeline;
 use LasseRafn\InitialAvatarGenerator\InitialAvatar;
 
 /**
- * Class Payer
- * @package App\Models
+ * Class Payer.
  * @property TrainingDocument trainingDocuments
  * @property mixed            avatar
  * @property string           name
@@ -42,12 +41,11 @@ class Payer extends Model
         'tat_default_time',
         'tat_lead_red',
         'tat_lead_yellow',
-
         'is_test',
-
+        'type_id',
+        'category_id',
         'billing_frequency_id', // TODO needs relationship
         'email_security_option_id', // TODO needs relationship
-        'payer_type_id', // TODO needs relationship
     ];
 
     protected $dispatchesEvents = [
@@ -56,6 +54,19 @@ class Payer extends Model
 
     protected $casts = [
         'is_test' => 'boolean',
+    ];
+
+    protected static $categories = [
+        2 => 'Equipment Provider',
+        1 => 'Health Plan',
+        3 => 'IPA',
+        4 => 'Medical Group',
+    ];
+
+    protected static $types = [
+        1 => 'Payer',
+        2 => 'Manager',
+        3 => 'Both',
     ];
 
     /**
@@ -104,6 +115,25 @@ class Payer extends Model
             ->preferBold()
             ->generate()
             ->stream(config('app.avatar_image_type'));
+    }
+
+    public function getCompanyCategoryAttribute()
+    {
+        return 'Payer';
+    }
+
+    public function getCategoryAttribute()
+    {
+        if (empty($this->category_id) || !isset(self::$categories[$this->category_id])) {
+            return ['id' => 1, 'name' => self::$categories[1]];
+        }
+
+        return ['id' => $this->category_id, 'name' => self::$categories[$this->category_id]];
+    }
+
+    public static function getCategories()
+    {
+        return self::$categories;
     }
 
     /**

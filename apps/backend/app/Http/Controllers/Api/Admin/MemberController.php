@@ -12,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class MembersController extends Controller
+class MemberController extends Controller
 {
     public function duplicates(Request $request)
     {

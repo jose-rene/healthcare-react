@@ -21,6 +21,19 @@ class PayerTest extends TestCase
     protected $admin;
     protected $member;
     protected $user;
+    protected $payerFields = [
+        'company_name',
+        'lines_of_business',
+        'payers',
+        'member_number_types',
+        'request_types',
+        'address',
+        'phone',
+        'languages',
+        'avatar_url',
+        'company_category',
+        'category',
+    ];
 
     /**
      * Test payer profile route.
@@ -34,7 +47,7 @@ class PayerTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types', 'languages', 'avatar_url'])
+            ->assertJsonStructure($this->payerFields)
             ->assertJsonCount(Language::all()->count(), 'languages');
     }
 
@@ -50,7 +63,7 @@ class PayerTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types', 'languages', 'avatar_url'])
+            ->assertJsonStructure($this->payerFields)
             ->assertJsonCount(Language::all()->count(), 'languages');
     }
 
@@ -71,7 +84,7 @@ class PayerTest extends TestCase
         // dd($response->json());
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types'])
+            ->assertJsonStructure($this->payerFields)
             ->assertJsonCount($payerCount, 'payers');
     }
 
@@ -95,7 +108,7 @@ class PayerTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types'])
+            ->assertJsonStructure($this->payerFields)
             ->assertJsonCount($payerCount, 'payers.0.payers');
     }
 
@@ -140,14 +153,14 @@ class PayerTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types', 'languages', 'avatar_url']);
+            ->assertJsonStructure($this->payerFields);
 
         // update
         $response = $this->json('PATCH', 'v1/admin/payer/' . $this->payer->uuid, ['name' => $name = 'Green Widgets Inc']);
         // validate response
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'request_types', 'languages', 'avatar_url'])
+            ->assertJsonStructure($this->payerFields)
             ->assertJsonPath('company_name', $name);
 
         // try a non admin user
