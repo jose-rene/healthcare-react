@@ -22,7 +22,6 @@ class CreateMembersTable extends Migration
             $table->foreignId('language_id')->nullable()->comment('The associated preferred language');
             $table->string('language', 50)->nullable()->comment('text of prefered language if other');
             $table->string('member_number')->comment('The plan specified member ID');
-            $table->string('line_of_business')->nullable()->comment('The line of business associated with the member.');
             $table->string('member_number_type')->nullable()->comment('The member ID type for the plan specified member id number.');
             $table->string('gender', 6)->comment('The member\'s gender');
             $table->string('name_title', 6)->comment('The member\'s name saluation');
