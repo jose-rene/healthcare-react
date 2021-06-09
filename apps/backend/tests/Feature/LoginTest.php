@@ -7,6 +7,7 @@ use App\Notifications\TwoFactorNotification;
 use Artisan;
 use Google2FA;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
@@ -17,7 +18,7 @@ use Tests\TestCase;
  */
 class LoginTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     /**
      * @var User
@@ -34,21 +35,24 @@ class LoginTest extends TestCase
     {
         // Make sure I can login
         $response = $this->postJson(
-            '/v1/login',
-            [
-                'email'    => $this->user->email,
-                'password' => 'password',
-            ]
-        );
-
-        $this->user->assign('admin');
-
-        $bearer_token = $response->json('access_token');
-
+                '/v1/login',
+                [
+                    'email'    => $this->user->email,
+                    'password' => 'password',
+                ],
+                [
+                    'User-Agent' => $this->faker->userAgent(),
+                ]
+            );
+        // validate response
         $response
             ->assertOk()
             ->assertJsonStructure(['token_type', 'expires_at', 'access_token']);
+        // validate login history
+        $this->assertEquals($this->user->loginHistory->count(), 1);
 
+        $this->user->assign('admin');
+        $bearer_token = $response->json('access_token');
         // Make sure the bearer token is attached to the right user
         $response = $this->get(
             '/v1/user/profile',

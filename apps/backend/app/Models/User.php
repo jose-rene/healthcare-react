@@ -182,11 +182,22 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * get the activity/ notifications for a user.
+     *
      * @return HasMany
      */
     public function activity()
     {
         return $this->hasMany(Activity::class);
+    }
+
+    /**
+     * Relationship to LoginHistory.
+     *
+     * @return Illuminate\Database\Eloquent\Collection of App\Models\LoginHistory
+     */
+    public function loginHistory()
+    {
+        return $this->hasMany(LoginHistory::class);
     }
 
     public function address()
