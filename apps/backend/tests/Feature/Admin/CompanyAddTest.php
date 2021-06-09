@@ -11,7 +11,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
-class CompanyCategoryTest extends TestCase
+class CompanyAddTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
@@ -23,19 +23,35 @@ class CompanyCategoryTest extends TestCase
      *
      * @return void
      */
-    public function testCompanyCategories()
+    public function testCompanyAdd()
     {
-        // get the categories
-        $response = $this->json('GET', route('api.admin.company.categories'));
+        // make a company
+        $data = [
+            'name'           => $company = $this->faker->company(),
+            'category'       => 1, // payer
+            'payer_category' => 1,
+        ];
+        $response = $this->json('POST', route('api.admin.company.create'), $data);
         // validate response code and structure
         $response
-            ->assertOk()
-            ->assertJsonStructure(['categories', 'payer_categories']);
+            ->assertStatus(201)
+            ->assertJsonPath('company_name', $company);
+
+        // make a therapy network
+        $data = [
+            'name'     => $company = $this->faker->company(),
+            'category' => 3, // therapy network
+        ];
+        $response = $this->json('POST', route('api.admin.company.create'), $data);
+        // validate response code and structure
+        $response
+            ->assertStatus(201)
+            ->assertJsonPath('company_name', $company);
 
         // test permissions, remove ablity
         Bouncer::disallow('client_services_specialist')->to('create-payers');
         Bouncer::refresh();
-        $response = $this->json('GET', route('api.admin.company.categories'));
+        $response = $this->json('POST', route('api.admin.company.create'), $data);
         // validate forbidden response code
         $response->assertStatus(403);
     }
