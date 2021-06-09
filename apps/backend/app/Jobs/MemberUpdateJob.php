@@ -21,7 +21,7 @@ class MemberUpdateJob
      *
      * @return void
      */
-    public function __construct($request, Member $member)
+    public function __construct(MemberRequest | array $request, Member $member)
     {
         $this->data = $request instanceof MemberRequest ? $request->validated() : $request;
         $this->member = $member;

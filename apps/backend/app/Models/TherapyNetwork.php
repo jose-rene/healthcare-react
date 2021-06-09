@@ -12,7 +12,7 @@ class TherapyNetwork extends Model
 
     protected $fillable = ['name'];
 
-    public function getCategoryAttribute()
+    public function getCompanyCategoryAttribute()
     {
         return 'Therapy Network';
     }
