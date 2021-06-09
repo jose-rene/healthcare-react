@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\UserLoggedIn;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\TwoFactorAuthApp;
@@ -67,14 +68,17 @@ class LoginController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        if (auth()->user()->is_2fa) {
-            $class = 'email' === auth()->user()->twofactor_method || 'sms' === auth()->user()->twofactor_method ? TwoFactorAuthMessage::class : TwoFactorAuthApp::class;
-            $params = App::make($class)->send(auth()->user());
+        $user = auth()->user();
+        if ($user->is_2fa) {
+            $class = 'email' === $user->twofactor_method || 'sms' === $user->twofactor_method ? TwoFactorAuthMessage::class : TwoFactorAuthApp::class;
+            $params = App::make($class)->send($user);
 
             return response()->json($params, 200);
         }
 
-        return response()->json(auth()->user()->getAuthTokens($request));
+        event(new UserLoggedIn($user));
+
+        return response()->json($user->getAuthTokens($request));
     }
 
     /**
@@ -95,6 +99,7 @@ class LoginController extends Controller
         $user = App::make($class)->validate($request['code'], $request['email'], $request['token']);
         // user 2fa successful, send bearer token
         auth()->login($user);
+        event(new UserLoggedIn($user));
 
         return response()->json($user->getAuthTokens());
     }
@@ -113,6 +118,7 @@ class LoginController extends Controller
 
         if (null !== ($user = User::select('id')->where('email', $email)->first()) && !empty($user)) {
             Auth::login($user);
+            event(new UserLoggedIn($user));
 
             return response()->json(auth()->user()->getAuthTokens($request));
         }
