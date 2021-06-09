@@ -24,7 +24,6 @@ class CreateActivityTypesTable extends Migration
             $table->softDeletes();
         });
 
-
         $types = collect([
             'Private',
             'Cancelled',
@@ -43,6 +42,6 @@ class CreateActivityTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('types');
+        Schema::dropIfExists('activity_types');
     }
 }
