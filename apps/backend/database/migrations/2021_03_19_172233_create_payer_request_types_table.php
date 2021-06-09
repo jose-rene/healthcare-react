@@ -27,6 +27,6 @@ class CreatePayerRequestTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('company_request_types');
+        Schema::dropIfExists('payer_request_types');
     }
 }

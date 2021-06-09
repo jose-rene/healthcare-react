@@ -31,6 +31,6 @@ class CreateClinicalTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('critical_types');
+        Schema::dropIfExists('clinical_types');
     }
 }
