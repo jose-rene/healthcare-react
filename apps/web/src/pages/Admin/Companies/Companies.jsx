@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { isEmpty } from "lodash";
 
 import PageLayout from "../../../layouts/PageLayout";
 
@@ -17,31 +18,6 @@ import useApiCall from "../../../hooks/useApiCall";
 
 import "../../../styles/companies.scss";
 
-const testData = [
-    {
-        id: "first",
-        name: "first",
-        street: "first",
-        city: "first",
-        state: "first",
-        zip: "first",
-        phone: "first",
-        category: "first",
-        subCategory: "first",
-    },
-    {
-        id: "second",
-        name: "second",
-        street: "second",
-        city: "second",
-        state: "second",
-        zip: "second",
-        phone: "second",
-        category: "second",
-        subCategory: "second",
-    },
-];
-
 const Companies = (props) => {
     const [
         {
@@ -53,9 +29,18 @@ const Companies = (props) => {
         url: "/admin/payer",
     });
 
+    const [
+        { loading: categoryLoading, data: categoryData },
+        requestCategoryData,
+    ] = useApiCall({
+        url: "/admin/company/categories",
+    });
+
     const [searchStatus, setSearchStatus] = useState(false);
     const [checkList, setCheckList] = useState([]);
     const [checkedAll, setCheckedAll] = useState(false);
+    const [categoryOptions, setCategoryOptions] = useState([]);
+    const [subCategoryOptions, setSubCategoryOptions] = useState([]);
 
     const [headers] = useState([
         {
@@ -81,14 +66,14 @@ const Companies = (props) => {
                 );
             },
         },
-        { columnMap: "name", label: "Name", type: String },
-        { columnMap: "street", label: "Street", type: String },
-        { columnMap: "city", label: "City", type: String },
-        { columnMap: "state", label: "State", type: String },
-        { columnMap: "zip", label: "Zip", type: String },
+        { columnMap: "company_name", label: "Name", type: String },
+        { columnMap: "address.street", label: "Street", type: String },
+        { columnMap: "address.city", label: "City", type: String },
+        { columnMap: "address.state", label: "State", type: String },
+        { columnMap: "address.zip", label: "Zip", type: String },
         { columnMap: "phone", label: "Phone", type: String },
-        { columnMap: "category", label: "Category", type: String },
-        { columnMap: "subCategory", label: "Subcategory", type: String },
+        { columnMap: "company_category", label: "Category", type: String },
+        { columnMap: "category.name", label: "Subcategory", type: String },
     ]);
 
     const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
@@ -103,6 +88,33 @@ const Companies = (props) => {
     useEffect(() => {
         setSearchStatus(false);
     }, []);
+
+    useEffect(() => {
+        requestCategoryData();
+    }, []);
+
+    useEffect(() => {
+        if (isEmpty(categoryData)) {
+            return;
+        }
+
+        const { categories, payer_categories } = categoryData;
+
+        let categoryArr = [{ id: "", title: "", val: "" }];
+        const categoryArrTemp = categories?.map(({ id, name }) => {
+            return { id, title: name, val: id };
+        });
+
+        categoryArr = [...categoryArr, ...categoryArrTemp];
+
+        let payerArr = [{ id: "", title: "", val: "" }];
+        for (const [key, value] of Object.entries(payer_categories)) {
+            payerArr.push({ id: value.id, title: value.name, val: value.id });
+        }
+
+        setCategoryOptions(categoryArr);
+        setSubCategoryOptions(payerArr);
+    }, [categoryData]);
 
     const redoSearch = async (params = searchObj) => {
         try {
@@ -232,18 +244,7 @@ const Companies = (props) => {
                                         <Select
                                             name="category"
                                             label="Category"
-                                            options={[
-                                                {
-                                                    id: "option1",
-                                                    val: "option1",
-                                                    title: "Option 1",
-                                                },
-                                                {
-                                                    id: "option2",
-                                                    val: "option2",
-                                                    title: "Option 2",
-                                                },
-                                            ]}
+                                            options={categoryOptions}
                                             onChange={formUpdateSearchObj}
                                         />
                                     </div>
@@ -252,18 +253,7 @@ const Companies = (props) => {
                                         <Select
                                             name="subCategory"
                                             label="Subcategory"
-                                            options={[
-                                                {
-                                                    id: "option1",
-                                                    val: "option1",
-                                                    title: "Option 1",
-                                                },
-                                                {
-                                                    id: "option2",
-                                                    val: "option2",
-                                                    title: "Option 2",
-                                                },
-                                            ]}
+                                            options={subCategoryOptions}
                                             onChange={formUpdateSearchObj}
                                         />
                                     </div>
@@ -296,7 +286,7 @@ const Companies = (props) => {
                                             searchObj={searchObj}
                                             headers={headers}
                                             loading={loading}
-                                            data={testData}
+                                            data={data}
                                             dataMeta={meta}
                                             onChange={handleTableChange}
                                         />
