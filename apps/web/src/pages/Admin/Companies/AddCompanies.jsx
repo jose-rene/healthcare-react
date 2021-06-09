@@ -10,6 +10,7 @@ import TabNarrReports from "./Tabs/TabNarrativeReports/TabNarrativeReports";
 import TabRequestTypes from "./Tabs/TabRequestTypes";
 import TabPricing from "./Tabs/TabPricing";
 import TabCriteria from "./Tabs/TabCriteria";
+import TabBilling from "./Tabs/TabBilling";
 
 const AddCompanies = (props) => {
     const handleBack = () => {
@@ -61,6 +62,10 @@ const AddCompanies = (props) => {
 
                     <Tab eventKey="criteria" title="Criteria">
                         <TabCriteria />
+                    </Tab>
+
+                    <Tab eventKey="billing" title="Billing">
+                        <TabBilling />
                     </Tab>
                 </Tabs>
             </div>
