@@ -11,6 +11,7 @@ import TabRequestTypes from "./Tabs/TabRequestTypes";
 import TabPricing from "./Tabs/TabPricing";
 import TabCriteria from "./Tabs/TabCriteria";
 import TabBilling from "./Tabs/TabBilling";
+import TabTherapyNetworks from "./Tabs/TabTherapyNetworks";
 
 const AddCompanies = (props) => {
     const handleBack = () => {
@@ -66,6 +67,10 @@ const AddCompanies = (props) => {
 
                     <Tab eventKey="billing" title="Billing">
                         <TabBilling />
+                    </Tab>
+
+                    <Tab eventKey="therapyNetworks" title="Therapy Networks">
+                        <TabTherapyNetworks />
                     </Tab>
                 </Tabs>
             </div>
