@@ -14,6 +14,7 @@ import TabBilling from "./Tabs/TabBilling";
 import TabTherapyNetworks from "./Tabs/TabTherapyNetworks";
 import TabReviewers from "./Tabs/TabReviewers";
 import TabAssocCompanies from "./Tabs/TabAssocCompanies";
+import TabGeographicFilters from "./Tabs/TabGeographicFilters";
 
 const AddCompanies = (props) => {
     const handleBack = () => {
@@ -81,6 +82,13 @@ const AddCompanies = (props) => {
 
                     <Tab eventKey="assocCompanies" title="Assoc.Companies">
                         <TabAssocCompanies />
+                    </Tab>
+
+                    <Tab
+                        eventKey="geographicFilters"
+                        title="Geographic Filters"
+                    >
+                        <TabGeographicFilters />
                     </Tab>
                 </Tabs>
             </div>
