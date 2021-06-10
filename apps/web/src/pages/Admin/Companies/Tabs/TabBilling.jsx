@@ -260,11 +260,11 @@ const TabBilling = () => {
 
                             <div className="row">
                                 <div className="col-md-6">
-                                    <InputText title="Payer ID" value="95237" />
+                                    <InputText label="Payer ID" value="95237" />
                                 </div>
                                 <div className="col-md-6">
                                     <InputText
-                                        title="Phone"
+                                        label="Phone"
                                         value="866-886-9992"
                                     />
                                 </div>
