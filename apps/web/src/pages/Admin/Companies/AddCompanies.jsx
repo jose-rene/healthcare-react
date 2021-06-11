@@ -17,6 +17,7 @@ import TabAssocCompanies from "./Tabs/TabAssocCompanies";
 import TabGeographicFilters from "./Tabs/TabGeographicFilters";
 import TabReports from "./Tabs/TabReports";
 import TabTemplates from "./Tabs/TabTemplates";
+import TabNotes from "./Tabs/TabNotes";
 
 const AddCompanies = (props) => {
     const handleBack = () => {
@@ -99,6 +100,10 @@ const AddCompanies = (props) => {
 
                     <Tab eventKey="templates" title="Templates">
                         <TabTemplates />
+                    </Tab>
+
+                    <Tab eventKey="notes" title="Notes">
+                        <TabNotes />
                     </Tab>
                 </Tabs>
             </div>
