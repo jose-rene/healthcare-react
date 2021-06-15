@@ -167,6 +167,7 @@ const RequestLookup = ({ search, setSearch }) => {
         updateSearchObj({
             from_date: fromValue,
             to_date: toValue,
+            date_range: value,
         });
     };
 
