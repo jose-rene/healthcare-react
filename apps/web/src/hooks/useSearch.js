@@ -20,7 +20,9 @@ const useSearch = ({
     };
 
     const updateSearchObj = (objUpdates) => {
-        return setSearchObj({ ...searchObj, ...objUpdates });
+        return setSearchObj((prevObj) => {
+            return { ...prevObj, ...objUpdates };
+        });
     };
 
     return [
