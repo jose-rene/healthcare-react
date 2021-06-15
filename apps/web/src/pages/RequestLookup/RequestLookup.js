@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import moment from "moment";
 import PageLayout from "../../layouts/PageLayout";
 import InputText from "../../components/inputs/InputText";
 import Button from "../../components/inputs/Button";
@@ -107,16 +108,18 @@ const RequestLookup = ({ search, setSearch }) => {
     ]);
 
     const [dateRangeOptions] = useState([
+        { id: "", title: "", val: "" },
         { id: "7", title: "Last 7 Days", val: "7" },
         { id: "30", title: "Last 30 Days", val: "30" },
         { id: "90", title: "Last 90 Days", val: "90" },
     ]);
 
-    const [searchStatus, setSearchStatus] = useState(false);
+    const [{ fromDate, toDate }, setDateRange] = useState({
+        fromDate: from_date,
+        toDate: to_date,
+    });
 
-    useEffect(() => {
-        console.log({ data });
-    }, [data]);
+    const [searchStatus, setSearchStatus] = useState(false);
 
     useEffect(() => {
         setSearchStatus(false);
@@ -149,6 +152,24 @@ const RequestLookup = ({ search, setSearch }) => {
         }
     );
 
+    const updateDateRange = ({ target: { value } }) => {
+        const toValue = value ? moment().format("YYYY-MM-DD") : "";
+        const fromValue = value
+            ? moment().subtract(value, "days").format("YYYY-MM-DD")
+            : "";
+        setDateRange((prevRange) => {
+            return {
+                ...prevRange,
+                fromDate: fromValue,
+                toDate: toValue,
+            };
+        });
+        updateSearchObj({
+            from_date: fromValue,
+            to_date: toValue,
+        });
+    };
+
     return (
         <PageLayout>
             <div className="content-box">
@@ -173,7 +194,7 @@ const RequestLookup = ({ search, setSearch }) => {
                                         <InputText
                                             name="from_date"
                                             label="From Date"
-                                            defaultValue={from_date}
+                                            defaultValue={fromDate}
                                             type="date"
                                             onChange={formUpdateSearchObj}
                                         />
@@ -183,7 +204,7 @@ const RequestLookup = ({ search, setSearch }) => {
                                         <InputText
                                             name="to_date"
                                             label="To Date"
-                                            defaultValue={to_date}
+                                            defaultValue={toDate}
                                             type="date"
                                             onChange={formUpdateSearchObj}
                                         />
@@ -195,7 +216,7 @@ const RequestLookup = ({ search, setSearch }) => {
                                             label="Date Range"
                                             defaultValue={date_range}
                                             options={dateRangeOptions}
-                                            onChange={formUpdateSearchObj}
+                                            onChange={updateDateRange}
                                         />
                                     </div>
 

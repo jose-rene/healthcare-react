@@ -60,12 +60,10 @@ const TableAPI = ({
                                     <Icon icon="edit" size="lg" />
                                 </Link>
                             );
+                        } else if (formatter) {
+                            column = formatter(get(d, columnMap, ""), d);
                         } else {
-                            if (formatter) {
-                                column = formatter(get(d, columnMap, ""), d);
-                            } else {
-                                column = get(d, columnMap, "");
-                            }
+                            column = get(d, columnMap, "");
                         }
 
                         return (
