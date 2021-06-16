@@ -6,6 +6,7 @@ use App\Events\MemberCreated;
 use App\Http\SearchPipeline\Dob;
 use App\Http\SearchPipeline\FirstName;
 use App\Http\SearchPipeline\LastName;
+use App\Traits\Contactable;
 use App\Traits\Uuidable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,9 +22,7 @@ use Illuminate\Pipeline\Pipeline;
  */
 class Member extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
-    use Uuidable;
+    use HasFactory, SoftDeletes, Uuidable, Contactable;
 
     protected $fillable = [
         'payer_id',

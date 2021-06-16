@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\CompanyContactRequest;
 use App\Http\Requests\PayerRequest;
 use App\Http\Resources\PayerResource;
 use App\Models\Payer;
@@ -20,7 +21,7 @@ class PayerController extends Controller
      */
     public function index(Request $request)
     {
-        $data  = Payer::searchPayers()->paginate($request->get('perPage', 50));
+        $data = Payer::searchPayers()->paginate($request->get('perPage', 50));
 
         return PayerResource::collection($data);
     }
@@ -75,5 +76,20 @@ class PayerController extends Controller
         $payer->delete();
 
         return response()->json(['message' => 'ok']);
+    }
+
+    /**
+     * Add contacts to the Payer.
+     *
+     * @param Request $request
+     * @param Payer   $payer
+     * @return JsonResponse
+     */
+    public function contact(CompanyContactRequest $request, Payer $payer)
+    {
+        $data = $request->validated();
+        $payer->addContacts($data['contacts']);
+
+        return new PayerResource($payer);
     }
 }

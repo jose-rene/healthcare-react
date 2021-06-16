@@ -8,6 +8,7 @@ use App\Http\SearchPipeline\Name;
 use App\Http\SearchPipeline\Phone as PhoneSearchPipe;
 use App\Http\SearchPipeline\Sort;
 use App\Models\UserType\HealthPlanUser;
+use App\Traits\Contactable;
 use App\Traits\Uuidable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +24,7 @@ use LasseRafn\InitialAvatarGenerator\InitialAvatar;
  */
 class Payer extends Model
 {
-    use HasFactory, Uuidable, SoftDeletes;
+    use HasFactory, Uuidable, SoftDeletes, Contactable;
 
     protected $fillable = [
         'name',
@@ -196,9 +197,26 @@ class Payer extends Model
         return $this->hasMany(self::class, 'parent_id')->with('children');
     }
 
+    /**
+     * Relationship to phones.
+     *
+     *  @return Illuminate\Database\Eloquent\Collection of App\Models\Phone
+     */
     public function phones()
     {
         return $this->morphMany(Phone::class, 'phoneable')->orderBy('is_primary', 'desc');
+    }
+
+    /**
+     * Relationship to emails.
+     *
+     *  @return Illuminate\Database\Eloquent\Collection of App\Models\Email
+     */
+    public function emails()
+    {
+        return $this->morphMany(Email::class, 'emailable')
+            ->orderBy('is_primary', 'desc')
+            ->orderBy('updated_at', 'desc');
     }
 
     public function getTrainingDocumentsAttribute()
@@ -219,6 +237,11 @@ class Payer extends Model
     public function getMainPhoneAttribute()
     {
         return $this->phones()->first();
+    }
+
+    public function getMainEmailAttribute()
+    {
+        return $this->emails()->first();
     }
 
     public function scopeSearchPayers($query)
