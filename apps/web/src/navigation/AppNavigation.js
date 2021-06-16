@@ -27,6 +27,7 @@ import RoleRouteRouter from "../route/RoleRoute";
 import AdminPayer from "../pages/Test/AdminPayer";
 import AdminCompanies from "../pages/Admin/Companies/Companies";
 import AdminAddCompanies from "../pages/Admin/Companies/AddCompanies";
+import AdminDetailCompanies from "../pages/Admin/Companies/DetailCompanies";
 
 const AppNavigation = ({ initializing, initializeUser }) => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -131,6 +132,12 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     path="/admin/add-companies"
                     middleware={["hp_user", "hp_champion"]} // need to change admin
                     component={AdminAddCompanies}
+                />
+
+                <PrivateRoute
+                    path="/admin/company/:id"
+                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    component={AdminDetailCompanies}
                 />
 
                 <PrivateRoute path="/questionnaire/:id">
