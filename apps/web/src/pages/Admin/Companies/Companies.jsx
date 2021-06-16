@@ -67,11 +67,11 @@ const Companies = (props) => {
             },
         },
         { columnMap: "company_name", label: "Name", type: String },
-        { columnMap: "address.street", label: "Street", type: String },
+        { columnMap: "address.address_1", label: "Street", type: String },
         { columnMap: "address.city", label: "City", type: String },
         { columnMap: "address.state", label: "State", type: String },
-        { columnMap: "address.zip", label: "Zip", type: String },
-        { columnMap: "phone", label: "Phone", type: String },
+        { columnMap: "address.postal_code", label: "Zip", type: String },
+        { columnMap: "phone.number", label: "Phone", type: String },
         { columnMap: "company_category", label: "Category", type: String },
         { columnMap: "category.name", label: "Subcategory", type: String },
     ]);
@@ -107,7 +107,7 @@ const Companies = (props) => {
 
         categoryArr = [...categoryArr, ...categoryArrTemp];
 
-        let payerArr = [{ id: "", title: "", val: "" }];
+        const payerArr = [{ id: "", title: "", val: "" }];
         for (const [key, value] of Object.entries(payer_categories)) {
             payerArr.push({ id: value.id, title: value.name, val: value.id });
         }

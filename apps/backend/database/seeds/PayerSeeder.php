@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Lob;
 use App\Models\Payer;
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class PayerSeeder extends Seeder
@@ -16,20 +17,17 @@ class PayerSeeder extends Seeder
     public function run()
     {
         $name = 'Test Health Plan';
-        $payer = Payer::firstOrCreate(['name' => $name], [
-            'name' => $name,
-        ]);
-        // add lobs
-        if (!$payer->lobs()->exists()) {
-            $payer->lobs()->createMany(
-                Lob::factory()->count(5)->make()->toArray()
-            );
-            // $payer->lobs()->sync(Lob::factory()->count(5)->create()->map(fn ($item) => $item->id)->toArray());
+        if (null === ($payer = Payer::firstWhere('name', $name))) {
+            $payer = Payer::factory()
+                ->hasAddresses(1)
+                ->hasPhones(1)
+                ->hasLobs(5)
+                ->create(['name' => $name])->first();
         }
         // add child payers
         if (!$payer->children()->exists()) {
             $payer->children()->saveMany(
-                Payer::factory()->hasLobs(3)->count(5)->create()
+                Payer::factory()->hasLobs(3)->hasAddresses(1)->hasPhones(1)->count(5)->create()
             );
         }
     }

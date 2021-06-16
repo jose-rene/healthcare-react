@@ -32,7 +32,11 @@ class TestPayerSeeder extends Seeder
         $payers->each(function ($payer) {
             if (mt_rand(0, 99) > 69) {
                 $payer->children()->saveMany(
-                    Payer::factory()->hasLobs(rand(2, 5))->count(rand(2, 5))->create()
+                    Payer::factory()
+                        ->hasLobs(rand(2, 5))
+                        ->hasPhones(1, ['is_primary' => true])
+                        ->hasAddresses(1, ['is_primary' => true])
+                        ->count(rand(2, 5))->create()
                 );
             }
         });
