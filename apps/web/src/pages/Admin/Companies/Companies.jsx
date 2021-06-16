@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { isEmpty } from "lodash";
 
 import PageLayout from "../../../layouts/PageLayout";
@@ -7,6 +8,7 @@ import InputText from "../../../components/inputs/InputText";
 import Select from "../../../components/inputs/Select";
 import Button from "../../../components/inputs/Button";
 import Checkbox from "../../../components/inputs/Checkbox";
+import Icon from "../../../components/elements/Icon";
 
 import TableAPI from "../../../components/elements/TableAPI";
 import Form from "../../../components/elements/Form";
@@ -74,6 +76,23 @@ const Companies = (props) => {
         { columnMap: "phone.number", label: "Phone", type: String },
         { columnMap: "company_category", label: "Category", type: String },
         { columnMap: "category.name", label: "Subcategory", type: String },
+        {
+            columnMap: "id",
+            label: "Actions",
+            type: ACTIONS,
+            disableSortBy: true,
+            formatter(id) {
+                return (
+                    <Link to={`/admin/company/${id}`}>
+                        <Icon
+                            size="1x"
+                            icon="info-circle"
+                            className="mr-2 bg-secondary text-white rounded-circle"
+                        />
+                    </Link>
+                );
+            },
+        },
     ]);
 
     const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
@@ -128,7 +147,13 @@ const Companies = (props) => {
     const handleFormSubmit = (e) => redoSearch();
 
     const handleNewCompany = () => {
-        props.history.push("/admin/add-companies");
+        props.history.push({
+            pathname: "/admin/add-companies",
+            state: {
+                categoryOptions,
+                subCategoryOptions,
+            },
+        });
     };
 
     const handleDuplication = () => {
