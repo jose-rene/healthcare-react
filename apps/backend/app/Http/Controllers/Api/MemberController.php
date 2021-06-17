@@ -13,8 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
-use const FILTER_VALIDATE_EMAIL;
-
 class MemberController extends Controller
 {
     /**
@@ -46,7 +44,7 @@ class MemberController extends Controller
     public function store(MemberRequest $request)
     {
         // the validation is already ran due to the magic of service binding, this is just retrieving the data
-        $data   = $request->validated();
+        $data = $request->validated();
         $member = Member::create([
             'name_title'         => $data['title'],
             'first_name'         => $data['first_name'],
@@ -59,26 +57,8 @@ class MemberController extends Controller
             'lob_id'             => $data['line_of_business'],
             'language'           => $data['language'],
         ]);
-        // @todo add emailable model and contact types model
-        foreach ($data['contacts'] as $index => $item) {
-            if (!strstr($item['value'], '@') || !filter_var($item['value'], FILTER_VALIDATE_EMAIL)) {
-                $member->phones()->create([
-                    'number'         => $item['value'],
-                    'is_primary'     => 0 === $index ? 1 : 0,
-                    'contact_type'   => $item['type'],
-                    'phoneable_type' => Member::class,
-                    'phoneable_id'   => $member->id,
-                ]);
-            } else {
-                $member->emails()->create([
-                    'email'          => $item['value'],
-                    'is_primary'     => 0 === $index ? 1 : 0,
-                    'contact_type'   => $item['type'],
-                    'emailable_type' => Email::class,
-                    'emailable_id'   => $member->id,
-                ]);
-            }
-        }
+        // contacts
+        $member->addContacts($data['contacts']);
         // address
         $member->addresses()->create([
             'address_1'   => $data['address_1'],
