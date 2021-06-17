@@ -83,13 +83,23 @@ const Companies = (props) => {
             disableSortBy: true,
             formatter(id) {
                 return (
-                    <Link to={`/admin/company/${id}`}>
-                        <Icon
-                            size="1x"
-                            icon="info-circle"
-                            className="mr-2 bg-secondary text-white rounded-circle"
-                        />
-                    </Link>
+                    <>
+                        <Link to={`/admin/company/${id}/edit`}>
+                            <Icon
+                                size="1x"
+                                icon="edit"
+                                className="mr-2 bg-secondary text-white rounded-circle p-1"
+                            />
+                        </Link>
+
+                        <Link to={`/admin/company/${id}`}>
+                            <Icon
+                                size="1x"
+                                icon="info-circle"
+                                className="mr-2 bg-secondary text-white rounded-circle p-1"
+                            />
+                        </Link>
+                    </>
                 );
             },
         },

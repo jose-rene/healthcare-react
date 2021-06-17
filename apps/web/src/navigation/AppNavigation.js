@@ -140,9 +140,16 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     component={AdminDetailCompanies}
                 />
 
+                <PrivateRoute
+                    path="/admin/company/:id/edit"
+                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    component={AdminDetailCompanies}
+                />
+
                 <PrivateRoute path="/questionnaire/:id">
                     <Questionnaire />
                 </PrivateRoute>
+
                 <PrivateRoute path="/assessment/:id">
                     <Assessment />
                 </PrivateRoute>
