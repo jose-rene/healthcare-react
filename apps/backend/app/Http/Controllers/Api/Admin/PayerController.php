@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CompanyContactRequest;
-use App\Http\Requests\PayerRequest;
+use App\Http\Requests\Admin\PayerRequest;
 use App\Http\Resources\PayerResource;
 use App\Models\Payer;
 use Exception;
@@ -59,7 +59,11 @@ class PayerController extends Controller
      */
     public function update(PayerRequest $request, Payer $payer)
     {
-        $payer->update($request->validated());
+        $payer->update($data = $request->validated());
+
+        if (!empty($data['member_number_types'])) {
+            $payer->memberNumberTypes()->sync($data['member_number_types']);
+        }
 
         return new PayerResource($payer);
     }
