@@ -20,7 +20,8 @@ import "../../styles/home.scss";
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 const AddMember = (props) => {
-    const { first_name, last_name, dob } = props.history.location.state;
+    const { first_name = "", last_name = "", dob = "" } =
+        props.history.location?.state || {};
 
     const [
         { data: payerProfile, loading: pageLoading },
