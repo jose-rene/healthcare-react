@@ -19,6 +19,9 @@ class PayerResource extends JsonResource
         return [
             'id'                  => $this->uuid,
             'company_name'        => $this->name,
+            'abbreviation'        => $this->abbreviation,
+            'assessment_label'    => $this->assessment_label,
+            'has_phi'             => $this->has_phi,
             'lines_of_business'   => LobResource::collection($this->lobs),
             'payers'              => self::collection($this->children),
             'member_number_types' => PayerMemberNumberResource::collection($this->memberNumberTypes),

@@ -31,7 +31,8 @@ class CreatePayersTable extends Migration
             $table->string('coupa_url')->nullable()->comment('url for submitting to Coupa');
             $table->string('criteria')->nullable()->comment('criteria (can be inserted in narrative report)');
             $table->string('email_security_option_id')->nullable()->comment('id of email security options when sending invoices');
-            $table->boolean('is_test')->nullable()->default(false)->comment('flag to indicate a test payer account');
+            $table->boolean('is_test')->default(false)->comment('flag to indicate a test payer account');
+            $table->boolean('has_phi')->default(false)->comment('flag to indicate payer has phi');
             $table->string('type_id')->unsignedTinyInteger()->default(1)->comment('id of payer type');
             $table->string('category_id')->unsignedTinyInteger()->default(1)->comment('id of payer category');
             $table->string('per_request_average_high')->nullable()->comment('high-end limit of average cost of requested items (for use with outcome reports)');

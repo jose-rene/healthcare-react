@@ -11,4 +11,14 @@ class MemberNumberType extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
+
+    /**
+     * Relationship to payers.
+     *
+     * @return App\Models\Payer
+     */
+    public function payers()
+    {
+        return $this->belongsToMany(Payer::class);
+    }
 }

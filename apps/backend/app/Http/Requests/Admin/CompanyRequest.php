@@ -34,4 +34,16 @@ class CompanyRequest extends FormRequest
             'payer_category' => ['required_if:category,1', Rule::in($payerCategoryIds)],
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'category.*' => 'The selected company type is not currently supported',
+        ];
+    }
 }

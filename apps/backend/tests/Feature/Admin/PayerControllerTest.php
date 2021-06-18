@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Language;
+use App\Models\MemberNumberType;
 use App\Models\Payer;
 use App\Models\TrainingDocument;
 use App\Models\User;
@@ -15,7 +16,7 @@ use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 /**
- * Class
+ * Class.
  * @link  https://phpunit.readthedocs.io/en/9.5/annotations.html#group
  * @link  https://phpunit.readthedocs.io/en/9.5/annotations.html#testwith
  * @group admin
@@ -119,6 +120,37 @@ class PayerControllerTest extends TestCase
     }
 
     /**
+     * Test that the payer child hierarchy is retrieved properly.
+     *
+     * @return void
+     */
+    public function testUpdatePayer()
+    {
+        // $this->withoutExceptionHandling();
+        $formData = [
+            'name'                => $company = $this->faker->company,
+            'category_id'         => 2,
+            'abbreviation'        => substr($company, 0, 3),
+            'assessment_label'    => $this->faker->catchPhrase,
+            'member_number_types' => [MemberNumberType::first()->id],
+            'has_phi'             => 1,
+        ];
+        // update the payer
+        $response = $this->json('PUT', route('api.admin.payer.update', $this->payer->uuid), $formData);
+
+        // validate response code and structure
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types'])
+            ->assertJsonCount(1, 'member_number_types')
+            ->assertJsonPath('company_name', $formData['name'])
+            ->assertJsonPath('abbreviation', $formData['abbreviation'])
+            ->assertJsonPath('assessment_label', $formData['assessment_label'])
+            ->assertJsonPath('category.id', $formData['category_id'])
+            ->assertJsonPath('has_phi', (bool) $formData['has_phi']);
+    }
+
+    /**
      * @group training
      * @group document
      * @group functional
@@ -160,7 +192,7 @@ class PayerControllerTest extends TestCase
             '--class' => 'LanguageSeeder',
         ]);
         $this->payer = Payer::factory()->hasLobs(5, ['is_tat_enabled' => 1])->count(1)->create()->first();
-        $this->user  = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
+        $this->user = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
         $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create(['payer_id' => $this->payer]));
 
         Bouncer::allow('admin')->everything();

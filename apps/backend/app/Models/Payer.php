@@ -43,6 +43,7 @@ class Payer extends Model
         'tat_lead_red',
         'tat_lead_yellow',
         'is_test',
+        'has_phi',
         'type_id',
         'category_id',
         'billing_frequency_id', // TODO needs relationship
@@ -55,6 +56,7 @@ class Payer extends Model
 
     protected $casts = [
         'is_test' => 'boolean',
+        'has_phi' => 'boolean',
     ];
 
     protected static $categories = [
@@ -158,13 +160,13 @@ class Payer extends Model
     }
 
     /**
-     * Relationship to payer member number types.
+     * Relationship to member number types.
      *
-     * @return App\Models\PayerMemberNumberType
+     * @return App\Models\MemberNumberType
      */
     public function memberNumberTypes()
     {
-        return $this->hasMany(PayerMemberNumberType::class);
+        return $this->belongsToMany(MemberNumberType::class);
     }
 
     /**

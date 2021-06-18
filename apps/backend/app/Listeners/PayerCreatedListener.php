@@ -26,8 +26,8 @@ class PayerCreatedListener
     public function handle(PayerCreated $event)
     {
         // get the default member number types
-        $types = MemberNumberType::all()->map(fn($item) => ['name' => $item['name'], 'title' => $item['title']]);
+        $types = MemberNumberType::all()->pluck('id')->toArray();
         // add these to the payer member number types
-        $event->payer->memberNumberTypes()->createMany($types);
+        $event->payer->memberNumberTypes()->sync($types);
     }
 }

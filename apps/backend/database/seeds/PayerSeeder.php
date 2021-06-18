@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Lob;
+use App\Models\MemberNumberType;
 use App\Models\Payer;
-use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class PayerSeeder extends Seeder
@@ -16,6 +15,7 @@ class PayerSeeder extends Seeder
      */
     public function run()
     {
+        $memberNumberTypes = MemberNumberType::all()->pluck('id')->toArray();
         $name = 'Test Health Plan';
         if (null === ($payer = Payer::firstWhere('name', $name))) {
             $payer = Payer::factory()
@@ -30,5 +30,7 @@ class PayerSeeder extends Seeder
                 Payer::factory()->hasLobs(3)->hasAddresses(1)->hasPhones(1)->count(5)->create()
             );
         }
+        // member number types
+        $payer->memberNumberTypes()->sync($memberNumberTypes);
     }
 }
