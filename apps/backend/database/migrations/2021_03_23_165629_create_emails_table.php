@@ -15,6 +15,7 @@ class CreateEmailsTable extends Migration
     {
         Schema::create('emails', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid');
 
             $table->string('email');
             $table->foreignId('email_type_id')->nullable()->comment('id of related email type');

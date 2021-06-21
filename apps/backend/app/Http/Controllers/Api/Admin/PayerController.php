@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CompanyContactRequest;
+use App\Http\Requests\Admin\EmailRequest;
 use App\Http\Requests\Admin\PayerRequest;
+use App\Http\Requests\Admin\PhoneRequest;
+use App\Http\Resources\EmailResource;
 use App\Http\Resources\PayerResource;
+use App\Http\Resources\PhoneResource;
 use App\Models\Payer;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -95,5 +99,35 @@ class PayerController extends Controller
         $payer->addContacts($data['contacts']);
 
         return new PayerResource($payer);
+    }
+
+    /**
+     * Update the specified payer's phone.
+     *
+     * @param Request $request
+     * @param Payer   $payer
+     * @return JsonResponse
+     */
+    public function updatePhone(PhoneRequest $request, Payer $payer, $id)
+    {
+        abort_if(null === ($phone = $payer->phones->firstWhere('uuid', $id)), 422, 'Phone not found.');
+        $phone->update($request->validated());
+
+        return new PhoneResource($phone);
+    }
+
+    /**
+     * Update the specified payer's email.
+     *
+     * @param Request $request
+     * @param Payer   $payer
+     * @return JsonResponse
+     */
+    public function updateEmail(EmailRequest $request, Payer $payer, $id)
+    {
+        abort_if(null === ($email = $payer->emails->firstWhere('uuid', $id)), 422, 'Email not found.');
+        $email->update($request->validated());
+
+        return new EmailResource($email);
     }
 }

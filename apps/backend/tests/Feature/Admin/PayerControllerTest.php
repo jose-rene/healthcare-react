@@ -47,6 +47,7 @@ class PayerControllerTest extends TestCase
                 'member_number_types',
                 'request_types',
                 'languages',
+                'contacts',
             ])
             ->assertJsonCount(Language::all()->count(), 'languages');
     }
@@ -70,6 +71,7 @@ class PayerControllerTest extends TestCase
                 'member_number_types',
                 'request_types',
                 'languages',
+                'contacts',
             ])
             ->assertJsonCount(Language::all()->count(), 'languages');
     }
@@ -88,10 +90,9 @@ class PayerControllerTest extends TestCase
         // get the payer
         $response = $this->json('GET', route('api.admin.payer.show', $this->payer->uuid));
         // validate response code and structure
-        // dd($response->json());
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types'])
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types', 'contacts'])
             ->assertJsonCount($payerCount, 'payers');
     }
 
@@ -120,13 +121,12 @@ class PayerControllerTest extends TestCase
     }
 
     /**
-     * Test that the payer child hierarchy is retrieved properly.
+     * Test payer update.
      *
      * @return void
      */
     public function testUpdatePayer()
     {
-        // $this->withoutExceptionHandling();
         $formData = [
             'name'                => $company = $this->faker->company,
             'category_id'         => 2,
@@ -148,6 +148,54 @@ class PayerControllerTest extends TestCase
             ->assertJsonPath('assessment_label', $formData['assessment_label'])
             ->assertJsonPath('category.id', $formData['category_id'])
             ->assertJsonPath('has_phi', (bool) $formData['has_phi']);
+    }
+
+    /**
+     * Test payer's phone update.
+     *
+     * @return void
+     */
+    public function testUpdatePayerPhone()
+    {
+        $formData = [
+            'number'     => $this->faker->phoneNumber(),
+            'is_primary' => 0,
+        ];
+        $route = route('api.admin.payer.phone.update', [
+            'payer' => $this->payer,
+            'id'    => $this->payer->phones->first()->uuid,
+        ]);
+        // update the payer's phone
+        $response = $this->json('PUT', $route, $formData);
+        // validate response code and structure
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('number', $formData['number'])
+            ->assertJsonPath('is_primary', (bool) $formData['is_primary']);
+    }
+
+    /**
+     * Test payer's email update.
+     *
+     * @return void
+     */
+    public function testUpdatePayerEmail()
+    {
+        $formData = [
+            'email'      => $this->faker->companyEmail(),
+            'is_primary' => 0,
+        ];
+        $route = route('api.admin.payer.email.update', [
+            'payer' => $this->payer,
+            'id'    => $this->payer->emails->first()->uuid,
+        ]);
+        // update the payer's email
+        $response = $this->json('PUT', $route, $formData);
+        // validate response code and structure
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('email', $formData['email'])
+            ->assertJsonPath('is_primary', (bool) $formData['is_primary']);
     }
 
     /**
@@ -191,7 +239,13 @@ class PayerControllerTest extends TestCase
         Artisan::call('db:seed', [
             '--class' => 'LanguageSeeder',
         ]);
-        $this->payer = Payer::factory()->hasLobs(5, ['is_tat_enabled' => 1])->count(1)->create()->first();
+        $this->payer = Payer::factory()
+            ->hasLobs(5, ['is_tat_enabled' => 1])
+            ->hasEmails(1)
+            ->hasPhones(1)
+            ->count(1)
+            ->create()
+            ->first();
         $this->user = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
         $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create(['payer_id' => $this->payer]));
 
