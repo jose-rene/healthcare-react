@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Tabs, Tab } from "react-bootstrap";
 
 import PageLayout from "../../../layouts/PageLayout";
@@ -20,10 +20,24 @@ import TabTemplates from "./Tabs/TabTemplates";
 import TabNotes from "./Tabs/TabNotes";
 import TabMisc from "./Tabs/TabMisc";
 
+import useApiCall from "../../../hooks/useApiCall";
+
 const DetailCompanies = (props) => {
     const handleBack = () => {
         props.history.push("/admin/companies");
     };
+
+    const company_id = props.history.location.pathname.split("/")[3];
+
+    const [{ data, loading }, companyDetailRequest] = useApiCall({
+        url: `/admin/payer/${company_id}`,
+    });
+
+    useEffect(() => {
+        companyDetailRequest();
+    }, []);
+
+    console.log("+++++++++++++++++", data);
 
     return (
         <PageLayout>
