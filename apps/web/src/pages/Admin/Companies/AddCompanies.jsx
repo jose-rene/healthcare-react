@@ -24,6 +24,9 @@ const AddCompanies = (props) => {
     const [categoryOptions, setCategoryOptions] = useState([]);
     const [subCategoryOptions, setSubCategoryOptions] = useState([]);
     const [showSubcategory, setShowSubcategory] = useState(false);
+    const [contactMethods, setContactMethods] = useState([
+        { type: "type", phone_email: "phone_email" },
+    ]);
 
     const { handleSubmit, register, watch, errors } = useForm();
 
@@ -82,21 +85,21 @@ const AddCompanies = (props) => {
                     </div>
                 </div>
 
+                <div className="col-md-6">
+                    {formError ? (
+                        <PageAlert
+                            className="mt-3"
+                            variant="warning"
+                            timeout={5000}
+                            dismissible
+                        >
+                            Error: {formError}
+                        </PageAlert>
+                    ) : null}
+                </div>
                 <Form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="col-md-6">
-                        {formError ? (
-                            <PageAlert
-                                className="mt-3"
-                                variant="warning"
-                                timeout={5000}
-                                dismissible
-                            >
-                                Error: {formError}
-                            </PageAlert>
-                        ) : null}
-                    </div>
-                    <div className="d-flex">
-                        <div className="col-md-3">
+                    <div className="form-row">
+                        <div className="col-md-4">
                             <InputText
                                 name="name"
                                 label="Company Name"
@@ -106,7 +109,7 @@ const AddCompanies = (props) => {
                                 errors={errors}
                             />
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-4">
                             <Select
                                 name="category"
                                 label="Company Type"
@@ -117,9 +120,7 @@ const AddCompanies = (props) => {
                                 errors={errors}
                             />
                         </div>
-                    </div>
-                    <div className="d-flex">
-                        <div className="col-md-3">
+                        <div className="col-md-4">
                             {showSubcategory && (
                                 <Select
                                     name="payer_category"
@@ -132,12 +133,25 @@ const AddCompanies = (props) => {
                                 />
                             )}
                         </div>
-                        <div className="col-md-3 custom-add-button">
+
+                        <div className="col-md-12">
                             <Button
                                 type="submit"
                                 className="btn btn-block btn-primary mb-md-3 py-2"
                                 label="Add"
                             />
+                        </div>
+                        <div className="col-md-6">
+                            {formError ? (
+                                <PageAlert
+                                    className="mt-3"
+                                    variant="warning"
+                                    timeout={5000}
+                                    dismissible
+                                >
+                                    Error: {formError}
+                                </PageAlert>
+                            ) : null}
                         </div>
                     </div>
                 </Form>

@@ -1,8 +1,13 @@
-import React, { useState } from "react";
-
-import { Tabs, Tab } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { Form, Tabs, Tab } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import { isEmpty } from "lodash";
 
 import TableAPI from "../../../../components/elements/TableAPI";
+import ContactMethods from "../../../../components/elements/ContactMethods";
+import PageAlert from "../../../../components/elements/PageAlert";
+
 import InputText from "../../../../components/inputs/InputText";
 import Checkbox from "../../../../components/inputs/Checkbox";
 import Select from "../../../../components/inputs/Select";
@@ -10,6 +15,8 @@ import Icon from "../../../../components/elements/Icon";
 import Button from "../../../../components/inputs/Button";
 
 import { ACTIONS } from "../../../../helpers/table";
+
+import useApiCall from "../../../../hooks/useApiCall";
 
 const contactTestData = [
     {
@@ -31,6 +38,9 @@ const adressTestData = [
 ];
 
 const TabCompanyInfo = () => {
+    const history = useHistory();
+    const company_id = history.location.pathname.split("/")[3];
+
     const [contactHeaders] = useState([
         {
             columnMap: "description",
@@ -123,6 +133,79 @@ const TabCompanyInfo = () => {
         },
     ]);
 
+    const { handleSubmit } = useForm();
+
+    const [
+        { loading: categoryLoading, data: categoryData },
+        requestCategoryData,
+    ] = useApiCall({
+        url: "/admin/company/categories",
+    });
+
+    const [
+        {
+            loading: contactMethodsLoading,
+            data: contactMethodsData,
+            error: contactMethodsError,
+        },
+        requestContactMethodsData,
+    ] = useApiCall({
+        method: "post",
+        url: `/admin/payer/${company_id}/contact`,
+    });
+
+    const [payerCategoryOptions, setPayerCategoryOptions] = useState([]);
+    const [contactMethods, setContactMethods] = useState([
+        { type: "type", phone_email: "phone_email" },
+    ]);
+    const [contacts, setContacts] = useState({});
+    const [addContactStatus, setAddContactStatus] = useState(false);
+
+    useEffect(() => {
+        requestCategoryData();
+    }, []);
+
+    useEffect(() => {
+        if (isEmpty(categoryData)) {
+            return;
+        }
+
+        const { payer_categories } = categoryData;
+
+        const payerArr = [{ id: "", title: "", val: "" }];
+        for (const [key, value] of Object.entries(payer_categories)) {
+            payerArr.push({ id: value.id, title: value.name, val: value.id });
+        }
+
+        setPayerCategoryOptions(payerArr);
+    }, [categoryData]);
+
+    const onSubmit = async () => {
+        const sendData = [];
+        contactMethods.forEach((v) => {
+            sendData.push({
+                type: contacts[v.type],
+                value: contacts[v.phone_email],
+            });
+        });
+
+        try {
+            const result = await requestContactMethodsData({
+                params: { contacts: sendData },
+            });
+
+            if (result) {
+                setAddContactStatus(true);
+            }
+        } catch (e) {
+            console.log("Add Contact Methods Error:", e);
+        }
+    };
+
+    const setContactMethodsValue = ({ target: { name, value } }) => {
+        setContacts({ ...contacts, [name]: value });
+    };
+
     return (
         <>
             <div className="white-box white-box-small">
@@ -133,11 +216,6 @@ const TabCompanyInfo = () => {
                             label="Name"
                             placeholder="Name"
                         />
-                    </div>
-                    <div className="col-md-3">
-                        <div className="form-control custom-checkbox">
-                            <Checkbox labelLeft name="molina" label="Molina" />
-                        </div>
                     </div>
                     <div className="col-md-3">
                         <InputText
@@ -155,38 +233,9 @@ const TabCompanyInfo = () => {
                     </div>
                     <div className="col-md-3">
                         <Select
-                            name="category"
-                            label="Category"
-                            options={[
-                                {
-                                    id: "option1",
-                                    val: "option1",
-                                    title: "Option 1",
-                                },
-                                {
-                                    id: "option2",
-                                    val: "option2",
-                                    title: "Option 2",
-                                },
-                            ]}
-                        />
-                    </div>
-                    <div className="col-md-3">
-                        <Select
                             name="subCategory"
-                            label="Sub Category"
-                            options={[
-                                {
-                                    id: "option1",
-                                    val: "option1",
-                                    title: "Option 1",
-                                },
-                                {
-                                    id: "option2",
-                                    val: "option2",
-                                    title: "Option 2",
-                                },
-                            ]}
+                            label="Payer Category"
+                            options={payerCategoryOptions}
                         />
                     </div>
                     <div className="col-md-3">
@@ -208,42 +257,78 @@ const TabCompanyInfo = () => {
                 </div>
             </div>
 
-            <div className="col-md-6 pl-0">
-                <Button
-                    icon="plus"
-                    iconSize="sm"
-                    label="Add"
-                    className="float-right p-2"
-                />
+            <div className="row m-0">
+                <div className="col-md-6 pl-0">
+                    <Tabs
+                        defaultActiveKey="contact-methods"
+                        className="inside-tabs"
+                    >
+                        <Tab eventKey="contact-methods" title="Contact Methods">
+                            <div className="white-box mt-0">
+                                <TableAPI
+                                    searchObj={{}}
+                                    headers={contactHeaders}
+                                    loading={false}
+                                    data={contactTestData}
+                                    dataMeta={{}}
+                                />
+                            </div>
+                        </Tab>
 
-                <Tabs
-                    defaultActiveKey="contact-methods"
-                    className="inside-tabs"
-                >
-                    <Tab eventKey="contact-methods" title="Contact Methods">
-                        <div className="white-box mt-0">
-                            <TableAPI
-                                searchObj={{}}
-                                headers={contactHeaders}
-                                loading={false}
-                                data={contactTestData}
-                                dataMeta={{}}
+                        <Tab eventKey="addresses" title="Addresses">
+                            <div className="white-box mt-0">
+                                <TableAPI
+                                    searchObj={{}}
+                                    headers={addressHeaders}
+                                    loading={false}
+                                    data={adressTestData}
+                                    dataMeta={{}}
+                                />
+                            </div>
+                        </Tab>
+                    </Tabs>
+                </div>
+
+                <div className="col-md-6 white-box add-contact-method-top">
+                    <Form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="form-row">
+                            {contactMethodsError ? (
+                                <PageAlert
+                                    className="mt-3 w-100"
+                                    variant="warning"
+                                    timeout={5000}
+                                    dismissible
+                                >
+                                    Error: {contactMethodsError}
+                                </PageAlert>
+                            ) : null}
+                            {addContactStatus ? (
+                                <PageAlert
+                                    className="mt-3 w-100"
+                                    variant="success"
+                                    timeout={5000}
+                                    dismissible
+                                >
+                                    Contact successfully added.
+                                </PageAlert>
+                            ) : null}
+
+                            <ContactMethods
+                                contactMethods={contactMethods}
+                                setContactMethods={setContactMethods}
+                                setContactMethodsValue={setContactMethodsValue}
+                            />
+
+                            <Button
+                                icon="plus"
+                                iconSize="sm"
+                                label="Add"
+                                className="btn btn-block mx-1"
+                                type="Submit"
                             />
                         </div>
-                    </Tab>
-
-                    <Tab eventKey="addresses" title="Addresses">
-                        <div className="white-box mt-0">
-                            <TableAPI
-                                searchObj={{}}
-                                headers={addressHeaders}
-                                loading={false}
-                                data={adressTestData}
-                                dataMeta={{}}
-                            />
-                        </div>
-                    </Tab>
-                </Tabs>
+                    </Form>
+                </div>
             </div>
         </>
     );

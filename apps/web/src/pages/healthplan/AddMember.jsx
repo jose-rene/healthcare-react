@@ -9,11 +9,11 @@ import PageLayout from "../../layouts/PageLayout";
 import Select from "../../components/inputs/Select";
 import InputText from "../../components/inputs/InputText";
 import FormButtons from "../../components/elements/FormButtons";
+import ContactMethods from "../../components/elements/ContactMethods";
 import Icon from "../../components/elements/Icon";
 import useApiCall from "../../hooks/useApiCall";
 import { BASE_URL, API_KEY } from "../../config/Map";
 import states from "../../config/States.json";
-import types from "../../config/Types.json";
 import titles from "../../config/Titles.json";
 
 import "../../styles/home.scss";
@@ -103,23 +103,6 @@ const AddMember = (props) => {
         return result;
     }, [states]);
 
-    const typesOptions = useMemo(() => {
-        if (isEmpty(types)) {
-            return [];
-        }
-
-        const result = [{ id: "", title: "", val: "" }];
-        for (const [key, value] of Object.entries(types)) {
-            result.push({
-                id: value,
-                title: value,
-                val: key,
-            });
-        }
-
-        return result;
-    }, [types]);
-
     const titlesOptions = useMemo(() => {
         if (isEmpty(titles)) {
             return [];
@@ -169,7 +152,6 @@ const AddMember = (props) => {
         try {
             const result = await fireSubmit({ params: formSendData });
             setMember(result);
-            // reset();
         } catch (e) {
             console.log("Member create error:", e);
         }
@@ -232,63 +214,6 @@ const AddMember = (props) => {
             .catch((error) => {
                 setAlertMessage("Address fetch error!");
             });
-    };
-
-    const renderContactMethod = () => {
-        return contactMethods.map(({ type, phone_email }) => (
-            <React.Fragment key={type}>
-                <div className="col-md-5">
-                    <Select
-                        name={type}
-                        label="Type*"
-                        options={typesOptions}
-                        errors={errors}
-                        ref={register({
-                            required: "Type is required",
-                        })}
-                    />
-                </div>
-
-                <div className="col-md-5">
-                    <InputText
-                        name={phone_email}
-                        label="Phone/Email*"
-                        errors={errors}
-                        ref={register({
-                            required: "Phone/Email is required",
-                        })}
-                    />
-                </div>
-
-                {contactMethods.length > 1 && (
-                    <div className="col-md-2">
-                        <Button
-                            className="btn btn-zip btn-danger"
-                            label="remove"
-                            icon="cancel"
-                            iconSize="1x"
-                            onClick={() => removeContactMethod(type)}
-                        />
-                    </div>
-                )}
-            </React.Fragment>
-        ));
-    };
-
-    const addNewContactMethod = () => {
-        const len = contactMethods.length;
-        setContactMethods([
-            ...contactMethods,
-            { type: `type_${len}`, phone_email: `phone_email_${len}` },
-        ]);
-    };
-
-    const removeContactMethod = (type) => {
-        const filtered = contactMethods.filter((item) => {
-            return type !== item.type;
-        });
-
-        setContactMethods(filtered);
     };
 
     return (
@@ -580,16 +505,10 @@ const AddMember = (props) => {
                                     </h1>
                                 </div>
 
-                                {renderContactMethod()}
-
-                                <div className="col-md-12 mb-3">
-                                    <Button
-                                        className="btn btn-block btn-add-method"
-                                        onClick={() => addNewContactMethod()}
-                                    >
-                                        + Add new contact method
-                                    </Button>
-                                </div>
+                                <ContactMethods
+                                    contactMethods={contactMethods}
+                                    setContactMethods={setContactMethods}
+                                />
 
                                 <div className="col-md-12">
                                     {formError ? (
