@@ -17,6 +17,8 @@ Route::get('member/duplicates', 'MemberController@duplicates')->name('member.dup
 Route::get('company/categories', 'CompanyController@categories')->name('company.categories');
 Route::post('company', 'CompanyController@store')->name('company.create');
 Route::post('payer/{payer}/contact', 'PayerController@contact')->name('payer.contact.create');
+Route::put('payer/{payer}/email/{id}', 'PayerController@updateEmail')->name('payer.email.update');
+Route::put('payer/{payer}/phone/{id}', 'PayerController@updatePhone')->name('payer.phone.update');
 
 Route::apiResource('payer', 'PayerController');
 Route::apiResource('member', 'MemberController');

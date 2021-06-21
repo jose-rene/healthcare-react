@@ -25,7 +25,6 @@ class CompanyContactsTest extends TestCase
      */
     public function testCompanyAddContacts()
     {
-        $this->withoutExceptionHandling();
         $phone = ['type' => 'Phone', 'value' => $number = $this->faker->phonenumber];
         $email = ['type' => 'Home Email', 'value' => $emailAddress = $this->faker->email];
         $formData = ['contacts' => [$phone, $email]];
