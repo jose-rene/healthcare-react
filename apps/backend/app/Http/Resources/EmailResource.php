@@ -15,8 +15,9 @@ class EmailResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'email'      => $this->email,
-            'is_primary' => $this->is_primary,
+            'email'       => $this->email,
+            'is_primary'  => $this->is_primary,
+            'description' => $this->contact_type,
         ];
     }
 }

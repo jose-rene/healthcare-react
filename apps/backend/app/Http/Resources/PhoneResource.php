@@ -22,9 +22,10 @@ class PhoneResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'         => $this->uuid,
-            'number'     => $this->number,
-            'is_primary' => $this->is_primary,
+            'id'          => $this->uuid,
+            'number'      => $this->number,
+            'is_primary'  => $this->is_primary,
+            'description' => $this->contact_type,
         ];
     }
 }

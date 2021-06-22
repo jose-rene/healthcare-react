@@ -24,6 +24,7 @@ class EmailFactory extends Factory
         return [
             'email'          => $this->faker->companyEmail,
             'is_primary'     => 1,
+            'contact_type'   => 'Email',
             'emailable_type' => User::class,
             'emailable_id'   => function () {
                 return User::factory();
