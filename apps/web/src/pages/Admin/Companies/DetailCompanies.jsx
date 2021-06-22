@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Tabs, Tab } from "react-bootstrap";
 
 import PageLayout from "../../../layouts/PageLayout";
@@ -33,11 +33,11 @@ const DetailCompanies = (props) => {
         url: `/admin/payer/${company_id}`,
     });
 
+    const [udpateSuccess, setUpdateSuccess] = useState(false);
+
     useEffect(() => {
         companyDetailRequest();
-    }, []);
-
-    console.log("+++++++++++++++++", data);
+    }, [udpateSuccess]);
 
     return (
         <PageLayout>
@@ -67,7 +67,11 @@ const DetailCompanies = (props) => {
 
                 <Tabs defaultActiveKey="comapnyInfo">
                     <Tab eventKey="comapnyInfo" title="Company Info">
-                        <TabCompanyInfo />
+                        <TabCompanyInfo
+                            data={data}
+                            udpateSuccess={udpateSuccess}
+                            setUpdateSuccess={setUpdateSuccess}
+                        />
                     </Tab>
 
                     <Tab eventKey="narrReports" title="Narr.Reports">

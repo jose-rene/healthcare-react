@@ -18,14 +18,6 @@ import { ACTIONS } from "../../../../helpers/table";
 
 import useApiCall from "../../../../hooks/useApiCall";
 
-const contactTestData = [
-    {
-        id: "contactTestData",
-        description: "Home",
-        number: "(702) 555-0122",
-    },
-];
-
 const adressTestData = [
     {
         id: "addressTestData",
@@ -37,7 +29,7 @@ const adressTestData = [
     },
 ];
 
-const TabCompanyInfo = () => {
+const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
     const history = useHistory();
     const company_id = history.location.pathname.split("/")[3];
 
@@ -159,7 +151,6 @@ const TabCompanyInfo = () => {
         { type: "type", phone_email: "phone_email" },
     ]);
     const [contacts, setContacts] = useState({});
-    const [addContactStatus, setAddContactStatus] = useState(false);
 
     useEffect(() => {
         requestCategoryData();
@@ -195,7 +186,7 @@ const TabCompanyInfo = () => {
             });
 
             if (result) {
-                setAddContactStatus(true);
+                setUpdateSuccess(true);
             }
         } catch (e) {
             console.log("Add Contact Methods Error:", e);
@@ -269,7 +260,7 @@ const TabCompanyInfo = () => {
                                     searchObj={{}}
                                     headers={contactHeaders}
                                     loading={false}
-                                    data={contactTestData}
+                                    data={data?.contacts}
                                     dataMeta={{}}
                                 />
                             </div>
@@ -289,7 +280,7 @@ const TabCompanyInfo = () => {
                     </Tabs>
                 </div>
 
-                <div className="col-md-6 white-box add-contact-method-top">
+                <div className="col-md-6 white-box add-contact-method-top w-100">
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-row">
                             {contactMethodsError ? (
@@ -302,7 +293,7 @@ const TabCompanyInfo = () => {
                                     Error: {contactMethodsError}
                                 </PageAlert>
                             ) : null}
-                            {addContactStatus ? (
+                            {udpateSuccess ? (
                                 <PageAlert
                                     className="mt-3 w-100"
                                     variant="success"
