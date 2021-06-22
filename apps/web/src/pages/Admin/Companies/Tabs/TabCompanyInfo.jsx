@@ -32,6 +32,14 @@ const adressTestData = [
 const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
     const history = useHistory();
     const company_id = history.location.pathname.split("/")[3];
+    const {
+        name,
+        category_id,
+        abbreviation,
+        assessment_label,
+        member_number_types,
+        has_phi,
+    } = data;
 
     const [contactHeaders] = useState([
         {
@@ -125,7 +133,7 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
         },
     ]);
 
-    const { handleSubmit } = useForm();
+    const { handleSubmit, register, errors } = useForm();
 
     const [
         { loading: categoryLoading, data: categoryData },
@@ -151,6 +159,7 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
         { type: "type", phone_email: "phone_email" },
     ]);
     const [contacts, setContacts] = useState({});
+    const [companyInfoStatus, setCompanyInfoStatus] = useState(false);
 
     useEffect(() => {
         requestCategoryData();
@@ -171,7 +180,7 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
         setPayerCategoryOptions(payerArr);
     }, [categoryData]);
 
-    const onSubmit = async () => {
+    const handleAddContactMethods = async () => {
         const sendData = [];
         contactMethods.forEach((v) => {
             sendData.push({
@@ -197,55 +206,137 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
         setContacts({ ...contacts, [name]: value });
     };
 
+    const [
+        {
+            data: companyInfo,
+            loading: companyInfoLoading,
+            error: companyInfoError,
+        },
+        companyInfoUpdateRequest,
+    ] = useApiCall({
+        method: "put",
+        url: `/admin/payers/${company_id}`,
+    });
+
+    const handleUpdate = async (formUpdateData) => {
+        try {
+            const result = await companyInfoUpdateRequest({
+                params: formUpdateData,
+            });
+
+            setCompanyInfoStatus(true);
+        } catch (e) {
+            setCompanyInfoStatus(false);
+            console.log("Company Info Update Error:", e);
+        }
+    };
+
     return (
         <>
             <div className="white-box white-box-small">
-                <div className="row">
-                    <div className="col-md-3">
-                        <InputText
-                            name="name"
-                            label="Name"
-                            placeholder="Name"
-                        />
-                    </div>
-                    <div className="col-md-3">
-                        <InputText
-                            name="abbreviation"
-                            label="Abbreviation"
-                            placeholder="Name"
-                        />
-                    </div>
-                    <div className="col-md-3">
-                        <InputText
-                            name="member-id-types"
-                            label="Member ID Types"
-                            placeholder="MediCaid"
-                        />
-                    </div>
-                    <div className="col-md-3">
-                        <Select
-                            name="subCategory"
-                            label="Payer Category"
-                            options={payerCategoryOptions}
-                        />
-                    </div>
-                    <div className="col-md-3">
-                        <InputText
-                            name="assessment-label"
-                            label="Assessment Label"
-                            placeholder="Placeholder"
-                        />
-                    </div>
-                    <div className="col-md-3">
-                        <div className="form-control custom-checkbox">
-                            <Checkbox
-                                labelLeft
-                                name="molina"
-                                label="Includes PHI"
+                {companyInfoError ? (
+                    <PageAlert
+                        className="mt-3 w-100"
+                        variant="warning"
+                        timeout={5000}
+                        dismissible
+                    >
+                        Error: {companyInfoError}
+                    </PageAlert>
+                ) : null}
+                {companyInfoStatus ? (
+                    <PageAlert
+                        className="mt-3 w-100"
+                        variant="success"
+                        timeout={5000}
+                        dismissible
+                    >
+                        Company Info successfully updated.
+                    </PageAlert>
+                ) : null}
+                <Form onSubmit={handleSubmit(handleUpdate)}>
+                    <div className="row">
+                        <div className="col-md-3">
+                            <InputText
+                                name="name"
+                                label="Name"
+                                placeholder="Name"
+                                errors={errors}
+                                defaultValue={name}
+                                ref={register({
+                                    required: "Name is required",
+                                })}
                             />
                         </div>
+                        <div className="col-md-3">
+                            <InputText
+                                name="abbreviation"
+                                label="Abbreviation"
+                                placeholder="Abbreviation"
+                                defaultValue={abbreviation}
+                                errors={errors}
+                                ref={register({
+                                    required: "Abbreviation is required",
+                                })}
+                            />
+                        </div>
+                        <div className="col-md-3">
+                            <InputText
+                                name="member_number_types"
+                                label="Member ID Types"
+                                placeholder="MediCaid"
+                                defaultValue={member_number_types}
+                                errors={errors}
+                                ref={register({
+                                    required: "Member ID Types is required",
+                                })}
+                            />
+                        </div>
+                        <div className="col-md-3">
+                            <Select
+                                name="category_id"
+                                label="Payer Category"
+                                options={payerCategoryOptions}
+                                errors={errors}
+                                ref={register({
+                                    required: "Payer Category is required",
+                                })}
+                            />
+                        </div>
+                        <div className="col-md-3">
+                            <InputText
+                                name="assessment_label"
+                                label="Assessment Label"
+                                placeholder="Assessment Label"
+                                defaultValue={assessment_label}
+                                errors={errors}
+                                ref={register({
+                                    required: "Assessment Label is required",
+                                })}
+                            />
+                        </div>
+                        <div className="col-md-3">
+                            <div className="form-control custom-checkbox">
+                                <Checkbox
+                                    labelLeft
+                                    name="has_phi"
+                                    label="Includes PHI"
+                                    defaultValue={has_phi}
+                                    errors={errors}
+                                    ref={register({})}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-md-3 update-button-top">
+                            <Button
+                                type="submit"
+                                className="btn btn-block btn-primary mb-md-3 py-2"
+                            >
+                                Update
+                            </Button>
+                        </div>
                     </div>
-                </div>
+                </Form>
             </div>
 
             <div className="row m-0">
@@ -280,45 +371,45 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
                     </Tabs>
                 </div>
 
-                <div className="col-md-6 white-box add-contact-method-top w-100">
-                    <Form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="form-row">
-                            {contactMethodsError ? (
-                                <PageAlert
-                                    className="mt-3 w-100"
-                                    variant="warning"
-                                    timeout={5000}
-                                    dismissible
-                                >
-                                    Error: {contactMethodsError}
-                                </PageAlert>
-                            ) : null}
-                            {udpateSuccess ? (
-                                <PageAlert
-                                    className="mt-3 w-100"
-                                    variant="success"
-                                    timeout={5000}
-                                    dismissible
-                                >
-                                    Contact successfully added.
-                                </PageAlert>
-                            ) : null}
+                <div className="col-md-6 white-box add-contact-method-top w-100 h-100">
+                    <div className="form-row">
+                        {contactMethodsError ? (
+                            <PageAlert
+                                className="mt-3 w-100"
+                                variant="warning"
+                                timeout={5000}
+                                dismissible
+                            >
+                                Error: {contactMethodsError}
+                            </PageAlert>
+                        ) : null}
+                        {udpateSuccess ? (
+                            <PageAlert
+                                className="mt-3 w-100"
+                                variant="success"
+                                timeout={5000}
+                                dismissible
+                            >
+                                Contact successfully added.
+                            </PageAlert>
+                        ) : null}
 
-                            <ContactMethods
-                                contactMethods={contactMethods}
-                                setContactMethods={setContactMethods}
-                                setContactMethodsValue={setContactMethodsValue}
-                            />
+                        <ContactMethods
+                            contactMethods={contactMethods}
+                            setContactMethods={setContactMethods}
+                            setContactMethodsValue={setContactMethodsValue}
+                        />
 
-                            <Button
-                                icon="plus"
-                                iconSize="sm"
-                                label="Add"
-                                className="btn btn-block mx-1"
-                                type="Submit"
-                            />
-                        </div>
-                    </Form>
+                        <Button
+                            icon="plus"
+                            iconSize="sm"
+                            label="Add"
+                            className="btn btn-block mx-1"
+                            onClick={() => {
+                                handleAddContactMethods();
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
         </>
