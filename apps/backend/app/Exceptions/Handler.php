@@ -4,8 +4,9 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -66,6 +67,17 @@ class Handler extends ExceptionHandler
         // invalid or expired signature
         if ($exception instanceof InvalidSignatureException && $request->acceptsJson()) {
             return response()->json(['message' => 'Invalid Signature.'], 403);
+        }
+
+        // http exceptions, send back friendly json messages
+        if ($exception instanceof HttpException && $request->acceptsJson()) {
+            $data = ['message' => $exception->getMessage()];
+            // add an errors object for validation type errors
+            if (422 === ($statusCode = $exception->getStatusCode())) {
+                $data['errors'] = ['general' => $data['message']];
+            }
+
+            return response()->json($data, $statusCode);
         }
 
         return parent::render($request, $exception);
