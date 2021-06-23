@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Form, Tabs, Tab } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
+import MultiSelect from "react-select";
 
 import TableAPI from "../../../../components/elements/TableAPI";
 import ContactMethods from "../../../../components/elements/ContactMethods";
@@ -33,8 +34,8 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
     const history = useHistory();
     const company_id = history.location.pathname.split("/")[3];
     const {
-        name,
-        category_id,
+        company_name,
+        category,
         abbreviation,
         assessment_label,
         member_number_types,
@@ -155,30 +156,65 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
     });
 
     const [payerCategoryOptions, setPayerCategoryOptions] = useState([]);
+    const [memberIdTypesOptions, setMemberIdTypesOptions] = useState([]);
+    const [memberIdTypesValue, setMemberIdTypesValue] = useState([]);
     const [contactMethods, setContactMethods] = useState([
         { type: "type", phone_email: "phone_email" },
     ]);
     const [contacts, setContacts] = useState({});
     const [companyInfoStatus, setCompanyInfoStatus] = useState(false);
+    const [phiStatus, setPhiStatus] = useState(null);
 
     useEffect(() => {
         requestCategoryData();
     }, []);
 
     useEffect(() => {
+        setPhiStatus(has_phi);
+    }, [has_phi]);
+
+    useEffect(() => {
+        setUpdateSuccess(false);
+    }, [data]);
+
+    useEffect(() => {
         if (isEmpty(categoryData)) {
             return;
         }
 
-        const { payer_categories } = categoryData;
+        const { payer_categories, member_number_types: types } = categoryData;
 
         const payerArr = [{ id: "", title: "", val: "" }];
-        for (const [key, value] of Object.entries(payer_categories)) {
-            payerArr.push({ id: value.id, title: value.name, val: value.id });
-        }
+        payer_categories.forEach(({ id, name }) => {
+            payerArr.push({
+                id,
+                title: name,
+                val: id,
+                selected: Number(category?.id) === id ? "selected" : false,
+            });
+        });
+
+        const typesArr = [];
+        types.forEach(({ id, name }) => {
+            typesArr.push({ value: id, label: name });
+        });
 
         setPayerCategoryOptions(payerArr);
-    }, [categoryData]);
+        setMemberIdTypesOptions(typesArr);
+    }, [categoryData, category]);
+
+    useEffect(() => {
+        if (!member_number_types) {
+            return;
+        }
+
+        const typesArr = [];
+        member_number_types.forEach(({ id, title }) => {
+            typesArr.push({ value: id, label: title });
+        });
+
+        setMemberIdTypesValue(typesArr);
+    }, [member_number_types]);
 
     const handleAddContactMethods = async () => {
         const sendData = [];
@@ -215,13 +251,20 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
         companyInfoUpdateRequest,
     ] = useApiCall({
         method: "put",
-        url: `/admin/payers/${company_id}`,
+        url: `/admin/payer/${company_id}`,
     });
 
     const handleUpdate = async (formUpdateData) => {
+        const memberNumberTypes = memberIdTypesValue.map((item) => {
+            return item.value;
+        });
+
         try {
             const result = await companyInfoUpdateRequest({
-                params: formUpdateData,
+                params: {
+                    ...formUpdateData,
+                    member_number_types: memberNumberTypes,
+                },
             });
 
             setCompanyInfoStatus(true);
@@ -229,6 +272,14 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
             setCompanyInfoStatus(false);
             console.log("Company Info Update Error:", e);
         }
+    };
+
+    const handleMemberIdTypes = (value) => {
+        setMemberIdTypesValue(value);
+    };
+
+    const handlePhiStatus = () => {
+        setPhiStatus(!phiStatus);
     };
 
     return (
@@ -262,7 +313,7 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
                                 label="Name"
                                 placeholder="Name"
                                 errors={errors}
-                                defaultValue={name}
+                                defaultValue={company_name}
                                 ref={register({
                                     required: "Name is required",
                                 })}
@@ -281,16 +332,19 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
                             />
                         </div>
                         <div className="col-md-3">
-                            <InputText
-                                name="member_number_types"
-                                label="Member ID Types"
-                                placeholder="MediCaid"
-                                defaultValue={member_number_types}
-                                errors={errors}
-                                ref={register({
-                                    required: "Member ID Types is required",
-                                })}
-                            />
+                            <div className="form-group">
+                                <label className="form-label">
+                                    Member ID Types
+                                </label>
+                                <MultiSelect
+                                    closeMenuOnSelect={false}
+                                    value={memberIdTypesValue}
+                                    isMulti
+                                    placeholder="MediCaid"
+                                    options={memberIdTypesOptions}
+                                    onChange={handleMemberIdTypes}
+                                />
+                            </div>
                         </div>
                         <div className="col-md-3">
                             <Select
@@ -321,9 +375,10 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
                                     labelLeft
                                     name="has_phi"
                                     label="Includes PHI"
-                                    defaultValue={has_phi}
+                                    checked={phiStatus}
                                     errors={errors}
                                     ref={register({})}
+                                    onChange={() => handlePhiStatus()}
                                 />
                             </div>
                         </div>
