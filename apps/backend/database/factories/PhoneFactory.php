@@ -25,6 +25,7 @@ class PhoneFactory extends Factory
         return [
             'number'         => $this->faker->phoneNumber,
             'is_primary'     => 1,
+            'contact_type'   => 'Phone',
             'phoneable_type' => User::class,
             'phoneable_id'   => function () {
                 return User::factory();
