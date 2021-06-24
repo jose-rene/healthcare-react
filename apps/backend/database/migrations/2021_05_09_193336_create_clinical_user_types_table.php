@@ -23,14 +23,6 @@ class CreateClinicalUserTypesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-
-        $types = collect([
-            'Clinician',
-            'Reviewer',
-            'Senior reviewer',
-        ]);
-
-        $types->each(fn($name) => ClinicalUserType::create(compact('name')));
     }
 
     /**

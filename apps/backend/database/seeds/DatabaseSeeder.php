@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
         $this->call(MemberSeeder::class);
         $this->call(LanguageSeeder::class);
         $this->call(RequestTypeSeeder::class);
+        // clinical services user relation seeders
+        $this->call(ClinicalUserRelatedSeeder::class);
+        // @todo should be deprecated
         $this->call(AssessmentSeeder::class);
     }
 }

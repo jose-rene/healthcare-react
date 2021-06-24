@@ -16,10 +16,10 @@ class CreateClinicalUserStatusesTable extends Migration
         Schema::create('clinical_user_statuses', function (Blueprint $table) {
             $table->id();
 
-            $table->boolean('active')->comment('flag for active status (can log in)');
+            $table->boolean('is_active')->default(1)->comment('flag for active status (can log in)');
             $table->string('name')->comment('display name');
             $table->string('slug')->comment('available/unavailable/probation/vacation/illness/etc');
-            $table->string('description')->comment('description');
+            $table->string('description')->default('')->comment('description');
 
             $table->timestamps();
             $table->softDeletes();
