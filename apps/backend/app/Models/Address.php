@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property boolean     is_primary
+ * @property bool     is_primary
  * @property string      address_1
  * @property string      address_2
  * @property string      city
  * @property string      county
  * @property string      state
  * @property string      postal_code
- * @property integer     address_type_id
+ * @property int     address_type_id
  * @property AddressType addressType
  */
 class Address extends Model
@@ -34,7 +34,7 @@ class Address extends Model
         'address_type_id',
     ];
 
-    protected $casts = ['is_primary'];
+    protected $casts = ['is_primary' => 'boolean'];
 
     /**
      * Polymorphic relationship.
@@ -49,8 +49,11 @@ class Address extends Model
         return Arr::get($this->addressType, 'name', '');
     }
 
-    public function type()
+    public function addressType()
     {
-        return $this->hasOne(AddressType::class, 'address_type_id');
+        return $this->belongsTo(AddressType::class)->withDefault([
+            'id'   => 0,
+            'name' => 'N/A',
+        ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AddressRequest;
 use App\Http\Requests\Admin\CompanyContactRequest;
 use App\Http\Requests\Admin\EmailRequest;
 use App\Http\Requests\Admin\PayerRequest;
@@ -97,6 +98,20 @@ class PayerController extends Controller
     {
         $data = $request->validated();
         $payer->addContacts($data['contacts']);
+
+        return new PayerResource($payer);
+    }
+
+    /**
+     * Add address to the Payer.
+     *
+     * @param Request $request
+     * @param Payer   $payer
+     * @return JsonResponse
+     */
+    public function address(AddressRequest $request, Payer $payer)
+    {
+        $payer->addresses()->create($request->validated());
 
         return new PayerResource($payer);
     }

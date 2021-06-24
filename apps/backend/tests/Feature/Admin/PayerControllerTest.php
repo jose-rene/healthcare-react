@@ -151,6 +151,34 @@ class PayerControllerTest extends TestCase
     }
 
     /**
+     * Test adding address.
+     *
+     * @return void
+     */
+    public function testCompanyAddAddress()
+    {
+        $formData = [
+            'is_primary'      => true,
+            'address_1'       => $this->faker->streetAddress,
+            'city'            => $this->faker->city,
+            'county'          => $this->faker->lastName,
+            'state'           => $this->faker->stateAbbr,
+            'postal_code'     => $this->faker->postcode,
+            'address_type_id' => 2,
+        ];
+        $response = $this->json('POST', route('api.admin.payer.address.create', ['payer' => $this->payer]), $formData);
+        $response
+            ->assertOk()
+            ->assertJsonPath('address_list.0.type.id', $formData['address_type_id'])
+            ->assertJsonPath('address_list.0.is_primary', $formData['is_primary'])
+            ->assertJsonPath('address_list.0.address_1', $formData['address_1'])
+            ->assertJsonPath('address_list.0.city', $formData['city'])
+            ->assertJsonPath('address_list.0.county', $formData['county'])
+            ->assertJsonPath('address_list.0.state', $formData['state'])
+            ->assertJsonPath('address_list.0.postal_code', $formData['postal_code']);
+    }
+
+    /**
      * Test payer's phone update.
      *
      * @return void
