@@ -8,6 +8,7 @@ import MultiSelect from "react-select";
 import TableAPI from "../../../../components/elements/TableAPI";
 import ContactMethods from "../../../../components/elements/ContactMethods";
 import PageAlert from "../../../../components/elements/PageAlert";
+import Modal from "../../../../components/elements/Modal";
 
 import InputText from "../../../../components/inputs/InputText";
 import Checkbox from "../../../../components/inputs/Checkbox";
@@ -34,6 +35,7 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
     const history = useHistory();
     const company_id = history.location.pathname.split("/")[3];
     const {
+        id: payerId,
         company_name,
         category,
         abbreviation,
@@ -50,8 +52,8 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
             disableSortBy: true,
         },
         {
-            columnMap: "number",
-            label: "Number",
+            columnMap: "contact",
+            label: "Contact",
             type: String,
             disableSortBy: true,
         },
@@ -60,13 +62,22 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
             label: "Actions",
             type: ACTIONS,
             disableSortBy: true,
-            formatter(id) {
+            formatter(id, { is_primary, contact, type, description }) {
                 return (
                     <>
                         <Icon
                             size="1x"
                             icon="edit"
                             className="mr-2 bg-primary text-white rounded-circle p-1"
+                            onClick={() =>
+                                handleEdit(
+                                    id,
+                                    is_primary,
+                                    contact,
+                                    type,
+                                    description
+                                )
+                            }
                         />
                         <Icon
                             size="1x"
@@ -164,6 +175,9 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
     const [contacts, setContacts] = useState({});
     const [companyInfoStatus, setCompanyInfoStatus] = useState(false);
     const [phiStatus, setPhiStatus] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [editContact, setEditContact] = useState(null);
+    const [contactUpdateStatus, setContactUpdateStatus] = useState(false);
 
     useEffect(() => {
         requestCategoryData();
@@ -282,6 +296,60 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
         setPhiStatus(!phiStatus);
     };
 
+    const handleEdit = (id, is_primary, contact, type, description) => {
+        setEditContact({
+            id,
+            is_primary,
+            contact,
+            type,
+            description,
+        });
+
+        setShowModal(!showModal);
+    };
+
+    const handleUpdateEditData = ({ target: { name, value } }) => {
+        setEditContact({ ...editContact, [name]: value });
+    };
+
+    const handleClose = () => {
+        setShowModal(false);
+    };
+
+    const [
+        {
+            data: contactInfo,
+            loading: contactInfoLoading,
+            error: contactInfoError,
+        },
+        contactInfoUpdateRequest,
+    ] = useApiCall({
+        method: "put",
+        url: `/admin/payer/${payerId}/${editContact?.type}/${editContact?.id}`,
+    });
+
+    const handleUpdateContact = async () => {
+        try {
+            const contactParam =
+                editContact?.type && editContact.type === "email"
+                    ? "email"
+                    : "number";
+            const result = await contactInfoUpdateRequest({
+                params: {
+                    is_primary: editContact?.is_primary,
+                    [contactParam]: editContact?.contact,
+                },
+            });
+
+            if (result) {
+                setContactUpdateStatus(true);
+                setUpdateSuccess(true);
+            }
+        } catch (e) {
+            console.log("Contact Info Update Error:", e);
+        }
+    };
+
     return (
         <>
             <div className="white-box white-box-small">
@@ -305,6 +373,7 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
                         Company Info successfully updated.
                     </PageAlert>
                 ) : null}
+
                 <Form onSubmit={handleSubmit(handleUpdate)}>
                     <div className="row">
                         <div className="col-md-3">
@@ -401,7 +470,76 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
                         className="inside-tabs"
                     >
                         <Tab eventKey="contact-methods" title="Contact Methods">
+                            <Modal show={showModal} onHide={handleEdit}>
+                                <div className="col-md-12">
+                                    <InputText
+                                        label={editContact?.description}
+                                        name="contact"
+                                        value={editContact?.contact}
+                                        onChange={handleUpdateEditData}
+                                    />
+                                </div>
+
+                                <div className="col-md-12">
+                                    <div className="form-control custom-checkbox">
+                                        <Checkbox
+                                            labelLeft
+                                            label="Primary"
+                                            name="is_primary"
+                                            checked={editContact?.is_primary}
+                                            onChange={handleUpdateEditData}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="col-md-12">
+                                    <div className="row">
+                                        <div className="col-md-6" />
+
+                                        <div className="col-md-3 mt-3">
+                                            <Button
+                                                className="btn btn-block"
+                                                label="Update"
+                                                onClick={() => {
+                                                    handleUpdateContact();
+                                                    handleClose();
+                                                }}
+                                            />
+                                        </div>
+
+                                        <div className="col-md-3 mt-3">
+                                            <Button
+                                                outline
+                                                className="btn btn-block"
+                                                label="Cancel"
+                                                onClick={handleClose}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Modal>
                             <div className="white-box mt-0">
+                                {contactInfoError ? (
+                                    <PageAlert
+                                        className="mt-3 w-100"
+                                        variant="warning"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Error: {contactInfoError}
+                                    </PageAlert>
+                                ) : null}
+                                {contactUpdateStatus ? (
+                                    <PageAlert
+                                        className="mt-3 w-100"
+                                        variant="success"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Contact Info successfully updated.
+                                    </PageAlert>
+                                ) : null}
+
                                 <TableAPI
                                     searchObj={{}}
                                     headers={contactHeaders}
