@@ -29,7 +29,7 @@ class PayerResource extends JsonResource
             'address'             => new AddressResource($this->mainAddress),
             'phone'               => new PhoneResource($this->mainPhone),
             'email'               => new EmailResource($this->mainEmail),
-            'contacts'            => array_merge(PhoneResource::collection($this->phones)->toArray($request), EmailResource::collection($this->emails)->toArray($request)),
+            'contacts'            => array_merge(PhoneContactResource::collection($this->phones)->toArray($request), EmailContactResource::collection($this->emails)->toArray($request)),
             'languages'           => Language::all()->map(fn ($lang)           => ['id' => $lang['id'], 'name' => $lang['name']]),
             'avatar_url'          => route('payer.avatar.show', ['payer' => $this]),
             'company_category'    => $this->company_category,
