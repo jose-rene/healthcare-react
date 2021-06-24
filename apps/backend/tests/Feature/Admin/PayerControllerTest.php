@@ -227,6 +227,64 @@ class PayerControllerTest extends TestCase
     }
 
     /**
+     * Test delete payer's email.
+     *
+     * @return void
+     */
+    public function testDeletePayerEmail()
+    {
+        $route = route('api.admin.payer.email.delete', [
+            'payer' => $this->payer,
+            'id'    => $this->payer->emails->first()->uuid,
+        ]);
+        // update the payer's email
+        $response = $this->json('DELETE', $route);
+        // should return an error since there is only one email contact
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure(['message', 'errors']);
+
+        // add an email
+        $this->payer->emails()->create(['email' => $email = $this->faker->companyEmail, 'is_primary' => true]);
+        // try again, should be successful
+        $response = $this->json('DELETE', $route);
+        // should return ok when email is deleted
+        $response->assertOk();
+        // verify email is deleted
+        $this->assertEquals($email, $this->payer->main_email->email);
+        $this->assertEquals(1, $this->payer->emails->count());
+    }
+
+    /**
+     * Test delete payer's email.
+     *
+     * @return void
+     */
+    public function testDeletePayerPhone()
+    {
+        $route = route('api.admin.payer.phone.delete', [
+            'payer' => $this->payer,
+            'id'    => $this->payer->phones->first()->uuid,
+        ]);
+        // update the payer's email
+        $response = $this->json('DELETE', $route);
+        // should return an error since there is only one phone contact
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure(['message', 'errors']);
+
+        // add a phone
+        $this->payer->phones()->create(['number' => $phone = $this->faker->phoneNumber, 'is_primary' => true]);
+        // try again, should be successful
+        $response = $this->json('DELETE', $route);
+        // should return ok when email is deleted
+        $response->assertOk();
+        // verify email is deleted
+        $this->assertEquals($phone, $this->payer->main_phone->number);
+        $this->assertEquals(1, $this->payer->phones->count());
+    }
+
+    /**
      * @group training
      * @group document
      * @group functional
