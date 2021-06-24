@@ -27,6 +27,7 @@ class PayerResource extends JsonResource
             'member_number_types' => PayerMemberNumberResource::collection($this->memberNumberTypes),
             'request_types'       => RequestTypeResource::collection($this->requestTypes->whereNull('parent_id')),
             'address'             => new AddressResource($this->mainAddress),
+            'address_list'        => AddressResource::collection($this->addresses),
             'phone'               => new PhoneResource($this->mainPhone),
             'email'               => new EmailResource($this->mainEmail),
             'contacts'            => array_merge(PhoneResource::collection($this->phones)->toArray($request), EmailResource::collection($this->emails)->toArray($request)),

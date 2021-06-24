@@ -16,12 +16,13 @@ class AddressResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'is_primary' => (bool)$this->is_primary,
+            'type'        => ['id' => $this->addressType->id, 'name' => $this->addressType->name],
+            'is_primary'  => (bool) $this->is_primary,
             'address_1'   => $this->address_1,
             'address_2'   => $this->address_2 ?? '',
-            'city'       => $this->city,
-            'county'     => $this->county,
-            'state'      => $this->state,
+            'city'        => $this->city,
+            'county'      => $this->county,
+            'state'       => $this->state,
             'postal_code' => $this->postal_code,
         ];
     }

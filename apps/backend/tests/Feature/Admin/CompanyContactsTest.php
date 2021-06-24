@@ -19,7 +19,7 @@ class CompanyContactsTest extends TestCase
     protected $member;
 
     /**
-     * Test updating payer.
+     * Test adding contacts.
      *
      * @return void
      */
