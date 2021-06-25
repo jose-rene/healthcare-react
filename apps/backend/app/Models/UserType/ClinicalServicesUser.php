@@ -3,6 +3,10 @@
 namespace App\Models\UserType;
 
 use App\Http\SearchPipeline\Admin\ClinicalUserStatusId;
+use App\Models\ClinicalType;
+use App\Models\ClinicalUserStatus;
+use App\Models\ClinicalUserType;
+use App\Models\TherapyNetwork;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -45,22 +49,22 @@ class ClinicalServicesUser extends Model
 
     public function type()
     {
-        return $this->hasOne(ClinicalType::class, 'clinical_type_id');
+        return $this->belongsTo(ClinicalType::class, 'clinical_type_id')->select(['id', 'name']);
     }
 
     public function userType()
     {
-        return $this->hasOne(ClinicalUserType::class, 'clinical_user_type_id');
+        return $this->belongsTo(ClinicalUserType::class, 'clinical_user_type_id')->select(['id', 'name']);
     }
 
     public function status()
     {
-        return $this->hasOne(ClinicalUserStatus::class, 'clinical_user_status_id');
+        return $this->belongsTo(ClinicalUserStatus::class, 'clinical_user_status_id')->select(['id', 'name']);
     }
 
-    public function network()
+    public function therapyNetwork()
     {
-        return $this->hasOne(TherapyNetwork::class, 'therapy_network_id');
+        return $this->belongsTo(TherapyNetwork::class, 'therapy_network_id')->select(['id', 'name']);
     }
 
     public function scopeSearchAllUsers($query, self $authedUser)

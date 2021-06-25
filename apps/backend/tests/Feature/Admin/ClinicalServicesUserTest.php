@@ -28,7 +28,6 @@ class ClinicalServicesUserTest extends TestCase
     {
         // get clinical users
         $response = $this->json('GET', route('api.admin.clinicaluser.search'), ['status_id' => 1]);
-        // dd($response->json());
         // validate response code and structure
         $response
             ->assertOk()
@@ -57,6 +56,21 @@ class ClinicalServicesUserTest extends TestCase
         $response
             ->assertOk()
             ->assertJsonCount(0, 'data');
+    }
+
+    /**
+     * Test updating payer.
+     *
+     * @return void
+     */
+    public function testClinicalUserParams()
+    {
+        // get clinical user status and type options
+        $response = $this->json('GET', route('api.admin.clinicaluser.params'));
+        // validate response code and structure
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['user_statuses', 'user_types']);
     }
 
     protected function setUp(): void
