@@ -34,6 +34,9 @@ const DetailCompanies = (props) => {
     });
 
     const [udpateSuccess, setUpdateSuccess] = useState(false);
+    const [companyInfoActiveTab, setCompanyInfoActiveTab] = useState(
+        "contact-methods"
+    );
 
     useEffect(() => {
         companyDetailRequest();
@@ -70,6 +73,8 @@ const DetailCompanies = (props) => {
                         <TabCompanyInfo
                             data={data}
                             udpateSuccess={udpateSuccess}
+                            companyInfoActiveTab={companyInfoActiveTab}
+                            setCompanyInfoActiveTab={setCompanyInfoActiveTab}
                             setUpdateSuccess={setUpdateSuccess}
                         />
                     </Tab>

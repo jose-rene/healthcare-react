@@ -2,9 +2,9 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
-import Button from "../../components/inputs/Button";
 import BroadcastAlert from "../../components/elements/BroadcastAlert";
 import PageAlert from "../../components/elements/PageAlert";
+import AddressForm from "../../components/elements/AddressForm";
 import PageLayout from "../../layouts/PageLayout";
 import Select from "../../components/inputs/Select";
 import InputText from "../../components/inputs/InputText";
@@ -12,8 +12,6 @@ import FormButtons from "../../components/elements/FormButtons";
 import ContactMethods from "../../components/elements/ContactMethods";
 import Icon from "../../components/elements/Icon";
 import useApiCall from "../../hooks/useApiCall";
-import { BASE_URL, API_KEY } from "../../config/Map";
-import states from "../../config/States.json";
 import titles from "../../config/Titles.json";
 
 import "../../styles/home.scss";
@@ -86,23 +84,6 @@ const AddMember = (props) => {
         });
     }, [payerProfile]);
 
-    const statesOptions = useMemo(() => {
-        if (isEmpty(states)) {
-            return [];
-        }
-
-        const result = [{ id: "", title: "", val: "" }];
-        for (const [key, value] of Object.entries(states)) {
-            result.push({
-                id: value,
-                title: value,
-                val: key,
-            });
-        }
-
-        return result;
-    }, [states]);
-
     const titlesOptions = useMemo(() => {
         if (isEmpty(titles)) {
             return [];
@@ -120,17 +101,8 @@ const AddMember = (props) => {
         return result;
     }, [titles]);
 
-    const {
-        register,
-        handleSubmit,
-        watch,
-        setValue,
-        errors,
-        reset,
-    } = useForm();
+    const { register, handleSubmit, errors, reset } = useForm();
 
-    const [alertMessage, setAlertMessage] = useState("");
-    const [countyOptions, setCountyOptions] = useState([]);
     const [member, setMember] = useState(null);
     const [contactMethods, setContactMethods] = useState([
         { type: "type", phone_email: "phone_email" },
@@ -159,61 +131,6 @@ const AddMember = (props) => {
 
     const onCancel = () => {
         reset();
-    };
-
-    const address_1 = watch("address_1", "");
-    const postal_code = watch("postal_code", "");
-
-    const handleLookupZip = () => {
-        setAlertMessage("");
-        if (address_1 === null || address_1 === "") {
-            setAlertMessage("Please input address!");
-            return;
-        }
-
-        if (postal_code === null || postal_code === "") {
-            setAlertMessage("Please input postal code!");
-            return;
-        }
-
-        fetch(`${BASE_URL}?key=${API_KEY}&address=${address_1} ${postal_code}`)
-            .then((response) => response.json())
-            .then((data) => {
-                if (!data?.results || !data.results[0].address_components) {
-                    setAlertMessage("Address not found");
-                    return;
-                }
-
-                data.results[0].address_components.forEach((v) => {
-                    if (v.types) {
-                        if (
-                            v.types.indexOf("administrative_area_level_1") !==
-                            -1
-                        ) {
-                            setValue("state", v.short_name);
-                        }
-                        if (
-                            v.types.indexOf("administrative_area_level_2") !==
-                            -1
-                        ) {
-                            setCountyOptions([
-                                {
-                                    id: v.short_name,
-                                    title: v.short_name,
-                                    val: v.short_name,
-                                },
-                            ]);
-                            setValue("county", v.short_name);
-                        }
-                        if (v.types.indexOf("locality") !== -1) {
-                            setValue("city", v.short_name);
-                        }
-                    }
-                });
-            })
-            .catch((error) => {
-                setAlertMessage("Address fetch error!");
-            });
     };
 
     return (
@@ -412,89 +329,7 @@ const AddMember = (props) => {
                                     />
                                 </div>
 
-                                <div className="col-md-12">
-                                    <InputText
-                                        name="address_1"
-                                        label="Address 1*"
-                                        errors={errors}
-                                        ref={register({
-                                            required: "Address 1 is required",
-                                        })}
-                                    />
-                                </div>
-
-                                <div className="col-md-12">
-                                    <InputText
-                                        name="address_2"
-                                        label="Address 2"
-                                        errors={errors}
-                                        ref={register()}
-                                    />
-                                </div>
-
-                                {alertMessage && (
-                                    <PageAlert className="text-muted">
-                                        {alertMessage}
-                                    </PageAlert>
-                                )}
-
-                                <div className="col-md-12">
-                                    <div className="form-row">
-                                        <div className="col-md-6">
-                                            <InputText
-                                                name="postal_code"
-                                                label="Zip*"
-                                                errors={errors}
-                                                ref={register({
-                                                    required: "Zip is required",
-                                                })}
-                                            />
-                                        </div>
-
-                                        <div className="col-md-4">
-                                            <Button
-                                                className="btn btn-block btn-zip"
-                                                onClick={() =>
-                                                    handleLookupZip()
-                                                }
-                                            >
-                                                Lookup Zip
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <InputText
-                                        name="city"
-                                        label="City*"
-                                        errors={errors}
-                                        ref={register({
-                                            required: "City is required",
-                                        })}
-                                    />
-                                </div>
-
-                                <div className="col-md-6">
-                                    <Select
-                                        name="state"
-                                        label="State*"
-                                        options={statesOptions}
-                                        errors={errors}
-                                        ref={register({
-                                            required: "State is required",
-                                        })}
-                                    />
-                                </div>
-
-                                <div className="col-md-6">
-                                    <Select
-                                        name="county"
-                                        label="County"
-                                        options={countyOptions}
-                                        errors={errors}
-                                        ref={register()}
-                                    />
-                                </div>
+                                <AddressForm />
 
                                 <div className="col-md-12">
                                     <h1

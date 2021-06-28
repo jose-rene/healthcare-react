@@ -10,6 +10,7 @@ use App\Models\MemberNumberType;
 use App\Models\Payer;
 use App\Models\TherapyNetwork;
 use Illuminate\Http\Request;
+use App\Models\AddressType;
 
 class CompanyController extends Controller
 {
@@ -50,6 +51,7 @@ class CompanyController extends Controller
             ],
             'payer_categories'    => collect(Payer::getCategories())->map(fn ($cat, $i) => ['id' => $i, 'name' => $cat])->values(),
             'member_number_types' => MemberNumberType::all()->map(fn ($type) => ['id' => $type['id'], 'name' => $type['title']]),
+            'address_types'       => AddressType::all()->map(fn ($type) => ['id' => $type['id'], 'name' => $type['name']]),
         ];
 
         return response()->json($data);
