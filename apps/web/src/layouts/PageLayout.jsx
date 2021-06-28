@@ -219,6 +219,31 @@ const PageLayout = ({
                         </li>
                     )}
                     {checkMiddleware(
+                        ["hp_user", "hp_manager", "hp_champion"], // need to change role with admin
+                        primaryRole,
+                        abilities
+                    ) && (
+                        <li
+                            className={
+                                page === "admin/clinicians"
+                                    ? "sidebar-active"
+                                    : ""
+                            }
+                            data-toggle="tooltip"
+                            title="Clinicians"
+                        >
+                            <Link to="/admin/clinicians">
+                                <img
+                                    src="/images/icons/first-aid-kit.png"
+                                    alt="Clinicians"
+                                />
+                                <div className="d-block d-sm-none">
+                                    Clinicians
+                                </div>
+                            </Link>
+                        </li>
+                    )}
+                    {checkMiddleware(
                         ["hp_user", "hp_manager", "hp_champion"],
                         primaryRole,
                         abilities
