@@ -30,7 +30,8 @@ class CompanyCategoryTest extends TestCase
         // validate response code and structure
         $response
             ->assertOk()
-            ->assertJsonStructure(['categories', 'payer_categories']);
+            ->assertJsonStructure(['categories', 'payer_categories','member_number_types', 'address_types']);
+        ;
 
         // test permissions, remove ablity
         Bouncer::disallow('client_services_specialist')->to('create-payers');

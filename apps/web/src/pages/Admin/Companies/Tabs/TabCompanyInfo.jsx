@@ -7,6 +7,7 @@ import MultiSelect from "react-select";
 
 import TableAPI from "../../../../components/elements/TableAPI";
 import ContactMethods from "../../../../components/elements/ContactMethods";
+import AddressForm from "../../../../components/elements/AddressForm";
 import PageAlert from "../../../../components/elements/PageAlert";
 import Modal from "../../../../components/elements/Modal";
 import ConfirmationModal from "../../../../components/elements/ConfirmationModal";
@@ -21,18 +22,12 @@ import { ACTIONS } from "../../../../helpers/table";
 
 import useApiCall from "../../../../hooks/useApiCall";
 
-const adressTestData = [
-    {
-        id: "addressTestData",
-        type: "Mailing",
-        address: "211 Hope St",
-        city: "Mountain View",
-        state: "CA",
-        zip: "94-41",
-    },
-];
-
-const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
+const TabCompanyInfo = ({
+    data,
+    companyInfoActiveTab,
+    setUpdateSuccess,
+    setCompanyInfoActiveTab,
+}) => {
     const history = useHistory();
     const company_id = history.location.pathname.split("/")[3];
     const {
@@ -43,6 +38,7 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
         assessment_label,
         member_number_types,
         has_phi,
+        address_list,
     } = data;
 
     const [contactHeaders] = useState([
@@ -98,9 +94,12 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
             label: "Type",
             type: String,
             disableSortBy: true,
+            formatter({ name }) {
+                return <span>{name}</span>;
+            },
         },
         {
-            columnMap: "address",
+            columnMap: "address_1",
             label: "Address",
             type: String,
             disableSortBy: true,
@@ -118,7 +117,7 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
             disableSortBy: true,
         },
         {
-            columnMap: "zip",
+            columnMap: "postal_code",
             label: "Zip",
             type: String,
             disableSortBy: true,
@@ -156,20 +155,9 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
         url: "/admin/company/categories",
     });
 
-    const [
-        {
-            loading: contactMethodsLoading,
-            data: contactMethodsData,
-            error: contactMethodsError,
-        },
-        requestContactMethodsData,
-    ] = useApiCall({
-        method: "post",
-        url: `/admin/payer/${company_id}/contact`,
-    });
-
     const [payerCategoryOptions, setPayerCategoryOptions] = useState([]);
     const [memberIdTypesOptions, setMemberIdTypesOptions] = useState([]);
+    const [addressTypesOptions, setAddressTypesOptions] = useState([]);
     const [memberIdTypesValue, setMemberIdTypesValue] = useState([]);
     const [contactMethods, setContactMethods] = useState([
         { type: "type", phone_email: "phone_email" },
@@ -182,7 +170,10 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
     const [contactUpdateStatus, setContactUpdateStatus] = useState(false);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [deleteContact, setDeleteContact] = useState(null);
+    const [addressFormValue, setAddressFormValue] = useState({});
     const [contactDeleteStatus, setContactDeleteStatus] = useState(false);
+    const [contactAddStatus, setContactAddStatus] = useState(false);
+    const [addressAddStatus, setAddressAddStatus] = useState(false);
 
     useEffect(() => {
         requestCategoryData();
@@ -196,6 +187,8 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
         setUpdateSuccess(false);
         setContactUpdateStatus(false);
         setContactDeleteStatus(false);
+        setContactAddStatus(false);
+        setAddressAddStatus(false);
     }, [data]);
 
     useEffect(() => {
@@ -203,7 +196,11 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
             return;
         }
 
-        const { payer_categories, member_number_types: types } = categoryData;
+        const {
+            payer_categories,
+            member_number_types: types,
+            address_types,
+        } = categoryData;
 
         const payerArr = [{ id: "", title: "", val: "" }];
         payer_categories.forEach(({ id, name }) => {
@@ -220,8 +217,18 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
             typesArr.push({ value: id, label: name });
         });
 
+        const addressTypesArr = [{ id: "", title: "", val: "" }];
+        address_types.forEach(({ id, name }) => {
+            addressTypesArr.push({
+                id,
+                title: name,
+                val: id,
+            });
+        });
+
         setPayerCategoryOptions(payerArr);
         setMemberIdTypesOptions(typesArr);
+        setAddressTypesOptions(addressTypesArr);
     }, [categoryData, category]);
 
     useEffect(() => {
@@ -237,25 +244,67 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
         setMemberIdTypesValue(typesArr);
     }, [member_number_types]);
 
-    const handleAddContactMethods = async () => {
-        const sendData = [];
-        contactMethods.forEach((v) => {
-            sendData.push({
-                type: contacts[v.type],
-                value: contacts[v.phone_email],
-            });
-        });
+    const [
+        {
+            loading: contactMethodsLoading,
+            data: contactMethodsData,
+            error: contactMethodsError,
+        },
+        requestContactMethodsData,
+    ] = useApiCall({
+        method: "post",
+        url: `/admin/payer/${company_id}/contact`,
+    });
 
-        try {
-            const result = await requestContactMethodsData({
-                params: { contacts: sendData },
+    const [
+        {
+            loading: addressesLoading,
+            data: addressesData,
+            error: addressesError,
+        },
+        requestAddressesData,
+    ] = useApiCall({
+        method: "post",
+        url: `/admin/payer/${company_id}/address`,
+    });
+
+    const handleAdd = async () => {
+        if (companyInfoActiveTab === "contact-methods") {
+            const sendData = [];
+            contactMethods.forEach((v) => {
+                sendData.push({
+                    type: contacts[v.type],
+                    value: contacts[v.phone_email],
+                });
             });
 
-            if (result) {
-                setUpdateSuccess(true);
+            try {
+                const result = await requestContactMethodsData({
+                    params: { contacts: sendData },
+                });
+
+                if (result) {
+                    setUpdateSuccess(true);
+                    setContactAddStatus(true);
+                }
+            } catch (e) {
+                console.log("Add Contact Methods Error:", e);
             }
-        } catch (e) {
-            console.log("Add Contact Methods Error:", e);
+        }
+
+        if (companyInfoActiveTab === "addresses") {
+            try {
+                const result = await requestAddressesData({
+                    params: addressFormValue,
+                });
+
+                if (result) {
+                    setUpdateSuccess(true);
+                    setAddressAddStatus(true);
+                }
+            } catch (e) {
+                console.log("Add Address Error:", e);
+            }
         }
     };
 
@@ -396,6 +445,10 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
         setShowConfirmationModal(false);
     };
 
+    const handleTabs = (currentTab) => {
+        setCompanyInfoActiveTab(currentTab);
+    };
+
     return (
         <>
             <div className="white-box white-box-small">
@@ -512,8 +565,10 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
             <div className="row m-0">
                 <div className="col-md-6 pl-0">
                     <Tabs
-                        defaultActiveKey="contact-methods"
+                        defaultActiveKey={companyInfoActiveTab}
+                        activeKey={companyInfoActiveTab}
                         className="inside-tabs"
+                        onSelect={handleTabs}
                     >
                         <Tab eventKey="contact-methods" title="Contact Methods">
                             <ConfirmationModal
@@ -630,7 +685,7 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
                                     searchObj={{}}
                                     headers={addressHeaders}
                                     loading={false}
-                                    data={adressTestData}
+                                    data={address_list}
                                     dataMeta={{}}
                                 />
                             </div>
@@ -640,32 +695,68 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
 
                 <div className="col-md-6 white-box add-contact-method-top w-100 h-100">
                     <div className="form-row">
-                        {contactMethodsError ? (
-                            <PageAlert
-                                className="mt-3 w-100"
-                                variant="warning"
-                                timeout={5000}
-                                dismissible
-                            >
-                                Error: {contactMethodsError}
-                            </PageAlert>
-                        ) : null}
-                        {udpateSuccess ? (
-                            <PageAlert
-                                className="mt-3 w-100"
-                                variant="success"
-                                timeout={5000}
-                                dismissible
-                            >
-                                Contact successfully added.
-                            </PageAlert>
+                        {companyInfoActiveTab === "contact-methods" ? (
+                            <>
+                                {contactMethodsError ? (
+                                    <PageAlert
+                                        className="mt-3 w-100"
+                                        variant="warning"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Error: {contactMethodsError}
+                                    </PageAlert>
+                                ) : null}
+                                {contactAddStatus ? (
+                                    <PageAlert
+                                        className="mt-3 w-100"
+                                        variant="success"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Contact successfully added.
+                                    </PageAlert>
+                                ) : null}
+
+                                <ContactMethods
+                                    contactMethods={contactMethods}
+                                    setContactMethods={setContactMethods}
+                                    setContactMethodsValue={
+                                        setContactMethodsValue
+                                    }
+                                />
+                            </>
                         ) : null}
 
-                        <ContactMethods
-                            contactMethods={contactMethods}
-                            setContactMethods={setContactMethods}
-                            setContactMethodsValue={setContactMethodsValue}
-                        />
+                        {companyInfoActiveTab === "addresses" ? (
+                            <>
+                                {addressesError ? (
+                                    <PageAlert
+                                        className="mt-3 w-100"
+                                        variant="warning"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Error: {addressesError}
+                                    </PageAlert>
+                                ) : null}
+                                {addressAddStatus ? (
+                                    <PageAlert
+                                        className="mt-3 w-100"
+                                        variant="success"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Address successfully added.
+                                    </PageAlert>
+                                ) : null}
+                                <AddressForm
+                                    addressFormValue={addressFormValue}
+                                    addressTypesOptions={addressTypesOptions}
+                                    setAddressFormValue={setAddressFormValue}
+                                />
+                            </>
+                        ) : null}
 
                         <Button
                             icon="plus"
@@ -673,7 +764,7 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
                             label="Add"
                             className="btn btn-block mx-1"
                             onClick={() => {
-                                handleAddContactMethods();
+                                handleAdd();
                             }}
                         />
                     </div>
