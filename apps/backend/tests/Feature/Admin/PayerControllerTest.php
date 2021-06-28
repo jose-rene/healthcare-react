@@ -5,6 +5,7 @@ namespace Tests\Feature\Admin;
 use App\Models\Language;
 use App\Models\MemberNumberType;
 use App\Models\Payer;
+use App\Models\Address;
 use App\Models\TrainingDocument;
 use App\Models\User;
 use App\Models\UserType\HealthPlanUser;
@@ -168,14 +169,77 @@ class PayerControllerTest extends TestCase
         ];
         $response = $this->json('POST', route('api.admin.payer.address.create', ['payer' => $this->payer]), $formData);
         $response
+            ->assertStatus(201)
+            ->assertJsonPath('type.id', $formData['address_type_id'])
+            ->assertJsonPath('is_primary', $formData['is_primary'])
+            ->assertJsonPath('address_1', $formData['address_1'])
+            ->assertJsonPath('city', $formData['city'])
+            ->assertJsonPath('county', $formData['county'])
+            ->assertJsonPath('state', $formData['state'])
+            ->assertJsonPath('postal_code', $formData['postal_code']);
+    }
+
+    /**
+     * Test updating address.
+     *
+     * @return void
+     */
+    public function testCompanyUpdateAddress()
+    {
+        $formData = [
+            'is_primary'      => true,
+            'address_1'       => $this->faker->streetAddress,
+            'city'            => $this->faker->city,
+            'county'          => $this->faker->lastName,
+            'state'           => $this->faker->stateAbbr,
+            'postal_code'     => $this->faker->postcode,
+            'address_type_id' => 2,
+        ];
+        $response = $this->json('PUT', route('api.admin.payer.address.update', [
+            'payer' => $this->payer,
+            'id' => $this->payer->main_address->id,
+        ]), $formData);
+
+        $response
             ->assertOk()
-            ->assertJsonPath('address_list.0.type.id', $formData['address_type_id'])
-            ->assertJsonPath('address_list.0.is_primary', $formData['is_primary'])
-            ->assertJsonPath('address_list.0.address_1', $formData['address_1'])
-            ->assertJsonPath('address_list.0.city', $formData['city'])
-            ->assertJsonPath('address_list.0.county', $formData['county'])
-            ->assertJsonPath('address_list.0.state', $formData['state'])
-            ->assertJsonPath('address_list.0.postal_code', $formData['postal_code']);
+            ->assertJsonPath('type.id', $formData['address_type_id'])
+            ->assertJsonPath('is_primary', $formData['is_primary'])
+            ->assertJsonPath('address_1', $formData['address_1'])
+            ->assertJsonPath('city', $formData['city'])
+            ->assertJsonPath('county', $formData['county'])
+            ->assertJsonPath('state', $formData['state'])
+            ->assertJsonPath('postal_code', $formData['postal_code']);
+    }
+
+    /**
+     * Test updating address.
+     *
+     * @return void
+     */
+    public function testCompanyDeleteAddress()
+    {
+        $response = $this->json('DELETE', route('api.admin.payer.address.delete', [
+            'payer' => $this->payer,
+            'id' => $this->payer->main_address->id,
+        ]));
+        // should not process, cannot delete only address
+        $response
+            ->assertStatus(422);
+
+        // add an address
+        Address::factory()->create(['addressable_type' => Payer::class, 'addressable_id' => $this->payer->id]);
+        $addressCount = $this->payer->addresses->count();
+        // try again
+        $response = $this->json('DELETE', route('api.admin.payer.address.delete', [
+            'payer' => $this->payer,
+            'id' => $this->payer->main_address->id,
+        ]));
+        // should not process, cannot delete only address
+        $response
+            ->assertOk();
+        // address was deleted
+        $addressCount--;
+        $this->assertEquals($addressCount, $this->payer->addresses()->get()->count());
     }
 
     /**
@@ -198,7 +262,7 @@ class PayerControllerTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(200)
-            ->assertJsonPath('number', $formData['number'])
+            ->assertJsonPath('contact', $formData['number'])
             ->assertJsonPath('is_primary', (bool) $formData['is_primary']);
     }
 
@@ -222,7 +286,7 @@ class PayerControllerTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(200)
-            ->assertJsonPath('email', $formData['email'])
+            ->assertJsonPath('contact', $formData['email'])
             ->assertJsonPath('is_primary', (bool) $formData['is_primary']);
     }
 
@@ -327,6 +391,7 @@ class PayerControllerTest extends TestCase
         ]);
         $this->payer = Payer::factory()
             ->hasLobs(5, ['is_tat_enabled' => 1])
+            ->hasAddresses(1, ['is_primary' => true])
             ->hasEmails(1)
             ->hasPhones(1)
             ->count(1)

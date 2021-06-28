@@ -8,9 +8,10 @@ use App\Http\Requests\Admin\CompanyContactRequest;
 use App\Http\Requests\Admin\EmailRequest;
 use App\Http\Requests\Admin\PayerRequest;
 use App\Http\Requests\Admin\PhoneRequest;
-use App\Http\Resources\EmailResource;
+use App\Http\Resources\AddressResource;
+use App\Http\Resources\EmailContactResource;
 use App\Http\Resources\PayerResource;
-use App\Http\Resources\PhoneResource;
+use App\Http\Resources\PhoneContactResource;
 use App\Models\Payer;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -111,9 +112,42 @@ class PayerController extends Controller
      */
     public function address(AddressRequest $request, Payer $payer)
     {
-        $payer->addresses()->create($request->validated());
+        $address = $payer->addresses()->create($request->validated());
 
-        return new PayerResource($payer);
+        return new AddressResource($address);
+    }
+
+    /**
+     * Update the specified payer's address.
+     *
+     * @param Request $request
+     * @param Payer   $payer
+     * @param string $id
+     * @return JsonResponse
+     */
+    public function updateAddress(AddressRequest $request, Payer $payer, $id)
+    {
+        abort_if(false === ($address = $payer->addresses->find($id)), 422, 'Address not found.');
+        $address->update($request->validated());
+
+        return new AddressResource($address);
+    }
+
+    /**
+     * Remove the payer's address from storage.
+     *
+     * @param Payer $payer
+     * @param string $id
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function destroyAddress(Payer $payer, $id)
+    {
+        abort_if(false === ($address = $payer->addresses->find($id)), 422, 'Address not found.');
+        abort_if(2 > $payer->addresses->count(), 422, 'You cannot remove all payer addresses.');
+        $address->delete();
+
+        return response()->json(['message' => 'ok']);
     }
 
     /**
@@ -129,7 +163,7 @@ class PayerController extends Controller
         abort_if(null === ($phone = $payer->phones->firstWhere('uuid', $id)), 422, 'Phone not found.');
         $phone->update($request->validated());
 
-        return new PhoneResource($phone);
+        return new PhoneContactResource($phone);
     }
 
     /**
@@ -145,7 +179,7 @@ class PayerController extends Controller
         abort_if(null === ($email = $payer->emails->firstWhere('uuid', $id)), 422, 'Email not found.');
         $email->update($request->validated());
 
-        return new EmailResource($email);
+        return new EmailContactResource($email);
     }
 
     /**
