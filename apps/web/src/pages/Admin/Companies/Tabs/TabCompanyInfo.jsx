@@ -9,6 +9,7 @@ import TableAPI from "../../../../components/elements/TableAPI";
 import ContactMethods from "../../../../components/elements/ContactMethods";
 import PageAlert from "../../../../components/elements/PageAlert";
 import Modal from "../../../../components/elements/Modal";
+import ConfirmationModal from "../../../../components/elements/ConfirmationModal";
 
 import InputText from "../../../../components/inputs/InputText";
 import Checkbox from "../../../../components/inputs/Checkbox";
@@ -83,6 +84,7 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
                             size="1x"
                             icon="trash-alt"
                             className="bg-danger text-white rounded-circle p-1"
+                            onClick={() => handleDelete(id, type)}
                         />
                     </>
                 );
@@ -178,6 +180,9 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
     const [showModal, setShowModal] = useState(false);
     const [editContact, setEditContact] = useState(null);
     const [contactUpdateStatus, setContactUpdateStatus] = useState(false);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [deleteContact, setDeleteContact] = useState(null);
+    const [contactDeleteStatus, setContactDeleteStatus] = useState(false);
 
     useEffect(() => {
         requestCategoryData();
@@ -189,6 +194,8 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
 
     useEffect(() => {
         setUpdateSuccess(false);
+        setContactUpdateStatus(false);
+        setContactDeleteStatus(false);
     }, [data]);
 
     useEffect(() => {
@@ -350,6 +357,45 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
         }
     };
 
+    const handleDelete = (id, type) => {
+        setShowConfirmationModal(true);
+        setDeleteContact({
+            id,
+            type,
+        });
+    };
+
+    const [
+        {
+            data: contactDeleteInfo,
+            loading: contactDeleteInfoLoading,
+            error: contactDeleteInfoError,
+        },
+        contactInfoDeleteRequest,
+    ] = useApiCall({
+        method: "delete",
+        url: `/admin/payer/${payerId}/${deleteContact?.type}/${deleteContact?.id}`,
+    });
+
+    const handleDeleteContactConfirm = async () => {
+        setShowConfirmationModal(false);
+
+        try {
+            const result = await contactInfoDeleteRequest();
+
+            if (result) {
+                setContactDeleteStatus(true);
+                setUpdateSuccess(true);
+            }
+        } catch (e) {
+            console.log("Contact Info Delete Error:", e);
+        }
+    };
+
+    const handleDeleteContactCancel = () => {
+        setShowConfirmationModal(false);
+    };
+
     return (
         <>
             <div className="white-box white-box-small">
@@ -470,6 +516,13 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
                         className="inside-tabs"
                     >
                         <Tab eventKey="contact-methods" title="Contact Methods">
+                            <ConfirmationModal
+                                showModal={showConfirmationModal}
+                                content="Are you sure that you will delete this contact?"
+                                handleAction={handleDeleteContactConfirm}
+                                handleCancel={handleDeleteContactCancel}
+                            />
+
                             <Modal show={showModal} onHide={handleEdit}>
                                 <div className="col-md-12">
                                     <InputText
@@ -537,6 +590,27 @@ const TabCompanyInfo = ({ data, udpateSuccess, setUpdateSuccess }) => {
                                         dismissible
                                     >
                                         Contact Info successfully updated.
+                                    </PageAlert>
+                                ) : null}
+
+                                {contactDeleteInfoError ? (
+                                    <PageAlert
+                                        className="mt-3 w-100"
+                                        variant="warning"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Error: {contactDeleteInfoError}
+                                    </PageAlert>
+                                ) : null}
+                                {contactDeleteStatus ? (
+                                    <PageAlert
+                                        className="mt-3 w-100"
+                                        variant="success"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Contact Info successfully deleted.
                                     </PageAlert>
                                 ) : null}
 

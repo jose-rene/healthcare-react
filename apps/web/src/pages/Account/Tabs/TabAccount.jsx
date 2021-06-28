@@ -9,7 +9,7 @@ import Select from "../../../components/inputs/Select";
 import Button from "../../../components/inputs/Button";
 import Icon from "../../../components/elements/Icon";
 import PageAlert from "../../../components/elements/PageAlert";
-import Modal from "../../../components/elements/Modal";
+import ConfirmationModal from "../../../components/elements/ConfirmationModal";
 import { validateImage } from "../../../helpers/validate";
 import useApiCall from "../../../hooks/useApiCall";
 import { updateAvartarUrl } from "../../../actions/userAction";
@@ -98,35 +98,14 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                     </PageAlert>
                 </div>
             ) : null}
-            <Modal show={showModal} onHide={handleActivation}>
-                <div className="col-md-12 px-4 pt-4">
-                    <div className="row mb-4">
-                        <div className="col-md-12">
-                            Are you sure that you will deactivate this account?
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-6" />
 
-                        <div className="col-md-3 mb-2">
-                            <Button
-                                className="btn-block"
-                                outline
-                                label="Cancel"
-                                onClick={() => handleActivation()}
-                            />
-                        </div>
+            <ConfirmationModal
+                showModal={showModal}
+                content="Are you sure that you will deactivate this account?"
+                handleAction={handleActivation}
+                handleCancel={handleActivation}
+            />
 
-                        <div className="col-md-3">
-                            <Button
-                                className="btn-blue text-btn btn-block"
-                                label="Confirm"
-                                onClick={() => handleActivation()}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </Modal>
             <Row>
                 <Col lg={8}>
                     <Row>
