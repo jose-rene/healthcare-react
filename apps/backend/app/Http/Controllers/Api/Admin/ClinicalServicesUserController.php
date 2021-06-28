@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Models\ClinicalUserStatus;
+use App\Models\ClinicalUserType;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -76,5 +78,16 @@ class ClinicalServicesUserController extends Controller
             ->paginate(request('perPage', 50));
 
         return UserResource::collection($users);
+    }
+
+    public function params()
+    {
+        $map = fn ($item) => ['id' => $item['id'], 'name' => $item['name']];
+        $data = [
+            'user_statuses' => ClinicalUserStatus::all()->map($map),
+            'user_types'    => ClinicalUserType::all()->map($map),
+        ];
+
+        return response()->json($data);
     }
 }
