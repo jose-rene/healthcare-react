@@ -3,6 +3,7 @@ import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
 import InputText from "../../components/inputs/InputText";
+import Select from "../../components/inputs/Select";
 import Button from "../../components/inputs/Button";
 
 import Icon from "../../components/elements/Icon";
@@ -13,8 +14,19 @@ import PageLayout from "../../layouts/PageLayout";
 import { ACTIONS } from "../../helpers/table";
 
 import useApiCall from "../../hooks/useApiCall";
+import useSearch from "../../hooks/useSearch";
 
 const Clinicians = () => {
+    const [
+        {
+            loading: paramsSearch,
+            data: { user_statuses = [], user_types = [] },
+        },
+        fireGetParams,
+    ] = useApiCall({
+        url: "admin/clinicaluser/params",
+    });
+
     const [
         {
             loading,
@@ -22,17 +34,27 @@ const Clinicians = () => {
         },
         fireDoSearch,
     ] = useApiCall({
-        url: "admin/clinicaluser/params",
+        url: "admin/clinicaluser/search",
     });
 
     useEffect(() => {
+        fireGetParams();
         fireDoSearch();
+        setSearchStatus(false);
     }, []);
+
+    const [searchStatus, setSearchStatus] = useState(false);
+    const [userStatusesOptions, setUserStatusesOptions] = useState([]);
+    const [userTypesOptions, setUserTypesOptions] = useState([]);
 
     const [headers] = useState([
         { columnMap: "name", label: "Name", type: String },
-        { columnMap: "type", label: "Type", type: String },
-        { columnMap: "status", label: "Status", type: String },
+        { columnMap: "clinical_user_type.name", label: "Type", type: String },
+        {
+            columnMap: "clinical_user_status.name",
+            label: "Status",
+            type: String,
+        },
         { columnMap: "notes", label: "Notes", type: String },
         {
             columnMap: "id",
@@ -59,16 +81,86 @@ const Clinicians = () => {
         },
     ]);
 
-    const { handleSubmit } = useForm();
+    const { handleSubmit, register } = useForm();
 
-    const onSubmit = async (formData) => {
-        console.log("+++++++++++++++++++", formData);
+    useEffect(() => {
+        if (!user_statuses) {
+            return;
+        }
+
+        const statusesArr = [{ id: "", title: "", val: "" }];
+        user_statuses.forEach(({ id, name }) => {
+            statusesArr.push({
+                id,
+                title: name,
+                val: id,
+            });
+        });
+
+        setUserStatusesOptions(statusesArr);
+    }, [user_statuses]);
+
+    useEffect(() => {
+        if (!user_types) {
+            return;
+        }
+
+        const typesArr = [{ id: "", title: "", val: "" }];
+        user_types.forEach(({ id, name }) => {
+            typesArr.push({
+                id,
+                title: name,
+                val: id,
+            });
+        });
+
+        setUserTypesOptions(typesArr);
+    }, [user_types]);
+
+    const onSubmit = (formData) => {
+        redoSearch(formData);
+    };
+
+    const redoSearch = async (params = searchObj) => {
+        try {
+            setSearchStatus(true);
+            await fireDoSearch({ params });
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
+        {
+            searchObj: {
+                sortColumn: headers[0].columnMap,
+                sortDirection: "asc",
+            },
+        }
+    );
+
+    const handleTableChange = (props) => {
+        updateSearchObj(props);
+        redoSearch({ ...searchObj, ...props });
+    };
+
+    const handleNewClinician = () => {
+        console.log("handle new clinician.");
     };
 
     return (
         <PageLayout>
             <div className="content-box">
-                <h1 className="box-title mb-0">Clinicians</h1>
+                <div className="d-flex">
+                    <h1 className="box-title mb-3 mr-4">Clinicians</h1>
+                    <Button
+                        icon="plus"
+                        iconSize="sm"
+                        className="btn btn-sm mb-3"
+                        label="Add"
+                        onClick={() => handleNewClinician()}
+                    />
+                </div>
 
                 <div className="form-row">
                     <div className="col-md-12">
@@ -76,57 +168,29 @@ const Clinicians = () => {
                             <div className="white-box white-box-small">
                                 <div className="row m-0">
                                     <div className="col-md-3">
-                                        <InputText
-                                            name="missing"
-                                            label="Missing"
-                                            placeholder="Missing"
+                                        <Select
+                                            name="type_id"
+                                            label="Type"
+                                            options={userTypesOptions}
+                                            ref={register({})}
+                                            onChange={formUpdateSearchObj}
                                         />
                                     </div>
 
                                     <div className="col-md-3">
-                                        <InputText
-                                            name="expired"
-                                            label="Expired"
-                                            placeholder="Expired"
-                                        />
-                                    </div>
-
-                                    <div className="col-md-3">
-                                        <InputText
-                                            name="expiring"
-                                            label="Expiring"
-                                            placeholder="Expiring"
-                                        />
-                                    </div>
-
-                                    <div className="col-md-3">
-                                        <InputText
-                                            name="unverified"
-                                            label="Unverified"
-                                            placeholder="Unverified"
-                                        />
-                                    </div>
-
-                                    <div className="col-md-3">
-                                        <InputText
-                                            name="fwa"
-                                            label="FWA"
-                                            placeholder="FWA"
-                                        />
-                                    </div>
-
-                                    <div className="col-md-3">
-                                        <InputText
-                                            name="pending"
-                                            label="Pending"
-                                            placeholder="Pending"
+                                        <Select
+                                            name="status_id"
+                                            label="Status"
+                                            options={userStatusesOptions}
+                                            ref={register({})}
+                                            onChange={formUpdateSearchObj}
                                         />
                                     </div>
 
                                     <div className="col-md-3 align-self-end">
                                         <Button
                                             type="submit"
-                                            // disabled={loading}
+                                            disabled={loading}
                                             className="btn btn-block btn-primary mb-md-3 py-2"
                                         >
                                             Search
@@ -139,13 +203,19 @@ const Clinicians = () => {
 
                     <div className="col-md-12">
                         <div className="white-box white-box-small">
-                            <TableAPI
-                                searchObj={{}}
-                                headers={headers}
-                                loading={false}
-                                data={[]}
-                                dataMeta={{}}
-                            />
+                            {!searchStatus && (
+                                <div className="no-result">Do the search</div>
+                            )}
+                            {searchStatus && (
+                                <TableAPI
+                                    searchObj={searchObj}
+                                    headers={headers}
+                                    loading={loading}
+                                    data={data}
+                                    dataMeta={meta}
+                                    onChange={handleTableChange}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>
