@@ -16,6 +16,7 @@ class AddressResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id'          => $this->id,
             'type'        => ['id' => $this->addressType->id, 'name' => $this->addressType->name],
             'is_primary'  => (bool) $this->is_primary,
             'address_1'   => $this->address_1,
