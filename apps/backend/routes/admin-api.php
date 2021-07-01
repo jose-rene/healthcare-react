@@ -29,6 +29,7 @@ Route::delete('payer/{payer}/phone/{id}', 'PayerController@destroyPhone')->name(
 Route::get('clinicaluser/search', 'ClinicalServicesUserController@search')->name('clinicaluser.search');
 Route::get('clinicaluser/params', 'ClinicalServicesUserController@params')->name('clinicaluser.params');
 
+Route::apiResource('clinicaluser', 'ClinicalServicesUserController');
 Route::apiResource('payer', 'PayerController');
 Route::apiResource('member', 'MemberController');
 Route::apiResource('users', 'UserController');

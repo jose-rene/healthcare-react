@@ -103,5 +103,23 @@ class BouncerSeeder extends Seeder
                 Bouncer::allow($role)->to('create-users');
             }
         }
+
+        // add clinical service user roles
+        $clinicalServicesRoles = [
+            'Chief Medical Officer',
+            'Clinical National Director',
+            'Clinical Regional Director',
+            'Clinical Reviewer',
+            'Clinical State Champion',
+            'Clinical Trainer',
+            'Field Clinician',
+        ];
+        foreach ($clinicalServicesRoles as $title) {
+            $role = Bouncer::role()->firstOrCreate([
+                'domain' => 'Clinical Services',
+                'name'   => Str::snake($title),
+                'title'  => $title,
+            ]);
+        }
     }
 }
