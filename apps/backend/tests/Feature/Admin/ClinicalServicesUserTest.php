@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\ClinicalType;
+use App\Models\ClinicalUserStatus;
+use App\Models\ClinicalUserType;
 use App\Models\Payer;
 use App\Models\User;
 use App\Models\UserType\ClinicalServicesUser;
@@ -20,7 +23,7 @@ class ClinicalServicesUserTest extends TestCase
     protected $member;
 
     /**
-     * Test updating payer.
+     * Test clinical user search.
      *
      * @return void
      */
@@ -59,7 +62,7 @@ class ClinicalServicesUserTest extends TestCase
     }
 
     /**
-     * Test updating payer.
+     * Test clinical user params.
      *
      * @return void
      */
@@ -70,7 +73,47 @@ class ClinicalServicesUserTest extends TestCase
         // validate response code and structure
         $response
             ->assertOk()
-            ->assertJsonStructure(['user_statuses', 'user_types']);
+            ->assertJsonStructure(['user_statuses', 'user_types', 'types', 'therapy_networks', 'roles']);
+    }
+
+    /**
+     * Test clinical user create.
+     *
+     * @return void
+     */
+    public function testClinicalUserCreate()
+    {
+        // create a user with form data
+        $response = $this->json('POST', route('api.admin.clinicaluser.store'), $formData = $this->getFormData());
+        // dd($response->json(), ClinicalUserStatus::first()->id);
+
+        // validate response code and structure
+        $response
+            ->assertStatus(201)
+            ->assertJsonPath('first_name', $formData['first_name'])
+            ->assertJsonPath('last_name', $formData['last_name'])
+            ->assertJsonPath('email', $formData['email'])
+            ->assertJsonPath('phone_primary', $formData['phone']);
+    }
+
+    /**
+     * Get test form data.
+     *
+     * @group functional
+     * @return array
+     */
+    protected function getFormData()
+    {
+        return [
+            'clinical_type_id'        => ClinicalType::first()->id,
+            'clinical_user_status_id' => ClinicalUserStatus::first()->id,
+            'clinical_user_type_id'   => ClinicalUserType::first()->id,
+            'first_name'              => $this->faker->firstName,
+            'last_name'               => $this->faker->lastName,
+            'email'                   => $this->faker->unique()->safeEmail,
+            'phone'                   => $this->faker->phoneNumber,
+            'primary_role'            => 'field_clinician',
+        ];
     }
 
     protected function setUp(): void
