@@ -60,14 +60,14 @@ class UserResource extends JsonResource
             'last_name'          => $this->last_name,
             'email'              => $this->email,
             'phones'             => ($phoneCount = $this->phones->count()) ? new PhoneCollectionResource($this->phones) : [],
-            'phone_primary'      => $phoneCount && null !== ($phone = $this->phones->firstWhere('is_primary',
-                1)) ? $phone->number : '',
+            'phone_primary'      => $this->main_phone ? $this->main_phone->number : '',
             'address'            => new AddressResource($this->address),
             'primary_role'       => $this->primary_role,
             'primary_role_title' => $primaryRole ? $primaryRole->title : '',
             'roles'              => $roles,
             'abilities'          => $abilities->count() > 0 ? $abilities->map(fn ($item, $key) => $item['name']) : [],
             'two_factor_options' => $this->two_factor_options,
+            'notification_prefs' => $this->notification_prefs ?? [],
             $this->mergeWhen(!empty($userTypeResource), $userTypeResource),
         ];
     }

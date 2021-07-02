@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api\Admin;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\ClinicalServicesUserRequest;
+use App\Http\Requests\ClinicalServicesUserRequest;
+use App\Http\Resources\MyUserResource;
 use App\Http\Resources\UserResource;
-use App\Jobs\Admin\CreateUserJob;
 use App\Models\ClinicalType;
 use App\Models\ClinicalUserStatus;
 use App\Models\ClinicalUserType;
@@ -32,10 +32,29 @@ class ClinicalServicesUserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ClinicalServicesUserRequest $request)
+    public function update(ClinicalServicesUserRequest $request)
     {
-        dispatch($job = new CreateUserJob($request));
-        return new UserResource($job->getUser());
+        // check the user policy for permissions
+        $user = $request->user();
+        $policy = policy(User::class);
+        abort_if(!$policy->update(auth()->user(), $user), 403, 'You do not have permissions for this resource');
+
+        // update
+        $user->update($data = $request->validated());
+        if (!empty($data['title']) && $user->clinicalServicesUser->title !== $data['title']) {
+            $user->clinicalServicesUser()->update(['title' => $data['title']]);
+        }
+        if (!empty($data['phone']) && $user->main_phone !== $data['phone']) {
+            $user->phones()->create([
+                'number'         => $data['phone'],
+                'is_primary'     => 1, 
+                'phoneable_type' => User::class, 
+                'phoneable_id'   => $user->id
+            ]);
+            $user->refresh();
+        }
+
+        return new MyUserResource($user);
     }
 
     /**
@@ -50,18 +69,6 @@ class ClinicalServicesUserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -70,20 +77,6 @@ class ClinicalServicesUserController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function search(Request $request)
-    {
-        $users = User::where('user_type', 3)
-            ->whereHas('clinicalServicesUser', function ($query) use ($request) {
-                $query->where('clinical_user_status_id', empty($request->status_id) ? 1 : $request->status_id);
-                if (!empty($request->type_id)) {
-                    $query->where('clinical_user_type_id', $request->type_id);
-                }
-            })
-            ->paginate(request('perPage', 50));
-
-        return UserResource::collection($users);
     }
 
     public function params()
