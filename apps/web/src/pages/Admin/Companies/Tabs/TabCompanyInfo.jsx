@@ -67,7 +67,7 @@ const TabCompanyInfo = ({
                             icon="edit"
                             className="mr-2 bg-primary text-white rounded-circle p-1"
                             onClick={() =>
-                                handleEdit(
+                                handleContactEdit(
                                     id,
                                     is_primary,
                                     contact,
@@ -80,7 +80,7 @@ const TabCompanyInfo = ({
                             size="1x"
                             icon="trash-alt"
                             className="bg-danger text-white rounded-circle p-1"
-                            onClick={() => handleDelete(id, type)}
+                            onClick={() => handleDeleteContact(id, type)}
                         />
                     </>
                 );
@@ -103,6 +103,13 @@ const TabCompanyInfo = ({
             label: "Address",
             type: String,
             disableSortBy: true,
+            formatter(address_1, { address_2 }) {
+                return (
+                    <span>
+                        {address_1} {address_2}
+                    </span>
+                );
+            },
         },
         {
             columnMap: "city",
@@ -127,18 +134,44 @@ const TabCompanyInfo = ({
             label: "Actions",
             type: ACTIONS,
             disableSortBy: true,
-            formatter(id) {
+            formatter(
+                id,
+                {
+                    address_1,
+                    address_2,
+                    city,
+                    county,
+                    is_primary,
+                    postal_code,
+                    state,
+                    type,
+                }
+            ) {
                 return (
                     <>
                         <Icon
                             size="1x"
                             icon="edit"
                             className="mr-2 bg-primary text-white rounded-circle p-1"
+                            onClick={() =>
+                                handleAddressEdit(
+                                    id,
+                                    address_1,
+                                    address_2,
+                                    city,
+                                    county,
+                                    is_primary,
+                                    postal_code,
+                                    state,
+                                    type
+                                )
+                            }
                         />
                         <Icon
                             size="1x"
                             icon="trash-alt"
                             className="bg-danger text-white rounded-circle p-1"
+                            onClick={() => handleDeleteAddress(id)}
                         />
                     </>
                 );
@@ -165,13 +198,25 @@ const TabCompanyInfo = ({
     const [contacts, setContacts] = useState({});
     const [companyInfoStatus, setCompanyInfoStatus] = useState(false);
     const [phiStatus, setPhiStatus] = useState(null);
-    const [showModal, setShowModal] = useState(false);
+    const [showContactModal, setShowContactModal] = useState(false);
+    const [showAddressModal, setShowAddressModal] = useState(false);
     const [editContact, setEditContact] = useState(null);
+    const [editAddress, setEditAddress] = useState(null);
     const [contactUpdateStatus, setContactUpdateStatus] = useState(false);
-    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [addressUpdateStatus, setAddressUpdateStatus] = useState(false);
+    const [
+        showDeleteContactConfirmationModal,
+        setShowDeleteContactConfirmationModal,
+    ] = useState(false);
+    const [
+        showDeleteAddressConfirmationModal,
+        setShowDeleteAddressConfirmationModal,
+    ] = useState(false);
     const [deleteContact, setDeleteContact] = useState(null);
+    const [deleteAddress, setDeleteAddress] = useState(null);
     const [addressFormValue, setAddressFormValue] = useState({});
     const [contactDeleteStatus, setContactDeleteStatus] = useState(false);
+    const [addressDeleteStatus, setAddressDeleteStatus] = useState(false);
     const [contactAddStatus, setContactAddStatus] = useState(false);
     const [addressAddStatus, setAddressAddStatus] = useState(false);
 
@@ -189,6 +234,8 @@ const TabCompanyInfo = ({
         setContactDeleteStatus(false);
         setContactAddStatus(false);
         setAddressAddStatus(false);
+        setAddressUpdateStatus(false);
+        setAddressDeleteStatus(false);
     }, [data]);
 
     useEffect(() => {
@@ -352,7 +399,7 @@ const TabCompanyInfo = ({
         setPhiStatus(!phiStatus);
     };
 
-    const handleEdit = (id, is_primary, contact, type, description) => {
+    const handleContactEdit = (id, is_primary, contact, type, description) => {
         setEditContact({
             id,
             is_primary,
@@ -361,15 +408,20 @@ const TabCompanyInfo = ({
             description,
         });
 
-        setShowModal(!showModal);
+        setShowContactModal(!showContactModal);
     };
 
-    const handleUpdateEditData = ({ target: { name, value } }) => {
-        setEditContact({ ...editContact, [name]: value });
+    const handleUpdateContactEditData = ({ target: { name, value } }) => {
+        if (name === "is_primary") {
+            setEditContact({ ...editContact, [name]: !editContact.is_primary });
+        } else {
+            setEditContact({ ...editContact, [name]: value });
+        }
     };
 
     const handleClose = () => {
-        setShowModal(false);
+        setShowContactModal(false);
+        setShowAddressModal(false);
     };
 
     const [
@@ -406,8 +458,69 @@ const TabCompanyInfo = ({
         }
     };
 
-    const handleDelete = (id, type) => {
-        setShowConfirmationModal(true);
+    const handleAddressEdit = (
+        id,
+        address_1,
+        address_2,
+        city,
+        county,
+        is_primary,
+        postal_code,
+        state,
+        type
+    ) => {
+        setEditAddress({
+            id,
+            address_1,
+            address_2,
+            city,
+            county,
+            is_primary,
+            postal_code,
+            state,
+            address_type_id: type?.id,
+        });
+
+        setShowAddressModal(!showAddressModal);
+    };
+
+    const handleUpdateAddressEditData = ({ target: { name, value } }) => {
+        if (name === "is_primary") {
+            setEditAddress({ ...editAddress, [name]: !editAddress.is_primary });
+        } else {
+            setEditAddress({ ...editAddress, [name]: value });
+        }
+    };
+
+    const [
+        {
+            data: addressInfo,
+            loading: addressInfoLoading,
+            error: addressInfoError,
+        },
+        addressInfoUpdateRequest,
+    ] = useApiCall({
+        method: "put",
+        url: `/admin/payer/${payerId}/address/${editAddress?.id}`,
+    });
+
+    const handleUpdateAddress = async () => {
+        try {
+            const result = await addressInfoUpdateRequest({
+                params: editAddress,
+            });
+
+            if (result) {
+                setAddressUpdateStatus(true);
+                setUpdateSuccess(true);
+            }
+        } catch (e) {
+            console.log("Address Info Update Error:", e);
+        }
+    };
+
+    const handleDeleteContact = (id, type) => {
+        setShowDeleteContactConfirmationModal(true);
         setDeleteContact({
             id,
             type,
@@ -427,7 +540,7 @@ const TabCompanyInfo = ({
     });
 
     const handleDeleteContactConfirm = async () => {
-        setShowConfirmationModal(false);
+        setShowDeleteContactConfirmationModal(false);
 
         try {
             const result = await contactInfoDeleteRequest();
@@ -442,11 +555,47 @@ const TabCompanyInfo = ({
     };
 
     const handleDeleteContactCancel = () => {
-        setShowConfirmationModal(false);
+        setShowDeleteContactConfirmationModal(false);
     };
 
     const handleTabs = (currentTab) => {
         setCompanyInfoActiveTab(currentTab);
+    };
+
+    const handleDeleteAddress = (id) => {
+        setShowDeleteAddressConfirmationModal(true);
+        setDeleteAddress({ id });
+    };
+
+    const [
+        {
+            data: addressDeleteInfo,
+            loading: addressDeleteInfoLoading,
+            error: addressDeleteInfoError,
+        },
+        addressInfoDeleteRequest,
+    ] = useApiCall({
+        method: "delete",
+        url: `/admin/payer/${payerId}/address/${deleteAddress?.id}`,
+    });
+
+    const handleDeleteAddressConfirm = async () => {
+        setShowDeleteAddressConfirmationModal(false);
+
+        try {
+            const result = await addressInfoDeleteRequest();
+
+            if (result) {
+                setAddressDeleteStatus(true);
+                setUpdateSuccess(true);
+            }
+        } catch (e) {
+            console.log("Contact Info Delete Error:", e);
+        }
+    };
+
+    const handleDeleteAddressCancel = () => {
+        setShowDeleteAddressConfirmationModal(false);
     };
 
     return (
@@ -572,19 +721,22 @@ const TabCompanyInfo = ({
                     >
                         <Tab eventKey="contact-methods" title="Contact Methods">
                             <ConfirmationModal
-                                showModal={showConfirmationModal}
+                                showModal={showDeleteContactConfirmationModal}
                                 content="Are you sure that you will delete this contact?"
                                 handleAction={handleDeleteContactConfirm}
                                 handleCancel={handleDeleteContactCancel}
                             />
 
-                            <Modal show={showModal} onHide={handleEdit}>
+                            <Modal
+                                show={showContactModal}
+                                onHide={handleContactEdit}
+                            >
                                 <div className="col-md-12">
                                     <InputText
                                         label={editContact?.description}
                                         name="contact"
                                         value={editContact?.contact}
-                                        onChange={handleUpdateEditData}
+                                        onChange={handleUpdateContactEditData}
                                     />
                                 </div>
 
@@ -595,7 +747,9 @@ const TabCompanyInfo = ({
                                             label="Primary"
                                             name="is_primary"
                                             checked={editContact?.is_primary}
-                                            onChange={handleUpdateEditData}
+                                            onChange={
+                                                handleUpdateContactEditData
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -680,7 +834,113 @@ const TabCompanyInfo = ({
                         </Tab>
 
                         <Tab eventKey="addresses" title="Addresses">
+                            <ConfirmationModal
+                                showModal={showDeleteAddressConfirmationModal}
+                                content="Are you sure that you will delete this address?"
+                                handleAction={handleDeleteAddressConfirm}
+                                handleCancel={handleDeleteAddressCancel}
+                            />
+
+                            <Modal
+                                show={showAddressModal}
+                                onHide={handleAddressEdit}
+                            >
+                                <div className="form-row p-3">
+                                    <AddressForm
+                                        addressFormValue={editAddress}
+                                        addressTypesOptions={
+                                            addressTypesOptions
+                                        }
+                                        setAddressFormValue={setEditAddress}
+                                    />
+
+                                    <div className="col-md-12">
+                                        <div className="form-control custom-checkbox mt-0">
+                                            <Checkbox
+                                                labelLeft
+                                                label="Primary"
+                                                name="is_primary"
+                                                checked={
+                                                    editAddress?.is_primary
+                                                }
+                                                onChange={
+                                                    handleUpdateAddressEditData
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-12">
+                                        <div className="row">
+                                            <div className="col-md-6" />
+
+                                            <div className="col-md-3 mt-3">
+                                                <Button
+                                                    className="btn btn-block"
+                                                    label="Update"
+                                                    onClick={() => {
+                                                        handleUpdateAddress();
+                                                        handleClose();
+                                                    }}
+                                                />
+                                            </div>
+
+                                            <div className="col-md-3 mt-3">
+                                                <Button
+                                                    outline
+                                                    className="btn btn-block"
+                                                    label="Cancel"
+                                                    onClick={handleClose}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Modal>
+
                             <div className="white-box mt-0">
+                                {addressDeleteInfoError ? (
+                                    <PageAlert
+                                        className="mt-3 w-100"
+                                        variant="warning"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Error: {addressDeleteInfoError}
+                                    </PageAlert>
+                                ) : null}
+                                {addressDeleteStatus ? (
+                                    <PageAlert
+                                        className="mt-3 w-100"
+                                        variant="success"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Address Info successfully deleted.
+                                    </PageAlert>
+                                ) : null}
+
+                                {addressInfoError ? (
+                                    <PageAlert
+                                        className="mt-3 w-100"
+                                        variant="warning"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Error: {addressInfoError}
+                                    </PageAlert>
+                                ) : null}
+                                {addressUpdateStatus ? (
+                                    <PageAlert
+                                        className="mt-3 w-100"
+                                        variant="success"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Address Info successfully updated.
+                                    </PageAlert>
+                                ) : null}
+
                                 <TableAPI
                                     searchObj={{}}
                                     headers={addressHeaders}

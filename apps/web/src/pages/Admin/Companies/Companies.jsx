@@ -69,7 +69,18 @@ const Companies = (props) => {
             },
         },
         { columnMap: "company_name", label: "Name", type: String },
-        { columnMap: "address.address_1", label: "Street", type: String },
+        {
+            columnMap: "address",
+            label: "Street",
+            type: String,
+            formatter(address) {
+                return (
+                    <span>
+                        {address?.address_1} {address?.address_2}
+                    </span>
+                );
+            },
+        },
         { columnMap: "address.city", label: "City", type: String },
         { columnMap: "address.state", label: "State", type: String },
         { columnMap: "address.postal_code", label: "Zip", type: String },

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
 
@@ -37,6 +37,21 @@ const AddressForm = ({
 
         return result;
     }, [states]);
+
+    useEffect(() => {
+        setAddressFormData({ ...addressFormData, ...addressFormValue });
+        if (!addressFormValue?.county) {
+            return;
+        }
+
+        setCountyOptions([
+            {
+                id: addressFormValue?.county,
+                title: addressFormValue?.county,
+                val: addressFormValue?.county,
+            },
+        ]);
+    }, [addressFormValue]);
 
     const handleLookupZip = () => {
         const { address_1, postal_code } = addressFormData;
@@ -126,6 +141,7 @@ const AddressForm = ({
                         label="Type*"
                         options={addressTypesOptions}
                         errors={errors}
+                        value={addressFormValue?.address_type_id}
                         ref={register({
                             required: "Address Type is required",
                         })}
@@ -139,6 +155,7 @@ const AddressForm = ({
                     name="address_1"
                     label="Address 1*"
                     errors={errors}
+                    value={addressFormValue?.address_1}
                     ref={register({
                         required: "Address 1 is required",
                     })}
@@ -151,12 +168,16 @@ const AddressForm = ({
                     name="address_2"
                     label="Address 2"
                     errors={errors}
+                    value={addressFormValue?.address_2}
                     ref={register()}
+                    onChange={handleAddressFormData}
                 />
             </div>
 
             {alertMessage && (
-                <PageAlert className="text-muted">{alertMessage}</PageAlert>
+                <PageAlert className="text-muted" timeout={5000} dismissible>
+                    {alertMessage}
+                </PageAlert>
             )}
 
             <div className="col-md-12">
@@ -166,6 +187,7 @@ const AddressForm = ({
                             name="postal_code"
                             label="Zip*"
                             errors={errors}
+                            value={addressFormValue?.postal_code}
                             ref={register({
                                 required: "Zip is required",
                             })}
@@ -188,9 +210,11 @@ const AddressForm = ({
                     name="city"
                     label="City*"
                     errors={errors}
+                    value={addressFormValue?.city}
                     ref={register({
                         required: "City is required",
                     })}
+                    onChange={handleAddressFormData}
                 />
             </div>
 
@@ -200,9 +224,11 @@ const AddressForm = ({
                     label="State*"
                     options={statesOptions}
                     errors={errors}
+                    value={addressFormValue?.state}
                     ref={register({
                         required: "State is required",
                     })}
+                    onChange={handleAddressFormData}
                 />
             </div>
 
@@ -212,7 +238,9 @@ const AddressForm = ({
                     label="County"
                     options={countyOptions}
                     errors={errors}
+                    value={addressFormValue?.county}
                     ref={register()}
+                    onChange={handleAddressFormData}
                 />
             </div>
         </>
