@@ -28,7 +28,8 @@ import AdminPayer from "../pages/Test/AdminPayer";
 import AdminCompanies from "../pages/Admin/Companies/Companies";
 import AdminAddCompanies from "../pages/Admin/Companies/AddCompanies";
 import AdminDetailCompanies from "../pages/Admin/Companies/DetailCompanies";
-import AdminClinicians from "../pages/Admin/Clinicians";
+import AdminClinicians from "../pages/Admin/Clinicians/Clinicians";
+import AdminAddClinicians from "../pages/Admin/Clinicians/AddClinicians";
 
 const AppNavigation = ({ initializing, initializeUser }) => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -151,6 +152,12 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     path="/admin/clinicians"
                     middleware={["hp_user", "hp_champion"]} // need to change admin
                     component={AdminClinicians}
+                />
+
+                <PrivateRoute
+                    path="/admin/add-clinicians"
+                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    component={AdminAddClinicians}
                 />
 
                 <PrivateRoute path="/questionnaire/:id">
