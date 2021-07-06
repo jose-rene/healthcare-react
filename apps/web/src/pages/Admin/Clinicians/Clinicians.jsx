@@ -2,21 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
-import InputText from "../../components/inputs/InputText";
-import Select from "../../components/inputs/Select";
-import Button from "../../components/inputs/Button";
+import InputText from "../../../components/inputs/InputText";
+import Select from "../../../components/inputs/Select";
+import Button from "../../../components/inputs/Button";
 
-import Icon from "../../components/elements/Icon";
-import TableAPI from "../../components/elements/TableAPI";
+import Icon from "../../../components/elements/Icon";
+import TableAPI from "../../../components/elements/TableAPI";
 
-import PageLayout from "../../layouts/PageLayout";
+import PageLayout from "../../../layouts/PageLayout";
 
-import { ACTIONS } from "../../helpers/table";
+import { ACTIONS } from "../../../helpers/table";
 
-import useApiCall from "../../hooks/useApiCall";
-import useSearch from "../../hooks/useSearch";
+import useApiCall from "../../../hooks/useApiCall";
+import useSearch from "../../../hooks/useSearch";
 
-const Clinicians = () => {
+const Clinicians = (props) => {
     const [
         {
             loading: paramsSearch,
@@ -145,7 +145,9 @@ const Clinicians = () => {
     };
 
     const handleNewClinician = () => {
-        console.log("handle new clinician.");
+        props.history.push({
+            pathname: "/admin/add-clinicians",
+        });
     };
 
     return (
