@@ -85,7 +85,6 @@ class ClinicalServicesUserTest extends TestCase
     {
         // create a user with form data
         $response = $this->json('POST', route('api.admin.clinicaluser.store'), $formData = $this->getFormData());
-        // dd($response->json(), ClinicalUserStatus::first()->id);
 
         // validate response code and structure
         $response
@@ -93,7 +92,8 @@ class ClinicalServicesUserTest extends TestCase
             ->assertJsonPath('first_name', $formData['first_name'])
             ->assertJsonPath('last_name', $formData['last_name'])
             ->assertJsonPath('email', $formData['email'])
-            ->assertJsonPath('phone_primary', $formData['phone']);
+            ->assertJsonPath('phone_primary', $formData['phone'])
+            ->assertJsonPath('clinical_user_type.id', $formData['clinical_user_type_id']);
     }
 
     /**

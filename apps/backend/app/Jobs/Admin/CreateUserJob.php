@@ -13,6 +13,7 @@ class CreateUserJob
     use Dispatchable;
 
     protected $data;
+    protected $type;
     protected $user;
 
     /**
@@ -20,9 +21,10 @@ class CreateUserJob
      *
      * @return void
      */
-    public function __construct(FormRequest $request)
+    public function __construct(FormRequest $request, $type)
     {
         $this->data = $request->validated();
+        $this->type = $type;
     }
 
     /**
@@ -30,12 +32,12 @@ class CreateUserJob
      *
      * @return void
      */
-    public function handle($type = null)
+    public function handle()
     {
         // create the base user
         $this->createUser();
         // add the relationship for the user type
-        switch ($type) {
+        switch ($this->type) {
             case 'ClinicalServicesUser':
                 $this->user->clinicalServicesUser()->create($this->data);
             break;
