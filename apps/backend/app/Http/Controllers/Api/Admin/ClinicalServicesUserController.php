@@ -34,7 +34,7 @@ class ClinicalServicesUserController extends Controller
      */
     public function store(ClinicalServicesUserRequest $request)
     {
-        dispatch($job = new CreateUserJob($request));
+        dispatch($job = new CreateUserJob($request, 'ClinicalServicesUser'));
         return new UserResource($job->getUser());
     }
 
