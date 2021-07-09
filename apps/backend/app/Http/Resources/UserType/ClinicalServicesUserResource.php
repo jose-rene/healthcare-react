@@ -23,6 +23,7 @@ class ClinicalServicesUserResource extends JsonResource
             'is_test'              => $this->is_test,
             'note'                 => $this->note,
             'therapy_network'      => $this->therapyNetwork,
+            'title'                => $this->title,
         ];
     }
 }

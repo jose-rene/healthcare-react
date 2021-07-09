@@ -27,10 +27,14 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->get('/plan/idtypes', 'PlanController@idtypes');
 
     // user routes
-    $router->get('/user/profile', 'UserController@profile');
-    $router->put('/user/profile', 'UserController@profileSave');
+    $router->get('/user/profile', 'UserController@profile')->name('user.profile');
+    $router->put('/user/profile', 'UserController@profileSave')->name('user.profile.save');
     $router->post('/user/profile-image', 'UserController@profileImageSave')->name('user.profile.image.save');
     $router->put('/user/password', 'PasswordController@authedChangePassword');
+
+    // clinical user routes
+    Route::put('clinicaluser/update', 'ClinicalServicesUserController@update')->name('clinicaluser.update');
+    Route::get('clinicaluser/params', 'ClinicalServicesUserController@params')->name('clinicaluser.params');
 
     $router->post('/member/search', 'MemberController@search')->middleware('can:viewAny,' . Member::class);
     $router->post('/user/search', 'UserController@search');

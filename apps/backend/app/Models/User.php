@@ -146,7 +146,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function phones()
     {
-        return $this->morphMany(Phone::class, 'phoneable');
+        return $this->morphMany(Phone::class, 'phoneable')->orderby('id', 'desc')->orderBy('is_primary');
     }
 
     public function profileImage()
@@ -233,6 +233,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function engineeringUser()
     {
         return $this->hasOne(EngineeringUser::class);
+    }
+
+    /**
+     * Get the Payer for healthplan users.
+     *
+     * @ return App\Models\Payer
+     */
+    public function getMainPhoneAttribute()
+    {
+        return $this->phones->count() ? $this->phones->first() : '';
     }
 
     /**
