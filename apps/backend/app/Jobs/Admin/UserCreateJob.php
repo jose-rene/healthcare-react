@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class CreateUserJob
+class UserCreateJob
 {
     use Dispatchable;
 

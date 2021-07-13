@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ClinicalServicesUserRequest;
 use App\Http\Resources\UserResource;
-use App\Jobs\Admin\CreateUserJob;
+use App\Jobs\Admin\UserCreateJob;
+use App\Jobs\Admin\UserUpdateJob;
 use App\Models\ClinicalType;
 use App\Models\ClinicalUserStatus;
 use App\Models\ClinicalUserType;
@@ -17,59 +18,40 @@ use Illuminate\Http\Request;
 class ClinicalServicesUserController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  ClinicalServicesUserRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(ClinicalServicesUserRequest $request)
     {
-        dispatch($job = new CreateUserJob($request, 'ClinicalServicesUser'));
+        dispatch($job = new UserCreateJob($request, 'ClinicalServicesUser'));
         return new UserResource($job->getUser());
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  User $clinicaluser
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $clinicaluser)
     {
-        //
+        return new UserResource($clinicaluser);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  ClinicalServicesUserRequest  $request
+     * @param  User $clinicaluser
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ClinicalServicesUserRequest $request, User $clinicaluser)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        // @note variable name for User has to match route param, ie, cannot use $user as param
+        dispatch($job = new UserUpdateJob($request, $clinicaluser, 'ClinicalServicesUser'));
+        return new UserResource($clinicaluser);
     }
 
     public function search(Request $request)
