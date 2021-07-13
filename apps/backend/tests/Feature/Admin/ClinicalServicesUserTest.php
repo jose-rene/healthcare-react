@@ -78,6 +78,8 @@ class ClinicalServicesUserTest extends TestCase
 
     /**
      * Test clinical user create.
+     * 
+     * @group user-crud
      *
      * @return void
      */
@@ -89,6 +91,61 @@ class ClinicalServicesUserTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(201)
+            ->assertJsonPath('first_name', $formData['first_name'])
+            ->assertJsonPath('last_name', $formData['last_name'])
+            ->assertJsonPath('email', $formData['email'])
+            ->assertJsonPath('phone_primary', $formData['phone'])
+            ->assertJsonPath('clinical_user_type.id', $formData['clinical_user_type_id']);
+
+        // verify user has been created
+        $createdUser = User::firstWhere('uuid', $response->json()['id']);
+        $this->assertInstanceOf(User::class, $createdUser);
+    }
+
+    /**
+     * Test clinical user update.
+     *
+     * @depends testClinicalUserCreate
+     * @group user-crud
+     * 
+     * @return void
+     */
+    public function testClinicalUserUpdate()
+    {
+        $response = $this->json('POST', route('api.admin.clinicaluser.store'), $this->getFormData());
+        $userId = $response->json()['id'];
+        // update user with form data
+        $response = $this->json('PUT', route('api.admin.clinicaluser.update', $userId), $formData = $this->getFormData());
+
+        // validate response code and structure
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('first_name', $formData['first_name'])
+            ->assertJsonPath('last_name', $formData['last_name'])
+            ->assertJsonPath('email', $formData['email'])
+            ->assertJsonPath('phone_primary', $formData['phone'])
+            ->assertJsonPath('clinical_user_type.id', $formData['clinical_user_type_id']);
+    }
+
+    /**
+     * Test clinical user show.
+     *
+     * @depends testClinicalUserCreate
+     * @group user-crud
+     * 
+     * @return void
+     */
+    public function testClinicalUserShow()
+    {
+        // $this->withoutExceptionHandling();
+        $response = $this->json('POST', route('api.admin.clinicaluser.store'), $formData = $this->getFormData());
+        $userId = $response->json()['id'];
+        // fetch the user with userId
+        $response = $this->json('GET', route('api.admin.clinicaluser.show', $userId));
+
+        // validate response code and structure
+        $response
+            ->assertStatus(200)
             ->assertJsonPath('first_name', $formData['first_name'])
             ->assertJsonPath('last_name', $formData['last_name'])
             ->assertJsonPath('email', $formData['email'])
