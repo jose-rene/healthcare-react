@@ -15,6 +15,20 @@ import useApiCall from "../../../hooks/useApiCall";
 import useToast from "../../../hooks/useToast";
 
 const AddClinicians = (props) => {
+    const { handleSubmit, register, errors } = useForm();
+
+    const { success: successMessage } = useToast();
+
+    const [typesOptions, setTypesOptions] = useState([]);
+    const [userTypesOptions, setUserTypesOptions] = useState([]);
+    const [userStatusesOptions, setUserStatusesOptions] = useState([]);
+    const [therapyNetworksOptions, setTherapyNetworksOptions] = useState([]);
+    const [rolesOptions, setRolesOptions] = useState([]);
+
+    const editCliniciansId = props.location.pathname.split("/")[3];
+    const pageStatus =
+        props.location.pathname.split("/")[4] === "edit" ? "Update" : "Add";
+
     const [
         {
             loading: paramsSearch,
@@ -39,19 +53,25 @@ const AddClinicians = (props) => {
         url: "admin/clinicaluser",
     });
 
-    const { handleSubmit, register, errors } = useForm();
+    const [
+        { data: updateData, loading: updateLoading, error: formUpdateError },
+        updateCliniciansRequest,
+    ] = useApiCall({
+        method: "put",
+        url: `admin/clinicaluser/${editCliniciansId}`,
+    });
 
-    const { success: successMessage } = useToast();
-
-    const [typesOptions, setTypesOptions] = useState([]);
-    const [userTypesOptions, setUserTypesOptions] = useState([]);
-    const [userStatusesOptions, setUserStatusesOptions] = useState([]);
-    const [therapyNetworksOptions, setTherapyNetworksOptions] = useState([]);
-    const [rolesOptions, setRolesOptions] = useState([]);
+    const [
+        { data: editClinicians, loading: editLoading, error: editError },
+        getEditCliniciansRequest,
+    ] = useApiCall({
+        url: `admin/clinicaluser/${editCliniciansId}`,
+    });
 
     useEffect(() => {
         fireGetParams();
-    }, []);
+        getEditCliniciansRequest();
+    }, [editCliniciansId]);
 
     useEffect(() => {
         const typesArr = [{ id: "", title: "", val: "" }];
@@ -60,11 +80,15 @@ const AddClinicians = (props) => {
                 id,
                 title: name,
                 val: id,
+                selected:
+                    editClinicians?.clinical_type?.id === id
+                        ? "selected"
+                        : false,
             });
         });
 
         setTypesOptions(typesArr);
-    }, [types]);
+    }, [types, editClinicians]);
 
     useEffect(() => {
         const typesArr = [{ id: "", title: "", val: "" }];
@@ -73,11 +97,15 @@ const AddClinicians = (props) => {
                 id,
                 title: name,
                 val: id,
+                selected:
+                    editClinicians?.clinical_user_type?.id === id
+                        ? "selected"
+                        : false,
             });
         });
 
         setUserTypesOptions(typesArr);
-    }, [user_types]);
+    }, [user_types, editClinicians]);
 
     useEffect(() => {
         const statusesArr = [{ id: "", title: "", val: "" }];
@@ -86,11 +114,15 @@ const AddClinicians = (props) => {
                 id,
                 title: name,
                 val: id,
+                selected:
+                    editClinicians?.clinical_user_status?.id === id
+                        ? "selected"
+                        : false,
             });
         });
 
         setUserStatusesOptions(statusesArr);
-    }, [user_statuses]);
+    }, [user_statuses, editClinicians]);
 
     useEffect(() => {
         const therapyNetworksArr = [{ id: "", title: "", val: "" }];
@@ -99,11 +131,15 @@ const AddClinicians = (props) => {
                 id,
                 title: name,
                 val: id,
+                selected:
+                    editClinicians?.therapy_network?.id === id
+                        ? "selected"
+                        : false,
             });
         });
 
         setTherapyNetworksOptions(therapyNetworksArr);
-    }, [therapy_networks]);
+    }, [therapy_networks, editClinicians]);
 
     useEffect(() => {
         const rolesArr = [{ id: "", title: "", val: "" }];
@@ -112,11 +148,13 @@ const AddClinicians = (props) => {
                 id: name,
                 title,
                 val: name,
+                selected:
+                    editClinicians?.primary_role === name ? "selected" : false,
             });
         });
 
         setRolesOptions(rolesArr);
-    }, [roles]);
+    }, [roles, editClinicians]);
 
     const handleBack = () => {
         props.history.push("/admin/clinicians");
@@ -124,12 +162,27 @@ const AddClinicians = (props) => {
 
     const onSubmit = async (formValues) => {
         try {
-            const result = await postCliniciansRequest({ params: formValues });
+            if (pageStatus === "Add") {
+                const result = await postCliniciansRequest({
+                    params: formValues,
+                });
+
+                successMessage("Clinician successfully added.");
+            } else if (pageStatus === "Update") {
+                const result = await updateCliniciansRequest({
+                    params: formValues,
+                });
+
+                successMessage("Clinician successfully updated.");
+            }
 
             props.history.push(`/admin/clinicians`);
-            successMessage("Clinician successfully added.");
         } catch (e) {
-            console.log("Clinicians create error:", e);
+            if (pageStatus === "Add") {
+                console.log("Clinicians create error:", e);
+            } else if (pageStatus === "Update") {
+                console.log("Clinicians update error:", e);
+            }
         }
     };
 
@@ -147,7 +200,10 @@ const AddClinicians = (props) => {
                             onClick={() => handleBack()}
                         />
 
-                        <h1 className="box-title ml-4">Add Clinicians</h1>
+                        <h1 className="box-title ml-4">
+                            {pageStatus === "Update" ? "Edit" : "Add"}{" "}
+                            Clinicians
+                        </h1>
                     </div>
                 </div>
 
@@ -162,6 +218,16 @@ const AddClinicians = (props) => {
                             Error: {formError}
                         </PageAlert>
                     ) : null}
+                    {formUpdateError ? (
+                        <PageAlert
+                            className="mt-3"
+                            variant="warning"
+                            timeout={5000}
+                            dismissible
+                        >
+                            Error: {formUpdateError}
+                        </PageAlert>
+                    ) : null}
                 </div>
                 <Form onSubmit={handleSubmit(onSubmit)}>
                     <div className="form-row">
@@ -170,6 +236,7 @@ const AddClinicians = (props) => {
                                 name="clinical_type_id"
                                 label="Type*"
                                 options={typesOptions}
+                                defaultValue={editClinicians?.clinical_type?.id}
                                 ref={register({
                                     required: "Type is required",
                                 })}
@@ -181,6 +248,9 @@ const AddClinicians = (props) => {
                                 name="clinical_user_type_id"
                                 label="User Type*"
                                 options={userTypesOptions}
+                                defaultValue={
+                                    editClinicians?.clinical_user_type?.id
+                                }
                                 ref={register({
                                     required: "User Type is required",
                                 })}
@@ -192,6 +262,9 @@ const AddClinicians = (props) => {
                                 name="clinical_user_status_id"
                                 label="Status*"
                                 options={userStatusesOptions}
+                                defaultValue={
+                                    editClinicians?.clinical_user_status?.id
+                                }
                                 ref={register({
                                     required: "Status is required",
                                 })}
@@ -203,6 +276,9 @@ const AddClinicians = (props) => {
                                 name="therapy_network_id"
                                 label="Therapy Network"
                                 options={therapyNetworksOptions}
+                                defaultValue={
+                                    editClinicians?.therapy_network?.id
+                                }
                                 ref={register({})}
                                 errors={errors}
                             />
@@ -212,6 +288,7 @@ const AddClinicians = (props) => {
                                 name="primary_role"
                                 label="Primary Role*"
                                 options={rolesOptions}
+                                defaultValue={editClinicians?.primary_role}
                                 ref={register({
                                     required: "Primary Role is required",
                                 })}
@@ -220,10 +297,11 @@ const AddClinicians = (props) => {
                         </div>
                         <div className="col-md-6">
                             <InputText
-                                name="job_title"
-                                label="Job Title*"
+                                name="title"
+                                label="Title*"
+                                defaultValue={editClinicians?.title}
                                 ref={register({
-                                    required: "Job Title is required",
+                                    required: "Title is required",
                                 })}
                                 errors={errors}
                             />
@@ -232,6 +310,7 @@ const AddClinicians = (props) => {
                             <InputText
                                 name="first_name"
                                 label="First Name*"
+                                defaultValue={editClinicians?.first_name}
                                 ref={register({
                                     required: "First Name is required",
                                 })}
@@ -242,6 +321,7 @@ const AddClinicians = (props) => {
                             <InputText
                                 name="last_name"
                                 label="Last Name*"
+                                defaultValue={editClinicians?.last_name}
                                 ref={register({
                                     required: "Last Name is required",
                                 })}
@@ -253,6 +333,7 @@ const AddClinicians = (props) => {
                                 name="email"
                                 label="Email*"
                                 type="email"
+                                defaultValue={editClinicians?.email}
                                 ref={register({
                                     required: "Email is required",
                                     pattern: {
@@ -268,6 +349,7 @@ const AddClinicians = (props) => {
                             <InputText
                                 name="phone"
                                 label="Phone*"
+                                defaultValue={editClinicians?.phone_primary}
                                 ref={register({
                                     required: "Phone is required",
                                 })}
@@ -279,7 +361,7 @@ const AddClinicians = (props) => {
                             <Button
                                 type="submit"
                                 className="btn btn-block btn-primary"
-                                label="Add"
+                                label={pageStatus}
                             />
                         </div>
                     </div>

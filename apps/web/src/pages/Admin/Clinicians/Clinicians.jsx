@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
@@ -55,7 +56,7 @@ const Clinicians = (props) => {
             label: "Status",
             type: String,
         },
-        { columnMap: "notes", label: "Notes", type: String },
+        { columnMap: "note", label: "Notes", type: String },
         {
             columnMap: "id",
             label: "Actions",
@@ -64,11 +65,13 @@ const Clinicians = (props) => {
             formatter(id) {
                 return (
                     <>
-                        <Icon
-                            size="1x"
-                            icon="edit"
-                            className="mr-2 bg-secondary text-white rounded-circle p-1"
-                        />
+                        <Link to={`/admin/clinicians/${id}/edit`}>
+                            <Icon
+                                size="1x"
+                                icon="edit"
+                                className="mr-2 bg-secondary text-white rounded-circle p-1"
+                            />
+                        </Link>
 
                         <Icon
                             size="1x"
