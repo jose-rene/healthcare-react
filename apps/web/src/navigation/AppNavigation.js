@@ -149,6 +149,7 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                 />
 
                 <PrivateRoute
+                    exact
                     path="/admin/clinicians"
                     middleware={["hp_user", "hp_champion"]} // need to change admin
                     component={AdminClinicians}
@@ -156,6 +157,12 @@ const AppNavigation = ({ initializing, initializeUser }) => {
 
                 <PrivateRoute
                     path="/admin/add-clinicians"
+                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    component={AdminAddClinicians}
+                />
+
+                <PrivateRoute
+                    path="/admin/clinicians/:id/edit"
                     middleware={["hp_user", "hp_champion"]} // need to change admin
                     component={AdminAddClinicians}
                 />
