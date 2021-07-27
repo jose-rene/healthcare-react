@@ -181,10 +181,7 @@ const TabCompanyInfo = ({
 
     const { handleSubmit, register, errors } = useForm();
 
-    const [
-        { loading: categoryLoading, data: categoryData },
-        requestCategoryData,
-    ] = useApiCall({
+    const [{ data: categoryData }, requestCategoryData] = useApiCall({
         url: "/admin/company/categories",
     });
 
@@ -222,6 +219,8 @@ const TabCompanyInfo = ({
 
     useEffect(() => {
         requestCategoryData();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -236,6 +235,8 @@ const TabCompanyInfo = ({
         setAddressAddStatus(false);
         setAddressUpdateStatus(false);
         setAddressDeleteStatus(false);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
     useEffect(() => {
@@ -292,25 +293,14 @@ const TabCompanyInfo = ({
     }, [member_number_types]);
 
     const [
-        {
-            loading: contactMethodsLoading,
-            data: contactMethodsData,
-            error: contactMethodsError,
-        },
+        { error: contactMethodsError },
         requestContactMethodsData,
     ] = useApiCall({
         method: "post",
         url: `/admin/payer/${company_id}/contact`,
     });
 
-    const [
-        {
-            loading: addressesLoading,
-            data: addressesData,
-            error: addressesError,
-        },
-        requestAddressesData,
-    ] = useApiCall({
+    const [{ error: addressesError }, requestAddressesData] = useApiCall({
         method: "post",
         url: `/admin/payer/${company_id}/address`,
     });
@@ -359,14 +349,7 @@ const TabCompanyInfo = ({
         setContacts({ ...contacts, [name]: value });
     };
 
-    const [
-        {
-            data: companyInfo,
-            loading: companyInfoLoading,
-            error: companyInfoError,
-        },
-        companyInfoUpdateRequest,
-    ] = useApiCall({
+    const [{ error: companyInfoError }, companyInfoUpdateRequest] = useApiCall({
         method: "put",
         url: `/admin/payer/${company_id}`,
     });
@@ -384,7 +367,9 @@ const TabCompanyInfo = ({
                 },
             });
 
-            setCompanyInfoStatus(true);
+            if (result) {
+                setCompanyInfoStatus(true);
+            }
         } catch (e) {
             setCompanyInfoStatus(false);
             console.log("Company Info Update Error:", e);
@@ -424,14 +409,7 @@ const TabCompanyInfo = ({
         setShowAddressModal(false);
     };
 
-    const [
-        {
-            data: contactInfo,
-            loading: contactInfoLoading,
-            error: contactInfoError,
-        },
-        contactInfoUpdateRequest,
-    ] = useApiCall({
+    const [{ error: contactInfoError }, contactInfoUpdateRequest] = useApiCall({
         method: "put",
         url: `/admin/payer/${payerId}/${editContact?.type}/${editContact?.id}`,
     });
@@ -492,14 +470,7 @@ const TabCompanyInfo = ({
         }
     };
 
-    const [
-        {
-            data: addressInfo,
-            loading: addressInfoLoading,
-            error: addressInfoError,
-        },
-        addressInfoUpdateRequest,
-    ] = useApiCall({
+    const [{ error: addressInfoError }, addressInfoUpdateRequest] = useApiCall({
         method: "put",
         url: `/admin/payer/${payerId}/address/${editAddress?.id}`,
     });
@@ -528,11 +499,7 @@ const TabCompanyInfo = ({
     };
 
     const [
-        {
-            data: contactDeleteInfo,
-            loading: contactDeleteInfoLoading,
-            error: contactDeleteInfoError,
-        },
+        { error: contactDeleteInfoError },
         contactInfoDeleteRequest,
     ] = useApiCall({
         method: "delete",
@@ -568,11 +535,7 @@ const TabCompanyInfo = ({
     };
 
     const [
-        {
-            data: addressDeleteInfo,
-            loading: addressDeleteInfoLoading,
-            error: addressDeleteInfoError,
-        },
+        { error: addressDeleteInfoError },
         addressInfoDeleteRequest,
     ] = useApiCall({
         method: "delete",

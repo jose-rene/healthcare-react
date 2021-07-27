@@ -20,7 +20,6 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
     const {
         first_name,
         last_name,
-        email,
         phone_primary,
         avatar_url,
         job_title,
@@ -36,10 +35,7 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
     const { handleSubmit, errors, register } = useForm();
 
     // need to check this api
-    const [
-        { data: userImage, loading, error: imageError },
-        userImageSubmit,
-    ] = useApiCall({
+    const [{ loading }, userImageSubmit] = useApiCall({
         method: "post",
         url: "user/profile-image",
         headers: { "Content-Type": "multipart/form-data" },
@@ -75,8 +71,10 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
 
         try {
             const result = await userImageSubmit({ params: formData });
-            setimagePath(result.url); // need to check the backend api
-            updateAvartarUrl(result.url);
+            if (!loading && result) {
+                setimagePath(result.url); // need to check the backend api
+                updateAvartarUrl(result.url);
+            }
         } catch (error) {
             console.log(error);
         }
@@ -90,6 +88,8 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
         if (selectedFile) {
             handleFile();
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedFile]);
 
     return (

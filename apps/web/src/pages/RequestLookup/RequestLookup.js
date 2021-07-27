@@ -54,7 +54,7 @@ const RequestLookup = ({ search, setSearch }) => {
             columnMap: "request_status_id",
             formatter: (request_status_id) => {
                 const found = statusOptions.find(
-                    ({ value }) => value == request_status_id
+                    ({ value }) => value === request_status_id
                 );
 
                 return found?.title || "";

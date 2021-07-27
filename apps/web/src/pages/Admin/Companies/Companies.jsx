@@ -31,16 +31,13 @@ const Companies = (props) => {
         url: "/admin/payer",
     });
 
-    const [
-        { loading: categoryLoading, data: categoryData },
-        requestCategoryData,
-    ] = useApiCall({
+    const [{ data: categoryData }, requestCategoryData] = useApiCall({
         url: "/admin/company/categories",
     });
 
     const [searchStatus, setSearchStatus] = useState(false);
-    const [checkList, setCheckList] = useState([]);
-    const [checkedAll, setCheckedAll] = useState(false);
+    const [checkList] = useState([]);
+    const [checkedAll] = useState(false);
     const [categoryOptions, setCategoryOptions] = useState([]);
     const [subCategoryOptions, setSubCategoryOptions] = useState([]);
 
@@ -131,6 +128,8 @@ const Companies = (props) => {
 
     useEffect(() => {
         requestCategoryData();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -149,7 +148,12 @@ const Companies = (props) => {
 
         const payerArr = [{ id: "", title: "", val: "" }];
         for (const [key, value] of Object.entries(payer_categories)) {
-            payerArr.push({ id: value.id, title: value.name, val: value.id });
+            payerArr.push({
+                id: value.id,
+                title: value.name,
+                val: value.id,
+                key,
+            });
         }
 
         setCategoryOptions(categoryArr);

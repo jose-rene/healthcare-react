@@ -15,7 +15,8 @@ const SetForgotPassword = ({ location: { search: params = "" }, authed }) => {
     const [passwordChangeError, setPasswordChangeError] = useState(null);
     const history = useHistory();
     const { email, token, redirect = "/?action=password-updated" } = qs.parse(
-        params);
+        params
+    );
     const { register, handleSubmit, errors, watch, getValues } = useForm();
     const [goodPassword, setGoodPassword] = useState(false);
     const [passwordChecking, setPasswordChecking] = useState(false);
@@ -51,25 +52,33 @@ const SetForgotPassword = ({ location: { search: params = "" }, authed }) => {
                 pathname: redirect,
             });
         } catch (e) {
-            const { response: { status } } = e;
+            const {
+                response: { status },
+            } = e;
             switch (status) {
                 case 422:
                     return setPasswordChangeError(
                         <span>
-                            Invalid token please redo the <Link to="/password/reset" className="text-muted">password reset.</Link>
-                        </span>,
+                            Invalid token please redo the{" "}
+                            <Link to="/password/reset" className="text-muted">
+                                password reset.
+                            </Link>
+                        </span>
                     );
+
+                default:
+                    return;
             }
         }
     };
 
     return (
         <div className="container">
-
-            <h1 className="sign-in-title word-break">Password & Security {email}</h1>
+            <h1 className="sign-in-title word-break">
+                Password & Security {email}
+            </h1>
 
             <form onSubmit={handleSubmit(handleUpdatePassword)}>
-
                 <div className="row">
                     <div className="col-md-6">
                         <InputText
@@ -79,18 +88,18 @@ const SetForgotPassword = ({ location: { search: params = "" }, authed }) => {
                             type="password"
                             placeholder="Enter your new password"
                             errors={errors}
-                            style={{ height: '56px' }}
+                            style={{ height: "56px" }}
                             ref={register({
-                                required: 'Password is required',
+                                required: "Password is required",
                                 minLength: {
                                     value: 8,
                                     message:
-                                        'Password must be at least 8 characters',
+                                        "Password must be at least 8 characters",
                                 },
                                 maxLength: {
                                     value: 64,
                                     message:
-                                        'Password must be less than 65 characters',
+                                        "Password must be less than 65 characters",
                                 },
                             })}
                         />
@@ -101,45 +110,54 @@ const SetForgotPassword = ({ location: { search: params = "" }, authed }) => {
                             type="password"
                             placeholder="Enter your new password again"
                             errors={errors}
-                            style={{ height: '56px' }}
+                            style={{ height: "56px" }}
                             ref={register({
-                                validate: value =>
-                                    value === password.current || 'The passwords do not match',
+                                validate: (value) =>
+                                    value === password.current ||
+                                    "The passwords do not match",
                             })}
                         />
                     </div>
                     <div className="col-md-6 pl-5">
-
                         <PasswordRequirements
                             secondaryValid={setGoodPassword}
                             secondaryChecking={setPasswordChecking}
                             secondaryRules
                             token={token}
                             email={email}
-                            {...getValues(['password', 'password_confirmation'])}
+                            {...getValues([
+                                "password",
+                                "password_confirmation",
+                            ])}
                         />
-
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-6">
                         {passwordChangeError && (
                             <Alert className="mt-3" variant="warning">
-                                <span className="pr-1">Error:</span>{' '}{passwordChangeError}
+                                <span className="pr-1">Error:</span>{" "}
+                                {passwordChangeError}
                             </Alert>
                         )}
                         <Button
                             type="submit"
                             variant="primary"
-                            disabled={authedLoading || loading ||
-                            passwordChecking || !goodPassword}
+                            disabled={
+                                authedLoading ||
+                                loading ||
+                                passwordChecking ||
+                                !goodPassword
+                            }
                         >
                             Reset Password
-                            {authedLoading || loading || passwordChecking && (
-                                <Icon className="align-middle fa-spin ml-3">
-                                    spinner
-                                </Icon>
-                            )}
+                            {authedLoading ||
+                                loading ||
+                                (passwordChecking && (
+                                    <Icon className="align-middle fa-spin ml-3">
+                                        spinner
+                                    </Icon>
+                                ))}
                         </Button>
                     </div>
                 </div>

@@ -31,7 +31,6 @@ const TimeoutModal = ({
         seconds,
         minutes,
         // isRunning,
-        start,
         pause,
         // resume,
         restart,
@@ -41,6 +40,8 @@ const TimeoutModal = ({
         if (!show) {
             pause();
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [seconds]);
 
     useEffect(() => {
@@ -53,6 +54,8 @@ const TimeoutModal = ({
         return () => {
             pause();
         };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [show]);
 
     const formatNumber = (number, defaultNumber = 0) => {

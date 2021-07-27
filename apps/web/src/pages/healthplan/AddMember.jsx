@@ -37,10 +37,14 @@ const AddMember = (props) => {
         if (!isEmpty(data)) {
             props.history.push(`/member/${data.id}/request/add`);
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
     useEffect(() => {
         payerProfileRequest();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const planOptions = useMemo(() => {
@@ -99,6 +103,8 @@ const AddMember = (props) => {
         }
 
         return result;
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [titles]);
 
     const { register, handleSubmit, errors, reset } = useForm();

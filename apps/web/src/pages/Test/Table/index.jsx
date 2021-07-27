@@ -20,6 +20,8 @@ const FilterDropdown = ({
     const value = useMemo(() => {
         const { [name]: _value = defaultValue } = searchObj;
         return _value;
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchObj]);
 
     return (
@@ -38,7 +40,7 @@ const FilterDropdown = ({
 
 const TablePage = () => {
     const [
-        { loading, data: { data = [], meta = {} } = {}, error },
+        { loading, data: { data = [], meta = {} } = {} },
         fireCall,
     ] = useApiCall({
         url: "/user/search",
@@ -74,6 +76,8 @@ const TablePage = () => {
 
     useEffect(() => {
         redoSearch();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleTableChange = (props) => {

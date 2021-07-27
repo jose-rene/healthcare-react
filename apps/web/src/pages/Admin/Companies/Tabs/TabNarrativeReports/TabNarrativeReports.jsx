@@ -31,9 +31,6 @@ const templates = [
 ];
 
 const TabNarrativeReports = () => {
-    const [imagePath, setimagePath] = useState();
-    const [fileUploadError, setFileUploadError] = useState(null);
-    const [selectedFile, setSelectedFile] = useState(null);
     const [activeDropdown, setActiveDropdown] = useState("Secure");
     const [activeTab, setActiveTab] = useState("submissions");
     const [activeTemplates, setActiveTemplates] = useState("");
@@ -42,9 +39,7 @@ const TabNarrativeReports = () => {
 
     useEffect(() => {
         const activeItem = templates.filter((template) => {
-            if (template.templateName === activeDropdown) {
-                return template;
-            }
+            return template.templateName === activeDropdown;
         });
 
         setActiveTemplates(activeItem);
@@ -55,16 +50,12 @@ const TabNarrativeReports = () => {
         const error = validateImage(fileUploaded);
 
         if (error) {
-            setFileUploadError(error);
             return;
         }
-
-        setSelectedFile(fileUploaded);
     };
 
     const onPhotoUpload = () => {
         hiddenFileInput.current.click();
-        setFileUploadError(null);
     };
 
     const handleDropdown = (evt) => {
@@ -108,7 +99,7 @@ const TabNarrativeReports = () => {
                             <div className="logo-img-container">
                                 <img
                                     className="logo-img"
-                                    src={imagePath || "/images/dme-icon.svg"}
+                                    src="/images/dme-icon.svg"
                                     alt=""
                                     onClick={onPhotoUpload}
                                 />

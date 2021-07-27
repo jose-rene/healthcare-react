@@ -133,10 +133,14 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
         }
         // otherwise populate the initial group select by adding a new card
         addNewItemsCard();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [payerProfile]);
     // set params when request items change
     useEffect(() => {
         setParams(data);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
     const handleSelectChange = (selected, action, index, groupIndex) => {
@@ -166,6 +170,8 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
         }
         // populate the next select or request types
         // get the nested request_types to use
+
+        /* eslint-disable */
         if (index > 0) {
             for (i = 0; i < index; i++) {
                 const found = reqTypes.find(
@@ -178,6 +184,8 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
                 }
             }
         }
+        /* eslint-enable */
+
         // find the request type for this value in the reqTypes array
         const foundReqType = reqTypes.find((type) => type.id === value);
         // setRequestVals((prevVals) => [...prevVals, value]);
@@ -290,12 +298,12 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
                                                             value={
                                                                 select.value
                                                                     ? select.options.find(
-                                                                        (
-                                                                            opt
-                                                                        ) =>
-                                                                            opt.value ===
+                                                                          (
+                                                                              opt
+                                                                          ) =>
+                                                                              opt.value ===
                                                                               select.value
-                                                                    )
+                                                                      )
                                                                     : null
                                                             }
                                                             isClearable

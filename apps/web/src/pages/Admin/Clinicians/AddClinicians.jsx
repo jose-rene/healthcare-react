@@ -31,7 +31,6 @@ const AddClinicians = (props) => {
 
     const [
         {
-            loading: paramsSearch,
             data: {
                 roles = [],
                 types = [],
@@ -45,32 +44,25 @@ const AddClinicians = (props) => {
         url: "admin/clinicaluser/params",
     });
 
-    const [
-        { data, loading, error: formError },
-        postCliniciansRequest,
-    ] = useApiCall({
+    const [{ error: formError }, postCliniciansRequest] = useApiCall({
         method: "post",
         url: "admin/clinicaluser",
     });
 
-    const [
-        { data: updateData, loading: updateLoading, error: formUpdateError },
-        updateCliniciansRequest,
-    ] = useApiCall({
+    const [{ error: formUpdateError }, updateCliniciansRequest] = useApiCall({
         method: "put",
         url: `admin/clinicaluser/${editCliniciansId}`,
     });
 
-    const [
-        { data: editClinicians, loading: editLoading, error: editError },
-        getEditCliniciansRequest,
-    ] = useApiCall({
+    const [{ data: editClinicians }, getEditCliniciansRequest] = useApiCall({
         url: `admin/clinicaluser/${editCliniciansId}`,
     });
 
     useEffect(() => {
         fireGetParams();
         getEditCliniciansRequest();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editCliniciansId]);
 
     useEffect(() => {
@@ -167,13 +159,17 @@ const AddClinicians = (props) => {
                     params: formValues,
                 });
 
-                successMessage("Clinician successfully added.");
+                if (result) {
+                    successMessage("Clinician successfully added.");
+                }
             } else if (pageStatus === "Update") {
                 const result = await updateCliniciansRequest({
                     params: formValues,
                 });
 
-                successMessage("Clinician successfully updated.");
+                if (result) {
+                    successMessage("Clinician successfully updated.");
+                }
             }
 
             props.history.push(`/admin/clinicians`);

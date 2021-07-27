@@ -33,6 +33,8 @@ const PageAlert = ({
                 setShow(false);
             }, timeout);
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [show]);
 
     const handleOnClose = () => {

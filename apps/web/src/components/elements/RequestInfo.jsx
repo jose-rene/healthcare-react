@@ -10,6 +10,8 @@ const Info = () => {
 
     useEffect(() => {
         fireRequest();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

@@ -40,20 +40,20 @@ const TabDocuments = () => {
             formatter(id, { url }) {
                 return (
                     <>
-                        <a href="#" className="action-btn">
+                        <span className="action-btn">
                             <img
                                 className="action-btn"
                                 src="/images/icons/download.png"
                                 alt="Download"
                             />
-                        </a>
-                        <a href="#" className="action-btn">
-                            <img
+                        </span>
+                        <span className="action-btn">
+                            <i0mg
                                 className="action-btn"
                                 src="/images/icons/play.png"
                                 alt="Play"
                             />
-                        </a>
+                        </span>
                     </>
                 );
             },

@@ -29,7 +29,7 @@ const DetailCompanies = (props) => {
 
     const company_id = props.history.location.pathname.split("/")[3];
 
-    const [{ data, loading }, companyDetailRequest] = useApiCall({
+    const [{ data }, companyDetailRequest] = useApiCall({
         url: `/admin/payer/${company_id}`,
     });
 
@@ -40,6 +40,8 @@ const DetailCompanies = (props) => {
 
     useEffect(() => {
         companyDetailRequest();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [udpateSuccess]);
 
     return (

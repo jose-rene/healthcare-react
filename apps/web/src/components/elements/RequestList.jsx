@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
-import useApiCall from "../../hooks/useApiCall";
+// import useApiCall from "../../hooks/useApiCall";
 import "../../styles/RequestList.scss";
 import Button from "../inputs/Button";
 
 const List = () => {
-    const [{ data, loading }, fireRequestList] = useApiCall({
-        route: "request/list",
-    });
+    // const [{ data, loading }, fireRequestList] = useApiCall({
+    //     route: "request/list",
+    // });
 
     useEffect(() => {
         // fireRequestList();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

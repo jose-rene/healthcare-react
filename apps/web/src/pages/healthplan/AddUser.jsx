@@ -13,7 +13,7 @@ import PageAlert from "../../components/elements/PageAlert";
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 const AddUser = () => {
-    const [{ data, loading, error: formError }, fireSubmit] = useApiCall({
+    const [{ loading, error: formError }, fireSubmit] = useApiCall({
         method: "post",
         url: "user",
     });

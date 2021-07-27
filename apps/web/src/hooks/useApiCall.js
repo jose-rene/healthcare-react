@@ -160,16 +160,22 @@ export default ({
         })();
 
         debug && console.info("useService.fired.construct", { config });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         setConfig({ ...config, url });
         debug && console.info("useService.useMemo.url", { config });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url]);
 
     useEffect(() => {
         setConfig({ ...config, ...formatParams(params) });
         debug && console.info("useService.useMemo.params", { config });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params]);
 
     return [{ loading, data, error, cancelToken, setLoading }, fire];

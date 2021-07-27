@@ -1,17 +1,21 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import InputText from "../components/inputs/InputText";
-import {Alert, Button} from "react-bootstrap";
+import { Alert, Button } from "react-bootstrap";
 import Icon from "../components/elements/Icon";
-import {BASE_URL, POST} from "../config/URLs";
-import {useForm} from "react-hook-form";
+import { BASE_URL, POST } from "../config/URLs";
+import { useForm } from "react-hook-form";
 import useApiCall from "../hooks/useApiCall";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import qs from "query-string";
 
-export default ({location: {search: params = ''}}) => {
-    const [{loading = false}, forgotPassword] = useApiCall({baseURL: BASE_URL, url: '/password/email/', method: POST});
-    const {email = ''} = qs.parse(params);
-    const {register, handleSubmit, errors, setValue} = useForm();
+export default ({ location: { search: params = "" } }) => {
+    const [{ loading = false }, forgotPassword] = useApiCall({
+        baseURL: BASE_URL,
+        url: "/password/email/",
+        method: POST,
+    });
+    const { email = "" } = qs.parse(params);
+    const { register, handleSubmit, errors, setValue } = useForm();
     const [changeSuccess, setChangeSuccess] = useState(false);
     const [passwordChangeError, setPasswordChangeError] = useState(null);
 
@@ -19,22 +23,28 @@ export default ({location: {search: params = ''}}) => {
         try {
             setPasswordChangeError(null);
             setChangeSuccess(false);
-            await forgotPassword({params})
+            await forgotPassword({ params });
             setChangeSuccess(true);
-            setValue('email', '');
+            setValue("email", "");
         } catch (e) {
             setChangeSuccess(false);
-            const {response: {status}} = e;
+            const {
+                response: { status },
+            } = e;
             switch (status) {
                 case 422:
                     return setPasswordChangeError(
                         <span>
-                            Please check your email or wait a few minutes before re-trying.
+                            Please check your email or wait a few minutes before
+                            re-trying.
                         </span>
                     );
+
+                default:
+                    return;
             }
         }
-    }
+    };
 
     return (
         <div className="container-fluid">
@@ -43,7 +53,7 @@ export default ({location: {search: params = ''}}) => {
                     <div className="container-login">
                         <div className="text-center text-lg-left">
                             <Link to="/">
-                                <img alt="Logo" src="/images/logo.png"/>
+                                <img alt="Logo" src="/images/logo.png" />
                             </Link>
                         </div>
 
@@ -55,7 +65,7 @@ export default ({location: {search: params = ''}}) => {
                                 name="email"
                                 placeholder="Enter your email address"
                                 errors={errors}
-                                style={{height: "56px"}}
+                                style={{ height: "56px" }}
                                 defaultValue={email}
                                 ref={register({
                                     required: "Email is required",
@@ -68,14 +78,19 @@ export default ({location: {search: params = ''}}) => {
                             />
                             <div className="d-flex mt-3">
                                 Nevermind
-                                <Link to="/" className="text-muted pl-1" tabIndex="-1">
+                                <Link
+                                    to="/"
+                                    className="text-muted pl-1"
+                                    tabIndex="-1"
+                                >
                                     Sign in
                                 </Link>
                             </div>
                             {changeSuccess && (
                                 <Alert className="mt-3" variant="success">
-                                    <Icon icon="email"/>
-                                    Please check your email for the password reset instructions.
+                                    <Icon icon="email" />
+                                    Please check your email for the password
+                                    reset instructions.
                                 </Alert>
                             )}
                             {passwordChangeError && (
@@ -101,7 +116,7 @@ export default ({location: {search: params = ''}}) => {
                     </div>
                 </div>
 
-                <div className="d-none d-sm-none d-md-none d-lg-flex col-lg-6 login-bg col-no-padding"/>
+                <div className="d-none d-sm-none d-md-none d-lg-flex col-lg-6 login-bg col-no-padding" />
             </div>
         </div>
     );
