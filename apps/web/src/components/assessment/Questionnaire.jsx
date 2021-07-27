@@ -20,11 +20,6 @@ function Questionnaire({ id, assessmentId, answers }) {
         loading: true,
         error: null,
     });
-    const [{ sendData, sending, sendError }, updateQuestionnaire] = useState({
-        sendData: null,
-        sending: false,
-        sendError: null,
-    });
 
     useEffect(() => {
         console.log(
@@ -77,7 +72,7 @@ function Questionnaire({ id, assessmentId, answers }) {
                     console.log(ans);
                     formMethods.setValue(
                         `input_${ans.question_id}`,
-                        ans.value == 0 ? false : ans.value
+                        ans.value === 0 ? false : ans.value
                     );
                 });
             }

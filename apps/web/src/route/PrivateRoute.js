@@ -17,12 +17,10 @@ const PrivateRoute = ({
     primaryRole,
     ...rest
 }) => {
-    const [{}, { permissionCheck }] = useAuth();
+    const [{ permissionCheck }] = useAuth();
 
     const path = useMemo(() => {
-        return encodeURIComponent(
-            `${location.pathname}${location.search}`,
-        );
+        return encodeURIComponent(`${location.pathname}${location.search}`);
     }, [location]);
 
     // If the user needs to reset their password then push the user to the
@@ -31,6 +29,8 @@ const PrivateRoute = ({
         if (reset_password) {
             window.location.assign(`/password/change?redirect=${path}`);
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reset_password]);
 
     useEffect(() => {
@@ -43,6 +43,8 @@ const PrivateRoute = ({
                 }
             })();
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [requiredAbility]);
 
     if (

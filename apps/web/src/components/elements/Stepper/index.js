@@ -124,16 +124,20 @@ const Stepper = ({ data }) => {
 
     useEffect(() => {
         payerProfileRequest();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         setStatus(data);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data, memberVerified]);
 
     const handleUpdate = async (updateData = false, updateOnly = false) => {
         try {
             // need to check response when due_at save in the database.
-            const result = await fireSubmit(
+            await fireSubmit(
                 updateData
                     ? { params: updateData }
                     : activeStep === 0
@@ -141,9 +145,9 @@ const Stepper = ({ data }) => {
                     : { params }
             );
 
-            setEditData(result);
+            setEditData(requestData);
             setStatus({
-                ...result,
+                ...requestData,
                 due_na:
                     updateData !== false && "due_na" in updateData
                         ? updateData.due_na

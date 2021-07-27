@@ -49,6 +49,8 @@ const Button = ({
         const lbl = label || children;
 
         return bold ? <strong>{lbl}</strong> : lbl;
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [label, children]);
 
     return useButton ? (

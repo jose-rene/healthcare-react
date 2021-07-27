@@ -13,10 +13,7 @@ import PageAlert from "../../../components/elements/PageAlert";
 import useApiCall from "../../../hooks/useApiCall";
 
 const AddCompanies = (props) => {
-    const [
-        { data, loading, error: formError },
-        postCompanyRequest,
-    ] = useApiCall({
+    const [{ error: formError }, postCompanyRequest] = useApiCall({
         method: "post",
         url: "admin/company",
     });
@@ -24,9 +21,6 @@ const AddCompanies = (props) => {
     const [categoryOptions, setCategoryOptions] = useState([]);
     const [subCategoryOptions, setSubCategoryOptions] = useState([]);
     const [showSubcategory, setShowSubcategory] = useState(false);
-    const [contactMethods, setContactMethods] = useState([
-        { type: "type", phone_email: "phone_email" },
-    ]);
 
     const { handleSubmit, register, watch, errors } = useForm();
 

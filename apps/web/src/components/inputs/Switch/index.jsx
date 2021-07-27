@@ -3,7 +3,7 @@ import "./index.css";
 
 function Switch({ checked = false, disabled = false, ...otherProps }) {
     const [isToggled, setIsToggled] = useState(false);
-    const onToggle = () => setIsToggled(!isToggled);
+    // const onToggle = () => setIsToggled(!isToggled);
 
     useEffect(() => {
         setIsToggled(checked);

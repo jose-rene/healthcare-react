@@ -39,7 +39,7 @@ const TableAPI = ({
     }, [total_records, perPage]);
 
     const renderBody = useMemo(() => {
-        if (!data || data.length == 0) {
+        if (!data || data.length === 0) {
             return (
                 <tr key="0">
                     <td colSpan={headers.length} className="text-center">
@@ -78,6 +78,8 @@ const TableAPI = ({
                 )}
             </tr>
         ));
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [headers, data]);
 
     const paginationOptions = useMemo(() => {

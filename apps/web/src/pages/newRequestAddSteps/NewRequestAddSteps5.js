@@ -30,6 +30,8 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate, dueNa, setDueNa }) => {
         if (selectedFile) {
             handleFile();
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedFile]);
 
     const updateData = ({ target: { name, value, checked } }) => {
@@ -76,10 +78,7 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate, dueNa, setDueNa }) => {
 
     const request_uuid = memberData.id;
 
-    const [
-        { data: fileData, loading, error: fileError },
-        fileSubmit,
-    ] = useApiCall({
+    const [{ error: fileError }, fileSubmit] = useApiCall({
         method: "post",
         url: `request/${request_uuid}/document`,
     });
@@ -93,7 +92,7 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate, dueNa, setDueNa }) => {
         formData.append("mime_type", selectedFile.type);
 
         try {
-            const result = await fileSubmit({ params: formData });
+            await fileSubmit({ params: formData });
         } catch (error) {
             console.log(error);
         }

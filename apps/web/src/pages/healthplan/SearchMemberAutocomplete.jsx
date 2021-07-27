@@ -12,7 +12,7 @@ import "../../styles/healthplan.scss";
 
 const SearchMember = () => {
     const [
-        { loading, data: { data = [], meta = {} } = {}, error },
+        { loading, data: { data = [], meta = {} } = {} },
         memberSearch,
     ] = useApiCall({
         method: "post",
@@ -54,6 +54,8 @@ const SearchMember = () => {
 
     useEffect(() => {
         redoSearch();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleTableChange = (props) => {

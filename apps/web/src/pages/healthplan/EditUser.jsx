@@ -19,10 +19,7 @@ const EditUser = () => {
     const [{ userUpdated }, setUserUpdated] = useState({ userUpdated: false });
     // history for go back
     const history = useHistory();
-    const [
-        { data: userData, loading: userLoading, error: userError },
-        fetchUser,
-    ] = useApiCall({
+    const [{ data: userData }, fetchUser] = useApiCall({
         method: "get",
         url: `user/${id}`,
     });
@@ -46,10 +43,12 @@ const EditUser = () => {
         return () => {
             isMounted = false;
         };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // form handling
-    const [{ data, loading, error: formError }, fireSubmit] = useApiCall({
+    const [{ loading, error: formError }, fireSubmit] = useApiCall({
         method: "put",
         url: `user/${id}`,
     });
@@ -78,7 +77,10 @@ const EditUser = () => {
         try {
             const result = await fireSubmit({ params: formData });
             // console.log("result-> ", result);
-            setUserUpdated({ userUpdated: true });
+
+            if (result) {
+                setUserUpdated({ userUpdated: true });
+            }
             // reset();
         } catch (e) {
             console.log("User create error:", e);

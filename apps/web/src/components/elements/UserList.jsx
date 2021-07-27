@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo } from "react";
 import useSearch from "../../hooks/useSearch";
-import Icon from "./Icon";
-import PageAlert from "./PageAlert";
 import useApiCall from "../../hooks/useApiCall";
 import "../../styles/RequestList.scss";
 import TableAPI from "./TableAPI";
@@ -51,7 +49,7 @@ const List = () => {
     );
 
     const [
-        { loading, data: { data = [], meta = {} } = {}, error },
+        { loading, data: { data = [], meta = {} } = {} },
         fireCall,
     ] = useApiCall({
         url: "/user/search",
@@ -59,16 +57,15 @@ const List = () => {
         method: "post",
     });
 
-    const [
-        { searchObj },
-        { formUpdateSearchObj, updateSearchObj, resetSearchObj },
-    ] = useSearch({
-        searchObj: {
-            perPage: 10,
-            sortColumn: headers[1].columnMap,
-            sortDirection: "asc",
-        },
-    });
+    const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
+        {
+            searchObj: {
+                perPage: 10,
+                sortColumn: headers[1].columnMap,
+                sortDirection: "asc",
+            },
+        }
+    );
 
     const handleSearch = (_params = searchObj) => {
         const params = {
@@ -83,6 +80,8 @@ const List = () => {
 
     useEffect(() => {
         handleSearch();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleTableChange = (params) => {

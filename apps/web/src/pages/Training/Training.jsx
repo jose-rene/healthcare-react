@@ -36,7 +36,7 @@ const Training = () => {
     const [
         {
             loading,
-            data: { data = [], meta = {} },
+            data: { meta = {} },
         },
         requestDocuments,
     ] = useApiCall({
@@ -46,6 +46,8 @@ const Training = () => {
 
     useEffect(() => {
         handleTab(1); // training document type id of database
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleTab = (training_document_type_id) => {
@@ -61,6 +63,8 @@ const Training = () => {
         return mockTrainingDocuments.filter((item) => {
             return item.id_pdf === true;
         });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mockTrainingDocuments]);
 
     const videoData = useMemo(() => {
@@ -71,6 +75,8 @@ const Training = () => {
         return mockTrainingDocuments.filter((item) => {
             return item.id_pdf === false;
         });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mockTrainingDocuments]);
 
     return (

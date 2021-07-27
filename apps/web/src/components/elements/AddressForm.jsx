@@ -36,6 +36,8 @@ const AddressForm = ({
         }
 
         return result;
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [states]);
 
     useEffect(() => {
@@ -51,6 +53,8 @@ const AddressForm = ({
                 val: addressFormValue?.county,
             },
         ]);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [addressFormValue]);
 
     const handleLookupZip = () => {

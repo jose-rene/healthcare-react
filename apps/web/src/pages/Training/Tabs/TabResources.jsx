@@ -27,15 +27,14 @@ const TabResources = ({ pdfData, videoData, meta, loading }) => {
             formatter(id, { url }) {
                 return (
                     <>
-                        <a href="#" className="action-btn">
+                        <span className="action-btn">
                             <img
                                 className="action-btn"
                                 src="/images/icons/download.png"
                                 alt="Download"
                             />
-                        </a>
-                        <a
-                            href="#"
+                        </span>
+                        <span
                             className="action-btn"
                             onClick={(e) => handlePdfPlay(e, url)}
                         >
@@ -44,7 +43,7 @@ const TabResources = ({ pdfData, videoData, meta, loading }) => {
                                 src="/images/icons/play.png"
                                 alt="Play"
                             />
-                        </a>
+                        </span>
                     </>
                 );
             },
@@ -70,15 +69,14 @@ const TabResources = ({ pdfData, videoData, meta, loading }) => {
             formatter(id, { url }) {
                 return (
                     <>
-                        <a href="#" className="action-btn">
+                        <span className="action-btn">
                             <img
                                 className="action-btn"
                                 src="/images/icons/download.png"
                                 alt="Download"
                             />
-                        </a>
-                        <a
-                            href="#"
+                        </span>
+                        <span
                             className="action-btn"
                             onClick={(e) => handleVideoPlay(e, url)}
                         >
@@ -87,7 +85,7 @@ const TabResources = ({ pdfData, videoData, meta, loading }) => {
                                 src="/images/icons/play.png"
                                 alt="Play"
                             />
-                        </a>
+                        </span>
                     </>
                 );
             },

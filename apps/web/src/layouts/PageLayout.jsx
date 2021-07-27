@@ -26,7 +26,7 @@ const PageLayout = ({
     const [{ showTimeoutModal }, { dismissTimeout }] = useIdleTimeout({
         timeout: INACTIVITY_TIMEOUT,
     });
-    const [{}, fireSavePrimaryRole] = useApiCall({
+    const [{ loading }, fireSavePrimaryRole] = useApiCall({
         url: "user/profile",
         method: PUT,
     });
@@ -56,13 +56,16 @@ const PageLayout = ({
     };
 
     const handlePrimaryRoleChanged = async ({ target: { name, value } }) => {
-        if (value != primaryRole) {
+        if (value !== primaryRole) {
             await fireSavePrimaryRole({
                 params: {
                     primary_role: value,
                 },
             });
-            window.location.reload();
+
+            if (!loading) {
+                window.location.reload();
+            }
         }
     };
 

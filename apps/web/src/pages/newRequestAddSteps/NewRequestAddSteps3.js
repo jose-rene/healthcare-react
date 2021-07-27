@@ -24,6 +24,8 @@ const NewRequestAddSteps3 = ({ setParams, requestData }) => {
     // set params when diagnosis codes change
     useEffect(() => {
         setParams(data);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
     useEffect(() => {
@@ -39,6 +41,8 @@ const NewRequestAddSteps3 = ({ setParams, requestData }) => {
                 description: "",
             },
         ]);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const [{ loading }, fireSearch] = useApiCall({
@@ -120,9 +124,9 @@ const NewRequestAddSteps3 = ({ setParams, requestData }) => {
                                 value={
                                     item.code
                                         ? {
-                                            label: item.description,
-                                            value: item.code,
-                                        }
+                                              label: item.description,
+                                              value: item.code,
+                                          }
                                         : null
                                 }
                                 isLoading={loading}

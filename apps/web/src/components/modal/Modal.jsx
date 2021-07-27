@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useHistory } from "react-router";
 import { isEmpty } from "lodash";
 
@@ -15,7 +15,7 @@ const FormModal = ({ title, nameField, data, member_id, payerProfile }) => {
     const [open, setOpen] = useState(false);
     const [editData, setEditData] = useState(null);
 
-    const [{ data: memberData, loading, error }, fireSubmit] = useApiCall({
+    const [{ loading }, fireSubmit] = useApiCall({
         method: "put",
         url: `member/${member_id}`,
     });
@@ -52,6 +52,9 @@ const FormModal = ({ title, nameField, data, member_id, payerProfile }) => {
                 submitData = {
                     member_number: editData.member_number,
                 };
+                break;
+
+            default:
                 break;
         }
 
@@ -215,13 +218,16 @@ const FormModal = ({ title, nameField, data, member_id, payerProfile }) => {
                         </div>
                     </div>
                 );
+
+            default:
+                return;
         }
     };
     return (
         <div>
-            <a className="action-btn" onClick={handleClickOpen}>
+            <span className="action-btn" onClick={handleClickOpen}>
                 <i className="far fa-edit" />
-            </a>
+            </span>
 
             <Modal show={open} onHide={onclose} title={title}>
                 <div className="col-md-12">{content(nameField)}</div>

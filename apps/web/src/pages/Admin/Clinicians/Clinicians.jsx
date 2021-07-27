@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
-import InputText from "../../../components/inputs/InputText";
 import Select from "../../../components/inputs/Select";
 import Button from "../../../components/inputs/Button";
 
@@ -20,7 +19,6 @@ import useSearch from "../../../hooks/useSearch";
 const Clinicians = (props) => {
     const [
         {
-            loading: paramsSearch,
             data: { user_statuses = [], user_types = [] },
         },
         fireGetParams,
@@ -42,6 +40,8 @@ const Clinicians = (props) => {
         fireGetParams();
         fireDoSearch();
         setSearchStatus(false);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const [searchStatus, setSearchStatus] = useState(false);

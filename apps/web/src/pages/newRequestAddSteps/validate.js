@@ -20,5 +20,8 @@ export const validate = (index, data) => {
             return !!data.request_items.length;
         case 4:
             return data.due_na || !!data.due_at;
+
+        default:
+            return false;
     }
 };

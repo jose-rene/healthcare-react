@@ -48,6 +48,8 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                 initializeUser();
             }
         })();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (loading || initializing) {

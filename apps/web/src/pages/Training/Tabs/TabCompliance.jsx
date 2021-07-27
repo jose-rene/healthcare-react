@@ -25,15 +25,14 @@ const TabCompliance = ({ data, meta, loading }) => {
             formatter(id, { url }) {
                 return (
                     <>
-                        <a href="#" className="action-btn">
+                        <span className="action-btn">
                             <img
                                 className="action-btn"
                                 src="/images/icons/download.png"
                                 alt="Download"
                             />
-                        </a>
-                        <a
-                            href="#"
+                        </span>
+                        <span
                             className="action-btn"
                             onClick={(e) => handlePlay(e, url)}
                         >
@@ -42,7 +41,7 @@ const TabCompliance = ({ data, meta, loading }) => {
                                 src="/images/icons/play.png"
                                 alt="Play"
                             />
-                        </a>
+                        </span>
                     </>
                 );
             },

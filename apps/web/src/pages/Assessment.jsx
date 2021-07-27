@@ -11,13 +11,17 @@ const Assessment = () => {
             loading,
             data: { questionnaire, answers },
             error,
-        }, fireLoadAssessment] = useApiCall();
+        },
+        fireLoadAssessment,
+    ] = useApiCall();
 
     // load the questionnaire
     useEffect(() => {
         fireLoadAssessment({
             url: `/assessment/${id}`,
         });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     return (
