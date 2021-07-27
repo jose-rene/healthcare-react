@@ -1,17 +1,73 @@
-import React from "react";
-import { Col, Row } from "react-bootstrap";
-import Button from "../../../components/inputs/Button";
-/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState } from "react";
+
+import TableAPI from "../../../components/elements/TableAPI";
+import { ACTIONS } from "../../../helpers/table";
+
+const data = [
+    {
+        id: "mockTrainingDocuments1",
+        name: "Document File 2020",
+        fileSize: 6.3,
+        id_pdf: true,
+        url: "http://www.africau.edu/images/default/sample.pdf",
+    },
+    {
+        id: "mockTrainingDocuments2",
+        name: "License Document File 2020",
+        fileSize: 6.3,
+        id_pdf: true,
+        url: "https://smallpdf.com/pdf-reader?job=1621391229785",
+    },
+];
 
 const TabDocuments = () => {
+    const [headers] = useState([
+        { columnMap: "name", label: "Name", type: String, disableSortBy: true },
+        {
+            columnMap: "fileSize",
+            label: "File Size",
+            type: String,
+            disableSortBy: true,
+            formatter(fileSize) {
+                return <span>{fileSize}MB</span>;
+            },
+        },
+        {
+            columnMap: "id",
+            label: "Actions",
+            type: ACTIONS,
+            disableSortBy: true,
+            formatter(id, { url }) {
+                return (
+                    <>
+                        <a href="#" className="action-btn">
+                            <img
+                                className="action-btn"
+                                src="/images/icons/download.png"
+                                alt="Download"
+                            />
+                        </a>
+                        <a href="#" className="action-btn">
+                            <img
+                                className="action-btn"
+                                src="/images/icons/play.png"
+                                alt="Play"
+                            />
+                        </a>
+                    </>
+                );
+            },
+        },
+    ]);
+
     return (
-        <Row>
-            <Col lg={6} className="d-none d-sm-block">
+        <div className="row">
+            <div className="col-md-6 d-none d-sm-block">
                 <h2 className="box-outside-title">Document Viewer</h2>
 
                 <div className="white-box white-box-small">
-                    <Row>
-                        <Col lg={12}>
+                    <div className="row">
+                        <div className="col-md-12">
                             <embed
                                 src="/sample/sample.pdf"
                                 style={{
@@ -21,72 +77,29 @@ const TabDocuments = () => {
                                 alt="Document Viewer"
                                 pluginspage="https://www.adobe.com/products/acrobat/readstep2.html"
                             />
-                        </Col>
-                    </Row>
+                        </div>
+                    </div>
                 </div>
-            </Col>
+            </div>
 
-            <Col lg={6}>
-                <h2 className="box-outside-title">Files</h2>
+            <div className="col-md-6">
+                <h2 className="box-outside-title mt-4 pt-2">Files</h2>
 
                 <div className="white-box white-box-small">
-                    <Row>
-                        <Col lg={12}>
-                            <div className="table-responsive">
-                                <table className="table app-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>File Size</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        <tr>
-                                            <td>Document File 2020</td>
-                                            <td>6.3 MB</td>
-                                            <td width="120">
-                                                <Button
-                                                    to="#"
-                                                    useButton={false}
-                                                    variant="icon"
-                                                    icon="download"
-                                                />
-                                                <Button
-                                                    to="#"
-                                                    useButton={false}
-                                                    variant="icon"
-                                                    icon="play"
-                                                />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>License Document File 2020</td>
-                                            <td>6.3 MB</td>
-                                            <td width="120">
-                                                <Button
-                                                    to="#"
-                                                    useButton={false}
-                                                    variant="icon"
-                                                    icon="download"
-                                                />
-                                                <Button
-                                                    to="#"
-                                                    useButton={false}
-                                                    variant="icon"
-                                                    icon="play"
-                                                />
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </Col>
-                    </Row>
+                    <div className="row">
+                        <div className="col-md-12">
+                            <TableAPI // need to update real data
+                                searchObj={{}}
+                                headers={headers}
+                                loading={false}
+                                data={data}
+                                dataMeta={{}}
+                            />
+                        </div>
+                    </div>
                 </div>
-            </Col>
-        </Row>
+            </div>
+        </div>
     );
 };
 

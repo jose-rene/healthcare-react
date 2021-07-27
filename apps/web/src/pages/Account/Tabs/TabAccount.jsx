@@ -7,6 +7,7 @@ import Tooltip from "react-bootstrap/Tooltip";
 import InputText from "../../../components/inputs/InputText";
 import Select from "../../../components/inputs/Select";
 import Button from "../../../components/inputs/Button";
+import Checkbox from "../../../components/inputs/Checkbox";
 import Icon from "../../../components/elements/Icon";
 import PageAlert from "../../../components/elements/PageAlert";
 import ConfirmationModal from "../../../components/elements/ConfirmationModal";
@@ -16,7 +17,14 @@ import { updateAvartarUrl } from "../../../actions/userAction";
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 const TabAccount = ({ currentUser, updateAvartarUrl }) => {
-    const { first_name, last_name, email, avatar_url, job_title } = currentUser;
+    const {
+        first_name,
+        last_name,
+        email,
+        phone_primary,
+        avatar_url,
+        job_title,
+    } = currentUser;
 
     const hiddenFileInput = useRef(null);
 
@@ -115,10 +123,13 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                                     <Row>
                                         <Col lg={3}>
                                             <Row>
-                                                <Col lg={12}>
-                                                    <label className="app-input-label">
+                                                <Col
+                                                    lg={12}
+                                                    className="text-center"
+                                                >
+                                                    <div className="app-input-label">
                                                         Edit Profile Picture
-                                                    </label>
+                                                    </div>
 
                                                     <a href="#">
                                                         <OverlayTrigger
@@ -166,15 +177,11 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                                                     </a>
 
                                                     <div className="img-alert">
-                                                        <img
-                                                            src="/images/icons/alert-circle.png"
-                                                            alt=""
-                                                        />
                                                         <p>
-                                                            Recommended Picture
+                                                            Click on image to
+                                                            update
                                                             <br />
-                                                            Dimension is 150px x
-                                                            150px
+                                                            your profile picture
                                                         </p>
                                                     </div>
                                                 </Col>
@@ -188,6 +195,36 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                                                         label="Job Title"
                                                         name="job_title"
                                                         value={job_title}
+                                                        erorrs={errors}
+                                                        ref={register({})}
+                                                    />
+                                                </Col>
+
+                                                <Col lg={6}>
+                                                    <InputText
+                                                        label="Phone"
+                                                        name="phone_primary"
+                                                        value={phone_primary}
+                                                        errors={errors}
+                                                        ref={register({})}
+                                                    />
+                                                </Col>
+
+                                                <Col lg={6}>
+                                                    <InputText
+                                                        label="First Name"
+                                                        name="first_name"
+                                                        value={first_name}
+                                                        erorrs={errors}
+                                                        ref={register({})}
+                                                    />
+                                                </Col>
+
+                                                <Col lg={6}>
+                                                    <InputText
+                                                        label="Last Name"
+                                                        name="last_name"
+                                                        value={last_name}
                                                         erorrs={errors}
                                                         ref={register({})}
                                                     />
@@ -222,23 +259,19 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                                                 </Col>
 
                                                 <Col lg={6}>
-                                                    <InputText
-                                                        label="First Name"
-                                                        name="first_name"
-                                                        value={first_name}
-                                                        erorrs={errors}
-                                                        ref={register({})}
-                                                    />
-                                                </Col>
-
-                                                <Col lg={6}>
-                                                    <InputText
-                                                        label="Last Name"
-                                                        name="last_name"
-                                                        value={last_name}
-                                                        erorrs={errors}
-                                                        ref={register({})}
-                                                    />
+                                                    <div className="form-control custom-checkbox d-flex">
+                                                        <Checkbox
+                                                            labelLeft
+                                                            label="Text"
+                                                            name="sms"
+                                                        />
+                                                        <Checkbox
+                                                            labelLeft
+                                                            className="ml-2 mr-1"
+                                                            label="Email"
+                                                            name="mail"
+                                                        />
+                                                    </div>
                                                 </Col>
 
                                                 <Col lg={12}>

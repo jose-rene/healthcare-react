@@ -63,7 +63,13 @@ const TabSecurity = ({ currentUser }) => {
                             />
                         </Col>
 
-                        <Col lg={6} />
+                        <Col lg={6}>
+                            <Button
+                                label="Authenticate"
+                                outline
+                                className="auth-btn mb-md-3 py-2"
+                            />
+                        </Col>
 
                         <Col lg={6}>
                             <InputText type="password" label="New Password" />
@@ -82,7 +88,7 @@ const TabSecurity = ({ currentUser }) => {
                             <Button label="Cancel" variant="cancel" />
                             <Button
                                 label="Change Password"
-                                variant="primary"
+                                outline
                                 className="ml-3"
                             />
                         </Col>
