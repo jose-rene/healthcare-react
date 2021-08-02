@@ -62,7 +62,7 @@ class MemberController extends Controller
         // address
         $member->addresses()->create([
             'address_1'   => $data['address_1'],
-            'address_2'   => $data['address_2'],
+            'address_2'   => empty($data['address_2']) ? '' : $data['address_2'],
             'city'        => $data['city'],
             'state'       => $data['state'],
             'county'      => $data['county'],

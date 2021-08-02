@@ -121,9 +121,14 @@ const AddressForm = ({
 
                 setAddressFormValue &&
                     setAddressFormValue({
-                        ...addressFormValue,
+                        ...addressFormData,
                         ...addressTemp,
                     });
+
+                setAddressFormData({
+                    ...addressFormData,
+                    ...addressTemp,
+                });
             })
             .catch((error) => {
                 setAlertMessage("Address fetch error!");
@@ -133,7 +138,7 @@ const AddressForm = ({
     const handleAddressFormData = ({ target: { name, value } }) => {
         setAddressFormData({ ...addressFormData, [name]: value });
         setAddressFormValue &&
-            setAddressFormValue({ ...addressFormValue, [name]: value });
+            setAddressFormValue({ ...addressFormData, [name]: value });
     };
 
     return (
