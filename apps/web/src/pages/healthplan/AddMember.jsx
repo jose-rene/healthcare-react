@@ -82,9 +82,7 @@ const AddMember = (props) => {
         }
 
         return payerProfile.languages.map(({ id, name }) => {
-            return name === "English"
-                ? { id, title: name, val: id, selected: "selected" }
-                : { id, title: name, val: id };
+            return { id, title: name, val: id };
         });
     }, [payerProfile]);
 
@@ -113,19 +111,25 @@ const AddMember = (props) => {
     const [contactMethods, setContactMethods] = useState([
         { type: "type", phone_email: "phone_email" },
     ]);
+    const [contacts, setContacts] = useState({});
+    const [addressFormValue, setAddressFormValue] = useState({});
 
     const onSubmit = async (formData) => {
         if (loading) {
             return false;
         }
-        const contacts = [];
+        const sendContactsData = [];
         contactMethods.forEach((v) => {
-            contacts.push({
-                type: formData[v.type],
-                value: formData[v.phone_email],
+            sendContactsData.push({
+                type: contacts[v.type],
+                value: contacts[v.phone_email],
             });
         });
-        const formSendData = { ...formData, contacts };
+        const formSendData = {
+            ...formData,
+            contacts: sendContactsData,
+            ...addressFormValue,
+        };
 
         try {
             const result = await fireSubmit({ params: formSendData });
@@ -137,6 +141,10 @@ const AddMember = (props) => {
 
     const onCancel = () => {
         reset();
+    };
+
+    const setContactMethodsValue = ({ target: { name, value } }) => {
+        setContacts({ ...contacts, [name]: value });
     };
 
     return (
@@ -328,6 +336,7 @@ const AddMember = (props) => {
                                         name="language"
                                         label="Language*"
                                         options={languageOptions}
+                                        defaultValue="6" // 6 is English
                                         errors={errors}
                                         ref={register({
                                             required: "Language is required",
@@ -335,7 +344,9 @@ const AddMember = (props) => {
                                     />
                                 </div>
 
-                                <AddressForm />
+                                <AddressForm
+                                    setAddressFormValue={setAddressFormValue}
+                                />
 
                                 <div className="col-md-12">
                                     <h1
@@ -349,6 +360,9 @@ const AddMember = (props) => {
                                 <ContactMethods
                                     contactMethods={contactMethods}
                                     setContactMethods={setContactMethods}
+                                    setContactMethodsValue={
+                                        setContactMethodsValue
+                                    }
                                 />
 
                                 <div className="col-md-12">
