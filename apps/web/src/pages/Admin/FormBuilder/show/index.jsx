@@ -1,0 +1,69 @@
+import React, { useEffect, useMemo } from "react";
+import PageLayout from "../../../../layouts/PageLayout";
+import Form from "../../../../components/elements/Form";
+import "../edit/style.scss";
+import RenderForm from "./RenderForm";
+import Button from "../../../../components/inputs/Button";
+import useFormBuilder from "../../../../hooks/useFormBuilder";
+
+const FormView = ({
+    match: {
+        params: { form_slug },
+    },
+}) => {
+    const [{ form, formLoading }, { fireLoadForm }] = useFormBuilder({
+        formId: form_slug,
+    });
+
+    useEffect(() => {
+        if (!form_slug) {
+            throw "missing/ invalid form name";
+        }
+
+        fireLoadForm();
+    }, []);
+
+    // maps field validation to validation object
+    const validation = useMemo(() => {
+        const returnCustomValidation = {};
+
+        form.forEach(({ custom_name, props }) => {
+            const { customValidation } = props || {};
+
+            if (!customValidation) {
+                return true;
+            }
+
+            returnCustomValidation[custom_name] = {
+                customRule: customValidation,
+            };
+        });
+
+        return returnCustomValidation;
+    }, [form]);
+
+    const handleSubmit = (ff) => {
+        console.log("handleSubmit11.ff", JSON.stringify(ff), ff);
+    };
+
+    if (formLoading || !form_slug) {
+        return null;
+    }
+
+    return (
+        <PageLayout>
+            <div className="container mt-3">
+                <h3>Show</h3>
+                {form.length > 0 && (
+                    <Form onSubmit={handleSubmit} validation={validation} autocomplete="off">
+                        <RenderForm formElements={form} />
+
+                        <Button type="submit" label="Submit" />
+                    </Form>
+                )}
+            </div>
+        </PageLayout>
+    );
+};
+
+export default FormView;

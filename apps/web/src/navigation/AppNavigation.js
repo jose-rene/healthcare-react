@@ -30,6 +30,9 @@ import AdminAddCompanies from "../pages/Admin/Companies/AddCompanies";
 import AdminDetailCompanies from "../pages/Admin/Companies/DetailCompanies";
 import AdminClinicians from "../pages/Admin/Clinicians/Clinicians";
 import AdminAddClinicians from "../pages/Admin/Clinicians/AddClinicians";
+import FormView from "../pages/Admin/FormBuilder/show";
+import FormBuilderEdit from "../pages/Admin/FormBuilder/edit";
+import FormIndex from "../pages/Admin/FormBuilder/Index";
 
 const AppNavigation = ({ initializing, initializeUser }) => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -126,6 +129,25 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     requiredAbility="can:edit-payer"
                     page={<AdminPayer />}
                 />
+
+                <PrivateRoute
+                    path="/forms/:form_slug/show"
+                    middleware={["software_engineer"]} // need to change admin
+                    component={FormView}
+                />
+
+                <PrivateRoute
+                    path="/admin/forms/:form_slug/edit"
+                    middleware={["software_engineer"]} // need to change admin
+                    component={FormBuilderEdit}
+                />
+
+                <PrivateRoute
+                    path="/admin/forms"
+                    middleware={["software_engineer"]} // need to change admin
+                    component={FormIndex}
+                />
+
                 <PrivateRoute
                     path="/admin/companies"
                     middleware={["hp_user", "hp_champion"]} // need to change admin
