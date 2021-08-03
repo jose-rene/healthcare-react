@@ -17,6 +17,7 @@ const Button = ({
     icon = undefined,
     iconSize = undefined,
     disabled = false,
+    loading = false,
 }) => {
     const className = useMemo(() => {
         let cName = `btn btn-ln ${classAppend}`;
@@ -63,11 +64,17 @@ const Button = ({
         >
             {icon && <Icon className="mr-3" icon={icon} size={iconSize} />}
             {renderedLabel}
+            {loading && (
+                <Icon className="align-middle fa-spin ml-3">spinner</Icon>
+            )}
         </button>
     ) : (
         <Link to={to} className={className} onClick={onClick}>
             {icon && <Icon className="mr-3" icon={icon} size={iconSize} />}
             {renderedLabel}
+            {loading && (
+                <Icon className="align-middle fa-spin ml-3">spinner</Icon>
+            )}
         </Link>
     );
 };

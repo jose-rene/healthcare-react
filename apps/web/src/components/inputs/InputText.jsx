@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, InputGroup } from "react-bootstrap";
 import Icon from "../elements/Icon";
+import { set } from 'lodash';
 
 const InputText = (
     {
@@ -14,12 +15,19 @@ const InputText = (
         classNameAppend = "",
         helpText = false,
         errors = {},
+        error = false,
+        large = false,
+        customValidation,
         ...otherProps
     },
     ref
 ) => {
     const { [name]: { message = false } = {} } = errors;
     const hasError = !!message;
+
+    if (large) {
+        set(otherProps, 'style.height', 56);
+    }
 
     const getInput = () => {
         const defaultClassName = `form-control${

@@ -5,7 +5,6 @@ const Textarea = (
   {
     name,
     label = "",
-    type = "text",
     autocomplete = false,
     className = false,
     classNameAppend = "",
@@ -23,7 +22,6 @@ const Textarea = (
       {label && <Form.Label htmlFor={name}>{label}</Form.Label>}
       <textarea
         id={name}
-        type={type}
         name={name}
         autoComplete={autocomplete || name}
         className={

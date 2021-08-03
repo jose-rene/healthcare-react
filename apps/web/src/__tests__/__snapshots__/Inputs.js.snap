@@ -42,7 +42,6 @@ exports[`Input Components renders Textarea input correctly 1`] = `
   
   <textarea
     className="form-control  "
-    type="text"
   />
 </div>
 `;

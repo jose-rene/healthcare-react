@@ -1,0 +1,48 @@
+import React, { useEffect } from 'react';
+import PageLayout from "../../../../layouts/PageLayout";
+import Form from "../../../../components/elements/Form";
+import { ReactFormBuilder } from 'react-form-builder3';
+import FormElementsEdit from "../../../../components/forms/form-builder/field-edit-page";
+import "./style.scss";
+import useFormBuilder from "../../../../hooks/useFormBuilder";
+
+const FormBuilderEdit = ({ history, match: { params: { form_slug } } }) => {
+
+    const [{ items, form, formLoaded }, { fireLoadForm }] = useFormBuilder({
+        formId: form_slug,
+    });
+
+    useEffect(() => {
+        if (!form_slug) {
+            console.log('missing form_slug');
+        } else {
+            fireLoadForm().catch(eee => {
+                history.push('/admin/forms?message=edit-bad-form-slug');
+            });
+        }
+    }, []);
+
+    if (!form_slug) {
+        return null;
+    }
+
+    return (
+        <PageLayout>
+            <div className="bg-white gry-editor">
+                <h3>Editor</h3>
+                {!formLoaded && (
+                    <Form editing>
+                        <ReactFormBuilder
+                            edit
+                            data={form}
+                            toolbarItems={items}
+                            renderEditForm={props => <FormElementsEdit {...props} />}
+                        />
+                    </Form>
+                )}
+            </div>
+        </PageLayout>
+    );
+};
+
+export default FormBuilderEdit;

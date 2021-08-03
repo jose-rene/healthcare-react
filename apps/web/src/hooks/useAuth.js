@@ -68,7 +68,23 @@ const useAuth = () => {
                     tokenLoading: false,
                     authToken: null,
                     loading: false,
-                    error: "Bad Username / Password",
+                    error: "Invalid Username / Password",
+                });
+            } else if (err.response.status === 422) {
+                let validationError = "Network Error [422]";
+                // eslint-disable-next-line no-restricted-syntax
+                for (const field in err.response.data.errors) {
+                    if (err.response.data.errors.hasOwnProperty(field)) {
+                        [validationError] = err.response.data.errors[field];
+                        break;
+                    }
+                }
+                setAuthed({
+                    ...authState,
+                    tokenLoading: false,
+                    authToken: null,
+                    loading: false,
+                    error: validationError,
                 });
             } else {
                 setAuthed({
@@ -76,7 +92,9 @@ const useAuth = () => {
                     tokenLoading: false,
                     authToken: null,
                     loading: false,
-                    error: err?.message ?? "Network Error",
+                    error: `Network Error [${
+                        err.response?.status ? err.response.status : "100"
+                    }]`,
                 });
             }
         }
@@ -153,7 +171,9 @@ const useAuth = () => {
             return true; // nothing to check
         }
 
-        const { passed = false } = await fireCheckAbility({ params: { ability: requiredAbility } });
+        const { passed = false } = await fireCheckAbility({
+            params: { ability: requiredAbility },
+        });
         return passed;
     };
 

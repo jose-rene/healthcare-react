@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const useSearch = ({
     searchObj: searchObjDefault = {},
     pagination: paginationDefault = {
         perPage: 50,
     },
+    onSearch = () => {},
 } = {}) => {
+    let loaded = false;
+
+    useEffect(() => {
+        loaded = true;
+    }, []);
+
     const [searchObj, setSearchObj] = useState({
         ...paginationDefault,
         ...searchObjDefault,
@@ -25,11 +32,19 @@ const useSearch = ({
         });
     };
 
+    const redoSearch = (_searchObj = searchObj) => {
+        return onSearch({ params: searchObj });
+    };
+
+    useEffect(() => {
+        onSearch({ params: searchObj });
+    }, [searchObj]);
+
     return [
         // values
         { searchObj },
         // callbacks
-        { setSearchObj, resetSearchObj, formUpdateSearchObj, updateSearchObj },
+        { setSearchObj, resetSearchObj, formUpdateSearchObj, updateSearchObj, redoSearch },
     ];
 };
 

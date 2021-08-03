@@ -1,9 +1,9 @@
 import React from "react";
 import { Tab, Tabs } from "react-bootstrap";
-import Icon from "../../components/elements/Icon";
-import Button from "../../components/inputs/Button";
+import Icon from "../../../components/elements/Icon";
+import Button from "../../../components/inputs/Button";
 
-const AddUser = ({location}) => {
+const AddUser = ({ location }) => {
     return (
         <div className="content-box">
             <div className="col-12">
