@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\RequestType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,13 +16,21 @@ class RequestItemResource extends JsonResource
      */
     public function toArray($request)
     {
+        // the parent request types
+        $parents = array_reverse($this->mapParents($this->requestType->ancestors, true));
+        // the related classifcation, will be related to the top parent
+        $classification = "";
+        if (!empty($parents) && null !== ($requestType = RequestType::find($parents[0])) && $requestType->classification) {
+            $classification = $requestType->classification->id;
+        }
         return [
             'id'                   => $this->uuid,
             'vendor_price'         => $this->vendor_price,
             'name'                 => $this->name,
             'request_type_id'      => $this->request_type_id,
-            'request_type_parents' => array_reverse($this->mapParents($this->requestType->ancestors, true)),
+            'request_type_parents' => $parents,
             'details'              => RequestTypeDetailResource::collection($this->requestTypeDetails),
+            'classification'       => $classification,
             // ->pluck('name', 'id'),
         ];
     }

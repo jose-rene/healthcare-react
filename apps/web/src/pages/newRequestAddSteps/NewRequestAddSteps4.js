@@ -4,6 +4,7 @@ import Select2 from "react-select";
 import "./newRequestAddSteps.css";
 import { Card } from "react-bootstrap";
 import Icon from "../../components/elements/Icon";
+/* eslint-disable react-hooks/exhaustive-deps */
 
 const NewRequestAddSteps4 = ({ requestData, setParams }) => {
     const [data, setData] = useState({
@@ -13,7 +14,11 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
 
     const payerProfile = requestData.payer;
 
-    // console.log(payerProfile.request_types);
+    /* const [requestClassifications, setRequestClassifications] = useState([]);
+    console.log("classifications", payerProfile.classifications);
+    useEffect(() => {
+        setRequestClassifications(payerProfile.classifications);
+    }, [requestData]); */
     // combine request type selects and request detail select into a group
     const [requestItemGroups, setRequestItemGroups] = useState([]);
     // handle request details update
@@ -52,14 +57,19 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
     };
     // add a new card for request items
     const addNewItemsCard = () => {
+        // console.log("classifications -> ", payerProfile.classifications);
         setRequestItemGroups((prevGroups) => [
             ...prevGroups,
             {
+                classification: {
+                    options: mapOptions(payerProfile.classifications ?? []),
+                    value: "",
+                },
                 typeSelects: [
-                    {
+                    /* {
                         options: mapOptions(payerProfile.request_types),
                         value: "",
-                    },
+                    }, */
                 ],
                 requestDetails: null,
             },
@@ -73,13 +83,30 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
             const currentGroups = [];
             // build the requestitem groups from the top level
             requestData.request_items.forEach((item, groupIndex) => {
-                let foundReqTypes = payerProfile;
+                // console.log(groupIndex, item.classification);
+                const classification = { request_types: [] };
+                if (item.classification) {
+                    const found = payerProfile.classifications.find(
+                        (what) => item.classification === what.id
+                    );
+                    if (found?.request_types) {
+                        classification.request_types = found.request_types;
+                    }
+                    // console.log("classification -> ", classification);
+                }
+                let foundReqTypes = {
+                    request_types: classification.request_types,
+                };
                 if (
                     item.request_type_parents &&
                     item.request_type_parents.length
                 ) {
                     // the group at this index
                     currentGroups[groupIndex] = {
+                        classification: {
+                            options: mapOptions(payerProfile.classifications),
+                            value: item.classification ?? "",
+                        },
                         typeSelects: [],
                         requestDetails: null,
                     };
@@ -133,20 +160,43 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
         }
         // otherwise populate the initial group select by adding a new card
         addNewItemsCard();
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [payerProfile]);
     // set params when request items change
     useEffect(() => {
         setParams(data);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
+    const handleClassificationChange = (selected, action, groupIndex) => {
+        // get a copy of state
+        const currentGroups = [...requestItemGroups];
+        // get the value
+        const { value } = selected;
+        // find the selected item for the request types
+        const selectedItem = payerProfile.classifications.find(
+            (item) => item.id === value
+        );
+        // this will basically clear out all selects and add a blank request type select
+        const updatedGroup = {
+            classification: {
+                options: mapOptions(payerProfile.classifications),
+                value,
+            },
+            typeSelects: [
+                {
+                    options: mapOptions(selectedItem.request_types),
+                    value: "",
+                },
+            ],
+            requestDetails: null,
+        };
+        // set this index to this updated group
+        currentGroups[groupIndex] = updatedGroup;
+        // console.log(selected, action, value, selectedItem);
+        // update state
+        updateRequestDetails(currentGroups);
+    };
     const handleSelectChange = (selected, action, index, groupIndex) => {
         let i;
-        // request types
-        let reqTypes = payerProfile.request_types;
         // make a copy of state
         const currentGroups = [...requestItemGroups];
         // the value of this select
@@ -170,7 +220,11 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
         }
         // populate the next select or request types
         // get the nested request_types to use
-
+        // search in classifications for selected and get req types
+        const selectedClassification = payerProfile.classifications.find(
+            (item) => item.id === currentGroups[groupIndex].classification.value
+        );
+        let reqTypes = selectedClassification.request_types;
         /* eslint-disable */
         if (index > 0) {
             for (i = 0; i < index; i++) {
@@ -282,11 +336,57 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
                                             />
                                         </Card.Header>
                                         <Card.Body>
+                                            {selectGroup.classification && (
+                                                <>
+                                                    <h6 className="mt-0">
+                                                        Select the
+                                                        Classification
+                                                    </h6>
+                                                    <Select2
+                                                        key="classifications_{$groupIndex}"
+                                                        className="basic-single mt-2"
+                                                        classNamePrefix="select"
+                                                        defaultValue=""
+                                                        isClearable
+                                                        isSearchable
+                                                        name="classifications"
+                                                        options={
+                                                            selectGroup
+                                                                .classification
+                                                                .options
+                                                        }
+                                                        value={
+                                                            selectGroup
+                                                                .classification
+                                                                .value
+                                                                ? selectGroup.classification.options.find(
+                                                                    (opt) =>
+                                                                        opt.value ===
+                                                                          selectGroup
+                                                                              .classification
+                                                                              .value
+                                                                )
+                                                                : null
+                                                        }
+                                                        onChange={(
+                                                            selected,
+                                                            action
+                                                        ) =>
+                                                            handleClassificationChange(
+                                                                selected,
+                                                                action,
+                                                                groupIndex
+                                                            )
+                                                        }
+                                                        placeholder="Select Classification..."
+                                                    />
+                                                </>
+                                            )}
                                             {selectGroup.typeSelects.map(
                                                 (select, index) => (
                                                     <>
                                                         {index === 0 && (
-                                                            <h6>
+                                                            <h6 className="mt-3">
                                                                 Select the
                                                                 Request Type
                                                             </h6>
@@ -298,12 +398,12 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
                                                             value={
                                                                 select.value
                                                                     ? select.options.find(
-                                                                          (
-                                                                              opt
-                                                                          ) =>
-                                                                              opt.value ===
+                                                                        (
+                                                                            opt
+                                                                        ) =>
+                                                                            opt.value ===
                                                                               select.value
-                                                                      )
+                                                                    )
                                                                     : null
                                                             }
                                                             isClearable

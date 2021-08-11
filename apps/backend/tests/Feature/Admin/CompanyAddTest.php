@@ -36,7 +36,6 @@ class CompanyAddTest extends TestCase
         $response
             ->assertStatus(201)
             ->assertJsonPath('company_name', $company);
-
         // make a therapy network
         $data = [
             'name'     => $company = $this->faker->company(),

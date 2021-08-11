@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Classification;
 use App\Models\Payer;
 use App\Models\RequestType;
 use Illuminate\Database\Seeder;
@@ -22,8 +23,8 @@ class RequestTypeSeeder extends Seeder
         $payerCollection = $testPayer->children;
         // prepend the main payer
         $payerCollection->prepend($testPayer);
-        // main request types
-        $types = [
+        // main classifications
+        $classifications = [
             'In-Home Assessment',
             'Complex Assessment',
             'EM Home Assessment',
@@ -31,27 +32,32 @@ class RequestTypeSeeder extends Seeder
             'Speech Device - Chart Review',
             'Workplace Ergonomic Assessment',
         ];
-        if (null !== RequestType::firstWhere('name', $types[0])) {
+        if (null !== Classification::firstWhere('name', $classifications[0])) {
             return;
         }
         foreach ($payerCollection as $payer) {
-            foreach ($types as $name) {
-                $requestType = RequestType::factory()->create(['name' => $name, 'payer_id' => $payer]);
-                $children = $requestType->children()->saveMany(
+            foreach ($classifications as $name) {
+                // $requestType = RequestType::factory()->create(['name' => $name, 'payer_id' => $payer]);
+                $classification = Classification::factory()->create(['name' => $name, 'payer_id' => $payer]);
+                $requestTypes = $classification->requestTypes()->saveMany(
                 RequestType::factory()
-                    // ->hasChildren(3)
-                    // ->hasRequestTypeDetails(10)
                     ->count(3)
-                    ->create(['payer_id' => $payer])
-            );
+                    ->create(['payer_id' => $payer, 'classification_id' => $classification])
+                );
                 // add some children to children with request details
-                $children->each(fn ($child) => $child->children()->saveMany(
+                $children = $requestTypes->each(fn ($type) => $type->children()->saveMany(
                     RequestType::factory()
                         ->hasRequestTypeDetails(10)
                         ->count(3)
                         ->create(['payer_id' => $payer])
-                )
-            );
+                ));
+                // if you wanted to add one more level (remove details above)
+                /*$children->each(fn ($child) => $child->children()->saveMany(
+                    RequestType::factory()
+                        ->hasRequestTypeDetails(10)
+                        ->count(3)
+                        ->create(['payer_id' => $payer])
+                ));*/
             }
         }
 
