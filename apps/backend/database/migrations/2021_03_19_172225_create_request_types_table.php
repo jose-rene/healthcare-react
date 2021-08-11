@@ -20,6 +20,7 @@ class CreateRequestTypesTable extends Migration
             $table->foreignId('request_type_template_id')->nullable()->comment('id of related request type template (optional)');
             $table->foreignId('hcpcs_id')->nullable()->comment('id of related hcpcs');
             $table->foreignId('payer_id')->nullable();
+            $table->foreignId('classification_id')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable()->comment('The id of the parent request type');
             $table->foreign('parent_id')->references('id')->on('request_types')->onDelete('set null');
             $table->string('name')->comment('The name of the request type');

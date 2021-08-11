@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Channels;
+namespace App\Notifications\Channels;
 
 use Aws\Sns\SnsClient;
 use Illuminate\Notifications\Notification;
-use Messages\SmsMessage;
+use App\Notifications\Messages\SmsMessage;
 
 class SmsChannel
 {

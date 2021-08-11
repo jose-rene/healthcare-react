@@ -46,7 +46,7 @@ class PayerControllerTest extends TestCase
                 'lines_of_business',
                 'payers',
                 'member_number_types',
-                'request_types',
+                'classifications',
                 'languages',
                 'contacts',
             ])
@@ -70,7 +70,7 @@ class PayerControllerTest extends TestCase
                 'lines_of_business',
                 'payers',
                 'member_number_types',
-                'request_types',
+                'classifications',
                 'languages',
                 'contacts',
             ])

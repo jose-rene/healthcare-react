@@ -180,6 +180,16 @@ class Payer extends Model
     }
 
     /**
+     * Relationship to classification.
+     *
+     * @return Illuminate\Database\Eloquent\Collection of Classification
+     */
+    public function classifications()
+    {
+        return $this->hasMany(Classification::class)->orderBy('name');
+    }
+
+    /**
      * Returns one level of children or child payers.
      *
      * @return Illuminate\Database\Eloquent\Collection of Payer

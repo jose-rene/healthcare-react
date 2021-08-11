@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Channels\Messages;
+namespace App\Notifications\Messages;
 
 class SmsMessage
 {

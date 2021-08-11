@@ -24,6 +24,16 @@ class RequestType extends Model
     }
 
     /**
+     * Relationship to Classifications.
+     *
+     * @return Classification
+     */
+    public function classification()
+    {
+        return $this->belongsTo(Classification::class);
+    }
+
+    /**
      * Will return one level of children or child sections.
      *
      * @return Illuminate\Database\Eloquent\Collection of RequestType
