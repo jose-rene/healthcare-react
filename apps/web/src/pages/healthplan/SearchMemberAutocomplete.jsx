@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import _ from "lodash";
 
 import PageLayout from "../../layouts/PageLayout";
-import InputText from "../../components/inputs/InputText";
-import TableAPI from "../../components/elements/TableAPI";
+import InputText from "components/inputs/InputText";
+import TableAPI from "components/elements/TableAPI";
 
 import useApiCall from "../../hooks/useApiCall";
 import useSearch from "../../hooks/useSearch";

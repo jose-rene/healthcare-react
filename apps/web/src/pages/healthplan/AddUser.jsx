@@ -2,14 +2,14 @@ import React, { useRef, useState } from "react";
 import { Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import Button from "../../components/inputs/Button";
-import BroadcastAlert from "../../components/elements/BroadcastAlert";
+import { Button } from "components";
+import BroadcastAlert from "components/elements/BroadcastAlert";
 import PageLayout from "../../layouts/PageLayout";
 import "../../styles/home.scss";
-import Select from "../../components/inputs/Select";
-import InputText from "../../components/inputs/InputText";
+import Select from "components/inputs/Select";
+import InputText from "components/inputs/InputText";
 import useApiCall from "../../hooks/useApiCall";
-import PageAlert from "../../components/elements/PageAlert";
+import PageAlert from "components/elements/PageAlert";
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 const AddUser = () => {
@@ -61,7 +61,7 @@ const AddUser = () => {
                         <h1 className="box-title">
                             <Link to="/dashboard">
                                 <Button
-                                    className="py-2 mr-3"
+                                    className="py-2 me-3"
                                     variant="warn"
                                     icon="chevron-left"
                                     iconSize="sm"
@@ -214,7 +214,7 @@ const AddUser = () => {
                                     />
                                 </div>
                                 <div className="col-12">
-                                    <label className="form-label mr-3">
+                                    <label className="form-label me-3">
                                         Permissions:
                                     </label>
                                     <div className="form-check form-check-inline">

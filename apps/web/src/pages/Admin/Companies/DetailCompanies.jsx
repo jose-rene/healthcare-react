@@ -3,7 +3,7 @@ import { Tabs, Tab } from "react-bootstrap";
 
 import PageLayout from "../../../layouts/PageLayout";
 
-import Button from "../../../components/inputs/Button";
+import { Button } from "components";
 
 import TabCompanyInfo from "./Tabs/TabCompanyInfo";
 import TabNarrReports from "./Tabs/TabNarrativeReports/TabNarrativeReports";
@@ -21,6 +21,7 @@ import TabNotes from "./Tabs/TabNotes";
 import TabMisc from "./Tabs/TabMisc";
 
 import useApiCall from "../../../hooks/useApiCall";
+import Form from "../../../components/elements/Form";
 
 const DetailCompanies = (props) => {
     const handleBack = () => {
@@ -46,97 +47,99 @@ const DetailCompanies = (props) => {
 
     return (
         <PageLayout>
-            <div className="content-box">
-                <div className="row d-flex justify-content-between p-3">
-                    <div className="d-flex">
-                        <Button
-                            icon="chevron-left"
-                            iconSize="sm"
-                            className="btn btn-sm mb-5 py-2 px-3"
-                            outline
-                            label="Back"
-                            onClick={() => handleBack()}
-                        />
+            <Form>
+                <div className="content-box">
+                    <div className="row d-flex justify-content-between p-3">
+                        <div className="d-flex">
+                            <Button
+                                icon="chevron-left"
+                                iconSize="sm"
+                                className="btn btn-sm mb-5 py-2 px-3"
+                                outline
+                                label="Back"
+                                onClick={() => handleBack()}
+                            />
 
-                        <h1 className="box-title ml-4">Add Company</h1>
+                            <h1 className="box-title ml-4">Add Company</h1>
+                        </div>
+
+                        <div className="d-flex">
+                            <Button
+                                className="btn btn-sm mb-5 py-2 px-3"
+                                label="Outcome Report"
+                                variant="secondary"
+                            />
+                        </div>
                     </div>
 
-                    <div className="d-flex">
-                        <Button
-                            className="btn btn-sm mb-5 py-2 px-3"
-                            label="Outcome Report"
-                            variant="secondary"
-                        />
-                    </div>
+                    <Tabs defaultActiveKey="comapnyInfo">
+                        <Tab eventKey="comapnyInfo" title="Company Info">
+                            <TabCompanyInfo
+                                data={data}
+                                udpateSuccess={udpateSuccess}
+                                companyInfoActiveTab={companyInfoActiveTab}
+                                setCompanyInfoActiveTab={setCompanyInfoActiveTab}
+                                setUpdateSuccess={setUpdateSuccess}
+                            />
+                        </Tab>
+
+                        <Tab eventKey="narrReports" title="Narr.Reports">
+                            <TabNarrReports />
+                        </Tab>
+
+                        <Tab eventKey="requestTypes" title="Request Types">
+                            <TabRequestTypes />
+                        </Tab>
+
+                        <Tab eventKey="pricing" title="Pricing">
+                            <TabPricing />
+                        </Tab>
+
+                        <Tab eventKey="criteria" title="Criteria">
+                            <TabCriteria />
+                        </Tab>
+
+                        <Tab eventKey="billing" title="Billing">
+                            <TabBilling />
+                        </Tab>
+
+                        <Tab eventKey="therapyNetworks" title="Therapy Networks">
+                            <TabTherapyNetworks />
+                        </Tab>
+
+                        <Tab eventKey="reviewers" title="Reviewers">
+                            <TabReviewers />
+                        </Tab>
+
+                        <Tab eventKey="assocCompanies" title="Assoc.Companies">
+                            <TabAssocCompanies />
+                        </Tab>
+
+                        <Tab
+                            eventKey="geographicFilters"
+                            title="Geographic Filters"
+                        >
+                            <TabGeographicFilters />
+                        </Tab>
+
+                        <Tab eventKey="reports" title="Reports">
+                            <TabReports />
+                        </Tab>
+
+                        <Tab eventKey="templates" title="Templates">
+                            <TabTemplates />
+                        </Tab>
+
+                        <Tab eventKey="notes" title="Notes">
+                            <TabNotes />
+                        </Tab>
+
+                        <Tab eventKey="misc" title="Misc">
+                            <TabMisc />
+                        </Tab>
+                    </Tabs>
                 </div>
-
-                <Tabs defaultActiveKey="comapnyInfo">
-                    <Tab eventKey="comapnyInfo" title="Company Info">
-                        <TabCompanyInfo
-                            data={data}
-                            udpateSuccess={udpateSuccess}
-                            companyInfoActiveTab={companyInfoActiveTab}
-                            setCompanyInfoActiveTab={setCompanyInfoActiveTab}
-                            setUpdateSuccess={setUpdateSuccess}
-                        />
-                    </Tab>
-
-                    <Tab eventKey="narrReports" title="Narr.Reports">
-                        <TabNarrReports />
-                    </Tab>
-
-                    <Tab eventKey="requestTypes" title="Request Types">
-                        <TabRequestTypes />
-                    </Tab>
-
-                    <Tab eventKey="pricing" title="Pricing">
-                        <TabPricing />
-                    </Tab>
-
-                    <Tab eventKey="criteria" title="Criteria">
-                        <TabCriteria />
-                    </Tab>
-
-                    <Tab eventKey="billing" title="Billing">
-                        <TabBilling />
-                    </Tab>
-
-                    <Tab eventKey="therapyNetworks" title="Therapy Networks">
-                        <TabTherapyNetworks />
-                    </Tab>
-
-                    <Tab eventKey="reviewers" title="Reviewers">
-                        <TabReviewers />
-                    </Tab>
-
-                    <Tab eventKey="assocCompanies" title="Assoc.Companies">
-                        <TabAssocCompanies />
-                    </Tab>
-
-                    <Tab
-                        eventKey="geographicFilters"
-                        title="Geographic Filters"
-                    >
-                        <TabGeographicFilters />
-                    </Tab>
-
-                    <Tab eventKey="reports" title="Reports">
-                        <TabReports />
-                    </Tab>
-
-                    <Tab eventKey="templates" title="Templates">
-                        <TabTemplates />
-                    </Tab>
-
-                    <Tab eventKey="notes" title="Notes">
-                        <TabNotes />
-                    </Tab>
-
-                    <Tab eventKey="misc" title="Misc">
-                        <TabMisc />
-                    </Tab>
-                </Tabs>
-            </div>
+            </Form>
         </PageLayout>
     );
 };

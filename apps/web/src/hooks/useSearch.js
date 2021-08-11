@@ -7,12 +7,6 @@ const useSearch = ({
     },
     onSearch = () => {},
 } = {}) => {
-    // let loaded = false;
-
-    // useEffect(() => {
-    //     loaded = true;
-    // }, []);
-
     const [searchObj, setSearchObj] = useState({
         ...paginationDefault,
         ...searchObjDefault,

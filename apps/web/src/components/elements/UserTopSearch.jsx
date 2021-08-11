@@ -38,7 +38,7 @@ const UserTopSearch = ({
                             })}
                         />
                     </div>
-                    <div className="ml-auto px-2">
+                    <div className="ms-auto px-2">
                         <Button type="submit" className="pt-1 pb-1">
                             Search
                         </Button>

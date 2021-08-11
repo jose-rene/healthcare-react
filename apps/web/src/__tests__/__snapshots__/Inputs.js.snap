@@ -25,13 +25,20 @@ exports[`Input Components renders Select input correctly 1`] = `
 
 exports[`Input Components renders Text input correctly 1`] = `
 <div
-  className="form-group"
+  className="form-floating mb-3 form-group  "
 >
-  
   <input
-    className="form-control  "
+    className="form-control form-control"
+    onChange={[Function]}
+    required={false}
     type="text"
+    value=""
   />
+  <label
+    className="control-label"
+  >
+    
+  </label>
 </div>
 `;
 

@@ -1,10 +1,10 @@
 import React from "react";
 import { Row } from "react-bootstrap";
-import Button from "../../components/inputs/Button";
-import AlertList from "../../components/elements/AlertList";
-import BroadcastAlert from "../../components/elements/BroadcastAlert";
-import RequestInfo from "../../components/elements/RequestInfo";
-import UserList from "../../components/elements/UserList";
+import { Button } from "components";
+import AlertList from "components/elements/AlertList";
+import BroadcastAlert from "components/elements/BroadcastAlert";
+import RequestInfo from "components/elements/RequestInfo";
+import UserList from "components/elements/UserList";
 import PageLayout from "../../layouts/PageLayout";
 import "../../styles/home.scss";
 

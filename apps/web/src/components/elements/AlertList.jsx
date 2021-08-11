@@ -198,7 +198,7 @@ const List = () => {
                                                     {subjectTypeMap(alert)}
                                                 </label>
                                             </div>
-                                            <div className="ml-auto">
+                                            <div className="ms-auto">
                                                 <p className="checkbox-time">
                                                     {human_created_at}
                                                 </p>

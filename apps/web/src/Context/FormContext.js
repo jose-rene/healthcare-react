@@ -1,11 +1,4 @@
-import React, {
-    useContext,
-    useState,
-    useMemo,
-    createContext,
-    useEffect,
-    useCallback,
-} from "react";
+import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
 import { template } from "../helpers/string";
@@ -35,8 +28,6 @@ const FormProvider = ({
     validation = {},
     defaultData = {},
     editing: _editing = false,
-    debug = true,
-
     onFormChange,
     debounceMs = 2000,
 }) => {
@@ -104,10 +95,12 @@ const FormProvider = ({
         let errorTest = {};
 
         Object.keys(validationRules).forEach((fieldName) => {
-            const { rules = [], customRule = "", yupSchema } = validationRules[
-                fieldName
-            ];
-            const { [fieldName]: value = false } = form;
+            const {
+                rules = [],
+                customRule = "",
+                yupSchema,
+            } = validationRules[fieldName];
+            const { [fieldName]: value = "" } = form;
 
             // run validations
             if (rules.includes(REQUIRED) && (!value || value.length === 0)) {
@@ -143,6 +136,8 @@ const FormProvider = ({
                 }
             }
         });
+
+        console.log({errorTest});
 
         setErrors(errorTest);
 

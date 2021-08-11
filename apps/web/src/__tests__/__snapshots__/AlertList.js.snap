@@ -29,7 +29,7 @@ exports[`Alert List Displays an alert list with read and unread alerts 1`] = `
         </label>
       </div>
       <div
-        class="ml-auto"
+        class="ms-auto"
       >
         <p
           class="checkbox-time"
@@ -68,7 +68,7 @@ exports[`Alert List Displays an alert list with read and unread alerts 1`] = `
         </label>
       </div>
       <div
-        class="ml-auto"
+        class="ms-auto"
       >
         <p
           class="checkbox-time"
@@ -107,7 +107,7 @@ exports[`Alert List Displays an alert list with read and unread alerts 1`] = `
         </label>
       </div>
       <div
-        class="ml-auto"
+        class="ms-auto"
       >
         <p
           class="checkbox-time"
@@ -146,7 +146,7 @@ exports[`Alert List Displays an alert list with read and unread alerts 1`] = `
         </label>
       </div>
       <div
-        class="ml-auto"
+        class="ms-auto"
       >
         <p
           class="checkbox-time"
@@ -187,7 +187,7 @@ exports[`Alert List Displays an alert list with read and unread alerts 1`] = `
         </label>
       </div>
       <div
-        class="ml-auto"
+        class="ms-auto"
       >
         <p
           class="checkbox-time"
@@ -228,7 +228,7 @@ exports[`Alert List Displays an alert list with read and unread alerts 1`] = `
         </label>
       </div>
       <div
-        class="ml-auto"
+        class="ms-auto"
       >
         <p
           class="checkbox-time"
@@ -269,7 +269,7 @@ exports[`Alert List Displays an alert list with read and unread alerts 1`] = `
         </label>
       </div>
       <div
-        class="ml-auto"
+        class="ms-auto"
       >
         <p
           class="checkbox-time"
@@ -310,7 +310,7 @@ exports[`Alert List Displays an alert list with read and unread alerts 1`] = `
         </label>
       </div>
       <div
-        class="ml-auto"
+        class="ms-auto"
       >
         <p
           class="checkbox-time"
@@ -351,7 +351,7 @@ exports[`Alert List Displays an alert list with read and unread alerts 1`] = `
         </label>
       </div>
       <div
-        class="ml-auto"
+        class="ms-auto"
       >
         <p
           class="checkbox-time"

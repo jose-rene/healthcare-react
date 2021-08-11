@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
-import Select from "../../../../components/inputs/Select";
-import Button from "../../../../components/inputs/Button";
-import TableAPI from "../../../../components/elements/TableAPI";
-import Icon from "../../../../components/elements/Icon";
-import Checkbox from "../../../../components/inputs/Checkbox";
-import Modal from "../../../../components/elements/Modal";
+import Select from "components/inputs/Select";
+import { Button } from "components";
+import TableAPI from "components/elements/TableAPI";
+import Icon from "components/elements/Icon";
+import Checkbox from "components/inputs/Checkbox";
+import Modal from "components/elements/Modal";
 
 import { ACTIONS } from "../../../../helpers/table";
 
@@ -88,7 +88,7 @@ const TabReuqestTypes = () => {
                         <Icon
                             size="1x"
                             icon="info-circle"
-                            className="mr-2 bg-secondary text-white rounded-circle p-1"
+                            className="me-2 bg-secondary text-white rounded-circle p-1"
                         />
                         <Icon
                             size="1x"

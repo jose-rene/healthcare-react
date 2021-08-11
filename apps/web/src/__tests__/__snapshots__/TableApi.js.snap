@@ -45,12 +45,12 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
         «
       </span>
       <span
-        className="sr-only"
+        className="visually-hidden"
       >
         First
       </span>
       <span
-        className="sr-only"
+        className="visually-hidden"
       >
         (current)
       </span>
@@ -70,12 +70,12 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
         ‹
       </span>
       <span
-        className="sr-only"
+        className="visually-hidden"
       >
         Previous
       </span>
       <span
-        className="sr-only"
+        className="visually-hidden"
       >
         (current)
       </span>
@@ -91,7 +91,7 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
     >
       1
       <span
-        className="sr-only"
+        className="visually-hidden"
       >
         (current)
       </span>
@@ -217,7 +217,7 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
         ›
       </span>
       <span
-        className="sr-only"
+        className="visually-hidden"
       >
         Next
       </span>
@@ -239,7 +239,7 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
         »
       </span>
       <span
-        className="sr-only"
+        className="visually-hidden"
       >
         Last
       </span>
@@ -263,7 +263,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
       First Name
        
       <span
-        className="float-right ml-1"
+        className="float-right ms-1"
       >
         <i
           className=" icon fas fa-sort fa-1x "
@@ -277,7 +277,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
       Last Name
        
       <span
-        className="float-right ml-1"
+        className="float-right ms-1"
       >
         <i
           className=" icon fas fa-sort fa-1x "
@@ -291,7 +291,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
       Email
        
       <span
-        className="float-right ml-1"
+        className="float-right ms-1"
       >
         <i
           className=" icon fas fa-sort fa-1x "
@@ -305,7 +305,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
       City
        
       <span
-        className="float-right ml-1"
+        className="float-right ms-1"
       >
         <i
           className=" icon fas fa-sort fa-1x "

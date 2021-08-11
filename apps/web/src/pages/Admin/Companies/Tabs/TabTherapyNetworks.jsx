@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import TableAPI from "../../../../components/elements/TableAPI";
+import TableAPI from "components/elements/TableAPI";
 
 import { ACTIONS } from "../../../../helpers/table";
 

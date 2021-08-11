@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-import Select from "../../../../components/inputs/Select";
-import Button from "../../../../components/inputs/Button";
-import TableAPI from "../../../../components/elements/TableAPI";
-import Icon from "../../../../components/elements/Icon";
+import Select from "components/inputs/Select";
+import { Button } from "components";
+import TableAPI from "components/elements/TableAPI";
+import Icon from "components/elements/Icon";
 
 import { ACTIONS } from "../../../../helpers/table";
 
@@ -48,7 +48,7 @@ const GeographicFilters = () => {
     return (
         <>
             <div className="row col-lg-8 col-md-12">
-                <div className="white-box row ml-0 pr-4">
+                <div className="white-box row ml-0 pe-4">
                     <div className="col-md-5">
                         <Select
                             inlineLabel

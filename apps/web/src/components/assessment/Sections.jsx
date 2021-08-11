@@ -13,7 +13,7 @@ function Sections({ data }) {
             );
             questions = section.questions.filter((item) => !item.question_type);
         }
-        console.log(headerQuestions ?? "None");
+        //console.log(headerQuestions ?? "None");
         return (
             <li key={section.id}>
                 <div className="card">

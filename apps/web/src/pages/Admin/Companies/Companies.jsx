@@ -4,14 +4,14 @@ import { isEmpty } from "lodash";
 
 import PageLayout from "../../../layouts/PageLayout";
 
-import InputText from "../../../components/inputs/InputText";
-import Select from "../../../components/inputs/Select";
-import Button from "../../../components/inputs/Button";
-import Checkbox from "../../../components/inputs/Checkbox";
-import Icon from "../../../components/elements/Icon";
+import InputText from "components/inputs/InputText";
+import Select from "components/inputs/Select";
+import { Button } from "components";
+import Checkbox from "components/inputs/Checkbox";
+import Icon from "components/elements/Icon";
 
-import TableAPI from "../../../components/elements/TableAPI";
-import Form from "../../../components/elements/Form";
+import TableAPI from "components/elements/TableAPI";
+import Form from "components/elements/Form";
 
 import { ACTIONS } from "../../../helpers/table";
 
@@ -96,7 +96,7 @@ const Companies = (props) => {
                             <Icon
                                 size="1x"
                                 icon="edit"
-                                className="mr-2 bg-secondary text-white rounded-circle p-1"
+                                className="me-2 bg-secondary text-white rounded-circle p-1"
                             />
                         </Link>
 
@@ -104,7 +104,7 @@ const Companies = (props) => {
                             <Icon
                                 size="1x"
                                 icon="info-circle"
-                                className="mr-2 bg-secondary text-white rounded-circle p-1"
+                                className="me-2 bg-secondary text-white rounded-circle p-1"
                             />
                         </Link>
                     </>
@@ -207,7 +207,7 @@ const Companies = (props) => {
             <div className="content-box">
                 <div className="row px-3 pb-2 d-flex justify-content-between">
                     <div className="d-flex">
-                        <h1 className="box-title mb-3 mr-4">Companies</h1>
+                        <h1 className="box-title mb-3 me-4">Companies</h1>
                         <Button
                             icon="plus"
                             iconSize="sm"
@@ -222,7 +222,7 @@ const Companies = (props) => {
                             <Button
                                 icon="copy"
                                 iconSize="sm"
-                                className="btn btn-sm mb-3 mr-3"
+                                className="btn btn-sm mb-3 me-3"
                                 variant="secondary"
                                 label="Duplicate"
                                 onClick={() => handleDuplication()}
@@ -231,7 +231,7 @@ const Companies = (props) => {
                             <Button
                                 icon="print"
                                 iconSize="sm"
-                                className="btn btn-sm mb-3 mr-3"
+                                className="btn btn-sm mb-3 me-3"
                                 variant="secondary"
                                 label="Print"
                                 onClick={() => handlePrint()}

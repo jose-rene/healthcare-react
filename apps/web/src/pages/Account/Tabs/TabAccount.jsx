@@ -4,13 +4,13 @@ import { Col, Row, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import InputText from "../../../components/inputs/InputText";
-import Select from "../../../components/inputs/Select";
-import Button from "../../../components/inputs/Button";
-import Checkbox from "../../../components/inputs/Checkbox";
-import Icon from "../../../components/elements/Icon";
-import PageAlert from "../../../components/elements/PageAlert";
-import ConfirmationModal from "../../../components/elements/ConfirmationModal";
+import InputText from "components/inputs/InputText";
+import Select from "components/inputs/Select";
+import { Button } from "components";
+import Checkbox from "components/inputs/Checkbox";
+import Icon from "components/elements/Icon";
+import PageAlert from "components/elements/PageAlert";
+import ConfirmationModal from "components/elements/ConfirmationModal";
 import { validateImage } from "../../../helpers/validate";
 import useApiCall from "../../../hooks/useApiCall";
 import { updateAvartarUrl } from "../../../actions/userAction";
@@ -267,7 +267,7 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                                                         />
                                                         <Checkbox
                                                             labelLeft
-                                                            className="ml-2 mr-1"
+                                                            className="ml-2 me-1"
                                                             label="Email"
                                                             name="mail"
                                                         />

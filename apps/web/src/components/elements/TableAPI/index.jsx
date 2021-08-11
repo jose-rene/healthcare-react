@@ -94,7 +94,7 @@ const TableAPI = ({
         <>
             <div className="row mb-3">
                 <div className="col">
-                    <small className="text-mute ml-0">
+                    <small className="text-mute ms-0">
                         {total_records
                             ? `Showing ${from} to ${to} of ${total_records} ${label}`
                             : emptyMessage}
@@ -120,7 +120,7 @@ const TableAPI = ({
                             total_records={total_records}
                             totalPages={totalPages}
                         />
-                        <div className="ml-auto">
+                        <div className="ms-auto">
                             <Select
                                 label="Show"
                                 inlineLabel

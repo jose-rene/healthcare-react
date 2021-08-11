@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from "react";
 import PageLayout from "../../../../layouts/PageLayout";
-import Form from "../../../../components/elements/Form";
+import Form from "components/elements/Form";
 import "../edit/style.scss";
 import RenderForm from "./RenderForm";
-import Button from "../../../../components/inputs/Button";
+import { Button } from "components";
 import useFormBuilder from "../../../../hooks/useFormBuilder";
 
 const FormView = ({

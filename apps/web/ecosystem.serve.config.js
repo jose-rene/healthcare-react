@@ -19,20 +19,20 @@ const {
 module.exports = {
   apps: [
     {
-      // script name
-      name: 'web:start',
+        // script name
+        name: "web:start",
 
-      args: 'run start',
-      script: 'npm',
+        args: "SKIP_PREFLIGHT_CHECK=true run start",
+        script: "npm",
 
-      wait_ready: false,
-      exec_mode: "fork",
-      instances: "1",
-      autorestart: true,
-      max_memory_restart: '1G',
-      kill_timeout: 2000,
-      listen_timeout: 1000,
-      restart_delay: 5000,
+        wait_ready: false,
+        exec_mode: "fork",
+        instances: "1",
+        autorestart: true,
+        max_memory_restart: "1G",
+        kill_timeout: 2000,
+        listen_timeout: 1000,
+        restart_delay: 5000,
       watch: true,
 
       node_args: `--max_old_space_size=${max_old_space_size}`,

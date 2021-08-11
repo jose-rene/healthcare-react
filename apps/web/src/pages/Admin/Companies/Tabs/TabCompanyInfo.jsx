@@ -5,18 +5,18 @@ import { useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
 import MultiSelect from "react-select";
 
-import TableAPI from "../../../../components/elements/TableAPI";
-import ContactMethods from "../../../../components/elements/ContactMethods";
-import AddressForm from "../../../../components/elements/AddressForm";
-import PageAlert from "../../../../components/elements/PageAlert";
-import Modal from "../../../../components/elements/Modal";
-import ConfirmationModal from "../../../../components/elements/ConfirmationModal";
+import TableAPI from "components/elements/TableAPI";
+import ContactMethods from "components/elements/ContactMethods";
+import AddressForm from "components/elements/AddressForm";
+import PageAlert from "components/elements/PageAlert";
+import Modal from "components/elements/Modal";
+import ConfirmationModal from "components/elements/ConfirmationModal";
 
-import InputText from "../../../../components/inputs/InputText";
-import Checkbox from "../../../../components/inputs/Checkbox";
-import Select from "../../../../components/inputs/Select";
-import Icon from "../../../../components/elements/Icon";
-import Button from "../../../../components/inputs/Button";
+import InputText from "components/inputs/InputText";
+import Checkbox from "components/inputs/Checkbox";
+import Select from "components/inputs/Select";
+import Icon from "components/elements/Icon";
+import { Button } from "components";
 
 import { ACTIONS } from "../../../../helpers/table";
 
@@ -65,14 +65,14 @@ const TabCompanyInfo = ({
                         <Icon
                             size="1x"
                             icon="edit"
-                            className="mr-2 bg-primary text-white rounded-circle p-1"
+                            className="me-2 bg-primary text-white rounded-circle p-1"
                             onClick={() =>
                                 handleContactEdit(
                                     id,
                                     is_primary,
                                     contact,
                                     type,
-                                    description
+                                    description,
                                 )
                             }
                         />
@@ -152,7 +152,7 @@ const TabCompanyInfo = ({
                         <Icon
                             size="1x"
                             icon="edit"
-                            className="mr-2 bg-primary text-white rounded-circle p-1"
+                            className="me-2 bg-primary text-white rounded-circle p-1"
                             onClick={() =>
                                 handleAddressEdit(
                                     id,
@@ -675,7 +675,7 @@ const TabCompanyInfo = ({
             </div>
 
             <div className="row m-0">
-                <div className="col-md-6 pl-0">
+                <div className="col-md-6 ps-0">
                     <Tabs
                         defaultActiveKey={companyInfoActiveTab}
                         activeKey={companyInfoActiveTab}

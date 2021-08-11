@@ -1,5 +1,5 @@
-import React from 'react';
-import Button from "../../inputs/Button";
+import React from "react";
+import { Button } from "components/index";
 
 const SubmitButton = ({
     title = "Submit",
@@ -8,15 +8,14 @@ const SubmitButton = ({
     children,
     ...otherProps
 }) => {
+
     return (
         <Button
-            variant="primary"
             type="submit"
             label={title}
-            className="btn-sign-in"
             disabled={disabled || loading}
             loading={loading}
-            {...otherProps}
+            {...{variant: 'primary', ...otherProps}}
         >
             {children}
         </Button>

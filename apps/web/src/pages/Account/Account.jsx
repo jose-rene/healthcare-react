@@ -6,7 +6,7 @@ import TabAccount from "./Tabs/TabAccount";
 import TabDocuments from "./Tabs/TabDocuments";
 import TabSecurity from "./Tabs/TabSecurity";
 import "../../styles/account.scss";
-import BroadcastAlert from "../../components/elements/BroadcastAlert";
+import BroadcastAlert from "components/elements/BroadcastAlert";
 
 const Account = ({ currentUser }) => {
     return (

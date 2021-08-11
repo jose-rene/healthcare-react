@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 
 import PageLayout from "../../../layouts/PageLayout";
 
-import Button from "../../../components/inputs/Button";
-import Select from "../../../components/inputs/Select";
-import InputText from "../../../components/inputs/InputText";
+import { Button } from "components";
+import Select from "components/inputs/Select";
+import InputText from "components/inputs/InputText";
 
-import PageAlert from "../../../components/elements/PageAlert";
+import PageAlert from "components/elements/PageAlert";
 
 import useApiCall from "../../../hooks/useApiCall";
 import useToast from "../../../hooks/useToast";

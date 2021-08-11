@@ -3,9 +3,9 @@ import { NavDropdown } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { signOut } from "../actions/authAction";
-import Icon from "../components/elements/Icon";
-import TimeoutModal from "../components/elements/TimeoutModal";
-import Select from "../components/inputs/Select";
+import Icon from "components/elements/Icon";
+import TimeoutModal from "components/elements/TimeoutModal";
+import Select from "components/inputs/Select";
 import { INACTIVITY_TIMEOUT, LOGOUT_COUNTDOWN_TIME } from "../config/Login";
 import { PUT } from "../config/URLs";
 import useApiCall from "../hooks/useApiCall";
@@ -129,7 +129,7 @@ const PageLayout = ({
                                     onClick={() =>
                                         console.log("Manage Account!")
                                     }
-                                    className="dropdown-item pl-0"
+                                    className="dropdown-item ps-0"
                                     title="Manage Account"
                                 >
                                     Manage Account
@@ -147,7 +147,7 @@ const PageLayout = ({
                                 <a
                                     href="#"
                                     onClick={() => console.log("Settings!")}
-                                    className="dropdown-item pl-0"
+                                    className="dropdown-item ps-0"
                                     title="Settings"
                                 >
                                     Settings

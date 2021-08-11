@@ -119,13 +119,13 @@ const DataTable = ({ columns, data, entityName, loading, searchObj ,updateSearch
                                                 <Icon
                                                     icon="arrow-down"
                                                     size="sm"
-                                                    className="ml-2"
+                                                    className="ms-2"
                                                 />
                                             ) : (
                                                 <Icon
                                                     icon="arrow-up"
                                                     size="sm"
-                                                    className="ml-2"
+                                                    className="ms-2"
                                                 />
                                             )
                                         ) : (
@@ -163,7 +163,7 @@ const DataTable = ({ columns, data, entityName, loading, searchObj ,updateSearch
                 name="perPage"
                 label="Show"
                 wrapperClass="form-group float-right form-inline"
-                labelClass="text-primary mr-2"
+                labelClass="text-primary me-2"
                 options={[
                     { id: 10, val: 10, title: "10" },
                     { id: 25, val: 25, title: "25" },

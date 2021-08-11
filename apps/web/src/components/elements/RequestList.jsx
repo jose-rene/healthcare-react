@@ -47,7 +47,7 @@ const List = () => {
                         </select>
                     </div>
 
-                    <div className="ml-auto">
+                    <div className="ms-auto">
                         <Button className="pt-1 pb-1">Search</Button>
                     </div>
                 </div>

@@ -26,7 +26,7 @@ const Modal = ({
                 <B_MODAL.Header closeButton={hasClose}>
                     <B_MODAL.Title>
                         {titleIcon ? (
-                            <Icon icon={titleIcon} size="lg" className="mr-2" />
+                            <Icon icon={titleIcon} size="lg" className="me-2" />
                         ) : null}
                         {title}
                     </B_MODAL.Title>

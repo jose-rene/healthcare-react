@@ -1,6 +1,6 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-import PageAlert from "../../components/elements/PageAlert";
+import PageAlert from "components/elements/PageAlert";
 import PageLayout from "../../layouts/PageLayout";
 
 const Error401 = () => {

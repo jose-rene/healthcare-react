@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-import InputText from "../../../../components/inputs/InputText";
-import Select from "../../../../components/inputs/Select";
-import Button from "../../../../components/inputs/Button";
-import TableAPI from "../../../../components/elements/TableAPI";
+import InputText from "components/inputs/InputText";
+import Select from "components/inputs/Select";
+import { Button } from "components";
+import TableAPI from "components/elements/TableAPI";
 
 const testData = [
     {
@@ -57,7 +57,7 @@ const TabPricing = () => {
                         <Select
                             inlineLabel
                             label="Template"
-                            className="mr-2"
+                            className="me-2"
                             placeholder="Select"
                             options={[
                                 {
@@ -83,13 +83,13 @@ const TabPricing = () => {
                 </div>
                 <div className="col-md-3">
                     <div className="d-flex align-items-baseline justify-content-between">
-                        <label className="mr-2">No Show Fee</label>
+                        <label className="me-2">No Show Fee</label>
                         <InputText placeholder="$250,00" />
                     </div>
                 </div>
                 <div className="col-md-3">
                     <div className="d-flex align-items-baseline justify-content-between">
-                        <label className="mr-2">Urgency</label>
+                        <label className="me-2">Urgency</label>
                         <InputText placeholder="$250,00" />
                     </div>
                 </div>

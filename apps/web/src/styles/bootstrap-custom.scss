@@ -1,8 +1,36 @@
 @import "./variables";
 
-// Import Bootstrap and its default variables
+// required for the theme merge to take place
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
+// Merge the maps
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+// Import Bootstrap 5
 @import "~bootstrap/scss/bootstrap.scss";
 
+// configure floating labels for bootstrap 5
+$form-floating-height: add(3.5rem, $input-height-border);
+$form-floating-line-height: 1.25;
+$form-floating-padding-x: $input-padding-x;
+$form-floating-padding-y: 1rem;
+$form-floating-input-padding-t: 1.625rem;
+$form-floating-input-padding-b: .625rem;
+$form-floating-label-opacity: .65;
+$form-floating-label-transform: scale(.85) translateY(-.5rem) translateX(.15rem);
+$form-floating-transition: opacity .1s ease-in-out, transform .1s ease-in-out;
+
+.btn{
+    &.btn-primary, &.btn-green{
+        @extend .text-white
+    }
+
+    &.btn-block{
+        width: 100%;
+        max-width: 300px;
+    }
+}
 // custom scss
 body {
     margin: 0;
@@ -11,11 +39,6 @@ body {
     background: #f5f9fc;
 }
 
-form {
-    label.form-label, label.form-check-label {
-        color: #475866;
-    }
-}
 
 // login page css
 
@@ -28,20 +51,8 @@ form {
     margin-bottom: 48px;
 }
 
-/* @note this can probably be btn-primary globally */
-.btn-sign-in {
-    background: linear-gradient(94.53deg, #0061a2 0%, #2085c2 96.27%);
-    border-radius: 3px;
-    color: white;
-    width: 100%;
-    height: 56px;
-    margin-top: 48px;
-    border: none;
-}
-
 .login-bg {
     min-height: 100vh;
-    width: 100%;
     background-image: url("/images/login-bg.jpg");
     background-repeat: no-repeat;
     background-position: center;
@@ -53,10 +64,6 @@ form {
     font-size: 16px;
     font-weight: 300;
     color: #696969;
-}
-
-.container-login {
-    padding: 120px 80px;
 }
 
 .btn-forgot-password {
@@ -73,9 +80,6 @@ form {
 
 /* iPhone size screens or smaller */
 @include media-breakpoint-down(xs) {
-    .container-login {
-        padding: 25px;
-    }
 
     .sign-in-title {
         margin-top: 50px;
