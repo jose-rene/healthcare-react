@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState } from "react";
 import useApiCall from "../../../hooks/useApiCall";
 import TableAPI from "../../../components/elements/TableAPI";
 import PageLayout from "../../../layouts/PageLayout";
@@ -12,23 +12,29 @@ import { _GET } from "../../../helpers/request";
 
 const FormIndex = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const [{ loading, data: { data = [], meta = {} } }, fireGetForms] = useApiCall({
-        url: 'form',
+    const [
+        {
+            loading,
+            data: { data = [], meta = {} },
+        },
+        fireGetForms,
+    ] = useApiCall({
+        url: "form",
     });
 
-    const [{}, firePostForm] = useApiCall({
-        url: 'form',
+    const [{ loading: postForm }, firePostForm] = useApiCall({
+        url: "form",
         method: POST,
     });
 
-    const [{}, fireDeleteForm] = useApiCall({
+    const [{ loading: deleteForm }, fireDeleteForm] = useApiCall({
         method: DELETE,
     });
 
     useEffect(() => {
-        if (_GET('message') == 'edit-bad-form-slug') {
+        if (_GET("message") === "edit-bad-form-slug") {
             // TODO :: handle this better
-            alert('Bad edit form slug');
+            alert("Bad edit form slug");
         }
     }, []);
 
@@ -55,7 +61,7 @@ const FormIndex = () => {
                 disableSortBy: true,
             },
             {
-                label: 'Actions',
+                label: "Actions",
                 formatter: (val, { slug }) => {
                     return (
                         <>
@@ -63,11 +69,19 @@ const FormIndex = () => {
                                 <Icon icon="edit" size="lg" />
                             </Link>
 
-                            <Link className="ml-3" to={`/forms/${slug}/show`} title="View">
+                            <Link
+                                className="ml-3"
+                                to={`/forms/${slug}/show`}
+                                title="View"
+                            >
                                 <Icon icon="eye" size="lg" />
                             </Link>
 
-                            <Link className="ml-3" onClick={() => handleDeleteForm(slug)} title="Delete">
+                            <Link
+                                className="ml-3"
+                                onClick={() => handleDeleteForm(slug)}
+                                title="Delete"
+                            >
                                 <Icon icon="trash" size="lg" />
                             </Link>
                         </>
@@ -77,10 +91,7 @@ const FormIndex = () => {
         ];
     }, []);
 
-    const [
-        { searchObj },
-        { updateSearchObj, redoSearch },
-    ] = useSearch({
+    const [{ searchObj }, { updateSearchObj, redoSearch }] = useSearch({
         searchObj: {
             perPage: 10,
             sortColumn: headers[1].columnMap,
@@ -90,13 +101,16 @@ const FormIndex = () => {
     });
 
     const handleCreateForm = async () => {
-        const name = prompt('Form Name?');
+        const name = prompt("Form Name?");
         await firePostForm({
             params: {
                 name,
             },
         });
-        await redoSearch();
+
+        if (!postForm) {
+            await redoSearch();
+        }
     };
 
     const handleDeleteForm = (slug) => {
@@ -108,8 +122,10 @@ const FormIndex = () => {
             url: `form/${showDeleteConfirm}`,
         });
 
-        await redoSearch();
-        setShowDeleteConfirm(null);
+        if (!deleteForm) {
+            await redoSearch();
+            setShowDeleteConfirm(null);
+        }
     };
 
     const handleDeleteCancel = () => {
@@ -120,7 +136,11 @@ const FormIndex = () => {
         <PageLayout>
             <div className="content-box">
                 <div className="float-right mb-3">
-                    <Button variant="primary" onClick={handleCreateForm} label="Create Form" />
+                    <Button
+                        variant="primary"
+                        onClick={handleCreateForm}
+                        label="Create Form"
+                    />
                 </div>
 
                 <TableAPI

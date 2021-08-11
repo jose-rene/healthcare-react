@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 import Textarea from "../../../inputs/Textarea";
 import { Card, Accordion } from "react-bootstrap";
 
 const CustomValidation = ({
     element,
-    name = 'customValidation',
+    name = "customValidation",
     updateElement,
     eventKey,
     ...props
 }) => {
-    const { props: { [name]: customValidation = '' } = '' } = element || {};
+    const { props: { [name]: customValidation = "" } = "" } = element || {};
 
     return (
         <Card border="danger">
@@ -22,9 +22,15 @@ const CustomValidation = ({
                         value={customValidation}
                         name="customValidation"
                         rows={5}
-                        helpText={(
-                            <a href="https://lodash.com/docs/4.17.15#template" target="_blank">Template help</a>
-                        )}
+                        helpText={
+                            <a
+                                href="https://lodash.com/docs/4.17.15#template"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Template help
+                            </a>
+                        }
                         {...props}
                     />
                 </Card.Body>

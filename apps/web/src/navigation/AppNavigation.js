@@ -33,6 +33,7 @@ import AdminAddClinicians from "../pages/Admin/Clinicians/AddClinicians";
 import FormView from "../pages/Admin/FormBuilder/show";
 import FormBuilderEdit from "../pages/Admin/FormBuilder/edit";
 import FormIndex from "../pages/Admin/FormBuilder/Index";
+import AdminUserList from "../pages/Admin/UserList";
 
 const AppNavigation = ({ initializing, initializeUser }) => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -189,6 +190,12 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     path="/admin/clinicians/:id/edit"
                     middleware={["hp_user", "hp_champion"]} // need to change admin
                     component={AdminAddClinicians}
+                />
+
+                <PrivateRoute
+                    path="/admin/users"
+                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    component={AdminUserList}
                 />
 
                 <PrivateRoute path="/questionnaire/:id">

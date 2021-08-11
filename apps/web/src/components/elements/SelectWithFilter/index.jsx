@@ -1,9 +1,9 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from "react";
 
-import AsyncSelect from 'react-select/async';
-import { includes } from 'lodash';
+import AsyncSelect from "react-select/async";
+import { includes } from "lodash";
 
-import './SelectWithFilter.scss';
+import "./SelectWithFilter.scss";
 
 const SelectWithFilter = ({ name, ...props }) => {
     const {
@@ -15,7 +15,7 @@ const SelectWithFilter = ({ name, ...props }) => {
 
         className,
         classNamePrefix = undefined,
-        placeholder = 'Enter search term(s)',
+        placeholder = "Enter search term(s)",
         disabled,
         isClearable = true,
 
@@ -37,30 +37,36 @@ const SelectWithFilter = ({ name, ...props }) => {
         getOption = (option) => {
             const { label, text, value } = option;
 
-            return ({
+            return {
                 value,
                 label: text || label,
                 option,
-            });
+            };
         },
     } = props;
 
-    const [_defaultIfOneOption, setDefaultIfOneOption] = useState(defaultIfOneOption);
+    const [_defaultIfOneOption, setDefaultIfOneOption] = useState(
+        defaultIfOneOption
+    );
 
     const formattedOptions = useMemo(() => {
         return options.map((option) => getOption(option));
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [options]);
 
-    const filterOptions = (search = '') => {
+    const filterOptions = (search = "") => {
         if (!search.trim().length) {
             return formattedOptions;
         }
         const searchTerm = search.toLowerCase();
 
-        return formattedOptions.filter((option) => optionFilterCheck({
-            term: searchTerm,
-            option,
-        }));
+        return formattedOptions.filter((option) =>
+            optionFilterCheck({
+                term: searchTerm,
+                option,
+            })
+        );
     };
 
     const loadOptions = (inputValue, callback) => {
@@ -88,11 +94,12 @@ const SelectWithFilter = ({ name, ...props }) => {
     });
 
     const getLabelForValue = (value) => {
-        const found_option = formattedOptions.find((option) => option.value == value) || {};
+        const found_option =
+            formattedOptions.find((option) => option.value === value) || {};
 
-        debug && console.log('base.getLabelForValue', { found_option });
+        debug && console.log("base.getLabelForValue", { found_option });
 
-        return found_option.label || '';
+        return found_option.label || "";
     };
 
     /**
@@ -103,15 +110,15 @@ const SelectWithFilter = ({ name, ...props }) => {
      * @param option
      */
     const handleOnChange = (e) => {
-        const { label = '', value = '', option = {} } = e || {};
-        debug && console.log('base.handleOnChange', { label, value, option });
+        const { label = "", value = "", option = {} } = e || {};
+        debug && console.log("base.handleOnChange", { label, value, option });
         if (value !== props.value) {
-            debug && console.log('base.handleOnChange.calling.onChange');
+            debug && console.log("base.handleOnChange.calling.onChange");
             onChange({
                 target: {
                     name,
-                    value: value || '',
-                    label: label || '',
+                    value: value || "",
+                    label: label || "",
                     option: option || {},
                 },
             });
@@ -119,15 +126,13 @@ const SelectWithFilter = ({ name, ...props }) => {
     };
 
     const setFirstOption = () => {
-        if (_defaultIfOneOption !== true || options.length != 1) {
+        if (_defaultIfOneOption !== true || options.length !== 1) {
             return false;
         }
 
         setDefaultIfOneOption(false);
 
-        const {
-            value: singleValue = '',
-        } = getOption(options[0]) || {};
+        const { value: singleValue = "" } = getOption(options[0]) || {};
 
         onChange({ target: { name, value: singleValue } });
     };
@@ -140,17 +145,28 @@ const SelectWithFilter = ({ name, ...props }) => {
             };
         }
 
-        return '';
+        return "";
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value, options]);
 
     useEffect(() => {
         setFirstOption();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [options]);
 
     return (
         <div>
             <div className="form-group" id={`${id}-wrapper`}>
-                {label && <label htmlFor={id} className={`control-label label-for-${name}`}>{label}</label>}
+                {label && (
+                    <label
+                        htmlFor={id}
+                        className={`control-label label-for-${name}`}
+                    >
+                        {label}
+                    </label>
+                )}
                 <AsyncSelect
                     id={id}
                     placeholder={placeholder}

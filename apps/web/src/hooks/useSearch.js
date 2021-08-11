@@ -7,11 +7,11 @@ const useSearch = ({
     },
     onSearch = () => {},
 } = {}) => {
-    let loaded = false;
+    // let loaded = false;
 
-    useEffect(() => {
-        loaded = true;
-    }, []);
+    // useEffect(() => {
+    //     loaded = true;
+    // }, []);
 
     const [searchObj, setSearchObj] = useState({
         ...paginationDefault,
@@ -38,13 +38,21 @@ const useSearch = ({
 
     useEffect(() => {
         onSearch({ params: searchObj });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchObj]);
 
     return [
         // values
         { searchObj },
         // callbacks
-        { setSearchObj, resetSearchObj, formUpdateSearchObj, updateSearchObj, redoSearch },
+        {
+            setSearchObj,
+            resetSearchObj,
+            formUpdateSearchObj,
+            updateSearchObj,
+            redoSearch,
+        },
     ];
 };
 

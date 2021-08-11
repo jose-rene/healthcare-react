@@ -17,10 +17,14 @@ const FormView = ({
 
     useEffect(() => {
         if (!form_slug) {
-            throw "missing/ invalid form name";
+            throw new Error({
+                code: 403,
+                message: "missing/ invalid form name",
+            });
         }
 
         fireLoadForm();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // maps field validation to validation object
@@ -55,7 +59,11 @@ const FormView = ({
             <div className="container mt-3">
                 <h3>Show</h3>
                 {form.length > 0 && (
-                    <Form onSubmit={handleSubmit} validation={validation} autocomplete="off">
+                    <Form
+                        onSubmit={handleSubmit}
+                        validation={validation}
+                        autocomplete="off"
+                    >
                         <RenderForm formElements={form} />
 
                         <Button type="submit" label="Submit" />
