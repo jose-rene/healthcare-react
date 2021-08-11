@@ -12,7 +12,7 @@ const {
     APP_PORT = "3000",
 } = process.env;
 
-const defaultArgs = ``;
+const defaultArgs = `SKIP_PREFLIGHT_CHECK=true`;
 
 const defaults = {
     // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/

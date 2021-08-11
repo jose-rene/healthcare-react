@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import QuestionnaireForm from "../components/assessment/Questionnaire";
+import QuestionnaireForm from "components/assessment/Questionnaire";
 import useApiCall from "../hooks/useApiCall";
 import PageLayout from "../layouts/PageLayout";
 

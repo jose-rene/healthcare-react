@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Tabs, Tab } from "react-bootstrap";
 
-import TableAPI from "../../../components/elements/TableAPI";
+import TableAPI from "components/elements/TableAPI";
 import { ACTIONS } from "../../../helpers/table";
 
 const TabResources = ({ pdfData, videoData, meta, loading }) => {

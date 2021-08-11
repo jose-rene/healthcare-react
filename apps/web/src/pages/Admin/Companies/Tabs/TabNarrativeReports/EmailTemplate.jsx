@@ -1,8 +1,8 @@
 import React from "react";
 
-import InputText from "../../../../../components/inputs/InputText";
-import TextArea from "../../../../../components/inputs/Textarea";
-import Checkbox from "../../../../../components/inputs/Checkbox";
+import InputText from "components/inputs/InputText";
+import TextArea from "components/inputs/Textarea";
+import Checkbox from "components/inputs/Checkbox";
 
 const EmailTemplate = ({ subject, body }) => {
     return (

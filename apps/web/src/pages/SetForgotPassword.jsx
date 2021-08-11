@@ -3,10 +3,10 @@ import React, { useRef, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
-import Icon from "../components/elements/Icon";
-import Button from "../components/inputs/Button";
-import InputText from "../components/inputs/InputText";
-import PasswordRequirements from "../components/user/PasswordRequirements";
+import Icon from "components/elements/Icon";
+import { Button } from "components";
+import InputText from "components/inputs/InputText";
+import PasswordRequirements from "components/user/PasswordRequirements";
 import { BASE_URL, POST, PUT } from "../config/URLs";
 import useApiCall from "../hooks/useApiCall";
 import { connect } from "react-redux";
@@ -118,7 +118,7 @@ const SetForgotPassword = ({ location: { search: params = "" }, authed }) => {
                             })}
                         />
                     </div>
-                    <div className="col-md-6 pl-5">
+                    <div className="col-md-6 ps-5">
                         <PasswordRequirements
                             secondaryValid={setGoodPassword}
                             secondaryChecking={setPasswordChecking}
@@ -136,7 +136,7 @@ const SetForgotPassword = ({ location: { search: params = "" }, authed }) => {
                     <div className="col-md-6">
                         {passwordChangeError && (
                             <Alert className="mt-3" variant="warning">
-                                <span className="pr-1">Error:</span>{" "}
+                                <span className="pe-1">Error:</span>{" "}
                                 {passwordChangeError}
                             </Alert>
                         )}

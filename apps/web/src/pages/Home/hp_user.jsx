@@ -1,7 +1,7 @@
 import React from "react";
 import { Row } from "react-bootstrap";
-import AlertList from "../../components/elements/AlertList";
-import BroadcastAlert from "../../components/elements/BroadcastAlert";
+import AlertList from "components/elements/AlertList";
+import BroadcastAlert from "components/elements/BroadcastAlert";
 import PageLayout from "../../layouts/PageLayout";
 import "../../styles/home.scss";
 

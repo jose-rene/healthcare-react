@@ -2,11 +2,11 @@ import React, { useState } from "react";
 
 import { Tabs, Tab } from "react-bootstrap";
 
-import Button from "../../../../components/inputs/Button";
-import TableAPI from "../../../../components/elements/TableAPI";
-import Select from "../../../../components/inputs/Select";
-import Checkbox from "../../../../components/inputs/Checkbox";
-import InputText from "../../../../components/inputs/InputText";
+import { Button } from "components";
+import TableAPI from "components/elements/TableAPI";
+import Select from "components/inputs/Select";
+import Checkbox from "components/inputs/Checkbox";
+import InputText from "components/inputs/InputText";
 
 const historyTestData = [
     {
@@ -83,7 +83,7 @@ const TabReports = () => {
             setActiveTab(currentTab);
         }
 
-        return;
+
     };
 
     return (

@@ -1,14 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 
-import {
-    Tabs,
-    Tab,
-    DropdownButton,
-    Dropdown,
-    NavDropdown,
-} from "react-bootstrap";
+import { Tabs, Tab, DropdownButton, Dropdown, NavDropdown } from "react-bootstrap";
 
-import InputText from "../../../../../components/inputs/InputText";
+import InputText from "components/inputs/InputText";
 
 import { validateImage } from "../../../../../helpers/validate";
 
@@ -50,7 +44,7 @@ const TabNarrativeReports = () => {
         const error = validateImage(fileUploaded);
 
         if (error) {
-            return;
+
         }
     };
 
@@ -72,7 +66,7 @@ const TabNarrativeReports = () => {
             setActiveTab(currentTab);
         }
 
-        return;
+
     };
 
     return (

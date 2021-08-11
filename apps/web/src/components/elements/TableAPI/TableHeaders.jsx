@@ -66,7 +66,7 @@ const TableHeaders = ({
                             onClick={() => handleOnChange(columnMap)}
                         >
                             {label}{" "}
-                            <span className="float-right ml-1">
+                            <span className="float-right ms-1">
                                 {sortArrow(columnMap)}
                             </span>
                         </th>

@@ -1,30 +1,26 @@
 import React, { useMemo } from "react";
-import { Link } from "react-router-dom";
-import Icon from "../elements/Icon";
+import Icon from "../Icon";
+import { Button as RButton } from "react-bootstrap";
 
 const Button = ({
-    useButton = true,
-    to = "#",
     onClick = undefined,
     variant = "default",
     label = undefined,
     children,
     type = "button",
-    className: classAppend = "",
     block = false,
     outline = false,
+    className: classAppend = '',
     bold = false,
     icon = undefined,
     iconSize = undefined,
     disabled = false,
     loading = false,
 }) => {
-    const className = useMemo(() => {
-        let cName = `btn btn-ln ${classAppend}`;
 
-        if (block) {
-            cName += " btn-block";
-        }
+    const className = useMemo(() => {
+        let cName = `btn ${classAppend}`;
+
 
         switch (variant.toLowerCase()) {
             case "cancel":
@@ -36,15 +32,19 @@ const Button = ({
                 break;
 
             case "icon":
-                cName = "btn-icon";
+                cName = " btn-icon";
                 break;
             default:
-                cName += outline ? " btn-outline-primary" : " btn-primary";
+                cName += outline ? ` btn-outline-${variant}` : ` btn-${variant}`;
                 break;
         }
 
+        if(block){
+            cName += ' btn-block';
+        }
+console.log({label, cName});
         return cName;
-    }, [outline, variant, block, classAppend]);
+    }, [outline, variant, block]);
 
     const renderedLabel = useMemo(() => {
         const lbl = label || children;
@@ -54,33 +54,22 @@ const Button = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [label, children]);
 
-    return useButton ? (
-        <button
+    return (
+        <RButton
+            variant="default"
             // eslint-disable-next-line react/button-has-type
             type={type}
-            className={className}
             onClick={onClick}
             disabled={disabled}
+            className={className}
         >
             {icon && <Icon className="me-3" icon={icon} size={iconSize} />}
-            <span className={`${loading ? "me-5" : ""}`}>
-                {renderedLabel}
-            </span>
+            {renderedLabel}
             {loading && (
                 <Icon className="align-middle fa-spin ms-3">spinner</Icon>
             )}
-        </button>
-    ) : (
-        <Link to={to} className={className} onClick={onClick}>
-            {icon && <Icon className="me-3" icon={icon} size={iconSize} />}
-            <span className={`${loading ? "me-5" : ""}`}>
-                {renderedLabel}
-            </span>
-            {loading && (
-                <Icon className="align-middle fa-spin ms-3">spinner</Icon>
-            )}
-        </Link>
-    );
+        </RButton>
+    )
 };
 
 export default Button;

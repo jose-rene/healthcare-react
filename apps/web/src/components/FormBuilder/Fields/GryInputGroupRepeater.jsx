@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 import { useFormContext } from "../../../Context/FormContext";
-import Button from "../../inputs/Button";
+import { Button } from "components/index";
 
 // placeholder this component is controlled/ rendered in the react-form-2 package.
 const GryInputGroupRepeater = () => null;

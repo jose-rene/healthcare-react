@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Tabs, Tab, DropdownButton, Dropdown } from "react-bootstrap";
 
-import InputText from "../../../../components/inputs/InputText";
-import Select from "../../../../components/inputs/Select";
+import InputText from "components/inputs/InputText";
+import Select from "components/inputs/Select";
 
 const TabBilling = () => {
     const [activeTab, setActiveTab] = useState("billing-submission");
@@ -14,7 +14,7 @@ const TabBilling = () => {
             setActiveTab(currentTab);
         }
 
-        return;
+
     };
 
     const handleDropdown = (evt) => {
@@ -227,7 +227,7 @@ const TabBilling = () => {
                                     />
                                 </div>
                                 <div className="col-md-6 d-flex">
-                                    <div className="col-md-6 pl-0">
+                                    <div className="col-md-6 ps-0">
                                         <Select
                                             label="State"
                                             options={[
@@ -249,7 +249,7 @@ const TabBilling = () => {
                                             ]}
                                         />
                                     </div>
-                                    <div className="col-md-6 pr-0">
+                                    <div className="col-md-6 pe-0">
                                         <InputText
                                             label="ZIP Code"
                                             value="2464"

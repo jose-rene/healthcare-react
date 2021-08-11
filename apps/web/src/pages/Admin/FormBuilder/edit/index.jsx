@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import PageLayout from "../../../../layouts/PageLayout";
-import Form from "../../../../components/elements/Form";
+import Form from "components/elements/Form";
 import { ReactFormBuilder } from "react-form-builder3";
-import FormElementsEdit from "../../../../components/forms/form-builder/field-edit-page";
+import FormElementsEdit from "components/forms/form-builder/field-edit-page";
 import "./style.scss";
 import useFormBuilder from "../../../../hooks/useFormBuilder";
 

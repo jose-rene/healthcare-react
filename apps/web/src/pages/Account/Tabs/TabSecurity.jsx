@@ -1,8 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Col, Row } from "react-bootstrap";
-import InputText from "../../../components/inputs/InputText";
-import Button from "../../../components/inputs/Button";
+import InputText from "components/inputs/InputText";
+import { Button } from "components";
 
 const TabSecurity = ({ currentUser }) => {
     const { email } = currentUser;

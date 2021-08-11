@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
 import PageLayout from "../layouts/PageLayout";
-import QuestionnaireForm from "../components/assessment/Questionnaire";
+import QuestionnaireForm from "components/assessment/Questionnaire";
 
 /* eslint-disable react/jsx-props-no-spreading */
 

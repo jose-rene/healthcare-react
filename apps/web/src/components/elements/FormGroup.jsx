@@ -29,7 +29,7 @@ const FormGroup = ({ elements, addRepeater, removeRepeater }) => {
                                 onClick={() => {
                                     addRepeater(id);
                                 }}
-                                className="ml-2 btn-success btn-sm"
+                                className="ms-2 btn-success btn-sm"
                                 icon="plus"
                                 iconSize="1x"
                             >

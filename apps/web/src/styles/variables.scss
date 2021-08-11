@@ -1,14 +1,36 @@
+@import url('http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900');
+
 // Override default variables before the import, eg:
 // $body-bg: #000;
 $font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
 "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
 sans-serif !default;
+
+
+$font-family-base: Roboto;
+
 $grid-breakpoints: (xs:0, sm: 641px, md:768px, lg:992px, xl:1200px);
 $container-max-widths: (sm: 641px, md: 768px, lg: 992px, xl: 1200px);
 
-$primary: #2e94e5;
+$blue: #1894E1;
+$green: #00A5A5;
+$secondary: #00A5A5;
+$info: rgba(43, 53, 61, 0.1);
 
-$btn-padding-y: .65rem;
+$border-radius: .75em;
+$line-height-lg: 32;
+$line-height-base: 2;
+$border-radius-lg: $border-radius;
+$border-radius-sm: $border-radius;
+$border-color: #dadee0;
+$btn-font-weight: 400;
+
+//$btn-padding-y: .65rem;
 $btn-padding-x: 1.5rem;
+$btn-white-space: 2px;
 
 $table-accent-bg: #fff;
+
+$custom-colors: (
+    'green': $green
+);

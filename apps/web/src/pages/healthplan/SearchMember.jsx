@@ -4,17 +4,17 @@ import { useForm } from "react-hook-form";
 
 import { Link } from "react-router-dom";
 import PageLayout from "../../layouts/PageLayout";
-import InputText from "../../components/inputs/InputText";
-import PageAlert from "../../components/elements/PageAlert";
-import TableAPI from "../../components/elements/TableAPI";
-import Button from "../../components/inputs/Button";
+import InputText from "components/inputs/InputText";
+import PageAlert from "components/elements/PageAlert";
+import TableAPI from "components/elements/TableAPI";
+import { Button } from "components";
 import useToast from "../../hooks/useToast";
 import useApiCall from "../../hooks/useApiCall";
 import useSearch from "../../hooks/useSearch";
 import { ACTIONS } from "../../helpers/table";
 
 import "../../styles/healthplan.scss";
-import Icon from "../../components/elements/Icon";
+import Icon from "components/elements/Icon";
 
 const SearchMember = (props) => {
     const { generalError } = useToast();
@@ -65,7 +65,7 @@ const SearchMember = (props) => {
                         className="btn btn-primary btn-icon btn-sm"
                         to={`/member/${id}/request/add`}
                     >
-                        <Icon icon="plus" className="mr-1" size="sm" />
+                        <Icon icon="plus" className="me-1" size="sm" />
                         New Request
                     </Link>
                 );

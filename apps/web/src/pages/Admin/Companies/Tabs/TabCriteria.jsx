@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import Select from "../../../../components/inputs/Select";
-import InputText from "../../../../components/inputs/InputText";
-import TableAPI from "../../../../components/elements/TableAPI";
+import Select from "components/inputs/Select";
+import InputText from "components/inputs/InputText";
+import TableAPI from "components/elements/TableAPI";
 
 const testData = [
     {
@@ -102,7 +102,7 @@ const TabCriteria = () => {
                     <Select
                         inlineLabel
                         label="View By Request Type"
-                        className="mr-2"
+                        className="me-2"
                         placeholder="Select"
                         options={[
                             {

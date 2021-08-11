@@ -2,11 +2,11 @@ import React, { useState } from "react";
 
 import { Tabs, Tab } from "react-bootstrap";
 
-import Button from "../../../../components/inputs/Button";
-import TableAPI from "../../../../components/elements/TableAPI";
-import Select from "../../../../components/inputs/Select";
-import InputText from "../../../../components/inputs/InputText";
-import Textarea from "../../../../components/inputs/Textarea";
+import { Button } from "components";
+import TableAPI from "components/elements/TableAPI";
+import Select from "components/inputs/Select";
+import InputText from "components/inputs/InputText";
+import Textarea from "components/inputs/Textarea";
 
 const TabTemplates = () => {
     const [activeTab, setActiveTab] = useState("alert-templates");
@@ -25,7 +25,7 @@ const TabTemplates = () => {
             setActiveTab(currentTab);
         }
 
-        return;
+
     };
 
     return (
@@ -102,7 +102,7 @@ const TabTemplates = () => {
                     </div>
 
                     <div className="row ml-0">
-                        <div className="col-md-12 pl-0">
+                        <div className="col-md-12 ps-0">
                             <Textarea
                                 className="form-control custom-textarea-input"
                                 label="Body"

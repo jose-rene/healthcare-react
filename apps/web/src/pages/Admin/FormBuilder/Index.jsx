@@ -1,13 +1,13 @@
 import React, { useMemo, useEffect, useState } from "react";
 import useApiCall from "../../../hooks/useApiCall";
-import TableAPI from "../../../components/elements/TableAPI";
+import TableAPI from "components/elements/TableAPI";
 import PageLayout from "../../../layouts/PageLayout";
-import Icon from "../../../components/elements/Icon";
+import Icon from "components/elements/Icon";
 import { Link } from "react-router-dom";
 import useSearch from "../../../hooks/useSearch";
-import Button from "../../../components/inputs/Button";
+import { Button } from "components";
 import { POST, DELETE } from "../../../config/URLs";
-import ConfirmationModal from "../../../components/elements/ConfirmationModal";
+import ConfirmationModal from "components/elements/ConfirmationModal";
 import { _GET } from "../../../helpers/request";
 
 const FormIndex = () => {
@@ -22,17 +22,17 @@ const FormIndex = () => {
         url: "form",
     });
 
-    const [{ loading: postForm }, firePostForm] = useApiCall({
-        url: "form",
+    const [, firePostForm] = useApiCall({
+        url: 'form',
         method: POST,
     });
 
-    const [{ loading: deleteForm }, fireDeleteForm] = useApiCall({
+    const [, fireDeleteForm] = useApiCall({
         method: DELETE,
     });
 
     useEffect(() => {
-        if (_GET("message") === "edit-bad-form-slug") {
+        if (_GET('message') === 'edit-bad-form-slug') {
             // TODO :: handle this better
             alert("Bad edit form slug");
         }

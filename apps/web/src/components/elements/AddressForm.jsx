@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
 
-import InputText from "../inputs/InputText";
+import InputText from "../inputs/ContextInput";
 import Button from "../inputs/Button";
 import Select from "../inputs/Select";
 import PageAlert from "./PageAlert";
@@ -142,7 +142,7 @@ const AddressForm = ({
     };
 
     return (
-        <>
+        <div className="row">
             {addressTypesOptions && (
                 <div className="col-md-6">
                     <Select
@@ -189,31 +189,26 @@ const AddressForm = ({
                 </PageAlert>
             )}
 
-            <div className="col-md-12">
-                <div className="form-row">
-                    <div className="col-md-6">
-                        <InputText
-                            name="postal_code"
-                            label="Zip*"
-                            errors={errors}
-                            value={addressFormValue?.postal_code}
-                            ref={register({
-                                required: "Zip is required",
-                            })}
-                            onChange={handleAddressFormData}
-                        />
-                    </div>
 
-                    <div className="col-md-4">
-                        <Button
-                            className="btn btn-block btn-zip"
-                            onClick={() => handleLookupZip()}
-                        >
-                            Lookup Zip
-                        </Button>
-                    </div>
-                </div>
+            <div className="col-md-8">
+                <InputText
+                    name="postal_code"
+                    label="Zip*"
+                    errors={errors}
+                    value={addressFormValue?.postal_code}
+                    ref={register({
+                        required: "Zip is required",
+                    })}
+                    onChange={handleAddressFormData}
+                />
             </div>
+
+            <div className="col-md-4">
+                <Button block onClick={handleLookupZip} size="lg">
+                    Lookup Zip
+                </Button>
+            </div>
+
             <div className="col-md-6">
                 <InputText
                     name="city"
@@ -252,7 +247,7 @@ const AddressForm = ({
                     onChange={handleAddressFormData}
                 />
             </div>
-        </>
+        </div>
     );
 };
 

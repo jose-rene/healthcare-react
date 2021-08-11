@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
-import Select from "../../../components/inputs/Select";
-import Button from "../../../components/inputs/Button";
+import Select from "components/inputs/Select";
+import { Button } from "components";
 
-import Icon from "../../../components/elements/Icon";
-import TableAPI from "../../../components/elements/TableAPI";
+import Icon from "components/elements/Icon";
+import TableAPI from "components/elements/TableAPI";
 
 import PageLayout from "../../../layouts/PageLayout";
 
@@ -69,14 +69,14 @@ const Clinicians = (props) => {
                             <Icon
                                 size="1x"
                                 icon="edit"
-                                className="mr-2 bg-secondary text-white rounded-circle p-1"
+                                className="me-2 bg-secondary text-white rounded-circle p-1"
                             />
                         </Link>
 
                         <Icon
                             size="1x"
                             icon="info-circle"
-                            className="mr-2 bg-secondary text-white rounded-circle p-1"
+                            className="me-2 bg-secondary text-white rounded-circle p-1"
                         />
                     </>
                 );
@@ -157,7 +157,7 @@ const Clinicians = (props) => {
         <PageLayout>
             <div className="content-box">
                 <div className="d-flex">
-                    <h1 className="box-title mb-3 mr-4">Clinicians</h1>
+                    <h1 className="box-title mb-3 me-4">Clinicians</h1>
                     <Button
                         icon="plus"
                         iconSize="sm"

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import InputText from "../components/inputs/InputText";
+import InputText from "components/inputs/InputText";
 import { Alert, Button } from "react-bootstrap";
-import Icon from "../components/elements/Icon";
+import Icon from "components/elements/Icon";
 import { BASE_URL, POST } from "../config/URLs";
 import { useForm } from "react-hook-form";
 import useApiCall from "../hooks/useApiCall";
@@ -80,7 +80,7 @@ export default ({ location: { search: params = "" } }) => {
                                 Nevermind
                                 <Link
                                     to="/"
-                                    className="text-muted pl-1"
+                                    className="text-muted ps-1"
                                     tabIndex="-1"
                                 >
                                     Sign in

@@ -9,7 +9,7 @@ const TableTop = ({ filters = [], redoSearch }) => {
                     {f}
                 </div>
             ))}
-            <div className="px-2 ml-auto">
+            <div className="px-2 ms-auto">
                 <Button
                     className="px-3 py-1"
                     variant="primary"

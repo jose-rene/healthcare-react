@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Card } from "react-bootstrap";
-import TableAPI from "../../../components/elements/TableAPI";
-import TableTop from "../../../components/elements/TableTop";
-import Select from "../../../components/inputs/Select";
+import TableAPI from "components/elements/TableAPI";
+import TableTop from "components/elements/TableTop";
+import Select from "components/inputs/Select";
 import useApiCall from "../../../hooks/useApiCall";
 import useSearch from "../../../hooks/useSearch";
 import PageLayout from "../../../layouts/PageLayout";

@@ -190,7 +190,7 @@ const PasswordRequirements = ({
                 {primaryRuleSet.map((rule, i) => (
                     <li key={`password-requirement-${i}`}>
                         <div className="row">
-                            <div className="col-1 pr-3">{icon(i)}</div>
+                            <div className="col-1 pe-3">{icon(i)}</div>
                             <div className="col">{rule.label}</div>
                         </div>
                     </li>
@@ -200,7 +200,7 @@ const PasswordRequirements = ({
                     secondaryRuleSet.map((rule, i) => (
                         <li key={`password-requirement-${i}`}>
                             <div className="row">
-                                <div className="col-1 pr-3">
+                                <div className="col-1 pe-3">
                                     {secondaryIcon(rule, i)}
                                 </div>
                                 <div className="col">{rule.label}</div>

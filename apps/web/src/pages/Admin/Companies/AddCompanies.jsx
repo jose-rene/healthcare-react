@@ -4,11 +4,11 @@ import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
 import PageLayout from "../../../layouts/PageLayout";
-import Button from "../../../components/inputs/Button";
-import InputText from "../../../components/inputs/InputText";
-import Select from "../../../components/inputs/Select";
+import { Button } from "components";
+import InputText from "components/inputs/InputText";
+import Select from "components/inputs/Select";
 
-import PageAlert from "../../../components/elements/PageAlert";
+import PageAlert from "components/elements/PageAlert";
 
 import useApiCall from "../../../hooks/useApiCall";
 

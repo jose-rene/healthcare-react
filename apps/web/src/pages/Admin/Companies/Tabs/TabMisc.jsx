@@ -2,11 +2,11 @@ import React, { useState } from "react";
 
 import { Tabs, Tab } from "react-bootstrap";
 
-import Button from "../../../../components/inputs/Button";
-import TableAPI from "../../../../components/elements/TableAPI";
-import InputText from "../../../../components/inputs/InputText";
-import Checkbox from "../../../../components/inputs/Checkbox";
-import Icon from "../../../../components/elements/Icon";
+import { Button } from "components";
+import TableAPI from "components/elements/TableAPI";
+import InputText from "components/inputs/InputText";
+import Checkbox from "components/inputs/Checkbox";
+import Icon from "components/elements/Icon";
 
 import { ACTIONS } from "../../../../helpers/table";
 
@@ -69,7 +69,7 @@ const TabMisc = () => {
                         <Icon
                             size="1x"
                             icon="info-circle"
-                            className="mr-2 bg-secondary text-white rounded-circle p-1"
+                            className="me-2 bg-secondary text-white rounded-circle p-1"
                         />
                         <Icon
                             size="1x"

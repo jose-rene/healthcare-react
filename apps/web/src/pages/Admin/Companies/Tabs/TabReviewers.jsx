@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import Button from "../../../../components/inputs/Button";
-import TableAPI from "../../../../components/elements/TableAPI";
-import Icon from "../../../../components/elements/Icon";
+import { Button } from "components";
+import TableAPI from "components/elements/TableAPI";
+import Icon from "components/elements/Icon";
 
 import { ACTIONS } from "../../../../helpers/table";
 
@@ -31,7 +31,7 @@ const TabReviewers = () => {
                         <Icon
                             size="1x"
                             icon="edit"
-                            className="mr-2 bg-primary text-white rounded-circle p-1"
+                            className="me-2 bg-primary text-white rounded-circle p-1"
                         />
                         <Icon
                             size="1x"

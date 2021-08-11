@@ -37,7 +37,7 @@ const TableTopSort = ({handleSearch, updateSearchObj}) => {
                     </select>
                 </div>
 
-                <div className="ml-auto px-2">
+                <div className="ms-auto px-2">
                     <Button className="pt-1 pb-1" onClick={handleSearch}>
                         Search
                     </Button>
