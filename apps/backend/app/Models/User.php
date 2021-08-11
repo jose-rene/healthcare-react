@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Http\SearchPipeline\Search;
 use App\Http\SearchPipeline\UserRole;
 use App\Http\SearchPipeline\UserSort;
+use App\Http\SearchPipeline\UserType;
 use App\Models\Activity\Activity;
 use App\Models\UserType\ClinicalServicesUser;
 use App\Models\UserType\EngineeringUser;
@@ -409,17 +410,22 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function scopeSearchAllUsers($query, self $authedUser)
     {
-        if (1 !== $authedUser->user_type) { // limit search to their own domain
+        $pipeline = [
+            Search::class,
+            UserRole::class,
+            UserSort::class,
+        ];
+
+        if (1 !== $authedUser->user_type && 4 !== $authedUser->user_type) { // limit search to their own domain
             $query->where('user_type', $authedUser->user_type);
+        }
+        else {
+            array_unshift($pipeline, UserType::class);
         }
 
         return app(Pipeline::class)
             ->send($query)
-            ->through([
-                Search::class,
-                UserRole::class,
-                UserSort::class,
-            ])
+            ->through($pipeline)
             ->thenReturn();
     }
 

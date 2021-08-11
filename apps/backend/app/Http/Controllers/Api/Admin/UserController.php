@@ -21,7 +21,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $data = User::paginate($request->get('perPage', 50));
+        $user = auth()->user();
+        $data = User::searchAllUsers($user)->paginate($request->get('perPage', 50));
+        // $data = User::paginate($request->get('perPage', 50));
 
         return UserResource::collection($data);
     }

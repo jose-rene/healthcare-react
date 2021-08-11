@@ -4,15 +4,16 @@ import useApiCall from "./useApiCall";
 import { PUT } from "../config/URLs";
 import CustomFormElements from "../components/FormBuilder/Fields";
 
-const useFormBuilder = ({
-    formId,
-} = {}) => {
+const useFormBuilder = ({ formId } = {}) => {
     const [{ loading: saving, data }, fireSaveForm] = useApiCall({
         url: `form/${formId}`,
         method: PUT,
     });
 
-    const [{ loading: formLoading, data: { form: { fields = [] } = {} } = {} }, fireLoadForm] = useApiCall({
+    const [
+        { loading: formLoading, data: { form: { fields = [] } = {} } = {} },
+        fireLoadForm,
+    ] = useApiCall({
         url: `form/${formId}`,
     });
 
@@ -22,25 +23,30 @@ const useFormBuilder = ({
 
     useEffect(() => {
         if (!formId) {
-            throw 'missing formId in useFormBuilder';
+            throw new Error({
+                code: 403,
+                message: "missing formId in useFormBuilder",
+            });
         }
 
         const registered = Registry.list();
 
-        const newItems = Object.entries(CustomFormElements).map(([componentName, component]) => {
-            if (!registered.includes(componentName)) {
-                Registry.register(componentName, component);
+        const newItems = Object.entries(CustomFormElements).map(
+            ([componentName, component]) => {
+                if (!registered.includes(componentName)) {
+                    Registry.register(componentName, component);
+                }
+
+                const baseAttrs = {
+                    key: componentName,
+                    element: "CustomElement",
+                    type: "custom",
+                    field_name: component.register.name,
+                };
+
+                return { ...baseAttrs, ...component.register };
             }
-
-            const baseAttrs = {
-                key: componentName,
-                element: 'CustomElement',
-                type: 'custom',
-                field_name: component.register.name,
-            };
-
-            return { ...baseAttrs, ...component.register };
-        });
+        );
 
         setItems(newItems);
 
@@ -52,6 +58,8 @@ const useFormBuilder = ({
                 fireSaveForm({ params: { form: data } });
             }
         });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -64,7 +72,15 @@ const useFormBuilder = ({
     }, [formLoading, loaded]);
 
     return [
-        { form, items, formLoading, formLoaded, loaded, saving, savedData: data },
+        {
+            form,
+            items,
+            formLoading,
+            formLoaded,
+            loaded,
+            saving,
+            savedData: data,
+        },
         { setForm, fireLoadForm },
     ];
 };

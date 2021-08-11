@@ -1,5 +1,5 @@
 import qs from "query-string";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
@@ -24,7 +24,8 @@ const Login = ({
     // tokenLoading is async storage, loading is http
     const [{ loading, userLoading, error }, { authUser }] = useAuth();
     const { action = false, redirect = "/dashboard" } = qs.parse(params);
-    const [form, setForm] = useState({
+    // const [form, setForm] = useState({
+    const [form] = useState({
         email: "",
         password: "",
     });

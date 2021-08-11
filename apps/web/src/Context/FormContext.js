@@ -88,27 +88,29 @@ const FormProvider = ({
         if (validated) {
             validateForm();
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [form]);
 
     useEffect(() => {
         if (tick !== null && onFormChange) {
             onFormChange(form);
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tick]);
 
     const validateForm = () => {
         let errorTest = {};
 
         Object.keys(validationRules).forEach((fieldName) => {
-            const {
-                rules = [],
-                customRule = "",
-                yupSchema,
-            } = validationRules[fieldName];
+            const { rules = [], customRule = "", yupSchema } = validationRules[
+                fieldName
+            ];
             const { [fieldName]: value = false } = form;
 
             // run validations
-            if (rules.includes(REQUIRED) && (!value || value.length == 0)) {
+            if (rules.includes(REQUIRED) && (!value || value.length === 0)) {
                 errorTest = {
                     ...errorTest,
                     [fieldName]: { message: "This field is required" },
@@ -189,7 +191,7 @@ const FormProvider = ({
 
     const shouldShow = (rule) => {
         const result = template(`<% if(${rule}){ %>yes<% } %>`, form) || "no";
-        return result == "yes";
+        return result === "yes";
     };
 
     return (
