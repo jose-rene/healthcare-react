@@ -1,5 +1,5 @@
 import qs from "query-string";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
@@ -22,6 +22,7 @@ const Login = ({
     const [{ loading, userLoading, error }, { authUser }] = useAuth();
     const { action = false, redirect = "/dashboard" } = qs.parse(params);
     const email = useRef();
+    const [loginValues, setLoginValues] = useState({});
 
     /* useEffect(() => {
         if (authed) {
@@ -43,6 +44,7 @@ const Login = ({
     };
 
     const onSubmit = async (data) => {
+        setLoginValues(data);
         if (loading) {
             return false;
         }
@@ -62,6 +64,7 @@ const Login = ({
             onSubmit={onSubmit}
             validation={validation}
             autocomplete={false}
+            defaultData={loginValues}
         >
             <div className="container-fluid">
                 <div className="row">
