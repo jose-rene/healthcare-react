@@ -22,12 +22,12 @@ const FormIndex = () => {
         url: "form",
     });
 
-    const [, firePostForm] = useApiCall({
-        url: 'form',
+    const [{ loading: postForm }, firePostForm] = useApiCall({
+        url: "form",
         method: POST,
     });
 
-    const [, fireDeleteForm] = useApiCall({
+    const [{ loading: deleteForm }, fireDeleteForm] = useApiCall({
         method: DELETE,
     });
 

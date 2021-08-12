@@ -1,22 +1,21 @@
-import React from 'react';
-import { TextAreaAutosize, Editor } from 'react-form-builder3/lib/functions';
-import * as draftToHtml from 'draftjs-to-html';
-import { EditorState, convertToRaw, convertFromHTML, ContentState } from 'draft-js';
+import React from "react";
+import { TextAreaAutosize, Editor } from "react-form-builder3/lib/functions";
+import * as draftToHtml from "draftjs-to-html";
+import { EditorState, convertToRaw, convertFromHTML, ContentState } from "draft-js";
 
-import DynamicOptionList from 'react-form-builder3/lib/dynamic-option-list';
-import { get } from 'react-form-builder3/lib/stores/requests';
-import ID from 'react-form-builder3/lib/UUID';
-import CustomRule from "../CustomRule";
-import CustomValidation from "../CustomValidation";
-import { set } from 'lodash';
+import DynamicOptionList from "react-form-builder3/lib/dynamic-option-list";
+import { get } from "react-form-builder3/lib/stores/requests";
+import ID from "react-form-builder3/lib/UUID";
+import { set } from "lodash";
 import { Accordion } from "react-bootstrap";
+import { CustomRule, CustomValidation } from "..";
 
 const toolbar = {
-    options: ['inline', 'list', 'textAlign', 'fontSize', 'link', 'history'],
+    options: ["inline", "list", "textAlign", "fontSize", "link", "history"],
     inline: {
         inDropdown: false,
         className: undefined,
-        options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
+        options: ["bold", "italic", "underline", "superscript", "subscript"],
     },
 };
 
