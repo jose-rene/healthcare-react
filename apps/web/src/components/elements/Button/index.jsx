@@ -10,17 +10,15 @@ const Button = ({
     type = "button",
     block = false,
     outline = false,
-    className: classAppend = '',
+    className: classAppend = "",
     bold = false,
     icon = undefined,
     iconSize = undefined,
     disabled = false,
     loading = false,
 }) => {
-
     const className = useMemo(() => {
         let cName = `btn ${classAppend}`;
-
 
         switch (variant.toLowerCase()) {
             case "cancel":
@@ -35,15 +33,19 @@ const Button = ({
                 cName = " btn-icon";
                 break;
             default:
-                cName += outline ? ` btn-outline-${variant}` : ` btn-${variant}`;
+                cName += outline
+                    ? ` btn-outline-${variant}`
+                    : ` btn-${variant}`;
                 break;
         }
 
-        if(block){
-            cName += ' btn-block';
+        if (block) {
+            cName += " btn-block";
         }
-console.log({label, cName});
+
         return cName;
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [outline, variant, block]);
 
     const renderedLabel = useMemo(() => {
@@ -69,7 +71,7 @@ console.log({label, cName});
                 <Icon className="align-middle fa-spin ms-3">spinner</Icon>
             )}
         </RButton>
-    )
+    );
 };
 
 export default Button;

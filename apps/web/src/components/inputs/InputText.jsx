@@ -3,8 +3,7 @@ import { has, set } from "lodash";
 import { InputGroup, Form } from "react-bootstrap";
 
 const Base = ({ children }) => <div className="input-group">{children}</div>;
-Base.Input = forwardRef((props, ref) =>
-    <Form.Control {...props} ref={ref} />);
+Base.Input = forwardRef((props, ref) => <Form.Control {...props} ref={ref} />);
 Base.Addon = ({ children, textProps, ...props }) => (
     <InputGroup.Append {...props}>
         <InputGroup.Text {...textProps}>{children}</InputGroup.Text>
@@ -65,9 +64,7 @@ const InputText = forwardRef((props, ref) => {
             return null;
         }
 
-        return (
-            <small className="form-text text-muted">{help}</small>
-        );
+        return <small className="form-text text-muted">{help}</small>;
     };
 
     const errorBlock = useMemo(() => {
@@ -80,6 +77,8 @@ const InputText = forwardRef((props, ref) => {
                 {error}
             </Form.Control.Feedback>
         );
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [error]);
 
     if (has(attributes, "value.amount")) {
@@ -93,7 +92,7 @@ const InputText = forwardRef((props, ref) => {
 
     // if (!input_attributes.value) input_attributes.value = '';
 
-    if (type == "email") {
+    if (type === "email") {
         // For email input types we need to use a pattern
         input_attributes.type = "email";
     }
@@ -192,12 +191,21 @@ const InputText = forwardRef((props, ref) => {
         default: () => <Base.Input {...input_attributes} />,
     };
 
-    return !wrap ? <Base.Input {...input_attributes} /> : (
-        <div className={`form-floating mb-3 ${outerClassReplace} ${outerClassName}`}>
+    return !wrap ? (
+        <Base.Input {...input_attributes} />
+    ) : (
+        <div
+            className={`form-floating mb-3 ${outerClassReplace} ${outerClassName}`}
+        >
             {typeMap[withIcon || "default"]()}
-            <label htmlFor={attributes.id}
-                   className="control-label" {...label_attrs}
-                   onDoubleClick={onLblDoubleClick}>{label}</label>
+            <label
+                htmlFor={attributes.id}
+                className="control-label"
+                {...label_attrs}
+                onDoubleClick={onLblDoubleClick}
+            >
+                {label}
+            </label>
             {renderHelpBlock(help)}
             {errorBlock}
         </div>
