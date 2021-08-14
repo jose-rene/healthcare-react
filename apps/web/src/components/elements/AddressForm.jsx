@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
 
-import InputText from "../inputs/ContextInput";
+import InputText from "../inputs/InputText";
 import Button from "../inputs/Button";
 import Select from "../inputs/Select";
 import PageAlert from "./PageAlert";
@@ -188,7 +188,6 @@ const AddressForm = ({
                     {alertMessage}
                 </PageAlert>
             )}
-
 
             <div className="col-md-8">
                 <InputText

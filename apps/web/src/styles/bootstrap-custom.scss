@@ -79,7 +79,7 @@ body {
 // media queries
 
 /* iPhone size screens or smaller */
-@include media-breakpoint-down(xs) {
+@include media-breakpoint-down(sm) {
 
     .sign-in-title {
         margin-top: 50px;
