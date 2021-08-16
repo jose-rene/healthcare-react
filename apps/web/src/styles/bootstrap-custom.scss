@@ -20,6 +20,12 @@ $form-floating-input-padding-b: .625rem;
 $form-floating-label-opacity: .65;
 $form-floating-label-transform: scale(.85) translateY(-.5rem) translateX(.15rem);
 $form-floating-transition: opacity .1s ease-in-out, transform .1s ease-in-out;
+$position-values: (
+  0: 0,
+  60: 60px,
+  50: 50%,
+  100: 100%
+);
 
 .btn{
     &.btn-primary, &.btn-green{
@@ -78,9 +84,16 @@ body {
 
 // media queries
 
+@include media-breakpoint-down(lg) {
+
+    .collapse-sidebar {
+        width:60px;
+        min-width:60px;
+    }
+}
+
 /* iPhone size screens or smaller */
 @include media-breakpoint-down(sm) {
-
     .sign-in-title {
         margin-top: 50px;
         margin-bottom: 20px;

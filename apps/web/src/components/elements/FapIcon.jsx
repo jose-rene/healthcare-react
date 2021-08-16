@@ -18,7 +18,13 @@ library.add(fal);
  * @param props
  * @returns {JSX.Element}
  */
-const FapIcon = ({ icon = undefined, size = "lg", spin = false }) => {
+const FapIcon = ({
+    icon = undefined,
+    size = "lg",
+    spin = false,
+    className = "",
+    ...props
+}) => {
     const name = icon ? icon.toLowerCase().trim() : "check";
 
     const map = {
@@ -32,11 +38,17 @@ const FapIcon = ({ icon = undefined, size = "lg", spin = false }) => {
     };
 
     const mappedIcon = map[name] || name;
+    const mappedClass =
+        mappedIcon === "spinner" || spin ? "fa-spin" : className;
+
+    console.log(`icon class ${mappedClass}`);
 
     return (
         <FontAwesomeIcon
             icon={["fal", mappedIcon]}
-            className={mappedIcon === "spinner" || spin ? "fa-spin" : ""}
+            className={mappedClass}
+            size={size}
+            {...props}
         />
     );
 };
