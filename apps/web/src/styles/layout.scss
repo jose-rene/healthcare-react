@@ -33,7 +33,6 @@
 .collapse-sidebar {
     /*width:160px;*/
     min-width:160px;
-    background: white;
     -webkit-transition:width 300ms ease-in-out, min-width 300ms ease-in-out;
     -moz-transition:width 300ms ease-in-out,  min-width 300ms ease-in-out;
     -o-transition:width 300ms ease-in-out,  min-width 300ms ease-in-out;
@@ -47,18 +46,30 @@
 }
 
 .btn-link {
+    font-size: 14px;
 	text-decoration: none;
+    color: rgba(43, 53, 61, 0.5);
 	&:focus {
 		-webkit-box-shadow: none;
 		-moz-box-shadow: none;
 		box-shadow: none;
+        color: rgba(43, 53, 61, 0.5);
 	}
+    &:hover {
+        color: rgba(43, 53, 61, 0.5);
+    }
+
 }
 
 .nav-link {
     border-left: 4px solid transparent;
+    color: rgba(43, 53, 61, 0.5);
+    font-size: 14px;
     &.active {
-        border-left: solid 4px rgb(179, 179, 228);
+        border-color: rgba(0, 0, 0, 0.125);
+        border-left: solid 4px rgb(24, 148, 225);
+        background-color: rgba(24, 148, 225, 0.08);
+        color:#1894e1;
     }
 }
 
