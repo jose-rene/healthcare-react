@@ -1,25 +1,22 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import React, { useState, useMemo } from "react";
 import { isEmpty } from "lodash";
-
-import InputText from "../inputs/InputText";
-import Button from "../inputs/Button";
-import Select from "../inputs/Select";
+import InputText from "../inputs/ContextInput";
+import Select from "../contextInputs/Select";
 import PageAlert from "./PageAlert";
-
 import states from "../../config/States.json";
 import { BASE_URL, API_KEY } from "../../config/Map";
+import { Button } from "../index";
+import ZipcodeInput from "../inputs/ZipcodeInput";
+import { useFormContext } from "../../Context/FormContext";
+import AddressType from "./AddressType";
+import Checkbox from "../inputs/Checkbox";
 
-const AddressForm = ({
-    addressFormValue,
-    addressTypesOptions,
-    setAddressFormValue,
-}) => {
+const AddressForm = ({ addressTypesOptions }) => {
+    const { getValue, update } = useFormContext();
+    const address = getValue("address", {});
     const [alertMessage, setAlertMessage] = useState("");
     const [countyOptions, setCountyOptions] = useState([]);
-    const [addressFormData, setAddressFormData] = useState(null);
-
-    const { register, setValue, errors } = useForm();
+    const [lookingUpZipcode, setLookingUpZipcode] = useState(false);
 
     const statesOptions = useMemo(() => {
         if (isEmpty(states)) {
@@ -40,26 +37,12 @@ const AddressForm = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [states]);
 
-    useEffect(() => {
-        setAddressFormData({ ...addressFormData, ...addressFormValue });
-        if (!addressFormValue?.county) {
-            return;
-        }
+    const handleLookupZip = async () => {
+        setLookingUpZipcode(true);
 
-        setCountyOptions([
-            {
-                id: addressFormValue?.county,
-                title: addressFormValue?.county,
-                val: addressFormValue?.county,
-            },
-        ]);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [addressFormValue]);
-
-    const handleLookupZip = () => {
-        const { address_1, postal_code } = addressFormData;
+        const { address_1, postal_code } = address;
         setAlertMessage("");
+
         if (address_1 === null || address_1 === "") {
             setAlertMessage("Please input address!");
             return;
@@ -70,183 +53,124 @@ const AddressForm = ({
             return;
         }
 
-        fetch(`${BASE_URL}?key=${API_KEY}&address=${address_1} ${postal_code}`)
-            .then((response) => response.json())
-            .then((data) => {
-                if (!data?.results || !data.results[0].address_components) {
-                    setAlertMessage("Address not found");
-                    return;
-                }
+        try {
+            const { results = [] } = await fetch(
+                `${BASE_URL}?key=${API_KEY}&address=${address_1} ${postal_code}`
+            ).then((response) => response.json());
 
-                let addressTemp = {};
+            const { address_components } = results[0] || {};
 
-                data.results[0].address_components.forEach((v) => {
-                    if (v.types) {
-                        if (
-                            v.types.indexOf("administrative_area_level_1") !==
-                            -1
-                        ) {
-                            setValue("state", v.short_name);
-                            addressTemp = {
-                                ...addressTemp,
-                                state: v.short_name,
-                            };
-                        }
-                        if (
-                            v.types.indexOf("administrative_area_level_2") !==
-                            -1
-                        ) {
-                            setCountyOptions([
-                                {
-                                    id: v.short_name,
-                                    title: v.short_name,
-                                    val: v.short_name,
-                                },
-                            ]);
-                            setValue("county", v.short_name);
-                            addressTemp = {
-                                ...addressTemp,
-                                county: v.short_name,
-                            };
-                        }
-                        if (v.types.indexOf("locality") !== -1) {
-                            setValue("city", v.short_name);
-                            addressTemp = {
-                                ...addressTemp,
-                                city: v.short_name,
-                            };
-                        }
+            if (!address_components) {
+                setAlertMessage("Address not found");
+                return;
+            }
+
+            const addressTemp = {};
+
+            address_components.forEach((v) => {
+                const { short_name, types } = v || {};
+
+                if (types) {
+                    if (types.indexOf("administrative_area_level_1") !== -1) {
+                        addressTemp.state = short_name;
                     }
-                });
 
-                setAddressFormValue &&
-                    setAddressFormValue({
-                        ...addressFormData,
-                        ...addressTemp,
-                    });
+                    if (types.indexOf("administrative_area_level_2") !== -1) {
+                        setCountyOptions([
+                            {
+                                id: short_name,
+                                title: short_name,
+                                val: short_name,
+                            },
+                        ]);
 
-                setAddressFormData({
-                    ...addressFormData,
-                    ...addressTemp,
-                });
-            })
-            .catch((error) => {
-                setAlertMessage("Address fetch error!");
+                        addressTemp.county = short_name;
+                    }
+
+                    if (v.types.indexOf("locality") !== -1) {
+                        addressTemp.city = short_name;
+                    }
+                }
             });
-    };
 
-    const handleAddressFormData = ({ target: { name, value } }) => {
-        setAddressFormData({ ...addressFormData, [name]: value });
-        setAddressFormValue &&
-            setAddressFormValue({ ...addressFormData, [name]: value });
+            update("address", addressTemp);
+        } catch (error) {
+            setAlertMessage("Address fetch error!");
+        } finally {
+            setLookingUpZipcode(false);
+        }
     };
 
     return (
-        <div className="row">
-            {addressTypesOptions && (
+        <>
+            <div className="row">
                 <div className="col-md-6">
-                    <Select
-                        name="address_type_id"
-                        label="Type*"
+                    <AddressType
                         options={addressTypesOptions}
-                        errors={errors}
-                        value={addressFormValue?.address_type_id}
-                        ref={register({
-                            required: "Address Type is required",
-                        })}
-                        onChange={handleAddressFormData}
+                        name="address.address_type_id"
+                        label="Type*"
                     />
                 </div>
-            )}
 
-            <div className="col-md-12">
-                <InputText
-                    name="address_1"
-                    label="Address 1*"
-                    errors={errors}
-                    value={addressFormValue?.address_1}
-                    ref={register({
-                        required: "Address 1 is required",
-                    })}
-                    onChange={handleAddressFormData}
-                />
-            </div>
+                <div className="col-md-12">
+                    <InputText name="address.address_1" label="Address 1*" />
+                </div>
 
-            <div className="col-md-12">
-                <InputText
-                    name="address_2"
-                    label="Address 2"
-                    errors={errors}
-                    value={addressFormValue?.address_2}
-                    ref={register()}
-                    onChange={handleAddressFormData}
-                />
-            </div>
+                <div className="col-md-12">
+                    <InputText name="address.address_2" label="Address 2" />
+                </div>
 
-            {alertMessage && (
-                <PageAlert className="text-muted" timeout={5000} dismissible>
+                <PageAlert
+                    show={!!alertMessage}
+                    className="text-muted"
+                    timeout={5000}
+                    dismissible
+                >
                     {alertMessage}
                 </PageAlert>
-            )}
 
-            <div className="col-md-8">
-                <InputText
-                    name="postal_code"
-                    label="Zip*"
-                    errors={errors}
-                    value={addressFormValue?.postal_code}
-                    ref={register({
-                        required: "Zip is required",
-                    })}
-                    onChange={handleAddressFormData}
-                />
-            </div>
+                <div className="col-md-8">
+                    <ZipcodeInput name="address.postal_code" />
+                </div>
 
-            <div className="col-md-4">
-                <Button block onClick={handleLookupZip} size="lg">
-                    Lookup Zip
-                </Button>
-            </div>
+                <div className="col-md-4">
+                    <Button
+                        variant="primary"
+                        block
+                        onClick={handleLookupZip}
+                        size="lg"
+                        loading={lookingUpZipcode}
+                        label="Lookup Zip"
+                    />
+                </div>
 
-            <div className="col-md-6">
-                <InputText
-                    name="city"
-                    label="City*"
-                    errors={errors}
-                    value={addressFormValue?.city}
-                    ref={register({
-                        required: "City is required",
-                    })}
-                    onChange={handleAddressFormData}
-                />
-            </div>
+                <div className="col-md-6">
+                    <InputText name="address.city" label="City*" />
+                </div>
 
-            <div className="col-md-6">
-                <Select
-                    name="state"
-                    label="State*"
-                    options={statesOptions}
-                    errors={errors}
-                    value={addressFormValue?.state}
-                    ref={register({
-                        required: "State is required",
-                    })}
-                    onChange={handleAddressFormData}
-                />
-            </div>
+                <div className="col-md-6">
+                    <Select
+                        name="address.state"
+                        label="State*"
+                        options={statesOptions}
+                    />
+                </div>
 
-            <div className="col-md-6">
-                <Select
-                    name="county"
-                    label="County"
-                    options={countyOptions}
-                    errors={errors}
-                    value={addressFormValue?.county}
-                    ref={register()}
-                    onChange={handleAddressFormData}
-                />
+                <div className="col-md-6">
+                    <Select
+                        name="address.county"
+                        label="County"
+                        options={countyOptions}
+                    />
+                </div>
+
+                <div className="col-md-12">
+                    <div className="form-control custom-checkbox mt-0">
+                        <Checkbox labelLeft label="Primary" name="is_primary" />
+                    </div>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

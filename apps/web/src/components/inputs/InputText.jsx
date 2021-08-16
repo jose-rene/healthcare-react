@@ -1,9 +1,20 @@
 import React, { useMemo, forwardRef } from "react";
 import { has, set } from "lodash";
-import { InputGroup, Form } from "react-bootstrap";
+import { InputGroup, Form, FloatingLabel } from "react-bootstrap";
+import InputMask from "react-input-mask";
 
 const Base = ({ children }) => <div className="input-group">{children}</div>;
-Base.Input = forwardRef((props, ref) => <Form.Control {...props} ref={ref} />);
+
+Base.Input = forwardRef((props, ref) => {
+    const { mask } = props;
+
+    if (mask) {
+        return <InputMask {...props} ref={ref} />;
+    }
+
+    return <Form.Control custom {...props} ref={ref} />;
+});
+
 Base.Addon = ({ children, textProps, ...props }) => (
     <InputGroup.Append {...props}>
         <InputGroup.Text {...textProps}>{children}</InputGroup.Text>
@@ -57,7 +68,7 @@ const InputText = forwardRef((props, ref) => {
         set(attributes, "style.height", 56);
     }
 
-    attributes["onChange"] = handleOnChange;
+    attributes.onChange = handleOnChange;
 
     const renderHelpBlock = (help) => {
         if (!help) {
@@ -87,8 +98,8 @@ const InputText = forwardRef((props, ref) => {
 
     const { ...input_attributes } = attributes;
 
-    input_attributes["ref"] = ref;
-    input_attributes["isInvalid"] = error;
+    input_attributes.ref = ref;
+    input_attributes.isInvalid = error;
 
     // if (!input_attributes.value) input_attributes.value = '';
 
@@ -188,27 +199,21 @@ const InputText = forwardRef((props, ref) => {
                 </Base>
             );
         },
-        default: () => <Base.Input {...input_attributes} />,
+        default: () => {
+            // console.log("placeholder ", input_attributes.placeholder);
+            if (!input_attributes.placeholder) {
+                input_attributes.placeholder = " ";
+            }
+        },
     };
 
-    return !wrap ? (
-        <Base.Input {...input_attributes} />
-    ) : (
-        <div
-            className={`form-floating mb-3 ${outerClassReplace} ${outerClassName}`}
-        >
+    return (
+        <FloatingLabel id={id} label={label} className="mb-3">
             {typeMap[withIcon || "default"]()}
-            <label
-                htmlFor={attributes.id}
-                className="control-label"
-                {...label_attrs}
-                onDoubleClick={onLblDoubleClick}
-            >
-                {label}
-            </label>
+            <Base.Input {...input_attributes} />
             {renderHelpBlock(help)}
             {errorBlock}
-        </div>
+        </FloatingLabel>
     );
 });
 

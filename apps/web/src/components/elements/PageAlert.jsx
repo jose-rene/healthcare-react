@@ -6,10 +6,12 @@ import "../../styles/PageAlert.scss";
 /**
  * @link https://fontawesome.com/icons?d=gallery
  * @param variant [ 'primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark']
+ * @param className
  * @param children
  * @param show
  * @param dismissible
  * @param icon
+ * @param timeout
  * @param onClose
  * @returns {JSX.Element}
  */
@@ -46,10 +48,10 @@ const PageAlert = ({
         onClose();
     };
 
-    return _show ? (
+    return (
         <Alert
             variant={variant}
-            show={show}
+            show={_show}
             className={className}
             dismissible={dismissible}
             onClose={handleOnClose}
@@ -57,7 +59,7 @@ const PageAlert = ({
             {icon && <Icon alt={`alert-icon-${variant}`} icon={icon} />}
             <p>{children}</p>
         </Alert>
-    ) : null;
+    );
 };
 
 export default PageAlert;

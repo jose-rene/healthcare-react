@@ -1,19 +1,16 @@
 import React, { useMemo } from "react";
-import { useForm } from "react-hook-form";
 import { isEmpty } from "lodash";
-
 import Select from "../inputs/Select";
-import InputText from "../inputs/InputText";
+import InputText from "../inputs/ContextInput";
 import Button from "../inputs/Button";
-
 import types from "../../config/Types.json";
+import Form from "./Form";
 
 const ContactMethods = ({
     contactMethods,
     setContactMethods,
     setContactMethodsValue,
 }) => {
-    const { register, errors } = useForm();
 
     const typesOptions = useMemo(() => {
         if (isEmpty(types)) {
@@ -35,30 +32,31 @@ const ContactMethods = ({
     }, [types]);
 
     const renderContactMethods = () => {
-        return contactMethods.map(({ type, phone_email }) => (
-            <React.Fragment key={type}>
+        return contactMethods.map(({ type, phone_email }, index) => (
+            <div className="row" key={type}>
                 <div className="col-md-4">
                     <Select
-                        name={type}
+                        name={`${index}[${type}]`}
                         label="Type*"
                         options={typesOptions}
-                        errors={errors}
-                        ref={register({
-                            required: "Type is required",
-                        })}
-                        onChange={setContactMethodsValue}
+                        required
+                        //errors={errors}
+                        //ref={register({
+                        //    required: "Type is required",
+                        //})}
+                        //onChange={setContactMethodsValue}
                     />
                 </div>
 
                 <div className="col-md-4">
                     <InputText
-                        name={phone_email}
+                        name={`${index}[${phone_email}]`}
                         label="Phone/Email*"
-                        errors={errors}
-                        ref={register({
-                            required: "Phone/Email is required",
-                        })}
-                        onChange={setContactMethodsValue}
+                        //errors={errors}
+                        //ref={register({
+                        //    required: "Phone/Email is required",
+                        //})}
+                        //onChange={setContactMethodsValue}
                     />
                 </div>
 
@@ -73,16 +71,16 @@ const ContactMethods = ({
                         />
                     </div>
                 )}
-            </React.Fragment>
+            </div>
         ));
     };
 
     const addNewContactMethod = () => {
-        const len = contactMethods.length;
-        setContactMethods([
-            ...contactMethods,
-            { type: `type_${len}`, phone_email: `phone_email_${len}` },
-        ]);
+        const oldContactMethods = contactMethods;
+
+        oldContactMethods.push({});
+
+        setContactMethods(oldContactMethods);
     };
 
     const removeContactMethod = (type) => {
@@ -93,19 +91,26 @@ const ContactMethods = ({
         setContactMethods(filtered);
     };
 
+    const handleContactSave = (formData) => {
+        // TODO :: handleContactSave
+        console.log("handleContactSave", { formData });
+        //setContactMethods(formData);
+    };
+
     return (
-        <>
+        <Form onFormChange={handleContactSave}>
             {renderContactMethods()}
 
             <div className="col-md-12 mb-3">
                 <Button
-                    className="btn btn-block btn-add-method"
+                    variant="primary-outline"
+                    block
                     onClick={() => addNewContactMethod()}
                 >
                     + Add new contact method
                 </Button>
             </div>
-        </>
+        </Form>
     );
 };
 

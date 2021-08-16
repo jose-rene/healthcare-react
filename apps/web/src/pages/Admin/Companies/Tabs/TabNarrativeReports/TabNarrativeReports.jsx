@@ -7,6 +7,7 @@ import InputText from "components/inputs/InputText";
 import { validateImage } from "../../../../../helpers/validate";
 
 import EmailTemplate from "./EmailTemplate";
+import Form from "../../../../../components/elements/Form";
 
 const templates = [
     {
@@ -70,173 +71,175 @@ const TabNarrativeReports = () => {
     };
 
     return (
-        <div className="row">
-            <div className="col-md-5">
-                <div>
-                    <h2 className="box-outside-title">Criteria</h2>
-                    <div className="white-box mt-0">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Lacus sit aliquam, varius dignissim ut eu tortor egestas
-                        urna. Auctor donec ac dictumst neque. Sagittis, mattis
-                        mauris pulvinar diam ut odio curabitur. Et sit id nunc
-                        aliquet gravida scelerisque aliquet. Nunc interdum
-                        rutrum odio lorem porttitor ipsum scelerisque egestas
-                        odio. Purus tincidunt ultricies id risus aenean nam urna
-                        sit nulla. Et cras facilisis tempor sit pharetra.
+        <Form>
+            <div className="row">
+                <div className="col-md-5">
+                    <div>
+                        <h2 className="box-outside-title">Criteria</h2>
+                        <div className="white-box mt-0">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            Lacus sit aliquam, varius dignissim ut eu tortor egestas
+                            urna. Auctor donec ac dictumst neque. Sagittis, mattis
+                            mauris pulvinar diam ut odio curabitur. Et sit id nunc
+                            aliquet gravida scelerisque aliquet. Nunc interdum
+                            rutrum odio lorem porttitor ipsum scelerisque egestas
+                            odio. Purus tincidunt ultricies id risus aenean nam urna
+                            sit nulla. Et cras facilisis tempor sit pharetra.
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <h2 className="box-outside-title">Company Logo</h2>
-                    <div className="row white-box mt-0 ml-0">
-                        <div className="col-md-6 d-flex justify-content-center align-items-center">
-                            <div className="logo-img-container">
-                                <img
-                                    className="logo-img"
-                                    src="/images/dme-icon.svg"
-                                    alt=""
-                                    onClick={onPhotoUpload}
-                                />
-                                <div className="photo-icon-container">
+                    <div>
+                        <h2 className="box-outside-title">Company Logo</h2>
+                        <div className="row white-box mt-0 ml-0">
+                            <div className="col-md-6 d-flex justify-content-center align-items-center">
+                                <div className="logo-img-container">
                                     <img
-                                        src="/images/icons/camera.svg"
+                                        className="logo-img"
+                                        src="/images/dme-icon.svg"
                                         alt=""
+                                        onClick={onPhotoUpload}
+                                    />
+                                    <div className="photo-icon-container">
+                                        <img
+                                            src="/images/icons/camera.svg"
+                                            alt=""
+                                        />
+                                    </div>
+                                    <InputText
+                                        type="file"
+                                        name="file"
+                                        ref={hiddenFileInput}
+                                        onChange={onFileChange}
+                                        style={{
+                                            display: "none",
+                                        }}
                                     />
                                 </div>
-                                <InputText
-                                    type="file"
-                                    name="file"
-                                    ref={hiddenFileInput}
-                                    onChange={onFileChange}
-                                    style={{
-                                        display: "none",
-                                    }}
-                                />
                             </div>
-                        </div>
 
-                        <div className="col-md-6 d-flex justify-content-center align-items-center">
-                            <div className="logo-alert">
-                                <img
-                                    src="/images/icons/alert-circle.png"
-                                    alt=""
-                                />
+                            <div className="col-md-6 d-flex justify-content-center align-items-center">
+                                <div className="logo-alert">
+                                    <img
+                                        src="/images/icons/alert-circle.png"
+                                        alt=""
+                                    />
 
-                                <div className="text">
-                                    Recommended Picture Dimension is 124px x
-                                    124px
+                                    <div className="text">
+                                        Recommended Picture Dimension is 124px x
+                                        124px
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="col-md-7">
-                <Tabs
-                    defaultActiveKey={activeTab}
-                    className="inside-tabs position-relative"
-                    activeKey={activeTab}
-                    onSelect={handleTabs}
-                >
-                    <Tab eventKey="submissions" title="Submission">
-                        <div className="white-box mt-0">
-                            <div className="row">
-                                <div className="col-md-2">
+                <div className="col-md-7">
+                    <Tabs
+                        defaultActiveKey={activeTab}
+                        className="inside-tabs position-relative"
+                        activeKey={activeTab}
+                        onSelect={handleTabs}
+                    >
+                        <Tab eventKey="submissions" title="Submission">
+                            <div className="white-box mt-0">
+                                <div className="row">
+                                    <div className="col-md-2">
                                     <span className="submission-text">
                                         To: Email / Name
                                     </span>
+                                    </div>
+                                    <div className="col-md-10">
+                                        <InputText
+                                            className="submission-text-input"
+                                            name="to_email"
+                                            placeholder="vem@safelivingsolutionsllc.com"
+                                        />
+                                    </div>
                                 </div>
-                                <div className="col-md-10">
-                                    <InputText
-                                        className="submission-text-input"
-                                        name="to_email"
-                                        placeholder="vem@safelivingsolutionsllc.com"
-                                    />
-                                </div>
-                            </div>
 
-                            <div className="row">
-                                <div className="col-md-2">
+                                <div className="row">
+                                    <div className="col-md-2">
                                     <span className="submission-text">
                                         CC: Email / Name
                                     </span>
+                                    </div>
+                                    <div className="col-md-10">
+                                        <InputText
+                                            className="submission-text-input"
+                                            name="cc_email"
+                                            placeholder="test@safelivingsolutionsllc.com"
+                                        />
+                                    </div>
                                 </div>
-                                <div className="col-md-10">
-                                    <InputText
-                                        className="submission-text-input"
-                                        name="cc_email"
-                                        placeholder="test@safelivingsolutionsllc.com"
-                                    />
-                                </div>
-                            </div>
 
-                            <div className="row">
-                                <div className="col-md-2">
+                                <div className="row">
+                                    <div className="col-md-2">
                                     <span className="submission-text">
                                         BBC Email
                                     </span>
+                                    </div>
+                                    <div className="col-md-10">
+                                        <InputText
+                                            className="submission-text-input"
+                                            name="bbc_email"
+                                            placeholder="jerry@dme-cg.com"
+                                        />
+                                    </div>
                                 </div>
-                                <div className="col-md-10">
-                                    <InputText
-                                        className="submission-text-input"
-                                        name="bbc_email"
-                                        placeholder="jerry@dme-cg.com"
+
+                                <NavDropdown.Divider />
+
+                                {activeTemplates && (
+                                    <EmailTemplate
+                                        subject={activeTemplates[0].subject}
+                                        body={activeTemplates[0].body}
                                     />
-                                </div>
+                                )}
                             </div>
+                        </Tab>
 
-                            <NavDropdown.Divider />
+                        <Tab eventKey="template" title="Template">
+                            <div className="white-box mt-0">
+                                {activeTemplates && (
+                                    <EmailTemplate
+                                        subject={activeTemplates[0].subject}
+                                        body={activeTemplates[0].body}
+                                    />
+                                )}
+                            </div>
+                        </Tab>
 
-                            {activeTemplates && (
-                                <EmailTemplate
-                                    subject={activeTemplates[0].subject}
-                                    body={activeTemplates[0].body}
-                                />
-                            )}
-                        </div>
-                    </Tab>
-
-                    <Tab eventKey="template" title="Template">
-                        <div className="white-box mt-0">
-                            {activeTemplates && (
-                                <EmailTemplate
-                                    subject={activeTemplates[0].subject}
-                                    body={activeTemplates[0].body}
-                                />
-                            )}
-                        </div>
-                    </Tab>
-
-                    <Tab
-                        eventKey="actions"
-                        tabClassName="position-absolute actions-tab"
-                        title={
-                            <DropdownButton
-                                id="actions"
-                                title={activeDropdown}
-                                variant="default"
-                                className="tab-dropdown"
-                                onSelect={handleDropdown}
-                            >
-                                <Dropdown.Item
-                                    eventKey="Secure"
-                                    className="text-dark"
+                        <Tab
+                            eventKey="actions"
+                            tabClassName="position-absolute actions-tab"
+                            title={
+                                <DropdownButton
+                                    id="actions"
+                                    title={activeDropdown}
+                                    variant="default"
+                                    className="tab-dropdown"
+                                    onSelect={handleDropdown}
                                 >
-                                    Secure
-                                </Dropdown.Item>
-                                <Dropdown.Item
-                                    eventKey="Secure Email (Office 365)"
-                                    className="text-dark"
-                                >
-                                    Secure Email (Office 365)
-                                </Dropdown.Item>
-                            </DropdownButton>
-                        }
-                    />
-                </Tabs>
+                                    <Dropdown.Item
+                                        eventKey="Secure"
+                                        className="text-dark"
+                                    >
+                                        Secure
+                                    </Dropdown.Item>
+                                    <Dropdown.Item
+                                        eventKey="Secure Email (Office 365)"
+                                        className="text-dark"
+                                    >
+                                        Secure Email (Office 365)
+                                    </Dropdown.Item>
+                                </DropdownButton>
+                            }
+                        />
+                    </Tabs>
+                </div>
             </div>
-        </div>
+        </Form>
     );
 };
 

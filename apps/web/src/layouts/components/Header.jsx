@@ -2,7 +2,8 @@ import FapIcon from "components/elements/FapIcon";
 import React from "react";
 import { NavDropdown } from "react-bootstrap";
 import Icon from "../../components/elements/Icon";
-import Select from "../../components/inputs/Select";
+import Select from "../../components/contextInputs/Select";
+import Form from "../../components/elements/Form";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const PageHeader = ({
@@ -58,6 +59,21 @@ const PageHeader = ({
                         </>
                     }
                 >
+                    <Form>
+                        {roles && roles.length > 1 && (
+                            <>
+                                <NavDropdown.ItemText>
+                                    <Select
+                                        name="primaryRole"
+                                        label="Switch Role"
+                                        options={roles}
+                                        value={primaryRole}
+                                        onChange={handleRoleSwitch}
+                                    />
+                                </NavDropdown.ItemText>
+                            </>
+                        )}
+                    </Form>
                     <NavDropdown.Item>
                         <div className="d-flex align-items-center">
                             <Icon
@@ -75,7 +91,6 @@ const PageHeader = ({
                             </a>
                         </div>
                     </NavDropdown.Item>
-                    <NavDropdown.Divider />
                     <NavDropdown.Item>
                         <div className="d-flex align-items-center">
                             <Icon
@@ -93,28 +108,18 @@ const PageHeader = ({
                             </a>
                         </div>
                     </NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    {roles && roles.length > 1 && (
-                        <>
-                            <NavDropdown.ItemText>
-                                <Select
-                                    name="primaryRole"
-                                    placeholder="Switch Role"
-                                    options={roles}
-                                    value={primaryRole}
-                                    onChange={handleRoleSwitch}
-                                />
-                            </NavDropdown.ItemText>
-                            <NavDropdown.Divider />
-                        </>
-                    )}
                     <NavDropdown.Item>
                         <a
                             href="/"
                             onClick={logOut}
-                            className="dropdown-item"
+                            className="dropdown-item ps-0"
                             title="Logout"
                         >
+                            <Icon
+                                icon="logout"
+                                size="1x"
+                                className="header-icon"
+                            />
                             Logout
                         </a>
                     </NavDropdown.Item>

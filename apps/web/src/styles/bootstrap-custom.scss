@@ -37,6 +37,17 @@ $position-values: (
         max-width: 300px;
     }
 }
+
+.table {
+    .actions {
+        @extend .m-2;
+
+        .action {
+            @extend .me-2;
+            @extend .p-2;
+        }
+    }
+}
 // custom scss
 body {
     margin: 0;
@@ -103,9 +114,9 @@ body {
         display: none;
     }
 
-    .content-container {
-        padding-left: 0px;
-    }
+    //.content-container {
+    //    padding-left: 0px;
+    //}
 
     .content-box {
         padding: 32px 24px;

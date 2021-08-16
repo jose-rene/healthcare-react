@@ -30,6 +30,7 @@ const Icon = ({
     name = name.toLowerCase().trim();
 
     const map = {
+        logout: "sign-out-alt",
         alert: "exclamation-triangle",
         mail: "envelope",
         email: "envelope",

@@ -1,3 +1,5 @@
+import * as Yup from "yup";
+
 export const validateFile = (file) => {
     if (!file) {
         return "No File Found";
@@ -23,3 +25,5 @@ export const validateImage = (file) => {
     }
     return null;
 };
+
+export default Yup;
