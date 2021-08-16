@@ -1,3 +1,4 @@
+import FapIcon from "components/elements/FapIcon";
 import React from "react";
 import { NavDropdown } from "react-bootstrap";
 import Icon from "../../components/elements/Icon";
@@ -24,7 +25,7 @@ const PageHeader = ({
                         onClick={toggleMenu}
                         className="btn btn-outline ml-1"
                     >
-                        <Icon icon="bars" />
+                        <FapIcon icon="bars" />
                     </button>
                 </div>
                 <div className="header-search d-none d-lg-block">

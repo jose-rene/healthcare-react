@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { connect } from "react-redux";
+import { Button } from "react-bootstrap";
+import FapIcon from "../components/elements/FapIcon";
 import TimeoutModal from "../components/elements/TimeoutModal";
 import { signOut } from "../actions/authAction";
 import { INACTIVITY_TIMEOUT, LOGOUT_COUNTDOWN_TIME } from "../config/Login";
@@ -7,7 +9,8 @@ import { PUT } from "../config/URLs";
 import useApiCall from "../hooks/useApiCall";
 import useIdleTimeout from "../hooks/useIdleTimeout";
 import PageHeader from "./components/Header";
-import PageSidebar from "./components/Sidebar";
+import SidebarHealthplan from "./components/sidebar/SidebarHealthplan";
+import MenuHealthplan from "./components/menu/MenuHealthplan";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const PageLayout = ({
@@ -23,14 +26,19 @@ const PageLayout = ({
         timeout: INACTIVITY_TIMEOUT,
     });
 
-    const [{ showMenu }, setMenu] = useState({
-        showMenu: false,
-    });
+    // state for show mobile menu offcanvas
+    const [showMenu, setMenu] = useState(false);
 
     const toggleMenu = () => {
-        setMenu(() => ({
-            showMenu: !showMenu,
-        }));
+        setMenu(!showMenu);
+    };
+
+    const handleShowMenu = () => {
+        setMenu(true);
+    };
+
+    const handleCloseMenu = () => {
+        setMenu(false);
     };
 
     const logOut = async (e) => {
@@ -66,6 +74,12 @@ const PageLayout = ({
         }
     };
 
+    const [open, setOpen] = useState(true);
+    const toggleOpen = () => {
+        // console.log("toggle open");
+        setOpen(!open);
+    };
+
     return (
         <>
             <PageHeader
@@ -77,14 +91,59 @@ const PageLayout = ({
                 toggleMenu={toggleMenu}
                 handleRoleSwitch={handlePrimaryRoleChanged}
             />
-            <div className="container-fluid">
-                <PageSidebar
-                    logOut={logOut}
-                    primaryRole={primaryRole}
-                    abilities={abilities}
-                    showMenu={showMenu}
+            <div className="container-fluid d-flex p-0">
+                <div
+                    className={`collapse-sidebar d-none d-sm-block${
+                        open ? "" : " collapsed"
+                    }`}
+                >
+                    <div className="position-fixed d-flex flex-column h-100 min-vh-100">
+                        <SidebarHealthplan
+                            logOut={logOut}
+                            primaryRole={primaryRole}
+                            abilities={abilities}
+                            open={open}
+                        />
+                        <div className="mt-auto text-center">
+                            <Button
+                                variant="link"
+                                onClick={toggleOpen}
+                                className="p-0 border-0 text-center d-none d-lg-inline"
+                            >
+                                <span
+                                    className={`d-none mb-2 p-2 ${
+                                        open ? "d-lg-inline" : ""
+                                    }`}
+                                >
+                                    <FapIcon
+                                        icon="angle-double-left"
+                                        className="me-2"
+                                    />
+                                    <span>Collapse sidebar</span>
+                                </span>
+                                <FapIcon
+                                    icon="angle-double-right"
+                                    className={open ? "d-lg-none" : ""}
+                                />
+                            </Button>
+                            <Button
+                                variant="link"
+                                onClick={handleShowMenu}
+                                className="p-0 border-0 text-center d-lg-none"
+                            >
+                                <FapIcon icon="angle-double-right" />
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+                <MenuHealthplan
+                    show={showMenu}
+                    onHide={handleCloseMenu}
+                    backdrop
                 />
-                <div className="content-container">{children}</div>
+                <div className="p-2 flex-grow-1" style={{ marginTop: "80px" }}>
+                    {children}
+                </div>
             </div>
             <TimeoutModal
                 show={showTimeoutModal}
