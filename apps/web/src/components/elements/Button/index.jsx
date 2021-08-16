@@ -16,6 +16,7 @@ const Button = ({
     iconSize = undefined,
     disabled = false,
     loading = false,
+    size = "lg",
 }) => {
     const className = useMemo(() => {
         let cName = `btn ${classAppend}`;
@@ -59,16 +60,17 @@ const Button = ({
     return (
         <RButton
             variant="default"
+            size={size}
             // eslint-disable-next-line react/button-has-type
             type={type}
             onClick={onClick}
             disabled={disabled}
             className={className}
         >
-            {icon && <Icon className="me-3" icon={icon} size={iconSize} />}
+            {icon && <Icon className="me-3" icon={icon} size={iconSize || size} />}
             {renderedLabel}
             {loading && (
-                <Icon className="align-middle fa-spin ms-3">spinner</Icon>
+                <Icon className="align-middle fa-spin ms-3" size={iconSize || size}>spinner</Icon>
             )}
         </RButton>
     );

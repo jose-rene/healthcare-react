@@ -68,6 +68,7 @@ export default ({
         params: request_params = false,
         persist_changes = true,
         hasAuthedUrl: _hasAuthedUrl = hasAuthedUrl,
+        loadingTimeoutMS = 100, // resolves the call but keeps loading for a few MS makes page interactions look cleaner
         ...config_override
     } = {}) => {
         let _configs = config;
@@ -133,7 +134,9 @@ export default ({
             setLoading(false);
             throw err;
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, loadingTimeoutMS);
         }
     };
 

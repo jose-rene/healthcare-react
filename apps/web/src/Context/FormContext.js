@@ -38,6 +38,7 @@ const FormProvider = ({
     const [validated, setValidated] = useState(false);
     const [valid, setValid] = useState(false);
     const [validationRules, setValidationRules] = useState(validation);
+    const [formatDatas, setFormatDatas] = useState({});
     // const {scrollRef} = useContext(GlobalContext);
 
     const debouncedOnFormChange = useCallback(
@@ -158,8 +159,21 @@ const FormProvider = ({
         setValid(validCheck);
 
         if (validCheck && onSubmit) {
-            onSubmit(form);
+            let formValues = form;
+
+            // runs component pre submit data formatting
+            Object.keys(formatDatas).forEach((callbackName) => {
+                const callback = formatDatas[callbackName];
+
+                formValues = callback(formValues, getValue, callbackName);
+            });
+
+            onSubmit(formValues);
         }
+    };
+
+    const addFormatData = (name, action) => {
+        setFormatDatas(prev => ({ ...prev, [name]: action }));
     };
 
     const getValue = (key, defaultValue = "") => {
@@ -202,6 +216,7 @@ const FormProvider = ({
                 // functions
                 setForm,
                 onSubmit: handleFormSubmit,
+                addFormatData,
                 update,
                 onChange,
                 getValue,

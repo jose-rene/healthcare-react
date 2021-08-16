@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Tab } from "react-bootstrap";
-
 import PageLayout from "../../../layouts/PageLayout";
-
-import { Button } from "components";
-
 import TabCompanyInfo from "./Tabs/TabCompanyInfo";
 import TabNarrReports from "./Tabs/TabNarrativeReports/TabNarrativeReports";
 import TabRequestTypes from "./Tabs/TabRequestTypes";
@@ -21,125 +17,108 @@ import TabNotes from "./Tabs/TabNotes";
 import TabMisc from "./Tabs/TabMisc";
 
 import useApiCall from "../../../hooks/useApiCall";
-import Form from "../../../components/elements/Form";
+import PageTitle from "../../../components/PageTitle";
 
 const DetailCompanies = (props) => {
-    const handleBack = () => {
-        props.history.push("/admin/companies");
-    };
+    const {
+        match,
+        history,
+    } = props;
 
-    const company_id = props.history.location.pathname.split("/")[3];
+    const {
+        id: company_id = false,
+    } = match.params || {};
 
-    const [{ data }, companyDetailRequest] = useApiCall({
-        url: `/admin/payer/${company_id}`,
-    });
+    const [{ data, loading }, companyDetailRequest] = useApiCall();
 
-    const [udpateSuccess, setUpdateSuccess] = useState(false);
-    const [companyInfoActiveTab, setCompanyInfoActiveTab] = useState(
-        "contact-methods"
-    );
+    const [updateSuccess, setUpdateSuccess] = useState(false);
 
     useEffect(() => {
-        companyDetailRequest();
+        companyDetailRequest({
+            url: `/admin/payer/${company_id}`,
+        });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [udpateSuccess]);
+    }, []);
+
+    const handleBack = () => {
+        history.push("/admin/companies");
+    };
 
     return (
         <PageLayout>
-            <Form>
-                <div className="content-box">
-                    <div className="row d-flex justify-content-between p-3">
-                        <div className="d-flex">
-                            <Button
-                                icon="chevron-left"
-                                iconSize="sm"
-                                className="btn btn-sm mb-5 py-2 px-3"
-                                outline
-                                label="Back"
-                                onClick={() => handleBack()}
-                            />
+            {!loading && (<div className="content-box">
+                <PageTitle
+                    title={(company_id ? "Edit" : "Add") + " Company"}
+                    onBack={handleBack}
+                />
 
-                            <h1 className="box-title ml-4">Add Company</h1>
-                        </div>
+                <Tabs defaultActiveKey="companyInfo">
+                    <Tab eventKey="companyInfo" title="Company Info">
+                        <TabCompanyInfo
+                            company_id={company_id}
+                            data={data}
+                            updateSuccess={updateSuccess}
+                            setUpdateSuccess={setUpdateSuccess}
+                        />
+                    </Tab>
 
-                        <div className="d-flex">
-                            <Button
-                                className="btn btn-sm mb-5 py-2 px-3"
-                                label="Outcome Report"
-                                variant="secondary"
-                            />
-                        </div>
-                    </div>
+                    <Tab eventKey="narrReports" title="Narr.Reports">
+                        <TabNarrReports />
+                    </Tab>
 
-                    <Tabs defaultActiveKey="comapnyInfo">
-                        <Tab eventKey="comapnyInfo" title="Company Info">
-                            <TabCompanyInfo
-                                data={data}
-                                udpateSuccess={udpateSuccess}
-                                companyInfoActiveTab={companyInfoActiveTab}
-                                setCompanyInfoActiveTab={setCompanyInfoActiveTab}
-                                setUpdateSuccess={setUpdateSuccess}
-                            />
-                        </Tab>
+                    <Tab eventKey="requestTypes" title="Request Types">
+                        <TabRequestTypes />
+                    </Tab>
 
-                        <Tab eventKey="narrReports" title="Narr.Reports">
-                            <TabNarrReports />
-                        </Tab>
+                    <Tab eventKey="pricing" title="Pricing">
+                        <TabPricing />
+                    </Tab>
 
-                        <Tab eventKey="requestTypes" title="Request Types">
-                            <TabRequestTypes />
-                        </Tab>
+                    <Tab eventKey="criteria" title="Criteria">
+                        <TabCriteria />
+                    </Tab>
 
-                        <Tab eventKey="pricing" title="Pricing">
-                            <TabPricing />
-                        </Tab>
+                    <Tab eventKey="billing" title="Billing">
+                        <TabBilling />
+                    </Tab>
 
-                        <Tab eventKey="criteria" title="Criteria">
-                            <TabCriteria />
-                        </Tab>
+                    <Tab eventKey="therapyNetworks" title="Therapy Networks">
+                        <TabTherapyNetworks />
+                    </Tab>
 
-                        <Tab eventKey="billing" title="Billing">
-                            <TabBilling />
-                        </Tab>
+                    <Tab eventKey="reviewers" title="Reviewers">
+                        <TabReviewers />
+                    </Tab>
 
-                        <Tab eventKey="therapyNetworks" title="Therapy Networks">
-                            <TabTherapyNetworks />
-                        </Tab>
+                    <Tab eventKey="assocCompanies" title="Assoc.Companies">
+                        <TabAssocCompanies />
+                    </Tab>
 
-                        <Tab eventKey="reviewers" title="Reviewers">
-                            <TabReviewers />
-                        </Tab>
+                    <Tab
+                        eventKey="geographicFilters"
+                        title="Geographic Filters"
+                    >
+                        <TabGeographicFilters />
+                    </Tab>
 
-                        <Tab eventKey="assocCompanies" title="Assoc.Companies">
-                            <TabAssocCompanies />
-                        </Tab>
+                    <Tab eventKey="reports" title="Reports">
+                        <TabReports />
+                    </Tab>
 
-                        <Tab
-                            eventKey="geographicFilters"
-                            title="Geographic Filters"
-                        >
-                            <TabGeographicFilters />
-                        </Tab>
+                    <Tab eventKey="templates" title="Templates">
+                        <TabTemplates />
+                    </Tab>
 
-                        <Tab eventKey="reports" title="Reports">
-                            <TabReports />
-                        </Tab>
+                    <Tab eventKey="notes" title="Notes">
+                        <TabNotes />
+                    </Tab>
 
-                        <Tab eventKey="templates" title="Templates">
-                            <TabTemplates />
-                        </Tab>
-
-                        <Tab eventKey="notes" title="Notes">
-                            <TabNotes />
-                        </Tab>
-
-                        <Tab eventKey="misc" title="Misc">
-                            <TabMisc />
-                        </Tab>
-                    </Tabs>
-                </div>
-            </Form>
+                    <Tab eventKey="misc" title="Misc">
+                        <TabMisc />
+                    </Tab>
+                </Tabs>
+            </div>)}
         </PageLayout>
     );
 };

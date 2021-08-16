@@ -23,7 +23,7 @@ const PageSidebar = ({ logOut, primaryRole, abilities, showMenu }) => {
                 {checkMiddleware(
                     ["hp_user", "hp_manager", "hp_champion"], // need to change role with admin
                     primaryRole,
-                    abilities
+                    abilities,
                 ) && (
                     <li
                         className={
@@ -47,7 +47,7 @@ const PageSidebar = ({ logOut, primaryRole, abilities, showMenu }) => {
                 {checkMiddleware(
                     ["hp_user", "hp_manager", "hp_champion"], // need to change role with admin
                     primaryRole,
-                    abilities
+                    abilities,
                 ) && (
                     <li
                         className={
@@ -68,7 +68,7 @@ const PageSidebar = ({ logOut, primaryRole, abilities, showMenu }) => {
                 {checkMiddleware(
                     ["hp_user", "hp_manager", "hp_champion"], // need to change role with admin
                     primaryRole,
-                    abilities
+                    abilities,
                 ) && (
                     <li
                         className={
@@ -86,7 +86,7 @@ const PageSidebar = ({ logOut, primaryRole, abilities, showMenu }) => {
                 {checkMiddleware(
                     ["hp_user", "hp_manager", "hp_champion"],
                     primaryRole,
-                    abilities
+                    abilities,
                 ) && (
                     <li
                         className={
@@ -109,7 +109,7 @@ const PageSidebar = ({ logOut, primaryRole, abilities, showMenu }) => {
                 {checkMiddleware(
                     ["hp_user", "hp_manager", "hp_champion"],
                     primaryRole,
-                    abilities
+                    abilities,
                 ) && (
                     <li
                         className={

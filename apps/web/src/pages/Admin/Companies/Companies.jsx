@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { isEmpty } from "lodash";
-
 import PageLayout from "../../../layouts/PageLayout";
-
-import InputText from "components/inputs/InputText";
-import Select from "components/inputs/Select";
 import { Button } from "components";
 import Checkbox from "components/inputs/Checkbox";
 import Icon from "components/elements/Icon";
-
 import TableAPI from "components/elements/TableAPI";
 import Form from "components/elements/Form";
-
 import { ACTIONS } from "../../../helpers/table";
-
-import useSearch from "../../../hooks/useSearch";
 import useApiCall from "../../../hooks/useApiCall";
-
+import PageTitle from "../../../components/PageTitle";
+import TableSearchForm from "./TableSearchForm";
+import useSearch from "../../../hooks/useSearch";
+import useToast from "../../../hooks/useToast";
 import "../../../styles/companies.scss";
 
 const Companies = (props) => {
+    const { generalError } = useToast();
     const [
         {
             loading,
@@ -54,7 +50,7 @@ const Companies = (props) => {
             ),
             type: ACTIONS,
             disableSortBy: true,
-            formatter(company_id) {
+            formatter (company_id) {
                 return (
                     <Checkbox
                         inline
@@ -70,7 +66,7 @@ const Companies = (props) => {
             columnMap: "address",
             label: "Street",
             type: String,
-            formatter(address) {
+            formatter (address) {
                 return (
                     <span>
                         {address?.address_1} {address?.address_2}
@@ -89,47 +85,41 @@ const Companies = (props) => {
             label: "Actions",
             type: ACTIONS,
             disableSortBy: true,
-            formatter(id) {
+            formatter (id) {
                 return (
-                    <>
-                        <Link to={`/admin/company/${id}/edit`}>
+                    <div className="actions">
+                        <Link to={`/admin/company/${id}/edit`} className="action bg-primary text-white">
                             <Icon
                                 size="1x"
                                 icon="edit"
-                                className="me-2 bg-secondary text-white rounded-circle p-1"
                             />
                         </Link>
 
-                        <Link to={`/admin/company/${id}`}>
+                        <Link to={`/admin/company/${id}`} className="action  bg-info text-white">
                             <Icon
                                 size="1x"
                                 icon="info-circle"
-                                className="me-2 bg-secondary text-white rounded-circle p-1"
                             />
                         </Link>
-                    </>
+                    </div>
                 );
             },
         },
     ]);
 
-    const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
+    const [{ searchObj }, { updateSearchObj }] = useSearch(
         {
             searchObj: {
                 sortColumn: headers[0].columnMap,
                 sortDirection: "asc",
             },
-        }
+        },
     );
 
     useEffect(() => {
         setSearchStatus(false);
-    }, []);
 
-    useEffect(() => {
         requestCategoryData();
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -165,11 +155,10 @@ const Companies = (props) => {
             setSearchStatus(true);
             await fireDoSearch({ params });
         } catch (e) {
+            generalError();
             console.log(e);
         }
     };
-
-    const handleFormSubmit = (e) => redoSearch();
 
     const handleNewCompany = () => {
         props.history.push({
@@ -205,120 +194,52 @@ const Companies = (props) => {
     return (
         <PageLayout>
             <div className="content-box">
-                <div className="row px-3 pb-2 d-flex justify-content-between">
-                    <div className="d-flex">
-                        <h1 className="box-title mb-3 me-4">Companies</h1>
-                        <Button
-                            icon="plus"
-                            iconSize="sm"
-                            className="btn btn-sm mb-3"
-                            label="New"
-                            onClick={() => handleNewCompany()}
-                        />
-                    </div>
+                <PageTitle
+                    hideBack
+                    title="Companies"
+                    actions={[
+                        {
+                            icon: "plus",
+                            label: "New",
+                            onClick: handleNewCompany,
+                        },
+                    ]}
+                />
 
-                    <div className="d-flex">
-                        <div className="d-flex justify-content-between">
-                            <Button
-                                icon="copy"
-                                iconSize="sm"
-                                className="btn btn-sm mb-3 me-3"
-                                variant="secondary"
-                                label="Duplicate"
-                                onClick={() => handleDuplication()}
-                            />
+                <div className="mb-3">
+                    <Button
+                        icon="copy"
+                        size="sm"
+                        className="me-3 text-white p-2 px-4"
+                        variant="secondary"
+                        label="Duplicate"
+                        onClick={handleDuplication}
+                    />
 
-                            <Button
-                                icon="print"
-                                iconSize="sm"
-                                className="btn btn-sm mb-3 me-3"
-                                variant="secondary"
-                                label="Print"
-                                onClick={() => handlePrint()}
-                            />
-                        </div>
-                    </div>
+                    <Button
+                        icon="print"
+                        size="sm"
+                        className="me-3 text-white p-2 px-4"
+                        variant="secondary"
+                        label="Print"
+                        onClick={handlePrint}
+                    />
                 </div>
 
                 <div className="form-row">
                     <div className="col-md-12">
-                        <Form onSubmit={handleFormSubmit}>
-                            <div className="white-box white-box-small">
-                                <div className="row m-0">
-                                    <div className="col-md-3">
-                                        <InputText
-                                            name="name"
-                                            label="Name"
-                                            placeholder="Name"
-                                            onChange={formUpdateSearchObj}
-                                        />
-                                    </div>
+                        <Form
+                            onSubmit={redoSearch}
+                            defaultData={searchObj}
+                        >
 
-                                    <div className="col-md-3">
-                                        <InputText
-                                            name="street"
-                                            label="Street"
-                                            placeholder="000 Street Ln."
-                                            onChange={formUpdateSearchObj}
-                                        />
-                                    </div>
+                            <TableSearchForm
+                                categoryOptions={categoryOptions}
+                                subCategoryOptions={subCategoryOptions}
+                                loading={loading}
+                                redoSearch={redoSearch}
+                            />
 
-                                    <div className="col-md-3">
-                                        <InputText
-                                            name="city"
-                                            label="City"
-                                            placeholder="City Name"
-                                            onChange={formUpdateSearchObj}
-                                        />
-                                    </div>
-
-                                    <div className="col-md-3">
-                                        <InputText
-                                            name="zip"
-                                            label="ZIP"
-                                            placeholder="000000"
-                                            onChange={formUpdateSearchObj}
-                                        />
-                                    </div>
-
-                                    <div className="col-md-3">
-                                        <InputText
-                                            name="phone"
-                                            label="Phone"
-                                            placeholder="(000) 000-0000"
-                                            onChange={formUpdateSearchObj}
-                                        />
-                                    </div>
-
-                                    <div className="col-md-3">
-                                        <Select
-                                            name="category"
-                                            label="Category"
-                                            options={categoryOptions}
-                                            onChange={formUpdateSearchObj}
-                                        />
-                                    </div>
-
-                                    <div className="col-md-3">
-                                        <Select
-                                            name="subCategory"
-                                            label="Subcategory"
-                                            options={subCategoryOptions}
-                                            onChange={formUpdateSearchObj}
-                                        />
-                                    </div>
-
-                                    <div className="col-md-3 align-self-end">
-                                        <Button
-                                            type="submit"
-                                            disabled={loading}
-                                            className="btn btn-block btn-primary mb-md-3 py-2"
-                                        >
-                                            Search
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
                         </Form>
                     </div>
 
