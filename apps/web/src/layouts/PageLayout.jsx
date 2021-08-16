@@ -97,7 +97,7 @@ const PageLayout = ({
                         open ? "" : " collapsed"
                     }`}
                 >
-                    <div className="position-fixed d-flex flex-column h-100 min-vh-100">
+                    <div className="position-fixed d-flex flex-column h-100 min-vh-100 bg-white">
                         <SidebarHealthplan
                             logOut={logOut}
                             primaryRole={primaryRole}
