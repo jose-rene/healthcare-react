@@ -59,7 +59,7 @@ const PageHeader = ({
                         </>
                     }
                 >
-                    <Form>
+                    <Form defaultData={{ primaryRole }}>
                         {roles && roles.length > 1 && (
                             <>
                                 <NavDropdown.ItemText>
