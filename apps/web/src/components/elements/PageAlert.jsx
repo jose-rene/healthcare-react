@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Alert } from "react-bootstrap";
 import Icon from "./Icon";
 import "../../styles/PageAlert.scss";
+import FapIcon from "./FapIcon";
 
 /**
  * @link https://fontawesome.com/icons?d=gallery
@@ -56,7 +57,14 @@ const PageAlert = ({
             dismissible={dismissible}
             onClose={handleOnClose}
         >
-            {icon && <Icon alt={`alert-icon-${variant}`} icon={icon} />}
+            {icon && (
+                <FapIcon
+                    alt={`alert-icon-${variant}`}
+                    icon={icon}
+                    size="2x"
+                    className="me-2"
+                />
+            )}
             <p>{children}</p>
         </Alert>
     );

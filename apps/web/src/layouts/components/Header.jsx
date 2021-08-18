@@ -40,7 +40,10 @@ const PageHeader = ({
                     />
                     <span className="ms-1">Periscope</span>
                 </Navbar.Brand>
-                <div className="d-none d-sm-inline ps-sm-5">
+                <div
+                    className="d-none d-sm-inline"
+                    style={{ paddingLeft: "64px" }}
+                >
                     <InputGroup className="w-auto">
                         <InputGroup.Text
                             id="search-addon"

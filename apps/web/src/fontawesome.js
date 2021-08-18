@@ -18,6 +18,8 @@ import {
     faFileInvoice,
     faAngleDoubleRight,
     faAngleDoubleLeft,
+    faPlus,
+    faLightbulbOn,
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add(
@@ -37,7 +39,9 @@ library.add(
     faFileMedicalAlt,
     faFileInvoice,
     faAngleDoubleRight,
-    faAngleDoubleLeft
+    faAngleDoubleLeft,
+    faPlus,
+    faLightbulbOn
 );
 /*
 if (process.env.NODE_ENV === "development") {

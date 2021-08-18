@@ -18,7 +18,11 @@ const BroadcastAlert = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return !message ? null : <PageAlert variant="primary">{message}</PageAlert>;
+    return !message ? null : (
+        <PageAlert icon="lightbulb-on" variant="primary">
+            {message}
+        </PageAlert>
+    );
 };
 
 export default BroadcastAlert;
