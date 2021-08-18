@@ -33,15 +33,15 @@ const FapIcon = ({
         mail: "envelope",
         email: "envelope",
         cancel: "ban",
+        settings: "cog",
         loading: "spinner",
+        logout: "sign-out",
         delete: "times-circle",
     };
 
     const mappedIcon = map[name] || name;
     const mappedClass =
         mappedIcon === "spinner" || spin ? "fa-spin" : className;
-
-    console.log(`icon class ${mappedClass}`);
 
     return (
         <FontAwesomeIcon

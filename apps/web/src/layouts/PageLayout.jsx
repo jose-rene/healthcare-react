@@ -29,10 +29,6 @@ const PageLayout = ({
     // state for show mobile menu offcanvas
     const [showMenu, setMenu] = useState(false);
 
-    const toggleMenu = () => {
-        setMenu(!showMenu);
-    };
-
     const handleShowMenu = () => {
         setMenu(true);
     };
@@ -60,7 +56,7 @@ const PageLayout = ({
         method: PUT,
     });
 
-    const handlePrimaryRoleChanged = async ({ target: { name, value } }) => {
+    const handleRoleSwitch = async ({ target: { name, value } }) => {
         if (value !== primaryRole) {
             await fireSavePrimaryRole({
                 params: {
@@ -83,13 +79,15 @@ const PageLayout = ({
     return (
         <>
             <PageHeader
-                full_name={full_name}
-                avatar_url={avatar_url}
-                logOut={logOut}
-                primaryRole={primaryRole}
-                roles={roles}
-                toggleMenu={toggleMenu}
-                handleRoleSwitch={handlePrimaryRoleChanged}
+                {...{
+                    full_name,
+                    avatar_url,
+                    primaryRole,
+                    roles,
+                    handleShowMenu,
+                    handleRoleSwitch,
+                    logOut,
+                }}
             />
             <div className="container-fluid d-flex p-0">
                 <div
@@ -99,10 +97,7 @@ const PageLayout = ({
                 >
                     <div className="position-fixed d-flex flex-column h-100 min-vh-100 bg-white">
                         <SidebarHealthplan
-                            logOut={logOut}
-                            primaryRole={primaryRole}
-                            abilities={abilities}
-                            open={open}
+                            {...{ logOut, primaryRole, abilities, open }}
                         />
                         <div className="mt-auto text-center">
                             <Button
@@ -141,7 +136,7 @@ const PageLayout = ({
                     onHide={handleCloseMenu}
                     backdrop
                 />
-                <div className="p-2 flex-grow-1" style={{ marginTop: "80px" }}>
+                <div className="p-2 flex-grow-1" style={{ marginTop: "56px" }}>
                     {children}
                 </div>
             </div>

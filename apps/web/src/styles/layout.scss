@@ -61,6 +61,11 @@
 
 }
 
+.dropdown-item {
+    font-size: 14px;
+    color: rgba(43, 53, 61, 0.5);
+}
+
 .nav-link {
     border-left: 4px solid transparent;
     color: rgba(43, 53, 61, 0.5);
@@ -71,6 +76,21 @@
         background-color: rgba(24, 148, 225, 0.08);
         color:#1894e1;
     }
+}
+
+.navbar-light {
+    .navbar-brand {
+        color: #2b353d;
+        font-size: 1.0rem;
+        line-height: 30px;
+    }
+}
+
+.offcanvas-title {
+    color: #2b353d;
+    font-size: 1.0rem;
+    line-height: 30px;
+    font-weight:normal;
 }
 
 .search-input {

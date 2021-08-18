@@ -14,7 +14,16 @@ const MenuHealthplan = ({ logOut, primaryRole, abilities, ...props }) => {
     return (
         <Offcanvas {...props} style={{ zIndex: 1050 }}>
             <Offcanvas.Header closeButton>
-                <Offcanvas.Title>Periscope</Offcanvas.Title>
+                <Offcanvas.Title>
+                    <img
+                        src="/icon/apple-icon-60x60.png"
+                        width="30"
+                        height="30"
+                        className="d-inline-block align-top"
+                        alt="Periscope"
+                    />
+                    <span className="ms-1">Periscope</span>
+                </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
                 <Nav defaultActiveKey={page} className="flex-column">
