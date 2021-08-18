@@ -18,6 +18,7 @@ const MenuUser = ({
             data-testid="userinfo"
             className="ms-sm-auto"
             id="user-options"
+            align="end"
             title={
                 <>
                     <span className="d-none d-sm-inline">{full_name}</span>

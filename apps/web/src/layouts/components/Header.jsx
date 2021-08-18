@@ -25,7 +25,8 @@ const PageHeader = ({
                 <Button
                     variant="link"
                     onClick={handleShowMenu}
-                    className="p-0 border-0 d-sm-none"
+                    className="p-0 border-0 d-sm-none text-start"
+                    style={{ minWidth: "80px" }}
                 >
                     <FapIcon icon="bars" />
                 </Button>
