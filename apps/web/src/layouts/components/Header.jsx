@@ -2,18 +2,11 @@ import FapIcon from "components/elements/FapIcon";
 import React from "react";
 import {
     Container,
-    Nav,
     Navbar,
-    NavDropdown,
     Button,
     InputGroup,
     FormControl,
 } from "react-bootstrap";
-// import Input from "react-select/src/components/Input";
-import Form from "components/elements/Form";
-import InputText from "../../components/inputs/InputText";
-import Icon from "../../components/elements/Icon";
-import Select from "../../components/contextInputs/Select";
 import MenuUser from "./menu/MenuUser";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */

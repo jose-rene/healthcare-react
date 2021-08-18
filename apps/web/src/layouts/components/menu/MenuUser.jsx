@@ -1,7 +1,6 @@
 import React from "react";
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { NavDropdown } from "react-bootstrap";
 import FapIcon from "../../../components/elements/FapIcon";
-import Icon from "../../../components/elements/Icon";
 import Select from "../../../components/contextInputs/Select";
 import Form from "../../../components/elements/Form";
 

@@ -4,6 +4,7 @@ import "./styles/bootstrap-custom.scss";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { GlobalProvider } from "./Context/GlobalContext";
+import './fontawesome';
 
 ReactDOM.render(
     <React.StrictMode>
