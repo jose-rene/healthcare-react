@@ -1,9 +1,5 @@
 import React from "react";
-import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { fal } from "@fortawesome/pro-light-svg-icons";
-// @todo should only import icons that are used
-library.add(fal);
 
 /**
  * @link https://fontawesome.com/icons?d=gallery
@@ -20,6 +16,7 @@ library.add(fal);
  */
 const FapIcon = ({
     icon = undefined,
+    fixedWidth = undefined,
     size = "lg",
     spin = false,
     className = "",
@@ -33,7 +30,9 @@ const FapIcon = ({
         mail: "envelope",
         email: "envelope",
         cancel: "ban",
+        settings: "cog",
         loading: "spinner",
+        logout: "sign-out",
         delete: "times-circle",
     };
 
@@ -41,13 +40,12 @@ const FapIcon = ({
     const mappedClass =
         mappedIcon === "spinner" || spin ? "fa-spin" : className;
 
-    console.log(`icon class ${mappedClass}`);
-
     return (
         <FontAwesomeIcon
             icon={["fal", mappedIcon]}
             className={mappedClass}
-            size={size}
+            size={fixedWidth ? null : size}
+            fixedWidth
             {...props}
         />
     );

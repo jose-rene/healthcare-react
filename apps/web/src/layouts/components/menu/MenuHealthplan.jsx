@@ -12,7 +12,16 @@ const MenuHealthplan = ({ logOut, primaryRole, abilities, ...props }) => {
     return (
         <Offcanvas {...props} style={{ zIndex: 1050 }}>
             <Offcanvas.Header closeButton>
-                <Offcanvas.Title>Periscope</Offcanvas.Title>
+                <Offcanvas.Title>
+                    <img
+                        src="/icon/apple-icon-60x60.png"
+                        width="30"
+                        height="30"
+                        className="d-inline-block align-top"
+                        alt="Periscope"
+                    />
+                    <span className="ms-1">Periscope</span>
+                </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
                 <Nav defaultActiveKey={page} className="flex-column">
@@ -20,14 +29,14 @@ const MenuHealthplan = ({ logOut, primaryRole, abilities, ...props }) => {
                         href="/dashboard"
                         className="list-group-item border-end-0"
                     >
-                        <FapIcon icon="home" size="lg" className="me-2" />
+                        <FapIcon icon="home" className="me-2" fixedWidth />
                         <span className={textClass}>Home</span>
                     </Nav.Link>
                     <Nav.Link
                         href="/account"
                         className="list-group-item border-end-0"
                     >
-                        <FapIcon icon="user" size="lg" className="me-2" />
+                        <FapIcon icon="user" className="me-2" fixedWidth />
                         <span className={textClass}>Account</span>
                     </Nav.Link>
                     <Nav.Link
@@ -36,8 +45,8 @@ const MenuHealthplan = ({ logOut, primaryRole, abilities, ...props }) => {
                     >
                         <FapIcon
                             icon="book-reader"
-                            size="lg"
                             className="me-2"
+                            fixedWidth
                         />
                         <span className={textClass}>Training</span>
                     </Nav.Link>
@@ -47,8 +56,8 @@ const MenuHealthplan = ({ logOut, primaryRole, abilities, ...props }) => {
                     >
                         <FapIcon
                             icon="question-circle"
-                            size="lg"
                             className="me-2"
+                            fixedWidth
                         />
                         <span className={textClass}>Tech Support</span>
                     </Nav.Link>
@@ -58,8 +67,8 @@ const MenuHealthplan = ({ logOut, primaryRole, abilities, ...props }) => {
                     >
                         <FapIcon
                             icon="file-medical-alt"
-                            size="lg"
                             className="me-2"
+                            fixedWidth
                         />
                         <span className={textClass}>New Request</span>
                     </Nav.Link>
@@ -69,8 +78,8 @@ const MenuHealthplan = ({ logOut, primaryRole, abilities, ...props }) => {
                     >
                         <FapIcon
                             icon="file-invoice"
-                            size="lg"
                             className="me-2"
+                            fixedWidth
                         />
                         <span className={textClass}>Invoices</span>
                     </Nav.Link>

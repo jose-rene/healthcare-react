@@ -1,131 +1,73 @@
 import FapIcon from "components/elements/FapIcon";
 import React from "react";
-import { NavDropdown } from "react-bootstrap";
-import Icon from "../../components/elements/Icon";
-import Select from "../../components/contextInputs/Select";
-import Form from "../../components/elements/Form";
+import {
+    Container,
+    Navbar,
+    Button,
+    InputGroup,
+    FormControl,
+} from "react-bootstrap";
+import MenuUser from "./menu/MenuUser";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const PageHeader = ({
     full_name,
     avatar_url,
-    toggleMenu,
+    handleShowMenu,
     logOut,
     primaryRole,
     roles,
     handleRoleSwitch,
 }) => {
     return (
-        <div className="header d-flex">
-            <div className="align-items-center w-50 d-flex">
-                <img src="/images/logo-header.png" alt="" />
-
-                <div className="mobile-menu d-sm-none">
-                    <button
-                        type="button"
-                        onClick={toggleMenu}
-                        className="btn btn-outline ml-1"
-                    >
-                        <FapIcon icon="bars" />
-                    </button>
-                </div>
-                <div className="header-search d-none d-lg-block">
-                    <Icon icon="search" className="header-icon" />
-                    <input
-                        className="search-input"
-                        type="text"
-                        placeholder="What are you looking for?"
-                    />
-                </div>
-            </div>
-
-            <div className="d-flex w-50 align-items-center justify-content-end">
-                <a href="#">
-                    <Icon icon="notification" className="header-icon" />
-                </a>
-
-                <NavDropdown
-                    data-testid="userinfo"
-                    alignRight
-                    id="user-options"
-                    title={
-                        <>
-                            <img
-                                alt="Me"
-                                className="header-avatar"
-                                src={avatar_url || "/images/icons/user.png"}
-                            />
-                            {full_name}
-                        </>
-                    }
+        <Navbar bg="white" expand fixed="top" className="py-2">
+            <Container fluid className="px-3">
+                <Button
+                    variant="link"
+                    onClick={handleShowMenu}
+                    className="p-0 border-0 d-sm-none text-start"
+                    style={{ minWidth: "80px" }}
                 >
-                    <Form defaultData={{ primaryRole }}>
-                        {roles && roles.length > 1 && (
-                            <>
-                                <NavDropdown.ItemText>
-                                    <Select
-                                        name="primaryRole"
-                                        label="Switch Role"
-                                        options={roles}
-                                        value={primaryRole}
-                                        onChange={handleRoleSwitch}
-                                    />
-                                </NavDropdown.ItemText>
-                            </>
-                        )}
-                    </Form>
-                    <NavDropdown.Item>
-                        <div className="d-flex align-items-center">
-                            <Icon
-                                icon="user"
-                                size="1x"
-                                className="header-icon"
-                            />
-                            <a
-                                href="#"
-                                onClick={() => console.log("Manage Account!")}
-                                className="dropdown-item ps-0"
-                                title="Manage Account"
-                            >
-                                Manage Account
-                            </a>
-                        </div>
-                    </NavDropdown.Item>
-                    <NavDropdown.Item>
-                        <div className="d-flex align-items-center">
-                            <Icon
-                                icon="cog"
-                                size="1x"
-                                className="header-icon"
-                            />
-                            <a
-                                href="#"
-                                onClick={() => console.log("Settings!")}
-                                className="dropdown-item ps-0"
-                                title="Settings"
-                            >
-                                Settings
-                            </a>
-                        </div>
-                    </NavDropdown.Item>
-                    <NavDropdown.Item>
-                        <a
-                            href="/"
-                            onClick={logOut}
-                            className="dropdown-item ps-0"
-                            title="Logout"
+                    <FapIcon icon="bars" />
+                </Button>
+                <Navbar.Brand href="/dashboard" className="mx-auto m-sm-0">
+                    <img
+                        src="/icon/apple-icon-60x60.png"
+                        width="30"
+                        height="30"
+                        className="d-inline-block align-top"
+                        alt="Periscope"
+                    />
+                    <span className="ms-1">Periscope</span>
+                </Navbar.Brand>
+                <div className="d-none d-sm-inline ps-sm-5">
+                    <InputGroup className="w-auto">
+                        <InputGroup.Text
+                            id="search-addon"
+                            className="bg-white border-end-0"
                         >
-                            <Icon
-                                icon="logout"
-                                size="1x"
-                                className="header-icon"
-                            />
-                            Logout
-                        </a>
-                    </NavDropdown.Item>
-                </NavDropdown>
-            </div>
-        </div>
+                            <FapIcon icon="search" />
+                        </InputGroup.Text>
+                        <FormControl
+                            className="border-start-0"
+                            placeholder="What are you looking for?"
+                            aria-label="Search"
+                            aria-describedby="search-addon"
+                        />
+                    </InputGroup>
+                </div>
+                <MenuUser
+                    {...{
+                        full_name,
+                        avatar_url,
+                        logOut,
+                        primaryRole,
+                        roles,
+                        handleRoleSwitch,
+                    }}
+                />
+            </Container>
+        </Navbar>
     );
 };
 
