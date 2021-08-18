@@ -20,7 +20,7 @@ const PageHeader = ({
     handleRoleSwitch,
 }) => {
     return (
-        <Navbar bg="white" expand fixed="top" className="py-0">
+        <Navbar bg="white" expand fixed="top" className="py-2">
             <Container fluid className="px-3">
                 <Button
                     variant="link"

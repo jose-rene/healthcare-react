@@ -136,7 +136,7 @@ const PageLayout = ({
                     onHide={handleCloseMenu}
                     backdrop
                 />
-                <div className="p-2 flex-grow-1" style={{ marginTop: "56px" }}>
+                <div className="p-2 flex-grow-1" style={{ marginTop: "70px" }}>
                     {children}
                 </div>
             </div>

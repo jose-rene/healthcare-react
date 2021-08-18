@@ -13,8 +13,8 @@ const SidebarHealthplan = ({ logOut, primaryRole, abilities, open }) => {
     return (
         <Nav
             defaultActiveKey={page}
-            className="flex-column"
-            style={{ marginTop: "56px" }}
+            className="flex-column sidebar-hp"
+            style={{ marginTop: "70px" }}
         >
             <Nav.Link href="/dashboard">
                 <FapIcon icon="home" size="lg" className="me-2" />

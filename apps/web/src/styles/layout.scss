@@ -103,6 +103,12 @@
     min-width: 250px;
 }
 
+.sidebar-hp {
+    .nav-link {
+        padding: 1rem;
+    }
+}
+
 .search-input:focus {
     outline: none;
 }
