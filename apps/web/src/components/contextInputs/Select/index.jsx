@@ -19,7 +19,7 @@ const Select = (
         valueKey = "val",
         ...otherProps
     },
-    ref,
+    ref
 ) => {
     const { getValue, getError, onChange } = useFormContext();
 
@@ -36,16 +36,23 @@ const Select = (
         }
     };
 
-    const selectOptions = options.map(({ id, [valueKey]: optionValue, [labelKey]: optionLabel, ...otherProps }) => (
-        <option key={id} value={optionValue} {...otherProps}>
-            {optionLabel}
-        </option>
-    ));
+    const selectOptions = options.map(
+        ({
+            id,
+            [valueKey]: optionValue,
+            [labelKey]: optionLabel,
+            ...otherProps
+        }) => (
+            <option key={id} value={optionValue} {...otherProps}>
+                {optionLabel}
+            </option>
+        )
+    );
 
     const _wrapperClass = useMemo(() => {
-        let label = "mb-3 form-floating " + (
-            wrapperClass ? "wrapperClass" : "form-group"
-        );
+        let label =
+            "mb-3 form-floating " +
+            (wrapperClass ? "wrapperClass" : "form-group");
 
         if (inlineLabel) {
             label += " d-flex";
@@ -54,14 +61,14 @@ const Select = (
         return label;
     }, [wrapperClass, inlineLabel]);
 
-    const selectClass = useMemo(() => {
-        return `${inlineLabel ? "col " : ""}${
-            className ||
-            `form-control ${
-                hasError ? " is-invalid" : ""
-            } ${classNameAppend}`
-        }`;
-    }, [inlineLabel, className, hasError, classNameAppend]);
+    // const selectClass = useMemo(() => {
+    //     return `${inlineLabel ? "col " : ""}${
+    //         className ||
+    //         `form-control ${
+    //             hasError ? " is-invalid" : ""
+    //         } ${classNameAppend}`
+    //     }`;
+    // }, [inlineLabel, className, hasError, classNameAppend]);
 
     return (
         <div className={_wrapperClass}>

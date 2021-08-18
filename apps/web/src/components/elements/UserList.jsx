@@ -5,8 +5,6 @@ import "../../styles/RequestList.scss";
 import TableAPI from "./TableAPI";
 import UserTopSearch from "./UserTopSearch";
 
-/* eslint-disable no-nested-ternary */
-
 const List = () => {
     const headers = useMemo(
         () => [
@@ -48,30 +46,28 @@ const List = () => {
         []
     );
 
-    const [
-        { loading, data: { data = [], meta = {} } = {} },
-        fireCall,
-    ] = useApiCall({
-        url: "/user/search",
-        defaultData: [],
-        method: "post",
-    });
+    const [{ loading, data: { data = [], meta = {} } = {} }, fireCall] =
+        useApiCall({
+            url: "/user/search",
+            defaultData: [],
+            method: "post",
+        });
 
-    const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
-        {
-            searchObj: {
-                perPage: 10,
-                sortColumn: headers[1].columnMap,
-                sortDirection: "asc",
-            },
-        }
-    );
+    const [{ searchObj }, { updateSearchObj }] = useSearch({
+        searchObj: {
+            perPage: 10,
+            sortColumn: headers[1].columnMap,
+            sortDirection: "asc",
+        },
+    });
 
     const handleSearch = (_params = searchObj) => {
         const params = {
             ..._params,
             userSort: _params.sortColumn,
         };
+
+        updateSearchObj({ ...searchObj, ...params });
 
         delete params.sortColumn;
 
@@ -86,7 +82,7 @@ const List = () => {
 
     const handleTableChange = (params) => {
         // the table should update the search obj and fire the api call
-        updateSearchObj(params);
+        updateSearchObj({ ...searchObj, ...params });
 
         // this might feel redundant but the searchObj does not have the new
         // values from sorting and everything in time so this workaround helps
@@ -94,20 +90,10 @@ const List = () => {
         handleSearch({ ...searchObj, ...params });
     };
 
-    const resetSearch = () => {
-        const clear = { ...searchObj, ...{ page: 1, search: "" } };
-        updateSearchObj(clear);
-        handleSearch(clear);
-    };
-
     return (
         <>
-            <UserTopSearch
-                handleSearch={handleSearch}
-                updateSearchObj={formUpdateSearchObj}
-                searchObj={searchObj}
-                resetSearch={resetSearch}
-            />
+            <UserTopSearch handleSearch={handleSearch} searchObj={searchObj} />
+
             <TableAPI
                 label="Users"
                 searchObj={searchObj}

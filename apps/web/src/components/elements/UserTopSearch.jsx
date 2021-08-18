@@ -1,45 +1,39 @@
 import React from "react";
-import { Form } from "react-bootstrap";
-import { useForm } from "react-hook-form";
-import Button from "../inputs/Button";
-import InputText from "../inputs/InputText";
+import * as Yup from "yup";
 
-const UserTopSearch = ({
-    handleSearch,
-    updateSearchObj,
-    resetSearch,
-    searchObj,
-}) => {
-    const { register, handleSubmit, setValue, errors } = useForm();
-    const clearSearch = () => {
-        resetSearch();
-        setValue("search", "", { shouldValidate: false });
+import Form from "components/elements/Form";
+import Button from "components/inputs/Button";
+import ContextInput from "components/inputs/ContextInput";
+
+const UserTopSearch = ({ handleSearch, searchObj }) => {
+    const validation = {
+        search: {
+            yupSchema: Yup.string()
+                .required("Search value is required")
+                .min(3, "Search must be at least 3 characters"),
+        },
     };
+
     return (
         <div className="d-none d-sm-block mb-2">
-            <Form onSubmit={handleSubmit(handleSearch)}>
+            <Form
+                autocomplete={false}
+                defaultData={searchObj}
+                validation={validation}
+                onSubmit={handleSearch}
+            >
                 <div className="d-flex justify-content-between">
                     <div className="flex-fill px-2">
-                        <InputText
+                        <ContextInput
                             name="search"
-                            prepend="search"
-                            onClear={clearSearch}
-                            label=""
-                            errors={errors}
-                            defaultValue={searchObj.search}
-                            onChange={updateSearchObj}
-                            ref={register({
-                                required: "Search value is required",
-                                minLength: {
-                                    value: 3,
-                                    message:
-                                        "Search must be at least 3 characters",
-                                },
-                            })}
+                            label="Do the search"
+                            required
+                            small
                         />
                     </div>
+
                     <div className="ms-auto px-2">
-                        <Button type="submit" className="pt-1 pb-1">
+                        <Button type="submit" className="py-3">
                             Search
                         </Button>
                     </div>

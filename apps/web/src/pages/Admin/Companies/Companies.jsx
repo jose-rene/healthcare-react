@@ -50,7 +50,7 @@ const Companies = (props) => {
             ),
             type: ACTIONS,
             disableSortBy: true,
-            formatter (company_id) {
+            formatter(company_id) {
                 return (
                     <Checkbox
                         inline
@@ -66,7 +66,7 @@ const Companies = (props) => {
             columnMap: "address",
             label: "Street",
             type: String,
-            formatter (address) {
+            formatter(address) {
                 return (
                     <span>
                         {address?.address_1} {address?.address_2}
@@ -85,21 +85,21 @@ const Companies = (props) => {
             label: "Actions",
             type: ACTIONS,
             disableSortBy: true,
-            formatter (id) {
+            formatter(id) {
                 return (
                     <div className="actions">
-                        <Link to={`/admin/company/${id}/edit`} className="action bg-primary text-white">
-                            <Icon
-                                size="1x"
-                                icon="edit"
-                            />
+                        <Link
+                            to={`/admin/company/${id}/edit`}
+                            className="action bg-primary text-white"
+                        >
+                            <Icon size="1x" icon="edit" />
                         </Link>
 
-                        <Link to={`/admin/company/${id}`} className="action  bg-info text-white">
-                            <Icon
-                                size="1x"
-                                icon="info-circle"
-                            />
+                        <Link
+                            to={`/admin/company/${id}`}
+                            className="action  bg-info text-white"
+                        >
+                            <Icon size="1x" icon="info-circle" />
                         </Link>
                     </div>
                 );
@@ -107,19 +107,19 @@ const Companies = (props) => {
         },
     ]);
 
-    const [{ searchObj }, { updateSearchObj }] = useSearch(
-        {
-            searchObj: {
-                sortColumn: headers[0].columnMap,
-                sortDirection: "asc",
-            },
+    const [{ searchObj }, { updateSearchObj }] = useSearch({
+        searchObj: {
+            sortColumn: headers[0].columnMap,
+            sortDirection: "asc",
         },
-    );
+    });
 
     useEffect(() => {
         setSearchStatus(false);
 
         requestCategoryData();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -228,18 +228,13 @@ const Companies = (props) => {
 
                 <div className="form-row">
                     <div className="col-md-12">
-                        <Form
-                            onSubmit={redoSearch}
-                            defaultData={searchObj}
-                        >
-
+                        <Form onSubmit={redoSearch} defaultData={searchObj}>
                             <TableSearchForm
                                 categoryOptions={categoryOptions}
                                 subCategoryOptions={subCategoryOptions}
                                 loading={loading}
                                 redoSearch={redoSearch}
                             />
-
                         </Form>
                     </div>
 

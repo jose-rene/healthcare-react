@@ -1,7 +1,6 @@
 import React from "react";
 import { Row } from "react-bootstrap";
 import { Button } from "components";
-import AlertList from "components/elements/AlertList";
 import BroadcastAlert from "components/elements/BroadcastAlert";
 import RequestInfo from "components/elements/RequestInfo";
 import UserList from "components/elements/UserList";
@@ -14,7 +13,7 @@ const Home = () => {
             <BroadcastAlert />
             <div className="content-box">
                 <Row>
-                    <div className="col-lg-8">
+                    <div className="col-md-12">
                         <h1 className="box-title">Welcome to your Portal</h1>
 
                         <RequestInfo />
@@ -42,9 +41,6 @@ const Home = () => {
                             </div>
                         </div>
                         <UserList />
-                    </div>
-                    <div className="col-lg-4 mt-4 mt-lg-0">
-                        <AlertList />
                     </div>
                 </Row>
             </div>

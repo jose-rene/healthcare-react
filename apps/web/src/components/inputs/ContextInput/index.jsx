@@ -3,10 +3,11 @@ import { useFormContext } from "../../../Context/FormContext";
 import { Input } from "../../index";
 
 const ContextInput = ({ name, customRule, ...props }) => {
-    const { getValue, onChange, getError, editing, shouldShow, autocomplete } = useFormContext();
+    const { getValue, onChange, getError, editing, shouldShow, autocomplete } =
+        useFormContext();
 
-    if(autocomplete){
-        props.autocomplete = autocomplete === false? "off": autocomplete;
+    if (autocomplete) {
+        props.autocomplete = autocomplete === false ? "off" : autocomplete;
     }
 
     if (!editing && customRule && !shouldShow(customRule)) {
@@ -23,9 +24,7 @@ const ContextInput = ({ name, customRule, ...props }) => {
         props.error = errorMessage;
     }
 
-    return (
-        <Input name={name} {...props} />
-    );
+    return <Input name={name} {...props} />;
 };
 
 export default ContextInput;

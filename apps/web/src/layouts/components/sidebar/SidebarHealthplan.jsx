@@ -2,7 +2,6 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 import FapIcon from "../../../components/elements/FapIcon";
-import checkMiddleware from "../../../helpers/user";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const SidebarHealthplan = ({ logOut, primaryRole, abilities, open }) => {

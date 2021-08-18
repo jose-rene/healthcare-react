@@ -31,10 +31,8 @@ const AddCompanies = (props) => {
 
     useEffect(() => {
         if (props.history.location.state) {
-            const {
-                categoryOptions,
-                subCategoryOptions,
-            } = props.history.location.state;
+            const { categoryOptions, subCategoryOptions } =
+                props.history.location.state;
 
             setCategoryOptions(categoryOptions);
             setSubCategoryOptions(subCategoryOptions);
@@ -46,8 +44,6 @@ const AddCompanies = (props) => {
     };
 
     const handleSubmit = async (params) => {
-        console.log("handleSubmit", { params });
-        return false;
         try {
             const result = await postCompanyRequest({ params });
 
@@ -60,10 +56,7 @@ const AddCompanies = (props) => {
     return (
         <PageLayout>
             <Container fluid>
-                <PageTitle
-                    title="Add Company"
-                    onBack={handleBack}
-                />
+                <PageTitle title="Add Company" onBack={handleBack} />
 
                 <div className="col-md-6">
                     {formError && (

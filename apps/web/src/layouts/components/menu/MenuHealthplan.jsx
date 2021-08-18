@@ -2,13 +2,11 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { Nav, Offcanvas } from "react-bootstrap";
 import FapIcon from "../../../components/elements/FapIcon";
-import checkMiddleware from "../../../helpers/user";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const MenuHealthplan = ({ logOut, primaryRole, abilities, ...props }) => {
     const location = useLocation();
     const page = location.pathname ?? "";
-    // console.log(page);
     const textClass = "";
 
     return (
