@@ -23,7 +23,7 @@ const AddCompanyForm = ({ categoryOptions, subCategoryOptions }) => {
                     />
                 </div>
                 <div className="col-md-6 offset-md-3">
-                    {company_type == "1" && (
+                    {company_type === "1" && (
                         <Select
                             name="payer_category"
                             label="Payer Type"

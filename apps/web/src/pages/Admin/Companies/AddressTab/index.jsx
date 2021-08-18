@@ -25,7 +25,7 @@ const AddressTab = ({
             label: "Type",
             type: String,
             disableSortBy: true,
-            formatter ({ name }) {
+            formatter({ name }) {
                 return <span>{name}</span>;
             },
         },
@@ -34,7 +34,7 @@ const AddressTab = ({
             label: "Address",
             type: String,
             disableSortBy: true,
-            formatter (address_1, { address_2 }) {
+            formatter(address_1, { address_2 }) {
                 return (
                     <span>
                         {address_1} {address_2}
@@ -65,10 +65,7 @@ const AddressTab = ({
             label: "Actions",
             type: ACTIONS,
             disableSortBy: true,
-            formatter (
-                id,
-                address,
-            ) {
+            formatter(id, address) {
                 return (
                     <div className="actions">
                         <Icon
@@ -94,7 +91,10 @@ const AddressTab = ({
     const [deleteAddress, setDeleteAddress] = useState(null);
     const [editAddress, setEditAddress] = useState(null);
     const [addressUpdateStatus, setAddressUpdateStatus] = useState(false);
-    const [showDeleteAddressConfirmationModal, setShowDeleteAddressConfirmationModal] = useState(false);
+    const [
+        showDeleteAddressConfirmationModal,
+        setShowDeleteAddressConfirmationModal,
+    ] = useState(false);
 
     const [{ error: addressInfoError }, addressInfoUpdateRequest] = useApiCall({
         method: "put",
@@ -106,12 +106,10 @@ const AddressTab = ({
         url: `/admin/payer/${company_id}/address`,
     });
 
-    const [
-        { error: addressDeleteInfoError },
-        addressInfoDeleteRequest,
-    ] = useApiCall({
-        method: "delete",
-    });
+    const [{ error: addressDeleteInfoError }, addressInfoDeleteRequest] =
+        useApiCall({
+            method: "delete",
+        });
 
     const handleClose = () => {
         setEditAddress(false);
@@ -142,6 +140,7 @@ const AddressTab = ({
         setDeleteAddress({ id });
     };
 
+    /* eslint-disable */
     const handleUpdateAddress = async () => {
         try {
             const result = await addressInfoUpdateRequest({
@@ -158,6 +157,7 @@ const AddressTab = ({
             generalError();
         }
     };
+    /* eslint-enable */
 
     const handleAddressSave = async (params) => {
         try {
@@ -202,9 +202,7 @@ const AddressTab = ({
                 handleCancel={handleDeleteAddressCancel}
             />
 
-            <Modal
-                show={!!editAddress}
-            >
+            <Modal show={!!editAddress}>
                 <Form
                     className="form-row p-3"
                     defaultData={{ address: editAddress }}

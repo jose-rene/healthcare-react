@@ -13,29 +13,37 @@ const PageTitle = ({
         <div className="row d-flex justify-content-start align-content-center p-3 ps-0">
             <div className="d-flex">
                 {!hideBack && (
-                    <a
+                    <span
                         className="text-dark text-decoration-none me-3 pt-2"
-                        href="#"
                         onClick={onBack}
                     >
-                        <Icon icon="chevron-left" size="small" className="me-2" />
+                        <Icon
+                            icon="chevron-left"
+                            size="small"
+                            className="me-2"
+                        />
                         {backLabel}
-                    </a>
+                    </span>
                 )}
 
                 {children}
 
-                {title && <div className={`box-title ${!hideBack ? "ms-4" : ""}`}>{title}</div>}
+                {title && (
+                    <div className={`box-title ${!hideBack ? "ms-4" : ""}`}>
+                        {title}
+                    </div>
+                )}
 
-                {actions.map(a => (
-                    <a
+                {actions.map((a) => (
+                    <span
                         className="text-dark text-decoration-none ms-3 pt-2"
-                        href="#"
                         onClick={a.onClick}
                     >
-                        {a.icon && <Icon icon={a.icon} size="small" className="me-2" />}
+                        {a.icon && (
+                            <Icon icon={a.icon} size="small" className="me-2" />
+                        )}
                         {a.label}
-                    </a>
+                    </span>
                 ))}
             </div>
         </div>

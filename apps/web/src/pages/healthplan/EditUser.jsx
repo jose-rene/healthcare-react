@@ -76,7 +76,6 @@ const EditUser = () => {
         }
         try {
             const result = await fireSubmit({ params: formData });
-            // console.log("result-> ", result);
 
             if (result) {
                 setUserUpdated({ userUpdated: true });
@@ -86,7 +85,7 @@ const EditUser = () => {
             console.log("User create error:", e);
         }
     };
-    // console.log(user);
+
     return (
         <PageLayout>
             <BroadcastAlert />
@@ -143,20 +142,17 @@ const EditUser = () => {
                                                 },
                                                 {
                                                     id: "hp_finance",
-                                                    title:
-                                                        "Health Plan Finance",
+                                                    title: "Health Plan Finance",
                                                     val: "hp_finance",
                                                 },
                                                 {
                                                     id: "hp_champion",
-                                                    title:
-                                                        "Health Plan Champion",
+                                                    title: "Health Plan Champion",
                                                     val: "hp_champion",
                                                 },
                                                 {
                                                     id: "hp_manager",
-                                                    title:
-                                                        "Health Plan Manager",
+                                                    title: "Health Plan Manager",
                                                     val: "hp_manager",
                                                 },
                                             ]}
@@ -272,7 +268,7 @@ const EditUser = () => {
                                                 name="can_view_invoices"
                                                 id="can_view_invoices"
                                                 defaultChecked={userData.abilities.includes(
-                                                    "view-invoices",
+                                                    "view-invoices"
                                                 )}
                                                 ref={register()}
                                             />
