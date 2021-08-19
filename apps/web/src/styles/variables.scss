@@ -31,6 +31,19 @@ $btn-white-space: 2px;
 $table-accent-bg: #fff;
 
 $body-color: #2b353d;
+$border-radius: 0.5rem;
+$border-radius-lg: 0.5rem;
+
+$form-floating-height:            calc(3.0rem + 2px);
+$form-floating-line-height:       1.0;
+/*$form-floating-padding-x:       $input-padding-x;
+$form-floating-padding-y:         1rem;
+$form-floating-input-padding-t:   1.25rem;
+$form-floating-input-padding-b:   .625rem;
+$form-floating-label-opacity:     .65;
+$form-floating-label-transform:   scale(.85) translateY(-.5rem) translateX(.15rem);
+$form-floating-transition:        opacity .1s ease-in-out, transform .1s ease-in-out;
+*/
 
 $custom-colors: (
     'green': $green

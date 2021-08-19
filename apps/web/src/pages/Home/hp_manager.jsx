@@ -1,6 +1,5 @@
 import React from "react";
-import { Row } from "react-bootstrap";
-import AlertList from "components/elements/AlertList";
+import { Row, Col, Container } from "react-bootstrap";
 import BroadcastAlert from "components/elements/BroadcastAlert";
 import PageLayout from "../../layouts/PageLayout";
 import "../../styles/home.scss";
@@ -8,18 +7,19 @@ import "../../styles/home.scss";
 const Home = () => {
     return (
         <PageLayout>
-            <BroadcastAlert />
-            <div className="content-box">
+            <Container fluid>
                 <Row>
-                    <div className="col-lg-8">
-                        <h1 className="box-title">Welcome to your Portal</h1>
-                        <h3>Health Manager Dashboard</h3>
-                    </div>
-                    <div className="col-lg-4 mt-4 mt-lg-0">
-                        <AlertList />
-                    </div>
+                    <Col>
+                        <BroadcastAlert />
+                    </Col>
                 </Row>
-            </div>
+                <Row>
+                    <Col md={12}>
+                        <h1>Welcome to your Portal</h1>
+                        <h3>Health Plan Finance User Dashboard</h3>
+                    </Col>
+                </Row>
+            </Container>
         </PageLayout>
     );
 };

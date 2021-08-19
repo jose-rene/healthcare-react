@@ -20,6 +20,7 @@ import {
     faAngleDoubleLeft,
     faPlus,
     faLightbulbOn,
+    faChevronLeft,
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add(
@@ -41,7 +42,8 @@ library.add(
     faAngleDoubleRight,
     faAngleDoubleLeft,
     faPlus,
-    faLightbulbOn
+    faLightbulbOn,
+    faChevronLeft
 );
 /*
 if (process.env.NODE_ENV === "development") {

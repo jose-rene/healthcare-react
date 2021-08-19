@@ -1,9 +1,11 @@
 import React from "react";
 import * as Yup from "yup";
 
-import Form from "components/elements/Form";
-import Button from "components/inputs/Button";
-import ContextInput from "components/inputs/ContextInput";
+import { FloatingLabel } from "react-bootstrap";
+import RawInput from "../contextInputs/RawInput";
+import Form from "./Form";
+import Button from "../inputs/Button";
+import FapIcon from "./FapIcon";
 
 const UserTopSearch = ({ handleSearch, searchObj }) => {
     const validation = {
@@ -15,28 +17,30 @@ const UserTopSearch = ({ handleSearch, searchObj }) => {
     };
 
     return (
-        <div className="d-none d-sm-block mb-2">
+        <div className="mb-2">
             <Form
                 autocomplete={false}
                 defaultData={searchObj}
                 validation={validation}
                 onSubmit={handleSearch}
             >
-                <div className="d-flex justify-content-between">
-                    <div className="flex-fill px-2">
-                        <ContextInput
+                <div className="d-flex">
+                    <FloatingLabel label="Search Users" controlId="search">
+                        <RawInput
+                            id="search"
                             name="search"
-                            label="Do the search"
+                            placeholder="Search Users"
                             required
-                            small
+                            className="grouper-left"
                         />
-                    </div>
-
-                    <div className="ms-auto px-2">
-                        <Button type="submit" className="py-3">
-                            Search
-                        </Button>
-                    </div>
+                    </FloatingLabel>
+                    <Button
+                        id="btnSearch"
+                        className="grouper-right"
+                        type="submit"
+                    >
+                        <FapIcon icon="search" /> Search
+                    </Button>
                 </div>
             </Form>
         </div>
