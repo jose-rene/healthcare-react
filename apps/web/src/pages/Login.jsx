@@ -1,14 +1,14 @@
 import qs from "query-string";
 import React, { useRef, useState } from "react";
-import { Alert } from "react-bootstrap";
+import { Alert, Container, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import * as Yup from "yup";
-import { initializeUser } from "../actions/userAction";
-import useAuth from "../hooks/useAuth";
 import Form from "components/elements/Form";
 import ContextInput from "components/inputs/ContextInput";
 import SubmitButton from "components/elements/SubmitButton";
+import useAuth from "../hooks/useAuth";
+import { initializeUser } from "../actions/userAction";
 
 // this rule wants both the htmlFor and label nested, should be either not both
 /* eslint-disable jsx-a11y/label-has-associated-control */
@@ -66,63 +66,70 @@ const Login = ({
             autocomplete={false}
             defaultData={loginValues}
         >
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="col-md-6 pt-5">
+            <Container fluid>
+                <Row>
+                    <div className="col-md-6 pt-5 text-center">
                         <div className="text-center text-lg-left">
-                            <img alt="Logo" src="/images/logo.png" />
+                            <img
+                                alt="Logo"
+                                src="/images/logo-tag-600.png"
+                                style={{ maxWidth: "300px" }}
+                            />
                         </div>
 
-                        <h1 className="sign-in-title">Sign In</h1>
+                        <h2 className="my-4">Sign In</h2>
 
                         {action && (
                             <Alert className="mt-3" variant="success">
                                 Password Updated
                             </Alert>
                         )}
+                        <Row>
+                            <div className="col-lg-6 offset-lg-3">
+                                <ContextInput
+                                    label="Account"
+                                    name="email"
+                                    placeholder="Enter your email address"
+                                    required
+                                    large
+                                />
 
-                        <ContextInput
-                            label="Account"
-                            name="email"
-                            placeholder="Enter your email address"
-                            required
-                            large
-                        />
+                                <ContextInput
+                                    label="Password"
+                                    name="password"
+                                    type="password"
+                                    placeholder="Enter your password"
+                                    large
+                                />
 
-                        <ContextInput
-                            label="Password"
-                            name="password"
-                            type="password"
-                            placeholder="Enter your password"
-                            large
-                        />
+                                {error ? (
+                                    <Alert className="mt-3" variant="warning">
+                                        Error: {error}
+                                    </Alert>
+                                ) : null}
 
-                        <div className="mt-3">
-                            <Link
-                                to={`/password/reset?email=${
-                                    email.current || ""
-                                }`}
-                                className="btn-forgot-password"
-                            >
-                                Forgot my password
-                            </Link>
-                        </div>
-
-                        {error ? (
-                            <Alert className="mt-3" variant="warning">
-                                Error: {error}
-                            </Alert>
-                        ) : null}
-
-                        <SubmitButton
-                            title="Sign in"
-                            loading={loading || userLoading}
-                        />
+                                <div className="d-flex mt-3">
+                                    <Link
+                                        to={`/password/reset?email=${
+                                            email.current || ""
+                                        }`}
+                                        className="btn-forgot-password"
+                                    >
+                                        Forgot my password
+                                    </Link>
+                                    <SubmitButton
+                                        title="Sign in"
+                                        loading={loading || userLoading}
+                                        className="ms-auto"
+                                    />
+                                </div>
+                            </div>
+                        </Row>
                     </div>
 
                     <div className="d-none d-sm-none d-md-block col-md-6 col-no-padding login-bg" />
-                </div>
-            </div>
+                </Row>
+            </Container>
         </Form>
     );
 };

@@ -1,5 +1,6 @@
 import React from "react";
-import Icon from "../elements/Icon";
+import { Button } from "react-bootstrap";
+import FapIcon from "../elements/FapIcon";
 
 const PageTitle = ({
     title,
@@ -10,42 +11,33 @@ const PageTitle = ({
     actions = [],
 }) => {
     return (
-        <div className="row d-flex justify-content-start align-content-center p-3 ps-0">
-            <div className="d-flex">
-                {!hideBack && (
-                    <span
-                        className="text-dark text-decoration-none me-3 pt-2"
-                        onClick={onBack}
-                    >
-                        <Icon
-                            icon="chevron-left"
-                            size="small"
-                            className="me-2"
-                        />
-                        {backLabel}
-                    </span>
-                )}
+        <div className="d-flex mb-4">
+            {!hideBack && (
+                <Button
+                    variant="link"
+                    className="px-0 pb-1 me-4"
+                    onClick={onBack}
+                >
+                    <FapIcon icon="chevron-left" />
+                    {backLabel}
+                </Button>
+            )}
 
-                {children}
+            {children}
 
-                {title && (
-                    <div className={`box-title ${!hideBack ? "ms-4" : ""}`}>
-                        {title}
-                    </div>
-                )}
+            {title && <h2 className="py-0 m-0">{title}</h2>}
 
-                {actions.map((a) => (
-                    <span
-                        className="text-dark text-decoration-none ms-3 pt-2"
-                        onClick={a.onClick}
-                    >
-                        {a.icon && (
-                            <Icon icon={a.icon} size="small" className="me-2" />
-                        )}
-                        {a.label}
-                    </span>
-                ))}
-            </div>
+            {actions.map((a, i) => (
+                <Button
+                    key={i}
+                    variant="link"
+                    className="pb-0 pt-2 ms-2"
+                    onClick={a.onClick}
+                >
+                    {a.icon && <FapIcon icon={a.icon} />}
+                    {a.label}
+                </Button>
+            ))}
         </div>
     );
 };

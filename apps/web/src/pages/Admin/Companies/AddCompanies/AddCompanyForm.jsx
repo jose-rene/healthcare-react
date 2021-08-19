@@ -1,4 +1,5 @@
 import React from "react";
+import { Container, Row } from "react-bootstrap";
 import Select from "../../../../components/contextInputs/Select";
 import { Button } from "../../../../components";
 import { useFormContext } from "../../../../Context/FormContext";
@@ -10,8 +11,8 @@ const AddCompanyForm = ({ categoryOptions, subCategoryOptions }) => {
     } = useFormContext();
 
     return (
-        <>
-            <div className="row">
+        <Container fluid>
+            <Row>
                 <div className="col-md-6 offset-md-3">
                     <ContextInput name="name" label="Company Name" />
                 </div>
@@ -39,8 +40,8 @@ const AddCompanyForm = ({ categoryOptions, subCategoryOptions }) => {
                         label="Add"
                     />
                 </div>
-            </div>
-        </>
+            </Row>
+        </Container>
     );
 };
 

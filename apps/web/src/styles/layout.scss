@@ -53,10 +53,10 @@
 		-webkit-box-shadow: none;
 		-moz-box-shadow: none;
 		box-shadow: none;
-        color: rgba(43, 53, 61, 0.5);
+        color: rgba(43, 53, 61, 0.7);
 	}
     &:hover {
-        color: rgba(43, 53, 61, 0.5);
+        color: rgba(43, 53, 61, 0.7);
     }
 
 }
@@ -109,67 +109,31 @@
     }
 }
 
-.search-input:focus {
-    outline: none;
+/** 
+ * Floating label does not work with input group, nor are there plans to make that compatible
+ * these grouper classes can be added to left and right to make an input with addon
+ * https://github.com/twbs/bootstrap/discussions/32653
+ */
+
+.grouper-left {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
-.header-search {
-    margin-left: 65px;
+.grouper-right {
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    &.btn {
+        &:focus {
+            -webkit-box-shadow: none;
+		    -moz-box-shadow: none;
+		    box-shadow: none;
+        }
+    }
 }
-
-.header-icon {
-    margin-right: 15px;
-    max-width: 20px;
-    height: auto;
-}
-
-.content-box {
-    padding: 32px 44px;
-}
-
-.box-title {
-    color: #475866;
-    font-size: 32px;
-    font-weight: 600;
-    line-height: 38px;
-    margin-bottom: 15px;
-}
-
-.box-subtitle {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 29px;
-    color: #475866;
-    margin-bottom: 24px;
-}
-
-.box-same-line {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.white-box {
-    margin-top: 32px;
-    width: 100%;
-    background: #ffffff;
-    box-shadow: 0 30px 40px rgba(0, 0, 0, 0.04);
-    border-radius: 6px;
-    padding: 26px;
-}
-
-.white-box-small {
-    padding: 16px !important;
-    margin-top: 16px !important;
-}
-
-.no-margin-top {
-    margin-top: 0 !important;
-}
-
-.btn-icon {
-    padding: 0 5px;
+.form-floating > label {
+    padding: .75rem;
 }
 
 .inside-tabs {
@@ -194,55 +158,6 @@
             margin: 0 4px 0 4px;
         }
     }
-}
-
-.sidebar {
-    position: fixed;
-    background: white;
-    width: 100px;
-    height: calc(100vh - 80px);
-    margin-top: 80px;
-    z-index: 998;
-}
-
-.sidebar-items {
-    list-style-type: none;
-    padding: 60px 0 0 0;
-    height: calc(100% - 60px);
-    display: flex;
-    flex-direction: column;
-
-    > li {
-        text-align: center;
-
-        > a {
-            padding: 18px 0 18px 0;
-            display: block;
-        }
-
-        > a > img {
-            width: 25px;
-            height: auto;
-        }
-    }
-
-    > :last-child {
-        margin-top: auto;
-    }
-}
-
-.sidebar-items > li:hover,
-.sidebar-active {
-    background: #ebf5fd;
-    border-left: 5px solid #2e94e5 !important;
-
-    & img:first-child {
-        margin-left: -5px;
-    }
-}
-
-.content-container {
-    padding: 80px 0 0 100px;
 }
 
 .nav-tabs {

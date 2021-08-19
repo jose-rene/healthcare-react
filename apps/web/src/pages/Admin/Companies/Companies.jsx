@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { isEmpty } from "lodash";
-import PageLayout from "../../../layouts/PageLayout";
 import { Button } from "components";
 import Checkbox from "components/inputs/Checkbox";
 import Icon from "components/elements/Icon";
 import TableAPI from "components/elements/TableAPI";
 import Form from "components/elements/Form";
+import { Container } from "react-bootstrap";
+import PageLayout from "../../../layouts/PageLayout";
 import { ACTIONS } from "../../../helpers/table";
 import useApiCall from "../../../hooks/useApiCall";
 import PageTitle from "../../../components/PageTitle";
@@ -193,14 +194,14 @@ const Companies = (props) => {
 
     return (
         <PageLayout>
-            <div className="content-box">
+            <Container fluid>
                 <PageTitle
                     hideBack
                     title="Companies"
                     actions={[
                         {
                             icon: "plus",
-                            label: "New",
+                            label: "Add New",
                             onClick: handleNewCompany,
                         },
                     ]}
@@ -262,7 +263,7 @@ const Companies = (props) => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </Container>
         </PageLayout>
     );
 };
