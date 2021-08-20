@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Alert } from "react-bootstrap";
-import Icon from "./Icon";
-import "../../styles/PageAlert.scss";
+
 import FapIcon from "./FapIcon";
+
+import "../../styles/PageAlert.scss";
 
 /**
  * @link https://fontawesome.com/icons?d=gallery
