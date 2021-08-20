@@ -1,24 +1,23 @@
-import React, { useMemo } from "react";
-import { FormControl, Form } from "react-bootstrap";
+import React from "react";
+import { FormControl } from "react-bootstrap";
 import { useFormContext } from "../../../Context/FormContext";
 
 const RawInput = ({ name, customRule, type = "text", error, ...props }) => {
-    const { getValue, onChange, getError, editing, shouldShow, autocomplete } =
-        useFormContext();
+    const { getValue, onChange, getError, autocomplete } = useFormContext();
 
-    const errorBlock = useMemo(() => {
-        if (!error) {
-            return null;
-        }
+    // const errorBlock = useMemo(() => {
+    //     if (!error) {
+    //         return null;
+    //     }
 
-        return (
-            <Form.Control.Feedback type="invalid" className="error">
-                {error}
-            </Form.Control.Feedback>
-        );
+    //     return (
+    //         <Form.Control.Feedback type="invalid" className="error">
+    //             {error}
+    //         </Form.Control.Feedback>
+    //     );
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [error]);
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [error]);
 
     if (autocomplete) {
         props.autocomplete = autocomplete === false ? "off" : autocomplete;
