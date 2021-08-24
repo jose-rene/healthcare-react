@@ -9,7 +9,7 @@ const BootstrapWrap = ({ handleSubmit, children, bsFormProps = {} }) => {
         <BSForm
             noValidate
             method="post"
-            onSubmit={e => handleSubmit(e, onSubmit)}
+            onSubmit={(e) => handleSubmit(e, onSubmit)}
             {...bsFormProps}
         >
             {children}
@@ -27,7 +27,6 @@ const Form = ({
     bsFormProps = {},
     ...props
 }) => {
-
     const handleSubmit = (e, submit) => {
         e.preventDefault();
 
@@ -43,7 +42,11 @@ const Form = ({
             autocomplete={autocomplete}
             {...props}
         >
-            <BootstrapWrap handleSubmit={handleSubmit} autoComplete={autocomplete} bsFormProps={bsFormProps}>
+            <BootstrapWrap
+                handleSubmit={handleSubmit}
+                autoComplete={autocomplete}
+                bsFormProps={bsFormProps}
+            >
                 {children}
             </BootstrapWrap>
         </FormProvider>
