@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
-import { useForm } from "react-hook-form";
-
 import { Link } from "react-router-dom";
-import PageLayout from "../../layouts/PageLayout";
-import InputText from "components/inputs/InputText";
+import { Container, Row, Col } from "react-bootstrap";
+import * as Yup from "yup";
+
+import PageLayout from "layouts/PageLayout";
+
+import { Button } from "components";
+import PageTitle from "components/PageTitle";
+import ContextInput from "components/inputs/ContextInput";
 import PageAlert from "components/elements/PageAlert";
 import TableAPI from "components/elements/TableAPI";
-import { Button } from "components";
-import useToast from "../../hooks/useToast";
-import useApiCall from "../../hooks/useApiCall";
-import useSearch from "../../hooks/useSearch";
-import { ACTIONS } from "../../helpers/table";
-
-import "../../styles/healthplan.scss";
+import Form from "components/elements/Form";
 import Icon from "components/elements/Icon";
+
+import useToast from "hooks/useToast";
+import useApiCall from "hooks/useApiCall";
+import useSearch from "hooks/useSearch";
+
+import { ACTIONS } from "helpers/table";
+
+import "styles/healthplan.scss";
 
 const SearchMember = (props) => {
     const { generalError } = useToast();
@@ -74,7 +79,17 @@ const SearchMember = (props) => {
     ]);
     const [searchStatus, setSearchStatus] = useState(false);
 
-    const { register, handleSubmit, errors } = useForm();
+    const validation = {
+        first_name: {
+            yupSchema: Yup.string().required("First Name is required"),
+        },
+        last_name: {
+            yupSchema: Yup.string().required("Last Name is required"),
+        },
+        dob: {
+            yupSchema: Yup.string().required("Date of Birth is required"),
+        },
+    };
 
     useEffect(() => {
         setSearchStatus(false);
@@ -90,7 +105,6 @@ const SearchMember = (props) => {
             await memberSearch({ params });
             setSearchStatus(true);
         } catch (e) {
-            // console.log(e);
             generalError();
         }
     };
@@ -107,21 +121,17 @@ const SearchMember = (props) => {
         });
     };
 
-    const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
-        {
-            searchObj: {
-                sortColumn: headers[0].columnMap,
-                sortDirection: "asc",
-            },
-        }
-    );
+    const [{ searchObj }, { updateSearchObj }] = useSearch({
+        searchObj: {
+            sortColumn: headers[0].columnMap,
+            sortDirection: "asc",
+        },
+    });
 
     return (
         <PageLayout>
-            <div className="content-box">
-                <h1 className="box-title" style={{ marginBottom: "0px" }}>
-                    Enter New Request
-                </h1>
+            <Container fluid>
+                <PageTitle title="Enter New Request" hideBack />
 
                 {searchError ? (
                     <PageAlert
@@ -133,106 +143,87 @@ const SearchMember = (props) => {
                         Error: {searchError}
                     </PageAlert>
                 ) : null}
-                <div className="row">
-                    <div className="col-md-12">
-                        <div className="first-div mt-3">
-                            <div className="row m-0">
-                                <Form onSubmit={handleSubmit(handleSearch)}>
-                                    <div className="d-flex mb-1 flex-sm-row flex-column">
-                                        <div className="px-2 flex-grow-1">
-                                            <InputText
-                                                name="first_name"
-                                                placeholder="First Name"
-                                                value={
-                                                    searchObj.first_name || ""
-                                                }
-                                                errors={errors}
-                                                ref={register({
-                                                    required:
-                                                        "First Name is required",
-                                                })}
-                                                onChange={formUpdateSearchObj}
-                                            />
-                                        </div>
+                <Row>
+                    <Col xl={8}>
+                        <Form
+                            autocomplete={false}
+                            defaultData={searchObj}
+                            validation={validation}
+                            onSubmit={handleSearch}
+                            className="p-0"
+                        >
+                            <div className="d-flex w-100">
+                                <div className="pe-2 flex-grow-1">
+                                    <ContextInput
+                                        label="First Name"
+                                        name="first_name"
+                                        placeholder="First Name"
+                                        required
+                                        large
+                                    />
+                                </div>
 
-                                        <div className="px-2 flex-grow-1">
-                                            <InputText
-                                                name="last_name"
-                                                placeholder="Last Name"
-                                                value={
-                                                    searchObj.last_name || ""
-                                                }
-                                                errors={errors}
-                                                ref={register({
-                                                    required:
-                                                        "Last Name is required",
-                                                })}
-                                                onChange={formUpdateSearchObj}
-                                            />
-                                        </div>
+                                <div className="px-2 flex-grow-1">
+                                    <ContextInput
+                                        label="Last Name"
+                                        name="last_name"
+                                        placeholder="Last Name"
+                                        required
+                                        large
+                                    />
+                                </div>
 
-                                        <div className="px-2 flex-grow-1">
-                                            <InputText
-                                                name="dob"
-                                                placeholder="Date of Birth"
-                                                value={searchObj.dob || ""}
-                                                type="date"
-                                                errors={errors}
-                                                ref={register({
-                                                    required:
-                                                        "Date of Birth is required",
-                                                })}
-                                                onChange={formUpdateSearchObj}
-                                            />
-                                        </div>
+                                <div className="px-2">
+                                    <ContextInput
+                                        label="Date of Birth"
+                                        name="dob"
+                                        type="date"
+                                        required
+                                        large
+                                    />
+                                </div>
 
-                                        <div className="px-2 ml-auto">
-                                            <Button
-                                                className="px-3 py-1"
-                                                variant="primary"
-                                                label="Search"
-                                                type="submit"
-                                            />
-                                        </div>
-                                    </div>
-                                </Form>
-                            </div>
-                        </div>
-
-                        <div className="white-box white-box-small">
-                            <div className="row">
-                                <div className="col-md-12">
-                                    {!data.length && !searchStatus && (
-                                        <div className="no-result">
-                                            Please search to show results
-                                        </div>
-                                    )}
-                                    {searchStatus && (
-                                        <>
-                                            <TableAPI
-                                                searchObj={searchObj}
-                                                headers={headers}
-                                                data={data}
-                                                loading={loading}
-                                                dataMeta={meta}
-                                                onChange={handleTableChange}
-                                            />
-
-                                            <div className="d-flex justify-content-center">
-                                                <Button
-                                                    variant="primary"
-                                                    label="Add New Member"
-                                                    onClick={handleAddMember}
-                                                />
-                                            </div>
-                                        </>
-                                    )}
+                                <div className="px-1">
+                                    <Button
+                                        variant="primary"
+                                        label="Search"
+                                        type="submit"
+                                    />
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        </Form>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xl={11}>
+                        {!data.length && !searchStatus && (
+                            <div className="no-result">
+                                Please search to show results
+                            </div>
+                        )}
+                        {searchStatus && (
+                            <>
+                                <TableAPI
+                                    searchObj={searchObj}
+                                    headers={headers}
+                                    data={data}
+                                    loading={loading}
+                                    dataMeta={meta}
+                                    onChange={handleTableChange}
+                                />
+
+                                <div className="d-flex justify-content-center">
+                                    <Button
+                                        variant="primary"
+                                        label="Add New Member"
+                                        onClick={handleAddMember}
+                                    />
+                                </div>
+                            </>
+                        )}
+                    </Col>
+                </Row>
+            </Container>
         </PageLayout>
     );
 };

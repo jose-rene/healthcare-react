@@ -252,12 +252,12 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
 <thead>
   <tr>
     <th
-      className="text-left"
+      className="text-left align-middle"
     >
       Title
     </th>
     <th
-      className="c-pointer text-left"
+      className="c-pointer text-left align-middle"
       onClick={[Function]}
     >
       First Name
@@ -271,7 +271,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
       </span>
     </th>
     <th
-      className="c-pointer text-left"
+      className="c-pointer text-left align-middle"
       onClick={[Function]}
     >
       Last Name
@@ -285,7 +285,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
       </span>
     </th>
     <th
-      className="c-pointer text-left"
+      className="c-pointer text-left align-middle"
       onClick={[Function]}
     >
       Email
@@ -299,7 +299,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
       </span>
     </th>
     <th
-      className="c-pointer text-left"
+      className="c-pointer text-left align-middle"
       onClick={[Function]}
     >
       City
