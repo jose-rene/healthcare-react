@@ -1,5 +1,5 @@
 import React, { useMemo, forwardRef } from "react";
-import { has, set } from "lodash";
+import { has } from "lodash";
 import { InputGroup, Form, FloatingLabel } from "react-bootstrap";
 import InputMask from "react-input-mask";
 
@@ -39,7 +39,7 @@ const InputText = forwardRef((props, ref) => {
         value = "",
         // onLblDoubleClick = undefined,
         feedbackClassName,
-        large = false,
+        // large = false,
         onChange,
         ...others
     } = props;
@@ -64,9 +64,9 @@ const InputText = forwardRef((props, ref) => {
         ..._attributes,
     };
 
-    if (large) {
+    /* if (large) {
         set(attributes, "style.height", 56);
-    }
+    } */
 
     attributes.onChange = handleOnChange;
 

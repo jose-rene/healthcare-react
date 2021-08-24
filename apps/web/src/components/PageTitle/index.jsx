@@ -6,7 +6,8 @@ const PageTitle = ({
     title,
     hideBack = false,
     backLabel = "Back",
-    onBack,
+    onBack = null,
+    href = null,
     children,
     actions = [],
 }) => {
@@ -17,6 +18,7 @@ const PageTitle = ({
                     variant="link"
                     className="px-0 pb-1 me-4"
                     onClick={onBack}
+                    href={href}
                 >
                     <FapIcon icon="chevron-left" />
                     {backLabel}

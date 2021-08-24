@@ -61,19 +61,18 @@ const Select = (
         return label;
     }, [wrapperClass, inlineLabel]);
 
-    // const selectClass = useMemo(() => {
-    //     return `${inlineLabel ? "col " : ""}${
-    //         className ||
-    //         `form-control ${
-    //             hasError ? " is-invalid" : ""
-    //         } ${classNameAppend}`
-    //     }`;
-    // }, [inlineLabel, className, hasError, classNameAppend]);
+    const selectClass = useMemo(() => {
+        return `${inlineLabel ? "col " : ""}${
+            className ||
+            `form-control ${hasError ? " is-invalid" : ""} ${classNameAppend}`
+        }`;
+    }, [inlineLabel, className, hasError, classNameAppend]);
 
     return (
         <div className={_wrapperClass}>
             <FloatingLabel id={id} label={label}>
                 <Form.Select
+                    className={selectClass}
                     id={name}
                     name={name}
                     ref={ref}
@@ -89,7 +88,7 @@ const Select = (
                 </Form.Text>
             )}
             {hasError && (
-                <Form.Text className="invalid-feedback mt-3">
+                <Form.Text className="invalid-feedback d-block">
                     {message}
                 </Form.Text>
             )}
