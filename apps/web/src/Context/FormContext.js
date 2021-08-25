@@ -1,4 +1,11 @@
-import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
+import React, {
+    useContext,
+    useState,
+    useMemo,
+    createContext,
+    useEffect,
+    useCallback,
+} from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
 import { template } from "../helpers/string";
@@ -138,7 +145,7 @@ const FormProvider = ({
             }
         });
 
-        console.log({errorTest});
+        console.log({ errorTest });
 
         setErrors(errorTest);
 
@@ -173,7 +180,7 @@ const FormProvider = ({
     };
 
     const addFormatData = (name, action) => {
-        setFormatDatas(prev => ({ ...prev, [name]: action }));
+        setFormatDatas((prev) => ({ ...prev, [name]: action }));
     };
 
     const getValue = (key, defaultValue = "") => {
@@ -186,9 +193,13 @@ const FormProvider = ({
         setForm(() => oldForm);
     };
 
-    const onChange = ({ target: { name, value } }) => {
+    const onChange = ({ target: { name, value, type = "text" } }) => {
         const oldForm = { ...form };
-        set(oldForm, name, value);
+        if (type === "checkbox") {
+            set(oldForm, name, document.getElementById(name).checked);
+        } else {
+            set(oldForm, name, value);
+        }
         setForm(() => oldForm);
     };
 
