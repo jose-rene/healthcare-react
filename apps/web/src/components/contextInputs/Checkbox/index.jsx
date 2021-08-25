@@ -17,6 +17,7 @@ const Checkbox = ({ name, label = "", disableFn, ...otherProps }, ref) => {
                 name={name}
                 id={id}
                 value={value}
+                checked={disabled ? false : value}
                 ref={ref}
                 disabled={disabled}
                 onChange={onChange}

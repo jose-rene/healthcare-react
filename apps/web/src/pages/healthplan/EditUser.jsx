@@ -1,21 +1,28 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Form, Row } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Row, Col, Container } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { Button } from "components";
+import { get, isEmpty } from "lodash";
+import * as Yup from "yup";
+
 import BroadcastAlert from "components/elements/BroadcastAlert";
-import PageLayout from "../../layouts/PageLayout";
-import "../../styles/home.scss";
-import Select from "components/inputs/Select";
-import InputText from "components/inputs/InputText";
-import useApiCall from "../../hooks/useApiCall";
+import PageTitle from "components/PageTitle";
+import ContextSelect from "components/contextInputs/Select";
+import ContextInput from "components/inputs/ContextInput";
+import ContextCheckbox from "components/contextInputs/Checkbox";
+import FormButtons from "components/contextInputs/FormButtons";
+import Form from "components/elements/Form";
 import PageAlert from "components/elements/PageAlert";
-/* eslint-disable jsx-a11y/label-has-associated-control */
+
+import PageLayout from "layouts/PageLayout";
+
+import useApiCall from "hooks/useApiCall";
+
+import "styles/home.scss";
 
 const EditUser = () => {
     // get id from url
     const { id } = useParams();
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({});
     const [{ userUpdated }, setUserUpdated] = useState({ userUpdated: false });
     // history for go back
     const history = useHistory();
@@ -23,13 +30,12 @@ const EditUser = () => {
         method: "get",
         url: `user/${id}`,
     });
+
     // fetch the user data
     useEffect(() => {
         const fetch = async () => {
             try {
-                const result = await fetchUser();
-                setUser(result);
-                // console.log(result);
+                await fetchUser();
             } catch (e) {
                 console.log("User fetch error:", e);
             }
@@ -47,40 +53,81 @@ const EditUser = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useEffect(() => {
+        if (!isEmpty(userData)) {
+            setUser({
+                ...userData,
+                phone: userData.phone_primary,
+                can_view_invoices:
+                    userData?.abilities?.indexOf("view-invoices") !== -1
+                        ? true
+                        : false,
+                can_view_reports:
+                    userData?.abilities?.indexOf("view-reports") !== -1
+                        ? true
+                        : false,
+                can_create_users:
+                    userData?.abilities?.indexOf("create-users") !== -1
+                        ? true
+                        : false,
+            });
+        }
+    }, [userData]);
+
     // form handling
     const [{ loading, error: formError }, fireSubmit] = useApiCall({
         method: "put",
         url: `user/${id}`,
     });
-    // form handling
-    const { register, handleSubmit, watch, setValue, errors } = useForm();
-    // disable checkbox when user is champion (it's not applicable they have ability from the role)
-    const primaryRole = useRef();
-    primaryRole.current = watch(
-        "primary_role",
-        userData ? userData.primary_role : ""
-    );
 
-    if (primaryRole.current === "hp_champion") {
-        // make sure create user perm is checked
-        setValue("can_create_users", true);
-    }
+    const validation = {
+        primary_role: {
+            yupSchema: Yup.string().required("User Type is required"),
+        },
+        job_title: {
+            yupSchema: Yup.string()
+                .required("Job Title is required")
+                .min(2, "Job Title must be at least 2 character")
+                .max(64, "Job Title cannot be longer than 64 characters"),
+        },
+        first_name: {
+            yupSchema: Yup.string()
+                .required("First Name is required")
+                .min(2, "First Name must be at least 1 character")
+                .max(64, "First Name cannot be longer than 64 characters"),
+        },
+        last_name: {
+            yupSchema: Yup.string()
+                .required("Last Name is required")
+                .min(2, "Last Name must be at least 1 character")
+                .max(64, "Last Name cannot be longer than 64 characters"),
+        },
+        email: {
+            yupSchema: Yup.string()
+                .required("Email is required")
+                .email("Please enter a valid email"),
+        },
+        phone: {
+            yupSchema: Yup.string().required("Phone is required"),
+        },
+    };
 
     const onCancel = () => {
         history.goBack();
     };
 
     const onSubmit = async (formData) => {
+        setUserUpdated({ userUpdated: false });
         if (loading) {
             return false;
         }
+
         try {
             const result = await fireSubmit({ params: formData });
 
             if (result) {
                 setUserUpdated({ userUpdated: true });
             }
-            // reset();
         } catch (e) {
             console.log("User create error:", e);
         }
@@ -88,24 +135,11 @@ const EditUser = () => {
 
     return (
         <PageLayout>
-            <BroadcastAlert />
-            <div className="content-box">
+            <Container fluid>
+                <BroadcastAlert />
+                <PageTitle title="Edit User" onBack={() => history.goBack()} />
                 <Row>
-                    <div className="col-lg-12">
-                        <h1 className="box-title">
-                            <Button
-                                className="py-2 me-3"
-                                variant="warn"
-                                icon="chevron-left"
-                                iconSize="sm"
-                                onClick={() => history.goBack()}
-                            >
-                                Back
-                            </Button>
-                            Edit User
-                        </h1>
-                    </div>
-                    <div className="col-lg-6">
+                    <Col lg={6}>
                         {formError ? (
                             <PageAlert
                                 className="mt-3"
@@ -126,15 +160,20 @@ const EditUser = () => {
                                 User Successfully Updated.
                             </PageAlert>
                         ) : null}
-                        {user ? (
-                            <Form onSubmit={handleSubmit(onSubmit)}>
+                        {!isEmpty(user) ? (
+                            <Form
+                                autocomplete={false}
+                                defaultData={user}
+                                validation={validation}
+                                onSubmit={onSubmit}
+                            >
                                 <div className="form-row mb-3">
-                                    <div className="col-6">
-                                        <Select
+                                    <Col md={6}>
+                                        <ContextSelect
                                             name="primary_role"
                                             label="User Type"
-                                            defaultValue={user.primary_role}
                                             options={[
+                                                { id: "", title: "", val: "" },
                                                 {
                                                     id: "hp_user",
                                                     title: "Health Plan User",
@@ -156,198 +195,99 @@ const EditUser = () => {
                                                     val: "hp_manager",
                                                 },
                                             ]}
-                                            errors={errors}
-                                            ref={register({
-                                                required:
-                                                    "User Type is required",
-                                            })}
+                                            required
+                                            large
                                         />
-                                    </div>
-                                    <div className="col-6">
-                                        <InputText
-                                            name="job_title"
+                                    </Col>
+                                    <Col md={6}>
+                                        <ContextInput
                                             label="Job Title"
-                                            errors={errors}
-                                            defaultValue={user.job_title}
-                                            ref={register({
-                                                required:
-                                                    "Job Title is required",
-                                                minLength: {
-                                                    value: 2,
-                                                    message:
-                                                        "Job Title must be at least 2 character",
-                                                },
-                                                maxLength: {
-                                                    value: 64,
-                                                    message:
-                                                        "Job Title name cannot be longer than 64 characters",
-                                                },
-                                            })}
+                                            name="job_title"
+                                            placeholder="Enter your Job Title"
+                                            required
+                                            large
                                         />
-                                    </div>
-                                    <div className="col-6">
-                                        <InputText
-                                            name="first_name"
+                                    </Col>
+                                    <Col md={6}>
+                                        <ContextInput
                                             label="First Name"
-                                            errors={errors}
-                                            defaultValue={user.first_name}
-                                            ref={register({
-                                                required:
-                                                    "First Name is required",
-                                                minLength: {
-                                                    value: 1,
-                                                    message:
-                                                        "First name must be at least 1 character",
-                                                },
-                                                maxLength: {
-                                                    value: 64,
-                                                    message:
-                                                        "First name cannot be longer than 64 characters",
-                                                },
-                                            })}
+                                            name="first_name"
+                                            placeholder="Enter your First Name"
+                                            required
+                                            large
                                         />
-                                    </div>
-                                    <div className="col-6">
-                                        <InputText
-                                            name="last_name"
+                                    </Col>
+                                    <Col md={6}>
+                                        <ContextInput
                                             label="Last Name"
-                                            errors={errors}
-                                            defaultValue={user.last_name}
-                                            ref={register({
-                                                required:
-                                                    "Last Name is required",
-                                                minLength: {
-                                                    value: 1,
-                                                    message:
-                                                        "Last name must be at least 1 character",
-                                                },
-                                                maxLength: {
-                                                    value: 64,
-                                                    message:
-                                                        "Last name cannot be longer than 64 characters",
-                                                },
-                                            })}
+                                            name="last_name"
+                                            placeholder="Enter your Last Name"
+                                            required
+                                            large
                                         />
-                                    </div>
-                                    <div className="col-6">
-                                        <InputText
-                                            name="email"
+                                    </Col>
+                                    <Col md={6}>
+                                        <ContextInput
                                             label="Email"
-                                            type="email"
-                                            defaultValue={user.email}
-                                            errors={errors}
-                                            ref={register({
-                                                required: "Email is required",
-                                                pattern: {
-                                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                                    message:
-                                                        "Please enter a valid email address",
-                                                },
-                                            })}
+                                            name="email"
+                                            placeholder="Enter your Email"
+                                            required
+                                            large
                                         />
-                                    </div>
-                                    <div className="col-6">
-                                        <InputText
-                                            name="phone"
+                                    </Col>
+                                    <Col md={6}>
+                                        <ContextInput
                                             label="Phone"
-                                            errors={errors}
-                                            defaultValue={user.phone_primary}
-                                            ref={register({
-                                                required: "Phone is required",
-                                            })}
+                                            name="phone"
+                                            placeholder="Enter your Phone"
+                                            required
+                                            large
                                         />
-                                    </div>
-                                    <div className="col-12">
+                                    </Col>
+                                    <div className="col-md-12">
                                         <label className="form-label me-3">
                                             Permissions:
                                         </label>
                                         <div className="form-check form-check-inline">
-                                            <input
-                                                className="form-check-input"
-                                                type="checkbox"
+                                            <ContextCheckbox
                                                 name="can_view_invoices"
-                                                id="can_view_invoices"
-                                                defaultChecked={userData.abilities.includes(
-                                                    "view-invoices"
-                                                )}
-                                                ref={register()}
+                                                label="View Invoices"
                                             />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor="can_view_invoices"
-                                            >
-                                                View Invoices
-                                            </label>
                                         </div>
                                         <div className="form-check form-check-inline">
-                                            <input
-                                                className="form-check-input"
-                                                type="checkbox"
+                                            <ContextCheckbox
                                                 name="can_view_reports"
-                                                id="can_view_reports"
-                                                defaultChecked={userData.abilities.includes(
-                                                    "view-reports"
-                                                )}
-                                                ref={register()}
+                                                label="View Reports"
                                             />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor="can_view_reports"
-                                            >
-                                                View Reports
-                                            </label>
                                         </div>
                                         <div className="form-check form-check-inline">
-                                            <input
-                                                className="form-check-input"
-                                                type="checkbox"
+                                            <ContextCheckbox
                                                 name="can_create_users"
-                                                id="can_create_users"
-                                                defaultChecked={
-                                                    userData.abilities.includes(
-                                                        "create-users"
-                                                    ) ||
-                                                    primaryRole.current ===
-                                                        "hp_champion"
+                                                label="Manage Users"
+                                                disableFn={(formData) =>
+                                                    get(
+                                                        formData,
+                                                        "primary_role"
+                                                    ) === "hp_champion"
                                                 }
-                                                disabled={
-                                                    primaryRole.current ===
-                                                    "hp_champion"
-                                                }
-                                                ref={register()}
                                             />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor="can_create_users"
-                                            >
-                                                Manage Users
-                                            </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="form-row mb-3">
-                                    <div className="col-12">
-                                        <Button
-                                            className="py-2"
-                                            variant="secondary"
-                                            onClick={onCancel}
-                                        >
-                                            Cancel
-                                        </Button>
-                                        <Button
-                                            className="ml-3 py-2"
-                                            type="Submit"
-                                        >
-                                            Save
-                                        </Button>
-                                    </div>
+                                    <Col lg={6}>
+                                        <FormButtons
+                                            submitLabel="Save"
+                                            cancelLabel="Cancel"
+                                            onCancel={onCancel}
+                                        />
+                                    </Col>
                                 </div>
                             </Form>
                         ) : null}
-                    </div>
-                    <div className="col-lg-6" />
+                    </Col>
                 </Row>
-            </div>
+            </Container>
         </PageLayout>
     );
 };

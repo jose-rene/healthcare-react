@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import * as Yup from "yup";
+import { Container, Row, Col } from "react-bootstrap";
 import { get, isEmpty } from "lodash";
+import * as Yup from "yup";
 
 import PageLayout from "layouts/PageLayout";
 
@@ -11,12 +12,11 @@ import ContextSelect from "components/contextInputs/Select";
 import ContextCheckbox from "components/contextInputs/Checkbox";
 import FormButtons from "components/contextInputs/FormButtons";
 import Form from "components/elements/Form";
+import PageTitle from "components/PageTitle";
 
 import useApiCall from "hooks/useApiCall";
 
 import "styles/home.scss";
-import PageTitle from "components/PageTitle";
-import { Container, Row, Col } from "react-bootstrap";
 
 const AddUser = () => {
     const [{ loading, error: formError }, fireSubmit] = useApiCall({
