@@ -10,22 +10,16 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 // Import Bootstrap 5
 @import "~bootstrap/scss/bootstrap.scss";
 
-// configure floating labels for bootstrap 5
-$form-floating-height: add(3.5rem, $input-height-border);
-$form-floating-line-height: 1.25;
-$form-floating-padding-x: $input-padding-x;
-$form-floating-padding-y: 1rem;
-$form-floating-input-padding-t: 1.625rem;
-$form-floating-input-padding-b: .625rem;
-$form-floating-label-opacity: .65;
-$form-floating-label-transform: scale(.85) translateY(-.5rem) translateX(.15rem);
-$form-floating-transition: opacity .1s ease-in-out, transform .1s ease-in-out;
 $position-values: (
   0: 0,
   60: 60px,
   50: 50%,
   100: 100%
 );
+
+.form-floating {
+    .form-select {padding-bottom: 0.25rem;}
+}
 
 .btn{
     &.btn-primary, &.btn-green{
