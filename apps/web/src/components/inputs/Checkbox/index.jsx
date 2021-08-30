@@ -23,7 +23,7 @@ const Checkbox = (
     return (
         <div className={inline ? "form-check form-check-inline" : "form-group"}>
             {labelLeft === false && label &&
-            <Form.Label htmlFor={name}>{label}</Form.Label>}
+            <Form.Label htmlFor={name} className="pe-2">{label}</Form.Label>}
             <input
                 type="checkbox"
                 id={name}
@@ -39,7 +39,7 @@ const Checkbox = (
                 {...otherProps}
             />
             {labelLeft && label &&
-            <Form.Label htmlFor={name}>{label}</Form.Label>}
+            <Form.Label htmlFor={name} className="ps-2">{label}</Form.Label>}
             {helpText && (
                 <Form.Text className="text-muted form-text">
                     {helpText}

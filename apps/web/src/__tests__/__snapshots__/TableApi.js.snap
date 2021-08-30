@@ -2,17 +2,12 @@
 
 exports[`<TableAPI /> renders pagination with a select 1`] = `
 <div
-  className="form-group d-flex"
+  className="form-floating"
+  hasValidation={true}
 >
-  <label
-    className=" col pt-2 form-label"
-    htmlFor="page"
-  >
-    Page
-  </label>
   <select
-    autoComplete="page"
-    className="col form-control  "
+    aria-label="Page"
+    className="form-select"
     id="page"
     name="page"
     onChange={[Function]}
@@ -24,6 +19,14 @@ exports[`<TableAPI /> renders pagination with a select 1`] = `
       1
     </option>
   </select>
+  <div
+    className="invalid-feedback"
+  />
+  <label
+    htmlFor="page"
+  >
+    Page
+  </label>
 </div>
 `;
 
@@ -102,10 +105,10 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
   >
     <a
       className="page-link"
-      href="#"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"
+      tabIndex={0}
     >
       2
     </a>
@@ -115,10 +118,10 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
   >
     <a
       className="page-link"
-      href="#"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"
+      tabIndex={0}
     >
       3
     </a>
@@ -128,10 +131,10 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
   >
     <a
       className="page-link"
-      href="#"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"
+      tabIndex={0}
     >
       4
     </a>
@@ -141,10 +144,10 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
   >
     <a
       className="page-link"
-      href="#"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"
+      tabIndex={0}
     >
       5
     </a>
@@ -154,10 +157,10 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
   >
     <a
       className="page-link"
-      href="#"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"
+      tabIndex={0}
     >
       6
     </a>
@@ -167,10 +170,10 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
   >
     <a
       className="page-link"
-      href="#"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"
+      tabIndex={0}
     >
       7
     </a>
@@ -180,10 +183,10 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
   >
     <a
       className="page-link"
-      href="#"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"
+      tabIndex={0}
     >
       8
     </a>
@@ -193,10 +196,10 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
   >
     <a
       className="page-link"
-      href="#"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"
+      tabIndex={0}
     >
       9
     </a>
@@ -206,10 +209,10 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
   >
     <a
       className="page-link"
-      href="#"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"
+      tabIndex={0}
     >
       <span
         aria-hidden="true"
@@ -228,10 +231,10 @@ exports[`<TableAPI /> renders regular pagination 1`] = `
   >
     <a
       className="page-link"
-      href="#"
       onClick={[Function]}
       onKeyDown={[Function]}
       role="button"
+      tabIndex={0}
     >
       <span
         aria-hidden="true"
@@ -266,7 +269,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
         className="float-right ms-1"
       >
         <i
-          className=" icon fas fa-sort fa-1x "
+          className="icon fas fa-sort   fa-1x "
         />
       </span>
     </th>
@@ -280,7 +283,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
         className="float-right ms-1"
       >
         <i
-          className=" icon fas fa-sort fa-1x "
+          className="icon fas fa-sort   fa-1x "
         />
       </span>
     </th>
@@ -294,7 +297,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
         className="float-right ms-1"
       >
         <i
-          className=" icon fas fa-sort fa-1x "
+          className="icon fas fa-sort   fa-1x "
         />
       </span>
     </th>
@@ -308,7 +311,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
         className="float-right ms-1"
       >
         <i
-          className=" icon fas fa-sort fa-1x "
+          className="icon fas fa-sort   fa-1x "
         />
       </span>
     </th>

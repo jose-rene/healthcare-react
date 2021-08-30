@@ -145,8 +145,6 @@ const FormProvider = ({
             }
         });
 
-        console.log({ errorTest });
-
         setErrors(errorTest);
 
         // validation fails
@@ -235,6 +233,7 @@ const FormProvider = ({
                 clear,
                 shouldShow,
                 setEditing,
+                setValidated,
             }}
         >
             {children}

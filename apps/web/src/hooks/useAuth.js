@@ -3,6 +3,10 @@ import { useState } from "react";
 import { AUTH_TOKEN_NAME, POST } from "../config/URLs";
 import useApiCall from "./useApiCall";
 
+function AuthError () {}
+
+AuthError.prototype = new Error();
+
 const useAuth = () => {
     const [{ loading: userLoading }, fireLoadProfile] = useApiCall({
         url: "user/profile",
@@ -70,6 +74,8 @@ const useAuth = () => {
                     loading: false,
                     error: "Invalid Username / Password",
                 });
+
+                throw new AuthError;
             } else if (err.response.status === 422) {
                 let validationError = "Network Error [422]";
                 // eslint-disable-next-line no-restricted-syntax
@@ -184,3 +190,4 @@ const useAuth = () => {
 };
 
 export default useAuth;
+export { AuthError };

@@ -1,6 +1,4 @@
-import React from "react";
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faTrash, faAlert } from '@fortawesome/free-solid-svg-icons'
+import React, { useMemo } from "react";
 
 /**
  * @link https://fontawesome.com/icons?d=gallery
@@ -26,34 +24,41 @@ const Icon = ({
     stacked_className = "",
     ...props
 }) => {
-    let name = icon || children;
-    name = name.toLowerCase().trim();
+    const name = (icon || children).toLowerCase().trim();
 
-    const map = {
+    // Get the icon class details
+    const mappedIcon = useMemo(() => {
+        const map = {
         logout: "sign-out-alt",
-        alert: "exclamation-triangle",
-        mail: "envelope",
-        email: "envelope",
-        cancel: "ban",
-        loading: "spinner",
-        delete: "times-circle",
-    };
+            alert: "exclamation-triangle",
+            mail: "envelope",
+            email: "envelope",
+            cancel: "ban",
+            loading: "spinner",
+            delete: "times-circle",
+        };
 
-    const mappedIcon = map[name] || name;
-    if (name === "spinner" && !className) {
-        className = "fa-spin";
-    }
+        if (name === "spinner" && !className) {
+            className = "fa-spin";
+        }
 
-    const mainIcon = (
-        <i
-            className={`${className} icon fa${iconType} fa-${mappedIcon
-                .toLowerCase()
-                .trim()} ${
-                stacked ? "fa-stack-1x" : `fa-${size} ${spin ? "fa-spin" : ""}`
-            }`}
-            {...props}
-        />
-    );
+        const iconName = (map[name] || name).toLowerCase().trim();
+        return `icon fa${iconType} fa-${iconName} ${className}`;
+    }, [name, className]);
+
+    // if the icon is a spinner make sure it has the spin animation
+    const spinning = useMemo(() => {
+        return spin ? "fa-spin" : "";
+    }, [spin]);
+
+    // how large is the icon
+    const iconSize = useMemo(() => {
+        return stacked ?
+            "fa-stack-1x" :
+            `fa-${size} ${spinning}`;
+    }, [size, spinning, stacked]);
+
+    const mainIcon = (<i className={`${mappedIcon}  ${iconSize}`}{...props} />);
 
     return stacked ? (
         <span className="fa-stack">

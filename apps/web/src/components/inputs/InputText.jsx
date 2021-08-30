@@ -12,7 +12,7 @@ Base.Input = forwardRef((props, ref) => {
         return <InputMask {...props} ref={ref} />;
     }
 
-    return <Form.Control custom {...props} ref={ref} />;
+    return <Form.Control {...props} ref={ref} />;
 });
 
 Base.Addon = ({ children, textProps, ...props }) => (

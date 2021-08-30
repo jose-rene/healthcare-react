@@ -38,6 +38,7 @@ class MyUserResource extends JsonResource
         $abilities = $this->getAbilities();
 
         return [
+            'title'              => $this->title,
             'full_name'          => $this->name,
             'first_name'         => $this->first_name,
             'middle_name'        => $this->middle_name,
