@@ -59,17 +59,11 @@ const EditUser = () => {
                 ...userData,
                 phone: userData.phone_primary,
                 can_view_invoices:
-                    userData?.abilities?.indexOf("view-invoices") !== -1
-                        ? true
-                        : false,
+                    userData?.abilities?.indexOf("view-invoices") !== -1,
                 can_view_reports:
-                    userData?.abilities?.indexOf("view-reports") !== -1
-                        ? true
-                        : false,
+                    userData?.abilities?.indexOf("view-reports") !== -1,
                 can_create_users:
-                    userData?.abilities?.indexOf("create-users") !== -1
-                        ? true
-                        : false,
+                    userData?.abilities?.indexOf("create-users") !== -1,
             });
         }
     }, [userData]);
@@ -196,7 +190,6 @@ const EditUser = () => {
                                                 },
                                             ]}
                                             required
-                                            large
                                         />
                                     </Col>
                                     <Col md={6}>

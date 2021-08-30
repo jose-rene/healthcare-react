@@ -50,9 +50,9 @@ const Select = (
     );
 
     const _wrapperClass = useMemo(() => {
-        let label =
-            "mb-3 form-floating " +
-            (wrapperClass ? "wrapperClass" : "form-group");
+        let label = `mb-3 form-floating ${
+            wrapperClass ? "wrapperClass" : "form-group"
+        }`;
 
         if (inlineLabel) {
             label += " d-flex";
@@ -63,8 +63,7 @@ const Select = (
 
     const selectClass = useMemo(() => {
         return `${inlineLabel ? "col " : ""}${
-            className ||
-            `form-control ${hasError ? " is-invalid" : ""} ${classNameAppend}`
+            className || `${hasError ? "is-invalid" : ""} ${classNameAppend}`
         }`;
     }, [inlineLabel, className, hasError, classNameAppend]);
 
