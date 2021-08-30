@@ -11,6 +11,7 @@ const SubmitButton = ({
 
     return (
         <Button
+            iconSize={"1x"}
             type="submit"
             label={title}
             disabled={disabled || loading}

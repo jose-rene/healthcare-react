@@ -1,38 +1,42 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import { Col, Row, Form } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import { Col, Row } from "react-bootstrap";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import InputText from "components/inputs/InputText";
-import Select from "components/inputs/Select";
+import InputText from "components/inputs/ContextInput";
 import { Button } from "components";
-import Checkbox from "components/inputs/Checkbox";
+import Checkbox from "components/inputs/Checkbox/ContextCheckbox";
 import Icon from "components/elements/Icon";
 import PageAlert from "components/elements/PageAlert";
 import ConfirmationModal from "components/elements/ConfirmationModal";
 import { validateImage } from "../../../helpers/validate";
 import useApiCall from "../../../hooks/useApiCall";
 import { updateAvartarUrl } from "../../../actions/userAction";
+import ContextSelect from "../../../components/inputs/Select/ContextSelect";
+import Form from "../../../components/elements/Form";
+import SubmitButton from "../../../components/elements/SubmitButton";
+import PhoneInput from "../../../components/inputs/PhoneInput";
+import { objFilterThenArray } from "../../../helpers/form";
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 const TabAccount = ({ currentUser, updateAvartarUrl }) => {
     const {
-        first_name,
-        last_name,
-        phone_primary,
         avatar_url,
-        job_title,
     } = currentUser;
 
     const hiddenFileInput = useRef(null);
 
+    const [formData, setFormData] = useState({});
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileUploadError, setFileUploadError] = useState(null);
     const [imagePath, setimagePath] = useState(avatar_url);
     const [showModal, setShowModal] = useState(false);
 
-    const { handleSubmit, errors, register } = useForm();
+    useEffect(() => {
+        const notification_prefs = { sms: true };
+        const newFormValues = { ...currentUser, notification_prefs };
+        setFormData(newFormValues);
+    }, [currentUser]);
 
     // need to check this api
     const [{ loading }, userImageSubmit] = useApiCall({
@@ -43,7 +47,11 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
 
     // need to implement form submit api
     const onSubmit = (formData) => {
-        console.log("+++++++++++++++++", formData);
+        const notification_prefs = objFilterThenArray(formData, "notification_prefs");
+        const params = { ...formData, notification_prefs };
+
+        // TODO :: send params to the database to update the users account
+        console.log("+++++++++++++++++", { formData, params });
     };
 
     const onPhotoUpload = () => {
@@ -119,7 +127,7 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                     <Row>
                         <Col lg={12}>
                             <div className="white-box">
-                                <Form onSubmit={handleSubmit(onSubmit)}>
+                                <Form onSubmit={onSubmit} defaultData={formData}>
                                     <Row>
                                         <Col lg={3}>
                                             <Row>
@@ -193,20 +201,14 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                                                 <Col lg={6}>
                                                     <InputText
                                                         label="Job Title"
-                                                        name="job_title"
-                                                        value={job_title}
-                                                        erorrs={errors}
-                                                        ref={register({})}
+                                                        name="title"
                                                     />
                                                 </Col>
 
                                                 <Col lg={6}>
-                                                    <InputText
+                                                    <PhoneInput
                                                         label="Phone"
                                                         name="phone_primary"
-                                                        value={phone_primary}
-                                                        errors={errors}
-                                                        ref={register({})}
                                                     />
                                                 </Col>
 
@@ -214,9 +216,6 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                                                     <InputText
                                                         label="First Name"
                                                         name="first_name"
-                                                        value={first_name}
-                                                        erorrs={errors}
-                                                        ref={register({})}
                                                     />
                                                 </Col>
 
@@ -224,14 +223,11 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                                                     <InputText
                                                         label="Last Name"
                                                         name="last_name"
-                                                        value={last_name}
-                                                        erorrs={errors}
-                                                        ref={register({})}
                                                     />
                                                 </Col>
 
                                                 <Col lg={6}>
-                                                    <Select
+                                                    <ContextSelect
                                                         label="Alert Threshold"
                                                         options={[
                                                             {
@@ -259,28 +255,24 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                                                 </Col>
 
                                                 <Col lg={6}>
-                                                    <div className="form-control custom-checkbox d-flex">
+                                                    <div
+                                                        className="form-control custom-checkbox d-flex pt-2 content-center align-center"
+                                                        style={{ gap: 15 }}>
                                                         <Checkbox
                                                             labelLeft
                                                             label="Text"
-                                                            name="sms"
+                                                            name="notification_prefs[sms]"
                                                         />
                                                         <Checkbox
                                                             labelLeft
-                                                            className="ml-2 me-1"
                                                             label="Email"
-                                                            name="mail"
+                                                            name="notification_prefs[mail]"
                                                         />
                                                     </div>
                                                 </Col>
 
-                                                <Col lg={12}>
-                                                    <Button
-                                                        className="btn btn-block"
-                                                        type="Submit"
-                                                    >
-                                                        Submit
-                                                    </Button>
+                                                <Col className="mt-3">
+                                                    <SubmitButton />
                                                 </Col>
                                             </Row>
                                         </Col>
@@ -507,7 +499,7 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                         </Col>
 
                         <Col lg={12}>
-                            <div className="white-box">
+                            <div className="white-box mt-3">
                                 <Row>
                                     <Col lg={12}>
                                         <div className="box-same-line">

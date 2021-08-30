@@ -143,7 +143,11 @@ body {
 }
 
 .c {
-    &-pointer{
+    &-pointer {
         cursor: pointer;
     }
+}
+
+.tab-content {
+    @extend .mt-4;
 }

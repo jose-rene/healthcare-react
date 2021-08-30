@@ -14,12 +14,19 @@ exports[`Input Components renders Checkbox input correctly 1`] = `
 
 exports[`Input Components renders Select input correctly 1`] = `
 <div
-  className="form-group "
+  className="form-floating"
+  hasValidation={true}
 >
-  
   <select
-    className="form-control  "
+    aria-label=""
+    className="form-select"
   />
+  <div
+    className="invalid-feedback"
+  />
+  <label>
+    
+  </label>
 </div>
 `;
 
@@ -29,7 +36,6 @@ exports[`Input Components renders Text input correctly 1`] = `
 >
   <input
     className="form-control form-control"
-    custom={true}
     onChange={[Function]}
     placeholder=" "
     required={false}
