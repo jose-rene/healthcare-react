@@ -17,9 +17,11 @@ import Form from "../../../components/elements/Form";
 import SubmitButton from "../../../components/elements/SubmitButton";
 import PhoneInput from "../../../components/inputs/PhoneInput";
 import { objFilterThenArray } from "../../../helpers/form";
+import { PUT } from "../../../config/URLs";
+import useToast from "../../../hooks/useToast";
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
-const TabAccount = ({ currentUser, updateAvartarUrl }) => {
+const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
     const {
         avatar_url,
     } = currentUser;
@@ -31,6 +33,7 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
     const [fileUploadError, setFileUploadError] = useState(null);
     const [imagePath, setimagePath] = useState(avatar_url);
     const [showModal, setShowModal] = useState(false);
+    const { generalError, success } = useToast();
 
     useEffect(() => {
         const notification_prefs = { sms: true };
@@ -45,13 +48,27 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
         headers: { "Content-Type": "multipart/form-data" },
     });
 
+    const [{ loading: saving }, fireSaveUserAccount] = useApiCall({
+        method: PUT,
+        url: `user/profile`,
+    });
+
     // need to implement form submit api
-    const onSubmit = (formData) => {
+    const onSubmit = async (formData) => {
         const notification_prefs = objFilterThenArray(formData, "notification_prefs");
         const params = { ...formData, notification_prefs };
 
-        // TODO :: send params to the database to update the users account
-        console.log("+++++++++++++++++", { formData, params });
+        try {
+            await fireSaveUserAccount({
+                params,
+            });
+
+            success("User Saved");
+            history.push("/");
+        } catch (e) {
+            generalError();
+            console.log("save user error", { e });
+        }
     };
 
     const onPhotoUpload = () => {
@@ -229,26 +246,27 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                                                 <Col lg={6}>
                                                     <ContextSelect
                                                         label="Alert Threshold"
+                                                        name="alert_threshold_number"
                                                         options={[
                                                             {
                                                                 id: 1,
                                                                 title: "Low",
-                                                                val: "Low",
+                                                                val: 1,
                                                             },
                                                             {
                                                                 id: 2,
                                                                 title: "Medium",
-                                                                val: "Medium",
+                                                                val: 2,
                                                             },
                                                             {
                                                                 id: 3,
                                                                 title: "High",
-                                                                val: "High",
+                                                                val: 3,
                                                             },
                                                             {
                                                                 id: 4,
                                                                 title: "Urgent",
-                                                                val: "Urgent",
+                                                                val: 4,
                                                             },
                                                         ]}
                                                     />
@@ -272,7 +290,9 @@ const TabAccount = ({ currentUser, updateAvartarUrl }) => {
                                                 </Col>
 
                                                 <Col className="mt-3">
-                                                    <SubmitButton />
+                                                    <SubmitButton
+                                                        loading={saving || loading}
+                                                    />
                                                 </Col>
                                             </Row>
                                         </Col>

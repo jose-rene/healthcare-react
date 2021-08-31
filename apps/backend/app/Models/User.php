@@ -62,6 +62,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'last_name',
         'user_type',
         'notification_prefs',
+        'alert_threshold_number',
         'dob',
         'email',
         'username',
@@ -93,10 +94,11 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $casts = [
-        'email_verified_at'  => 'datetime',
-        'notification_prefs' => 'json',
-        'reset_password'     => 'boolean',
-        'is_2fa'             => 'boolean',
+        'email_verified_at'      => 'datetime',
+        'notification_prefs'     => 'json',
+        'reset_password'         => 'boolean',
+        'alert_threshold_number' => 'int',
+        'is_2fa'                 => 'boolean',
     ];
 
     protected static $userTypeMap = [

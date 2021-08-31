@@ -73,9 +73,7 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     component={Error401}
                     exact
                 />
-                <PrivateRoute path="/account">
-                    <Account />
-                </PrivateRoute>
+                <PrivateRoute path="/account" component={Account} />
                 <PrivateRoute
                     path="/healthplan/addmember"
                     middleware={["hp_champion", "hp_user"]}

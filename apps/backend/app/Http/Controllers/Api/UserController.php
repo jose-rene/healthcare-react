@@ -453,19 +453,24 @@ class UserController extends Controller
             return response()->json(['message' => 'You do not have permissions for the requested resource.'], 403);
         }
 
-        $data = $request->except('password', 'roles', 'user_type');
-        // validate the primary role
-        $role = Bouncer::role()->firstWhere(['name' => $data['primary_role']]);
-        if (empty($role) || !$user->roles->contains('name', $data['primary_role'])) {
-            return response()->json(['message' => 'Invalid primary role.'], 422);
-        }
-        // change the user type if applicable
-        if ($user->user_type_domain !== $role->domain) {
-            // change the user type
-            $data['user_type'] = User::mapTypeForDomain($role->domain);
+        $request_data = $request->except('password', 'roles', 'user_type');
+
+        if ($request->has('primary_role')) {
+            // validate the primary role
+            $user_found_role = Bouncer::role()->firstWhere(['name' => $request_data['primary_role']]);
+            if (empty($user_found_role) || !$user->roles->contains('name', $request_data['primary_role'])) {
+                return response()->json(['message' => 'Invalid primary role.'], 422);
+            }
+
+            // change the user type if applicable
+            if ($user->user_type_domain !== $user_found_role->domain) {
+                // change the user type
+                $request_data['user_type'] = User::mapTypeForDomain($user_found_role->domain);
+            }
         }
 
-        $user->update($data);
+
+        $user->update($request_data);
 
         return new MyUserResource($user);
     }

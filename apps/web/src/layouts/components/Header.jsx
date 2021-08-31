@@ -1,13 +1,8 @@
 import FapIcon from "components/elements/FapIcon";
 import React from "react";
-import {
-    Container,
-    Navbar,
-    Button,
-    InputGroup,
-    FormControl,
-} from "react-bootstrap";
+import { Container, Navbar, Button, InputGroup, FormControl } from "react-bootstrap";
 import MenuUser from "./menu/MenuUser";
+import TopNavNotifications from "./TopNavNotifications";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const PageHeader = ({
@@ -58,6 +53,9 @@ const PageHeader = ({
                             aria-describedby="search-addon"
                         />
                     </InputGroup>
+                </div>
+                <div className="ms-sm-auto">
+                    <TopNavNotifications />
                 </div>
                 <MenuUser
                     {...{

@@ -16,7 +16,6 @@ const MenuUser = ({
     return (
         <NavDropdown
             data-testid="userinfo"
-            className="ms-sm-auto"
             id="user-options"
             align="end"
             title={
