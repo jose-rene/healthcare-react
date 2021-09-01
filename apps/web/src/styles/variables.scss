@@ -13,10 +13,20 @@ $grid-breakpoints: (xs:0, sm: 641px, md:768px, lg:992px, xl:1200px);
 $container-max-widths: (sm: 641px, md: 768px, lg: 992px, xl: 1200px);
 
 $blue: #1894E1;
-$primary: #1894e1;
 $green: #00A5A5;
-$secondary: #00A5A5;
 $info: rgba(43, 53, 61, 0.1);
+
+$theme-colors: (
+    "primary": $blue,
+    "secondary": $green,
+    "success": #198754,
+    "info": rgba(43, 53, 61, 0.1),
+    "warning": #ffc107,
+    "danger": #dc3545,
+    "light": #f8f9fa,
+    "dark": #212529,
+    "green": $green
+) !default;
 
 $border-radius: .75em;
 $border-radius-lg: $border-radius;

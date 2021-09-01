@@ -66,9 +66,8 @@ const Button = ({
             onClick={onClick}
             disabled={disabled}
             className={className}
-            size={size}
         >
-            {icon && <Icon className="me-3" icon={icon} size={iconSize || size} />}
+            {icon && <Icon className={`${renderedLabel ? "me-3" : ""}`} icon={icon} size={iconSize || size} />}
             {renderedLabel}
             {loading && (
                 <Icon className="align-middle fa-spin ms-3" size={iconSize || size}>spinner</Icon>

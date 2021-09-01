@@ -1,0 +1,16 @@
+#user-notifications {
+    &.dropdown-toggle::after {
+        display: none !important;
+    }
+
+    .dropdown-menu {
+        padding: 0;
+    }
+
+    .badge-count {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+}

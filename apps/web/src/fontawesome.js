@@ -1,6 +1,5 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
-    // fal,
     faBars,
     faHome,
     faSearch,
@@ -21,6 +20,8 @@ import {
     faPlus,
     faLightbulbOn,
     faChevronLeft,
+    faBellOn,
+    faCheck,
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add(
@@ -43,7 +44,9 @@ library.add(
     faAngleDoubleLeft,
     faPlus,
     faLightbulbOn,
-    faChevronLeft
+    faChevronLeft,
+    faBellOn,
+    faCheck,
 );
 /*
 if (process.env.NODE_ENV === "development") {

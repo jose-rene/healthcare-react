@@ -1,12 +1,5 @@
 @import "./variables";
 
-// required for the theme merge to take place
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-
-// Merge the maps
-$theme-colors: map-merge($theme-colors, $custom-colors);
-
 // Import Bootstrap 5
 @import "~bootstrap/scss/bootstrap.scss";
 

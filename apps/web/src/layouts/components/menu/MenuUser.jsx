@@ -4,6 +4,8 @@ import FapIcon from "../../../components/elements/FapIcon";
 import Select from "../../../components/contextInputs/Select";
 import Form from "../../../components/elements/Form";
 
+import "./MenuUser.scss";
+
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const MenuUser = ({
     full_name,
