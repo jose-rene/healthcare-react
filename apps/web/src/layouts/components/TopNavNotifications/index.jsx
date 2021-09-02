@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import FapIcon from "../../../components/elements/FapIcon";
 import { NavDropdown, Badge } from "react-bootstrap";
 import { useGlobalContext } from "../../../Context/GlobalContext";
@@ -7,8 +7,7 @@ import "./index.scss";
 import { Button } from "../../../components";
 
 const TopNavNotifications = () => {
-    const [isOpen, setIsOpen] = useState(true);
-    const { notifications: { get, markRead }, messages, messageLevel, totalMessageCount } = useGlobalContext();
+    const { notifications: { get, markRead } = {}, messages, messageLevel, totalMessageCount } = useGlobalContext();
 
     useEffect(() => {
         get();

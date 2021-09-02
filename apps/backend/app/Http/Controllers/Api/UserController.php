@@ -445,6 +445,22 @@ class UserController extends Controller
         return new MyUserResource($request->user());
     }
 
+    public function profileDelete(Request $request)
+    {
+        /** @var User $authed_user */
+        $authed_user = $request->user();
+
+        // allow user to only update their own profile
+        if ($authed_user->cannot('delete', $authed_user)) {
+            return response()->json(['message' => 'You do not have permissions for the requested resource.'], 403);
+        }
+
+        $authed_user->token()->revoke();
+        $authed_user->delete();
+
+        return response()->json(['message' => 'bye']);
+    }
+
     public function profileSave(Request $request)
     {
         $user = $request->user();

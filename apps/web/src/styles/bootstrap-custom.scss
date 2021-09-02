@@ -138,3 +138,19 @@ body {
 .tab-content {
     @extend .mt-4;
 }
+
+
+.dot {
+    width: 10px;
+    height: 10px;
+    margin: 7px 0 0 10px;
+    border-radius: 50%;
+
+    &.green-dot {
+        @extend .bg-green;
+    }
+
+    &.red-dot {
+        @extend .bg-danger;
+    }
+}

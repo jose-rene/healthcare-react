@@ -5,7 +5,6 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import InputText from "components/inputs/ContextInput";
 import { Button } from "components";
-import Checkbox from "components/inputs/Checkbox/ContextCheckbox";
 import Icon from "components/elements/Icon";
 import PageAlert from "components/elements/PageAlert";
 import ConfirmationModal from "components/elements/ConfirmationModal";
@@ -16,9 +15,9 @@ import ContextSelect from "../../../components/inputs/Select/ContextSelect";
 import Form from "../../../components/elements/Form";
 import SubmitButton from "../../../components/elements/SubmitButton";
 import PhoneInput from "../../../components/inputs/PhoneInput";
-import { objFilterThenArray } from "../../../helpers/form";
-import { PUT } from "../../../config/URLs";
+import { PUT, DELETE } from "../../../config/URLs";
 import useToast from "../../../hooks/useToast";
+import MultiCheckbox from "../../../components/inputs/Checkbox/MultiCheckbox";
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
@@ -36,9 +35,7 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
     const { generalError, success } = useToast();
 
     useEffect(() => {
-        const notification_prefs = { sms: true };
-        const newFormValues = { ...currentUser, notification_prefs };
-        setFormData(newFormValues);
+        setFormData(currentUser);
     }, [currentUser]);
 
     // need to check this api
@@ -53,11 +50,13 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
         url: `user/profile`,
     });
 
-    // need to implement form submit api
-    const onSubmit = async (formData) => {
-        const notification_prefs = objFilterThenArray(formData, "notification_prefs");
-        const params = { ...formData, notification_prefs };
+    const [{ loading: deactivating }, fireDeactivateUser] = useApiCall({
+        method: DELETE,
+        url: `user/profile`,
+    });
 
+    // need to implement form submit api
+    const onSubmit = async (params) => {
         try {
             await fireSaveUserAccount({
                 params,
@@ -105,7 +104,17 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
         }
     };
 
-    const handleActivation = () => {
+    const handleActivation = async ({ onlyCancel = true } = {}) => {
+        if (!onlyCancel) {
+            try {
+                await fireDeactivateUser();
+                window.location.reload();
+            } catch (e) {
+                console.log("Deactivation failed");
+                generalError();
+                return false;
+            }
+        }
         setShowModal(!showModal);
     };
 
@@ -135,8 +144,9 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
             <ConfirmationModal
                 showModal={showModal}
                 content="Are you sure that you will deactivate this account?"
-                handleAction={handleActivation}
+                handleAction={() => handleActivation({ onlyCancel: false })}
                 handleCancel={handleActivation}
+                loading={deactivating}
             />
 
             <Row>
@@ -213,7 +223,7 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
                                             </Row>
                                         </Col>
 
-                                        <Col lg={9}>
+                                        <Col lg={9} className="mt-3">
                                             <Row>
                                                 <Col lg={6}>
                                                     <InputText
@@ -272,19 +282,16 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
                                                     />
                                                 </Col>
 
-                                                <Col lg={6}>
+                                                <Col lg={6} className="mt-3 mt-lg-0">
                                                     <div
                                                         className="form-control custom-checkbox d-flex pt-2 content-center align-center"
                                                         style={{ gap: 15 }}>
-                                                        <Checkbox
-                                                            labelLeft
-                                                            label="Text"
-                                                            name="notification_prefs[sms]"
-                                                        />
-                                                        <Checkbox
-                                                            labelLeft
-                                                            label="Email"
-                                                            name="notification_prefs[mail]"
+                                                        <MultiCheckbox
+                                                            name="notification_prefs"
+                                                            values={[
+                                                                { label: "Text", value: "sms" },
+                                                                { label: "Email", value: "mail" },
+                                                            ]}
                                                         />
                                                     </div>
                                                 </Col>
@@ -482,43 +489,37 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
 
                 <Col lg={4}>
                     <Row>
-                        <Col lg={12}>
+                        <Col lg={12} className="p-3">
                             <div className="white-box">
-                                <Row>
-                                    <Col lg={12}>
-                                        <div className="box-same-line">
-                                            <h2 className="box-inside-title">
-                                                Account Status
-                                            </h2>
+                                <div className="box-same-line">
+                                    <h2 className="box-inside-title">
+                                        Account Status
+                                    </h2>
 
-                                            <div className="box-same-line">
-                                                <h2 className="box-inside-title">
-                                                    Active
-                                                </h2>
-                                                <div className="green-dot" />
-                                            </div>
-                                        </div>
+                                    <div className="box-same-line">
+                                        <h2 className="box-inside-title">
+                                            {currentUser.deleted_at && "In-"}Active
+                                        </h2>
+                                        <div className={"dot " + (currentUser.deleted_at ? "red-dot" : "green-dot")} />
+                                    </div>
+                                </div>
 
-                                        <p className="box-inside-text">
-                                            Lorem ipsum dolor sit amet,
-                                            consectetur adipiscing elit. Ut
-                                            fringilla finibus odio.
-                                        </p>
-                                    </Col>
+                                <p className="box-inside-text">
+                                    Mark your account in-active, you <span className="text-danger">
+                                    won't be able to login or do anything in the system
+                                </span> after doing this and you will automatically be logged out.
+                                </p>
 
-                                    <Col lg={12}>
-                                        <Button
-                                            variant="primary"
-                                            block
-                                            label="Deactivate Your Account"
-                                            onClick={() => handleActivation()}
-                                        />
-                                    </Col>
-                                </Row>
+                                <Button
+                                    variant="primary"
+                                    block
+                                    label="Deactivate Your Account"
+                                    onClick={() => handleActivation()}
+                                />
                             </div>
                         </Col>
 
-                        <Col lg={12}>
+                        <Col lg={12} className="d-none">
                             <div className="white-box mt-3">
                                 <Row>
                                     <Col lg={12}>
