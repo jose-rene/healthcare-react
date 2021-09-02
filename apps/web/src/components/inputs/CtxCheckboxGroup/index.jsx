@@ -1,8 +1,14 @@
-import React, { useMemo } from 'react';
+import React, { useMemo } from "react";
 import CheckBoxGroup from "../CheckBoxGroup";
 import { useFormContext } from "../../../Context/FormContext";
 
-const CtxCheckboxGroup = ({ name, children, customRule, options: _options, ...props }) => {
+const CtxCheckboxGroup = ({
+    name,
+    children,
+    customRule,
+    options: _options,
+    ...props
+}) => {
     const { getValue, editing, shouldShow, update } = useFormContext();
 
     const options = useMemo(() => {
@@ -20,7 +26,7 @@ const CtxCheckboxGroup = ({ name, children, customRule, options: _options, ...pr
     const values = getValue(name, []);
 
     const handleOnChange = ({ target: { name: fieldName, checked } }) => {
-        update(fieldName, checked);
+        update({ [fieldName]: checked });
     };
 
     return (

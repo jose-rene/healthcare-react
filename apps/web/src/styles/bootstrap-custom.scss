@@ -11,24 +11,27 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 @import "~bootstrap/scss/bootstrap.scss";
 
 $position-values: (
-  0: 0,
-  60: 60px,
-  50: 50%,
-  100: 100%
+    0: 0,
+    60: 60px,
+    50: 50%,
+    100: 100%,
 );
 
 .form-floating {
-    .form-select {padding-bottom: 0.25rem;}
+    .form-select {
+        padding-bottom: 0.25rem;
+    }
 }
 
-.btn{
-    &.btn-primary, &.btn-green{
-        @extend .text-white
+.btn {
+    &.btn-primary,
+    &.btn-green {
+        @extend .text-white;
     }
 
-    &.btn-block{
+    &.btn-block {
         width: 100%;
-        max-width: 300px;
+        // max-width: 300px;
     }
 }
 
@@ -49,7 +52,6 @@ body {
     -moz-osx-font-smoothing: grayscale;
     background: #f5f9fc;
 }
-
 
 // login page css
 
@@ -90,10 +92,9 @@ body {
 // media queries
 
 @include media-breakpoint-down(lg) {
-
     .collapse-sidebar {
-        width:60px;
-        min-width:60px;
+        width: 60px;
+        min-width: 60px;
     }
 }
 
