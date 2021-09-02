@@ -13,7 +13,7 @@ const ContextMultiSelect = ({
     const value = getValue(name, []);
 
     const handleOnChange = (values = []) => {
-        update(name, values);
+        update({ [name]: values });
     };
 
     return (

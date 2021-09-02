@@ -3,7 +3,7 @@ import { useState } from "react";
 import { AUTH_TOKEN_NAME, POST } from "../config/URLs";
 import useApiCall from "./useApiCall";
 
-function AuthError () {}
+function AuthError() {}
 
 AuthError.prototype = new Error();
 
@@ -75,7 +75,7 @@ const useAuth = () => {
                     error: "Invalid Username / Password",
                 });
 
-                throw new AuthError;
+                throw new AuthError();
             } else if (err.response.status === 422) {
                 let validationError = "Network Error [422]";
                 // eslint-disable-next-line no-restricted-syntax

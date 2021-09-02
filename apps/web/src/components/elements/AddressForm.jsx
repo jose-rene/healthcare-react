@@ -1,19 +1,21 @@
 import React, { useState, useMemo } from "react";
+import { Row, Col } from "react-bootstrap";
 import { isEmpty } from "lodash";
-import InputText from "../inputs/ContextInput";
-import Select from "../contextInputs/Select";
-import PageAlert from "./PageAlert";
-import states from "../../config/States.json";
-import { BASE_URL, API_KEY } from "../../config/Map";
-import { Button } from "../index";
-import ZipcodeInput from "../inputs/ZipcodeInput";
-import { useFormContext } from "../../Context/FormContext";
-import AddressType from "./AddressType";
-import Checkbox from "../inputs/Checkbox";
+
+import { Button } from "components/index";
+import ContextInput from "components/inputs/ContextInput";
+import ContextSelect from "components/contextInputs/Select";
+import ContextCheckbox from "components/contextInputs/Checkbox";
+import PageAlert from "components/elements/PageAlert";
+
+import { useFormContext } from "Context/FormContext";
+
+import states from "config/States.json";
+import { BASE_URL, API_KEY } from "config/Map";
 
 const AddressForm = ({ addressTypesOptions }) => {
     const { getValue, update } = useFormContext();
-    const address = getValue("address", {});
+
     const [alertMessage, setAlertMessage] = useState("");
     const [countyOptions, setCountyOptions] = useState([]);
     const [lookingUpZipcode, setLookingUpZipcode] = useState(false);
@@ -40,16 +42,20 @@ const AddressForm = ({ addressTypesOptions }) => {
     const handleLookupZip = async () => {
         setLookingUpZipcode(true);
 
-        const { address_1, postal_code } = address;
+        const address_1 = getValue("address_1");
+        const postal_code = getValue("postal_code");
+
         setAlertMessage("");
 
-        if (address_1 === null || address_1 === "") {
+        if (!address_1) {
             setAlertMessage("Please input address!");
+            setLookingUpZipcode(false);
             return;
         }
 
-        if (postal_code === null || postal_code === "") {
+        if (!postal_code) {
             setAlertMessage("Please input postal code!");
+            setLookingUpZipcode(false);
             return;
         }
 
@@ -65,7 +71,7 @@ const AddressForm = ({ addressTypesOptions }) => {
                 return;
             }
 
-            const addressTemp = {};
+            let addressTemp = {};
 
             address_components.forEach((v) => {
                 const { short_name, types } = v || {};
@@ -87,13 +93,13 @@ const AddressForm = ({ addressTypesOptions }) => {
                         addressTemp.county = short_name;
                     }
 
-                    if (v.types.indexOf("locality") !== -1) {
+                    if (types.indexOf("locality") !== -1) {
                         addressTemp.city = short_name;
                     }
                 }
             });
 
-            update("address", addressTemp);
+            update(addressTemp);
         } catch (error) {
             setAlertMessage("Address fetch error!");
         } finally {
@@ -102,75 +108,80 @@ const AddressForm = ({ addressTypesOptions }) => {
     };
 
     return (
-        <>
-            <div className="row">
-                <div className="col-md-6">
-                    <AddressType
+        <Row>
+            <PageAlert
+                show={!!alertMessage}
+                className="text-muted"
+                timeout={5000}
+                dismissible
+            >
+                {alertMessage}
+            </PageAlert>
+
+            {addressTypesOptions && (
+                <Col md={6}>
+                    <ContextSelect
                         options={addressTypesOptions}
-                        name="address.address_type_id"
+                        name="address_type_id"
                         label="Type*"
                     />
-                </div>
+                </Col>
+            )}
 
-                <div className="col-md-12">
-                    <InputText name="address.address_1" label="Address 1*" />
-                </div>
+            <Col md={12}>
+                <ContextInput
+                    name="address_1"
+                    label="Address 1*"
+                    onChange={update}
+                />
+            </Col>
 
-                <div className="col-md-12">
-                    <InputText name="address.address_2" label="Address 2" />
-                </div>
+            <Col md={12}>
+                <ContextInput name="address_2" label="Address 2" />
+            </Col>
 
-                <PageAlert
-                    show={!!alertMessage}
-                    className="text-muted"
-                    timeout={5000}
-                    dismissible
-                >
-                    {alertMessage}
-                </PageAlert>
+            <Col md={8}>
+                <ContextInput name="postal_code" label="Zip*" />
+            </Col>
 
-                <div className="col-md-8">
-                    <ZipcodeInput name="address.postal_code" />
-                </div>
+            <Col md={4}>
+                <Button
+                    className="mb-3"
+                    variant="primary"
+                    block
+                    onClick={handleLookupZip}
+                    size="lg"
+                    loading={lookingUpZipcode}
+                    label="Lookup Zip"
+                />
+            </Col>
 
-                <div className="col-md-4">
-                    <Button
-                        variant="primary"
-                        block
-                        onClick={handleLookupZip}
-                        size="lg"
-                        loading={lookingUpZipcode}
-                        label="Lookup Zip"
-                    />
-                </div>
+            <Col md={6}>
+                <ContextInput name="city" label="City*" />
+            </Col>
 
-                <div className="col-md-6">
-                    <InputText name="address.city" label="City*" />
-                </div>
+            <Col md={6}>
+                <ContextSelect
+                    name="state"
+                    label="State*"
+                    options={statesOptions}
+                />
+            </Col>
 
-                <div className="col-md-6">
-                    <Select
-                        name="address.state"
-                        label="State*"
-                        options={statesOptions}
-                    />
-                </div>
+            <Col md={6}>
+                <ContextSelect
+                    name="county"
+                    label="County"
+                    options={countyOptions}
+                />
+            </Col>
 
-                <div className="col-md-6">
-                    <Select
-                        name="address.county"
-                        label="County"
-                        options={countyOptions}
-                    />
+            <Col md={12}>
+                <div className="form-control py-2">
+                    <ContextCheckbox label="Primary" name="is_primary" />
                 </div>
-
-                <div className="col-md-12">
-                    <div className="form-control custom-checkbox mt-0">
-                        <Checkbox labelLeft label="Primary" name="is_primary" />
-                    </div>
-                </div>
-            </div>
-        </>
+            </Col>
+        </Row>
     );
 };
 

@@ -29,7 +29,7 @@ const Icon = ({
     // Get the icon class details
     const mappedIcon = useMemo(() => {
         const map = {
-        logout: "sign-out-alt",
+            logout: "sign-out-alt",
             alert: "exclamation-triangle",
             mail: "envelope",
             email: "envelope",
@@ -39,6 +39,7 @@ const Icon = ({
         };
 
         if (name === "spinner" && !className) {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             className = "fa-spin";
         }
 
@@ -53,12 +54,10 @@ const Icon = ({
 
     // how large is the icon
     const iconSize = useMemo(() => {
-        return stacked ?
-            "fa-stack-1x" :
-            `fa-${size} ${spinning}`;
+        return stacked ? "fa-stack-1x" : `fa-${size} ${spinning}`;
     }, [size, spinning, stacked]);
 
-    const mainIcon = (<i className={`${mappedIcon}  ${iconSize}`}{...props} />);
+    const mainIcon = <i className={`${mappedIcon}  ${iconSize}`} {...props} />;
 
     return stacked ? (
         <span className="fa-stack">

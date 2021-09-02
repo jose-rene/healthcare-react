@@ -9,13 +9,7 @@ const ZipcodeInput = ({
 }) => {
     props.mask = placeholder;
 
-    return (
-        <ContextInput
-            name={name}
-            label={label}
-            {...props}
-        />
-    );
+    return <ContextInput name={name} label={label} required {...props} />;
 };
 
 export default ZipcodeInput;

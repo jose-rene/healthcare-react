@@ -185,10 +185,8 @@ const FormProvider = ({
         return get(form, key, defaultValue);
     };
 
-    const update = (name, value) => {
-        const oldForm = { ...form };
-        set(oldForm, name, value);
-        setForm(() => oldForm);
+    const update = (obj) => {
+        setForm({ ...form, ...obj });
     };
 
     const onChange = ({ target: { name, value, type = "text" } }) => {

@@ -12,7 +12,7 @@ const Checkbox = ({ name, label = "", disableFn, ...otherProps }, ref) => {
     return (
         <div>
             <input
-                className="form-check-input"
+                className="form-check-input m-1"
                 type="checkbox"
                 name={name}
                 id={id}

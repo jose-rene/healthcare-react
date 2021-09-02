@@ -17,6 +17,8 @@ const LoginForm = ({
 
     useEffect(() => {
         setValidated(false);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tickClearValidation]);
 
     return (
