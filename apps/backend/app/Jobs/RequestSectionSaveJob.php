@@ -48,7 +48,7 @@ class RequestSectionSaveJob
         $section = $this->section;
 
         if (empty($section['type_name'])) {
-            throw new HttpResponseException(response()->json(['errors' => 'Action was not specified.'], 422));
+            throw new HttpResponseException(response()->json(['errors' => ['action' => ['Action was not specified!']]], 422));
         }
 
         $type_name = Str::slug($section['type_name']);
@@ -62,6 +62,7 @@ class RequestSectionSaveJob
                 // Syncs what the frontend sends to the related diagnosis. This could create,
                 // update, or delete what is in the database
                 $this->relevantDiagnosisSection();
+                $this->authNumberSection();
                 break;
 
             case 'auth-id':
@@ -77,11 +78,10 @@ class RequestSectionSaveJob
                 // update request.due_at or the note on the request item named due
                 $this->dueSection();
                 break;
-        }
-
-        if (request('is_last', false) === true) {
-            // if this is the last section mark the request as received.
-            $request->requestStatus()->associate(RequestStatus::find(1))->save();
+            case 'submit':
+                // marks the request as received
+                $request->requestStatus()->associate(RequestStatus::find(1))->save();
+                break;
         }
     }
 
@@ -128,23 +128,24 @@ class RequestSectionSaveJob
                 ),
             ]));
         } catch (ValidationException $e) {
-            throw new HttpResponseException(response()->json(['errors' => 'The Auth ID provided is not unique.'], 422));
+            throw new HttpResponseException(response()->json(['errors' => ['auth_number' => ['The Auth ID provided is not unique.']]], 422));
         }
     }
 
     protected function dueSection()
     {
-        if ('' === request()->input('due_at')) {
+        if (request()->input('due_at_na')) {
             // set date to null
             $this->request->update([
                 'due_at' => null,
+                'due_at_na' => true,
             ]);
 
             return;
         }
         // update date if valid
         $this->request->update(request()->validate([
-            'due_at' => ['date', 'after:today'],
+            'due_at' => ['required', 'date', 'after:today'],
             'notes'  => [], // form - due_date + time
         ]));
     }

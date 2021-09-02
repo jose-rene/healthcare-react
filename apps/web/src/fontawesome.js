@@ -1,4 +1,6 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
+import { faCheckCircle as faCheckCircleDuo } from "@fortawesome/pro-duotone-svg-icons";
+import { faCheckCircle as faCheckCircleSolid } from "@fortawesome/pro-solid-svg-icons";
 import {
     // fal,
     faBars,
@@ -21,6 +23,10 @@ import {
     faPlus,
     faLightbulbOn,
     faChevronLeft,
+    faChevronRight,
+    faInfoCircle,
+    faKeyboard,
+    faCheckCircle,
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add(
@@ -43,7 +49,13 @@ library.add(
     faAngleDoubleLeft,
     faPlus,
     faLightbulbOn,
-    faChevronLeft
+    faChevronLeft,
+    faChevronRight,
+    faInfoCircle,
+    faKeyboard,
+    faCheckCircle,
+    faCheckCircleDuo,
+    faCheckCircleSolid
 );
 /*
 if (process.env.NODE_ENV === "development") {

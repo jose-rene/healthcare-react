@@ -40,4 +40,20 @@ class DocumentRequestController extends Controller
 
         return new DocumentResource($document);
     }
+
+    /**
+     * Remove the specified document from storage.
+     *
+     * @param ModelRequest $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function destroy(Request $request, Document $document)
+    {
+        if (null !== ($document = $request->documents()->find($document->id))) {
+            $document->delete();
+        }
+
+        return response()->json(['message' => 'ok']);
+    }
 }

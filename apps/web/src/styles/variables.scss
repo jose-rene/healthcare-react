@@ -13,10 +13,21 @@ $grid-breakpoints: (xs:0, sm: 641px, md:768px, lg:992px, xl:1200px);
 $container-max-widths: (sm: 641px, md: 768px, lg: 992px, xl: 1200px);
 
 $blue: #1894E1;
-$primary: #1894e1;
 $green: #00A5A5;
-$secondary: #00A5A5;
 $info: rgba(43, 53, 61, 0.1);
+
+$theme-colors: (
+    "primary": $blue,
+    "secondary": $green,
+    "success": #198754, // #60ce56
+    "info": rgba(43, 53, 61, 0.1),
+    "warning": #ffc107,
+    "danger": #dc3545,
+    "light": #cceded,
+    "dark": #212529,
+    "green": $green
+) !default;
+;
 
 $border-radius: .75em;
 $border-radius-lg: $border-radius;
@@ -38,13 +49,15 @@ $form-floating-height:            calc(3.0rem + 2px);
 $form-floating-line-height:       1.0;
 /*$form-floating-padding-x:       $input-padding-x;
 $form-floating-padding-y:         1rem;
-$form-floating-input-padding-t:   1.25rem;
-$form-floating-input-padding-b:   .625rem;
-$form-floating-label-opacity:     .65;
+$form-floating-input-padding-t:   1.25rem;*/
+$form-floating-input-padding-b:   .5rem;
+/*$form-floating-label-opacity:     .65;
 $form-floating-label-transform:   scale(.85) translateY(-.5rem) translateX(.15rem);
 $form-floating-transition:        opacity .1s ease-in-out, transform .1s ease-in-out;
 */
 
-$custom-colors: (
-    'green': $green
+$h7-font-size: 0.875rem;
+
+$custom-font-sizes: (
+  7: $h7-font-size
 );
