@@ -148,6 +148,8 @@ class RequestSectionSaveJob
             'due_at' => ['required', 'date', 'after:today'],
             'notes'  => [], // form - due_date + time
         ]));
+        // refresh the request
+        $this->request->refresh();
     }
 
     /**
