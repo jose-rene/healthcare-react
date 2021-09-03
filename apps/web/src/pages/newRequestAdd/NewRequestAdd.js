@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo } from "react";
-import { isEmpty } from "lodash";
+import { Alert, Container, Row, Col } from "react-bootstrap";
+import PageTitle from "components/PageTitle";
+import RequestForm from "components/request/RequestForm";
 import PageLayout from "../../layouts/PageLayout";
-import Stepper from "../../components/elements/Stepper";
-import "./newRequestAdd.css";
 import useApiCall from "../../hooks/useApiCall";
 import { POST } from "../../config/URLs";
-import Icon from "../../components/elements/Icon";
 import useToast from "../../hooks/useToast";
 /* eslint-disable react-hooks/exhaustive-deps */
 
@@ -41,18 +40,13 @@ const NewRequestAdd = ({
     useEffect(() => {
         (async () => {
             if (!request_id) {
-                let id = null;
                 try {
-                    const { id: newReportId } = await fireCreateRequest();
-                    id = newReportId;
-                } catch (e) {}
-
-                if (!id) {
+                    const { id } = await fireCreateRequest();
+                    history.push(`/member/${member_id}/request/${id}/edit`);
+                } catch (e) {
+                    console.log("error creating request:", e);
                     goToSearch();
-                    return;
                 }
-
-                history.push(`/member/${member_id}/request/${id}/edit`);
             }
         })();
     }, []);
@@ -66,44 +60,63 @@ const NewRequestAdd = ({
     }, [request_id]);
 
     useEffect(() => {
-        if (isEmpty(data) && error !== false) {
+        if (!data?.id && error !== false) {
             goToSearch();
         }
 
-        if (!isEmpty(data) && data.request_status_id === 1) {
+        if (data?.id && data.request_status_id === 1) {
             goToSearch();
         }
     }, [error, data]);
 
     const { member = {} } = data;
 
-    const name = useMemo(() => {
-        const { title = "", last_name = "", first_name = "" } = member || {};
+    const [name, dob] = useMemo(() => {
+        const {
+            title = "",
+            last_name = "",
+            first_name = "",
+            dob = "",
+        } = member || {};
 
-        return `${title} ${first_name} ${last_name}`;
+        return [`${title} ${first_name} ${last_name}`, dob];
     }, [member]);
 
     return (
         <PageLayout>
-            <div className="content-box" style={{ backgroundColor: "#fff" }}>
-                <h1 className="box-title mb-0">
-                    New Request{" "}
-                    {(loading || saving) && (
-                        <Icon icon="spinner" size="1x" spin />
-                    )}
-                </h1>
-                <p className="box-legenda mb-3">
-                    Please fill the request sections
-                </p>
-
-                <div className="row">
-                    <div className="col-md-12">
-                        <h1 className="box-subtitle mt-5">{name}</h1>
-
-                        <Stepper data={data} />
-                    </div>
-                </div>
-            </div>
+            <Container fluid>
+                <PageTitle
+                    title="New Request"
+                    backLink="/healthplan/start-request"
+                />
+                <Row>
+                    <Col lg={8}>
+                        <Row>
+                            <div className="col-md-12">
+                                <Alert variant="green" className="px-4 py-3">
+                                    <div className="d-flex w-100">
+                                        <div>
+                                            <p className="fs-7 mb-2 text-muted">
+                                                Patient Identification
+                                            </p>
+                                            <h6 className="mb-0">{name}</h6>
+                                        </div>
+                                        <div className="ms-auto">
+                                            <p className="fs-7 mb-2 text-muted">
+                                                Information
+                                            </p>
+                                            <h6 className="mb-0">{dob}</h6>
+                                        </div>
+                                    </div>
+                                </Alert>
+                                {!loading && data?.id && (
+                                    <RequestForm data={data} />
+                                )}
+                            </div>
+                        </Row>
+                    </Col>
+                </Row>
+            </Container>
         </PageLayout>
     );
 };

@@ -17,6 +17,7 @@ class RequestResource extends JsonResource
     {
         return [
             'id'                => $this->uuid,
+            'status'            => $this->statusName,
             'member'            => new MemberResource($this->member),
             'payer'             => new PayerResource($this->payer),
             'member_verified'   => $this->member_verified,
@@ -26,10 +27,12 @@ class RequestResource extends JsonResource
             'request_type_id'   => $this->request_type_id,
             'created_at'        => $this->created_at->format('m/d/Y'),
             'due_at'            => $this->due_at ? $this->due_at->format('m/d/Y H:i:s') : '',
+            'due_at_na'         => $this->due_at_na,
             'request_type_name' => $this->requestType->name ?? '',
             'codes'             => RelevantDiagnosesResource::collection($this->relevantDiagnoses),
             'request_items'     => RequestItemResource::collection($this->requestItems),
             'activities'        => ActivityResource::collection($this->activities),
+            'documents'         => DocumentResource::collection($this->documents),
         ];
     }
 }

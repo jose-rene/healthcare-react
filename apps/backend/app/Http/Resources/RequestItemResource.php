@@ -19,9 +19,9 @@ class RequestItemResource extends JsonResource
         // the parent request types
         $parents = array_reverse($this->mapParents($this->requestType->ancestors, true));
         // the related classifcation, will be related to the top parent
-        $classification = "";
+        $classification = null;
         if (!empty($parents) && null !== ($requestType = RequestType::find($parents[0])) && $requestType->classification) {
-            $classification = $requestType->classification->id;
+            $classification = $requestType->classification;
         }
         return [
             'id'                   => $this->uuid,
@@ -30,7 +30,8 @@ class RequestItemResource extends JsonResource
             'request_type_id'      => $this->request_type_id,
             'request_type_parents' => $parents,
             'details'              => RequestTypeDetailResource::collection($this->requestTypeDetails),
-            'classification'       => $classification,
+            'classification'       => $classification ? $classification->id : "",
+            'classification_name'  => $classification ? $classification->name : "",
             // ->pluck('name', 'id'),
         ];
     }

@@ -1,25 +1,36 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Form } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import { Row, Col, Container } from "react-bootstrap";
 import { isEmpty } from "lodash";
+import * as Yup from "yup";
+
+import PageLayout from "layouts/PageLayout";
+
+import Form from "components/elements/Form";
 import BroadcastAlert from "components/elements/BroadcastAlert";
+import ContextInput from "components/inputs/ContextInput";
+import ContextSelect from "components/contextInputs/Select";
 import PageAlert from "components/elements/PageAlert";
 import AddressForm from "components/elements/AddressForm";
-import PageLayout from "../../layouts/PageLayout";
-import Select from "components/inputs/Select";
-import InputText from "components/inputs/InputText";
-import FormButtons from "components/elements/FormButtons";
+import FormButtons from "components/contextInputs/FormButtons";
 import ContactMethods from "components/elements/ContactMethods";
 import Icon from "components/elements/Icon";
-import useApiCall from "../../hooks/useApiCall";
-import titles from "../../config/Titles.json";
+import PageTitle from "components/PageTitle";
 
-import "../../styles/home.scss";
-/* eslint-disable jsx-a11y/label-has-associated-control */
+import useApiCall from "hooks/useApiCall";
+
+import titles from "config/Titles.json";
+
+import "styles/home.scss";
 
 const AddMember = (props) => {
     const { first_name = "", last_name = "", dob = "" } =
         props.history.location?.state || {};
+
+    const [member, setMember] = useState(null);
+    const [initialData, setInitialData] = useState(null);
+    const [contactMethods, setContactMethods] = useState([
+        { type: "type", phone_email: "phone_email" },
+    ]);
 
     const [
         { data: payerProfile, loading: pageLoading },
@@ -33,19 +44,50 @@ const AddMember = (props) => {
         url: "member",
     });
 
-    useEffect(() => {
-        if (!isEmpty(data)) {
-            props.history.push(`/member/${data.id}/request/add`);
-        }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data]);
-
-    useEffect(() => {
-        payerProfileRequest();
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const [validation, setValidation] = useState({
+        plan: {
+            yupSchema: Yup.string().required("Plan is required"),
+        },
+        member_number: {
+            yupSchema: Yup.string().required("Member ID is required"),
+        },
+        member_number_type: {
+            yupSchema: Yup.string().required("Member ID Type is required"),
+        },
+        line_of_business: {
+            yupSchema: Yup.string().required("Line of Business is required"),
+        },
+        title: {
+            yupSchema: Yup.string().required("Title is required"),
+        },
+        dob: {
+            yupSchema: Yup.string().required("Date of Birth is required"),
+        },
+        first_name: {
+            yupSchema: Yup.string().required("First Name of Birth is required"),
+        },
+        last_name: {
+            yupSchema: Yup.string().required("Last Name of Birth is required"),
+        },
+        gender: {
+            yupSchema: Yup.string().required("Gender is required"),
+        },
+        language: {
+            yupSchema: Yup.string().required("Language is required"),
+        },
+        address_1: {
+            yupSchema: Yup.string().required("Address 1 is required"),
+        },
+        city: {
+            yupSchema: Yup.string().required("City is required"),
+        },
+        state: {
+            yupSchema: Yup.string().required("State is required"),
+        },
+        postal_code: {
+            yupSchema: Yup.string().required("Postal Code is required"),
+        },
+    });
 
     const planOptions = useMemo(() => {
         if (isEmpty(payerProfile) || !payerProfile.payers.length) {
@@ -85,7 +127,7 @@ const AddMember = (props) => {
             return { id, title: name, val: id };
         });
     }, [payerProfile]);
-
+    //
     const titlesOptions = useMemo(() => {
         if (isEmpty(titles)) {
             return [];
@@ -105,30 +147,77 @@ const AddMember = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [titles]);
 
-    const { register, handleSubmit, errors, reset } = useForm();
+    useEffect(() => {
+        let contactMethodsValidation = {};
 
-    const [member, setMember] = useState(null);
-    const [contactMethods, setContactMethods] = useState([
-        { type: "type", phone_email: "phone_email" },
+        contactMethods.forEach(({ type, phone_email }, index) => {
+            contactMethodsValidation = {
+                ...contactMethodsValidation,
+                [type]: {
+                    yupSchema: Yup.string().required("Type is required"),
+                },
+                [phone_email]: {
+                    yupSchema: Yup.string().required("Phone/Email is required"),
+                },
+            };
+        });
+
+        setValidation({ ...validation, ...contactMethodsValidation });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [contactMethods]);
+
+    useEffect(() => {
+        setInitialData({
+            first_name,
+            last_name,
+            dob,
+            language: "6", // 6 is English
+            plan: planOptions[0]?.val,
+            member_number_type: memberNumberTypesOptions[0]?.val,
+            line_of_business: lobOptions[0]?.val,
+            title: titlesOptions[0]?.val,
+            gender: "male",
+        });
+    }, [
+        first_name,
+        last_name,
+        dob,
+        planOptions,
+        lobOptions,
+        memberNumberTypesOptions,
+        titlesOptions,
     ]);
-    const [contacts, setContacts] = useState({});
-    const [addressFormValue, setAddressFormValue] = useState({});
+
+    useEffect(() => {
+        if (!isEmpty(data)) {
+            props.history.push(`/member/${data.id}/request/add`);
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data]);
+
+    useEffect(() => {
+        payerProfileRequest();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const onSubmit = async (formData) => {
         if (loading) {
             return false;
         }
+
         const sendContactsData = [];
         contactMethods.forEach((v) => {
             sendContactsData.push({
-                type: contacts[v.type],
-                value: contacts[v.phone_email],
+                type: formData[v.type],
+                value: formData[v.phone_email],
             });
         });
         const formSendData = {
             ...formData,
             contacts: sendContactsData,
-            ...addressFormValue,
         };
 
         try {
@@ -139,21 +228,11 @@ const AddMember = (props) => {
         }
     };
 
-    const onCancel = () => {
-        reset();
-    };
-
-    const setContactMethodsValue = ({ target: { name, value } }) => {
-        setContacts({ ...contacts, [name]: value });
-    };
-
     return (
         <PageLayout>
-            <BroadcastAlert />
-            <div className="content-box">
-                <h1 className="box-title" style={{ marginBottom: "0px" }}>
-                    New Member Info
-                </h1>
+            <Container fluid>
+                <BroadcastAlert />
+                <PageTitle title="New Member Info" hideBack />
                 <p className="box-legenda">
                     Please enter the following information before proceeding
                     with the new request. Fields marked with * are required
@@ -164,7 +243,7 @@ const AddMember = (props) => {
                         <Icon icon="spinner" />
                     </div>
                 ) : (
-                    <div className="white-box">
+                    <>
                         {member ? (
                             <PageAlert
                                 className="mt-3"
@@ -175,141 +254,109 @@ const AddMember = (props) => {
                                 Member Successfully Added.
                             </PageAlert>
                         ) : null}
-                        <Form onSubmit={handleSubmit(onSubmit)}>
-                            <div className="form-row">
-                                {planOptions.length > 0 ? (
-                                    <>
-                                        <div className="col-md-6">
-                                            <Select
+                        <Form
+                            autocomplete={false}
+                            defaultData={member ? member : initialData}
+                            validation={validation}
+                            onSubmit={onSubmit}
+                        >
+                            <Row xl={12}>
+                                <>
+                                    {planOptions.length > 0 ? (
+                                        <Col md={6}>
+                                            <ContextSelect
                                                 name="plan"
                                                 label="Plan*"
                                                 options={planOptions}
-                                                errors={errors}
-                                                ref={register({
-                                                    required:
-                                                        "Plan is required",
-                                                })}
+                                                required
+                                                large
                                             />
-                                        </div>
+                                        </Col>
+                                    ) : (
+                                        <ContextInput
+                                            hidden
+                                            name="plan"
+                                            label="Plan"
+                                            value={payerProfile.id || ""}
+                                            readOnly
+                                        />
+                                    )}
+                                    <Col md={6}></Col>
+                                </>
 
-                                        <div className="col-md-6" />
-                                    </>
-                                ) : (
-                                    <InputText
-                                        hidden
-                                        name="plan"
-                                        value={payerProfile.id || ""}
-                                        readOnly
-                                    />
-                                )}
-
-                                <div className="col-md-12">
+                                <Col md={12}>
                                     <h1
                                         className="box-outside-title title-second"
                                         style={{ marginBottom: "32px" }}
                                     >
                                         Member Identification Info
                                     </h1>
-                                </div>
+                                </Col>
 
-                                <div className="col-md-6">
-                                    <InputText
+                                <Col md={6}>
+                                    <ContextInput
                                         name="member_number"
                                         label="Member ID*"
-                                        errors={errors}
-                                        ref={register({
-                                            required: "Member ID is required",
-                                        })}
                                     />
-                                </div>
+                                </Col>
 
-                                <div className="col-md-6">
-                                    <Select
+                                <Col md={6}>
+                                    <ContextSelect
                                         name="member_number_type"
                                         label="Member ID Type*"
                                         options={memberNumberTypesOptions}
-                                        errors={errors}
-                                        ref={register({
-                                            required:
-                                                "Member ID Type is required",
-                                        })}
                                     />
-                                </div>
+                                </Col>
 
-                                <div className="col-md-6">
-                                    <Select
+                                <Col md={6}>
+                                    <ContextSelect
                                         name="line_of_business"
-                                        label="Line of Business*"
+                                        label="Line of Business"
                                         options={lobOptions}
-                                        errors={errors}
-                                        ref={register({
-                                            required:
-                                                "Line of Business is required",
-                                        })}
                                     />
-                                </div>
+                                </Col>
 
-                                <div className="col-md-12">
+                                <Col md={12}>
                                     <h1
                                         className="box-outside-title title-second"
                                         style={{ marginBottom: "32px" }}
                                     >
                                         Basic Info
                                     </h1>
-                                </div>
+                                </Col>
 
-                                <div className="col-md-6">
-                                    <Select
+                                <Col md={6}>
+                                    <ContextSelect
                                         name="title"
                                         label="Title*"
                                         options={titlesOptions}
-                                        errors={errors}
-                                        ref={register({
-                                            required: "Title is required",
-                                        })}
                                     />
-                                </div>
+                                </Col>
 
-                                <div className="col-md-6">
-                                    <InputText
+                                <Col md={6}>
+                                    <ContextInput
                                         name="dob"
                                         label="Date of Birth*"
-                                        defaultValue={dob}
                                         type="date"
-                                        errors={errors}
-                                        ref={register({
-                                            required:
-                                                "Date of Birth is required",
-                                        })}
                                     />
-                                </div>
+                                </Col>
 
-                                <div className="col-md-6">
-                                    <InputText
+                                <Col md={6}>
+                                    <ContextInput
                                         name="first_name"
-                                        defaultValue={first_name}
                                         label="First Name*"
-                                        errors={errors}
-                                        ref={register({
-                                            required: "First Name is required",
-                                        })}
                                     />
-                                </div>
+                                </Col>
 
-                                <div className="col-md-6">
-                                    <InputText
+                                <Col md={6}>
+                                    <ContextInput
                                         name="last_name"
-                                        label="Last Name*"
-                                        defaultValue={last_name}
-                                        errors={errors}
-                                        ref={register({
-                                            required: "Last Name is required",
-                                        })}
+                                        label="Last Name"
                                     />
-                                </div>
+                                </Col>
 
-                                <div className="col-md-6">
-                                    <Select
+                                <Col md={6}>
+                                    <ContextSelect
                                         name="gender"
                                         label="Gender*"
                                         options={[
@@ -324,48 +371,38 @@ const AddMember = (props) => {
                                                 val: "female",
                                             },
                                         ]}
-                                        errors={errors}
-                                        ref={register({
-                                            required: "Gender is required",
-                                        })}
                                     />
-                                </div>
+                                </Col>
 
-                                <div className="col-md-6">
-                                    <Select
+                                <Col md={6}>
+                                    <ContextSelect
                                         name="language"
                                         label="Language*"
                                         options={languageOptions}
-                                        defaultValue="6" // 6 is English
-                                        errors={errors}
-                                        ref={register({
-                                            required: "Language is required",
-                                        })}
                                     />
-                                </div>
+                                </Col>
 
-                                <AddressForm
-                                    setAddressFormValue={setAddressFormValue}
-                                />
+                                <Col md={12}>
+                                    <AddressForm />
+                                </Col>
 
-                                <div className="col-md-12">
+                                <Col md={12}>
                                     <h1
                                         className="box-outside-title title-second"
                                         style={{ marginBottom: "32px" }}
                                     >
                                         Contact Methods
                                     </h1>
-                                </div>
+                                </Col>
 
-                                <ContactMethods
-                                    contactMethods={contactMethods}
-                                    setContactMethods={setContactMethods}
-                                    setContactMethodsValue={
-                                        setContactMethodsValue
-                                    }
-                                />
+                                <Col md={12}>
+                                    <ContactMethods
+                                        contactMethods={contactMethods}
+                                        setContactMethods={setContactMethods}
+                                    />
+                                </Col>
 
-                                <div className="col-md-12">
+                                <Col md={12}>
                                     {formError ? (
                                         <PageAlert
                                             className="mt-3"
@@ -376,19 +413,16 @@ const AddMember = (props) => {
                                             Error: {formError}
                                         </PageAlert>
                                     ) : null}
-                                </div>
+                                </Col>
 
-                                <div className="col-md-12">
-                                    <FormButtons
-                                        submitLabel="Create New Request"
-                                        onCancel={onCancel}
-                                    />
-                                </div>
-                            </div>
+                                <Col md={12}>
+                                    <FormButtons submitLabel="Create New Request" />
+                                </Col>
+                            </Row>
                         </Form>
-                    </div>
+                    </>
                 )}
-            </div>
+            </Container>
         </PageLayout>
     );
 };

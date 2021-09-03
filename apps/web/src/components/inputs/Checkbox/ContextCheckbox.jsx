@@ -3,11 +3,7 @@ import Checkbox from "./index";
 import { useFormContext } from "../../../Context/FormContext";
 
 const ContextCheckbox = (props) => {
-    const {
-        onChange: propsOnChange,
-        name,
-        value: valueLabel = true,
-    } = props;
+    const { onChange: propsOnChange, name, value: valueLabel = true } = props;
 
     const { getValue, getError, update } = useFormContext();
     const checked = getValue(name);
@@ -17,8 +13,10 @@ const ContextCheckbox = (props) => {
             return propsOnChange(e);
         }
 
-        const { target: { checked } } = e;
-        update(`${name}`, !!checked);
+        const {
+            target: { checked },
+        } = e;
+        update({ [`${name}`]: !!checked });
     };
 
     return (

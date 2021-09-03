@@ -139,8 +139,18 @@ class RequestAddTest extends TestCase
          */
         $response = $this->put($route, [
             'type_name' => 'due',
-            'is_last'   => true,
             'due_at'    => $due_at = $this->faker->dateTimeBetween('now', '+2 weeks'),
+        ]);
+        $response->assertSuccessful();
+
+        // Load values from the database and make sure the last pieces were updated
+        $memberRequest = Request::with('member.addresses')->first();
+        self::assertEquals($due_at, $memberRequest->due_at);
+        self::assertSame(false, $memberRequest->due_at_na);
+
+        // final submission
+        $response = $this->put($route, [
+            'type_name' => 'submit',
         ]);
         $response->assertSuccessful();
 
@@ -148,7 +158,6 @@ class RequestAddTest extends TestCase
         $memberRequest = Request::with('member.addresses')->first();
 
         self::assertEquals('Received', $memberRequest->statusName);
-        self::assertEquals($due_at, $memberRequest->due_at);
     }
 
     /**

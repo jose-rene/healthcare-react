@@ -67,10 +67,17 @@ const Button = ({
             disabled={disabled}
             className={className}
         >
-            {icon && <Icon className={`${renderedLabel ? "me-3" : ""}`} icon={icon} size={iconSize || size} />}
+            {icon && (
+                <Icon className={`${renderedLabel ? "me-3" : ""}`} icon={icon} size={iconSize || size} />
+            )}
             {renderedLabel}
             {loading && (
-                <Icon className="align-middle fa-spin ms-3" size={iconSize || size}>spinner</Icon>
+                <Icon
+                    className="align-middle fa-spin ms-3"
+                    size={iconSize || size}
+                >
+                    spinner
+                </Icon>
             )}
         </RButton>
     );

@@ -33,7 +33,8 @@ class CreateRequestsTable extends Migration
             $table->foreignId('questionnaire_id')->nullable();                                                                    // fk questionnaire.id
             $table->foreignId('auth_payer_uniqueness')->nullable();                                                               // fk to member payer history
             $table->foreignId('form_id')->nullable()->comment('id of the associated form');                                       // fk to addresses.id
-            $table->dateTime('due_at')->nullable();
+            $table->dateTime('due_at')->nullable()->comment('The request due date');
+            $table->boolean('due_at_na')->default(0)->comment('If n/a was explicitly set for the due date');
             $table->string('note')->nullable();
             $table->double('travel_time_estimate')->nullable();
 

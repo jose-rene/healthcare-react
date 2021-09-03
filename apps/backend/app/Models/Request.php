@@ -50,8 +50,8 @@ class Request extends Model
     public static $reopened = '9';
 
     protected $guarded = ['id'];
-
     protected $dates = ['due_at'];
+    protected $casts = ['due_at_na' => 'boolean'];
 
     /**
      * Relationship to assessments.

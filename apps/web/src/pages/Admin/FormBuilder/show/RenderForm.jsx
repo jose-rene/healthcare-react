@@ -140,7 +140,7 @@ const RenderForm = ({ formElements }) => {
             });
             // clear out the field values from the removed element
             removedElement.fields.map((field) => {
-                setValue(field.custom_name, "");
+                setValue({ [field.custom_name]: "" });
                 return field;
             });
             // remove the element
@@ -170,11 +170,11 @@ const RenderForm = ({ formElements }) => {
                         field.base_name
                     }]`;
                     const value = getValue(nextName, "");
-                    setValue(field.custom_name, value);
+                    setValue({ [field.custom_name]: value });
                     // console.log(nextName, field.custom_name, value);
                 } else {
                     // clear the original value
-                    setValue(field.custom_name, "");
+                    setValue({ [field.custom_name]: "" });
                 }
                 return field;
             });

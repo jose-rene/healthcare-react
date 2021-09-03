@@ -20,6 +20,7 @@ const FapIcon = ({
     size = "lg",
     spin = false,
     className = "",
+    type = "fal",
     ...props
 }) => {
     const name = icon ? icon.toLowerCase().trim() : "check";
@@ -42,7 +43,7 @@ const FapIcon = ({
 
     return (
         <FontAwesomeIcon
-            icon={["fal", mappedIcon]}
+            icon={[type, mappedIcon]}
             className={mappedClass}
             size={fixedWidth ? null : size}
             fixedWidth
