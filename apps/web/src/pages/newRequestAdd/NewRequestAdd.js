@@ -43,7 +43,10 @@ const NewRequestAdd = ({
                 let id = null;
                 try {
                     const { id: newReportId } = await fireCreateRequest();
-                    id = newReportId;
+
+                    if (saving) {
+                        id = newReportId;
+                    }
                 } catch (e) {}
 
                 if (!id) {
@@ -77,12 +80,8 @@ const NewRequestAdd = ({
     const { member = {} } = data;
 
     const [name, dob] = useMemo(() => {
-        const {
-            title = "",
-            last_name = "",
-            first_name = "",
-            dob = "",
-        } = member || {};
+        const { title = "", last_name = "", first_name = "", dob = "" } =
+            member || {};
 
         return [`${title} ${first_name} ${last_name}`, dob];
     }, [member]);

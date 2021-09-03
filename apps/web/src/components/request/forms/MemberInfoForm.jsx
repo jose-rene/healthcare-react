@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button, Card, Col, Collapse, Row } from "react-bootstrap";
 import FapIcon from "components/elements/FapIcon";
 
