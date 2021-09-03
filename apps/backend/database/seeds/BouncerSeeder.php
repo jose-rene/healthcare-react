@@ -49,6 +49,7 @@ class BouncerSeeder extends Seeder
         ]);
 
         Bouncer::allow($super)->to('create-users');
+        Bouncer::allow($super)->to('delete-users');
         Bouncer::allow($super)->to('force-delete-users');
         Bouncer::allow($super)->to('create-members');
         Bouncer::allow($super)->to('create-payers');

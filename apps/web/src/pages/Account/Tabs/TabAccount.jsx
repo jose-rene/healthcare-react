@@ -52,7 +52,7 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
 
     const [{ loading: deactivating }, fireDeactivateUser] = useApiCall({
         method: DELETE,
-        url: `user/profile`,
+        url: `profile`,
     });
 
     // need to implement form submit api
