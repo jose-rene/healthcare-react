@@ -68,9 +68,17 @@ class LoginController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
+        /** @var User $user */
         $user = auth()->user();
+
+        if (!$user->active) {
+            auth()->logout();
+
+            abort(401, 'user-inactive');
+        }
+
         if ($user->is_2fa) {
-            $class = 'email' === $user->twofactor_method || 'sms' === $user->twofactor_method ? TwoFactorAuthMessage::class : TwoFactorAuthApp::class;
+            $class  = 'email' === $user->twofactor_method || 'sms' === $user->twofactor_method ? TwoFactorAuthMessage::class : TwoFactorAuthApp::class;
             $params = App::make($class)->send($user);
 
             return response()->json($params, 200);

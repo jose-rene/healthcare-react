@@ -11,6 +11,7 @@ use App\Http\Resources\UserResource;
 use App\Jobs\PasswordExpireCheckJob;
 use App\Models\User;
 use Bouncer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -456,7 +457,7 @@ class UserController extends Controller
         }
 
         $authed_user->token()->revoke();
-        $authed_user->delete();
+        $authed_user->update(['inactive_at' => Carbon::now()]);
 
         return response()->json(['message' => 'bye']);
     }

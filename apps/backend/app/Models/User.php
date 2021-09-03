@@ -44,6 +44,8 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property Image           profileImage
  * @property mixed           avatar
  * @property Payer|null      payer
+ * @property Carbon          inactive_at
+ * @property boolean         active
  * @link https://github.com/JosephSilber/bouncer#cheat-sheet
  */
 class User extends Authenticatable implements MustVerifyEmail
@@ -72,6 +74,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_2fa',
         'google2fa_secret',
         'twofactor_method',
+        'inactive_at',
         'gender',
     ];
 
@@ -95,6 +98,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at'      => 'datetime',
+        'inactive_at'            => 'datetime',
         'notification_prefs'     => 'json',
         'reset_password'         => 'boolean',
         'alert_threshold_number' => 'int',
@@ -155,6 +159,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function profileImage()
     {
         return $this->morphOne(Image::class, 'imageable');
+    }
+
+    public function getActiveAttribute()
+    {
+        return !$this->inactive_at;
     }
 
     public function getAvatarAttribute()
@@ -408,6 +417,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->phonable->filter(function ($value, $key) {
             return $value->is_mobile;
         })->first();
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->whereNull('inactive_at');
     }
 
     public function scopeSearchAllUsers($query, self $authedUser)
