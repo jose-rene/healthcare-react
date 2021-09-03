@@ -12,14 +12,10 @@ import PageAlert from "components/elements/PageAlert";
 import TableAPI from "components/elements/TableAPI";
 import Form from "components/elements/Form";
 import Icon from "components/elements/Icon";
-
 import useToast from "hooks/useToast";
 import useApiCall from "hooks/useApiCall";
 import useSearch from "hooks/useSearch";
-
 import { ACTIONS } from "helpers/table";
-
-import "styles/healthplan.scss";
 
 const SearchMember = (props) => {
     const { generalError } = useToast();
@@ -195,12 +191,14 @@ const SearchMember = (props) => {
                     </Col>
                 </Row>
                 <Row>
-                    <Col xl={11}>
+                    <Col xl={8}>
                         {!data.length && !searchStatus && (
-                            <div className="no-result">
+                            <div className="text-center">
                                 Please search to show results
                             </div>
                         )}
+                    </Col>
+                    <Col xl={11}>
                         {searchStatus && (
                             <>
                                 <TableAPI

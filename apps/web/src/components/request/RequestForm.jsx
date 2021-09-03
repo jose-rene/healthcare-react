@@ -126,7 +126,11 @@ const RequestForm = ({ data }) => {
     // refresh request
     const refreshRequest = async (form) => {
         try {
-            const result = await fireSubmit({ method: "get" });
+            // @note set persist changes to false, otherwise fireSubmit will change to a get request
+            const result = await fireSubmit({
+                method: "get",
+                persist_changes: false,
+            });
             // close
             if (form && form === "doc") {
                 setOpenRequestDoc(false);
