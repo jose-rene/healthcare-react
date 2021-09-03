@@ -14,7 +14,6 @@ import FapIcon from "components/elements/FapIcon";
 import useApiCall from "hooks/useApiCall";
 import PageAlert from "components/elements/PageAlert";
 import LoadingOverlay from "react-loading-overlay";
-import { validateFile } from "../../../helpers/validate";
 
 /* eslint-disable react/no-array-index-key */
 
@@ -131,8 +130,8 @@ const RequestDocForm = ({
                                 {openRequestDoc
                                     ? "close"
                                     : documents.length
-                                        ? "change"
-                                        : "add"}
+                                    ? "change"
+                                    : "add"}
                             </Button>
                         </div>
                     </div>

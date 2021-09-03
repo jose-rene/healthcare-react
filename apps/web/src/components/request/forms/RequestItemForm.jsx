@@ -179,6 +179,8 @@ const RequestItemForm = ({
         }
         // otherwise populate the initial group select by adding a new card
         addNewItemsCard();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [payerProfile]);
     // set params when request items change
     /* useEffect(() => {
@@ -361,8 +363,8 @@ const RequestItemForm = ({
                                 {openRequestItem
                                     ? "close"
                                     : requestItems.length
-                                        ? "change"
-                                        : "add"}
+                                    ? "change"
+                                    : "add"}
                             </Button>
                         </div>
                     </div>
@@ -439,10 +441,10 @@ const RequestItemForm = ({
                                                                             .classification
                                                                             .value
                                                                             ? selectGroup.classification.options.find(
-                                                                                (
+                                                                                  (
                                                                                       opt
-                                                                                ) =>
-                                                                                    opt.value ===
+                                                                                  ) =>
+                                                                                      opt.value ===
                                                                                       selectGroup
                                                                                           .classification
                                                                                           .value
@@ -483,9 +485,9 @@ const RequestItemForm = ({
                                                                             select.value
                                                                                 ? select.options.find(
                                                                                       (
-                                                                                        opt
-                                                                                    ) =>
-                                                                                        opt.value ===
+                                                                                          opt
+                                                                                      ) =>
+                                                                                          opt.value ===
                                                                                           select.value
                                                                                   )
                                                                                 : null
