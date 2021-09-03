@@ -40,21 +40,13 @@ const NewRequestAdd = ({
     useEffect(() => {
         (async () => {
             if (!request_id) {
-                let id = null;
                 try {
-                    const { id: newReportId } = await fireCreateRequest();
-
-                    if (saving) {
-                        id = newReportId;
-                    }
-                } catch (e) {}
-
-                if (!id) {
+                    const { id } = await fireCreateRequest();
+                    history.push(`/member/${member_id}/request/${id}/edit`);
+                } catch (e) {
+                    console.log("error creating request:", e);
                     goToSearch();
-                    return;
                 }
-
-                history.push(`/member/${member_id}/request/${id}/edit`);
             }
         })();
     }, []);
@@ -80,8 +72,12 @@ const NewRequestAdd = ({
     const { member = {} } = data;
 
     const [name, dob] = useMemo(() => {
-        const { title = "", last_name = "", first_name = "", dob = "" } =
-            member || {};
+        const {
+            title = "",
+            last_name = "",
+            first_name = "",
+            dob = "",
+        } = member || {};
 
         return [`${title} ${first_name} ${last_name}`, dob];
     }, [member]);
