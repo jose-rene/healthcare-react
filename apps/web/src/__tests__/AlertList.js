@@ -2,6 +2,8 @@ import "@testing-library/jest-dom";
 import React from "react";
 import AlertList from "../components/elements/AlertList";
 import { axiosMock, render, screen } from "../testUtils";
+import { GlobalProvider } from "../Context/GlobalContext";
+import "../fontawesome";
 
 export const notificationResponse = [
     {
@@ -366,13 +368,9 @@ afterEach(() => {
 describe('Alert List', () => {
     it('Displays an alert list with read and unread alerts', async () => {
         axiosMock().onGet(/notifications/).reply(200, notificationResponse);
-        // .onPut(/notifications/)
-        // .reply('200', {
-        //     status: true,
-        // });
 
         // render with redux
-        render(<AlertList />);
+        render(<GlobalProvider><AlertList /></GlobalProvider>);
 
         // wait for the state changes
         const list = await screen.findByTestId('alert-list-group');
