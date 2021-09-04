@@ -70,19 +70,6 @@ const RequestDocForm = ({
     };
 
     // handle file upload
-    const doFileUpload = () => {
-        uploadFiles.forEach((item) => {
-            console.log(item);
-            handleFile(item);
-        });
-        // clear dropzone files
-        setUploadFiles([]);
-        // when done, refresh the request
-        refreshRequest("doc");
-    };
-
-    // console.log("docs -> ", documents);
-
     const [{ error: fileError, loading: isUploading }, fileSubmit] = useApiCall(
         {
             method: "post",
@@ -90,7 +77,7 @@ const RequestDocForm = ({
         }
     );
 
-    const handleFile = async (selectedFile) => {
+    const handleFile = (selectedFile) => {
         const formData = new FormData();
 
         formData.append("file", selectedFile);
@@ -98,13 +85,22 @@ const RequestDocForm = ({
         formData.append("name", selectedFile.name);
         formData.append("mime_type", selectedFile.type);
 
-        try {
-            await fileSubmit({ params: formData });
-        } catch (error) {
-            console.log(error);
-        }
+        return fileSubmit({ params: formData });
     };
 
+    const doFileUpload = async () => {
+        const promises = uploadFiles.map(async (item) => {
+            const result = await handleFile(item);
+            return result;
+        });
+        // wait for all promises to resolve
+        await Promise.all(promises);
+        // clear dropzone files
+        setUploadFiles([]);
+        // refresh the request
+        refreshRequest("doc");
+    };
+    // console.log("docs -> ", documents);
     return (
         <>
             <Card className={`border-1 mt-3${disabled ? " disabled" : ""}`}>

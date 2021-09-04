@@ -39,7 +39,7 @@ const FapIcon = ({
 
     const mappedIcon = map[name] || name;
     const mappedClass =
-        mappedIcon === "spinner" || spin ? "fa-spin" : className;
+        mappedIcon === "spinner" || spin ? "fa-spin align-middle" : className;
 
     return (
         <FontAwesomeIcon

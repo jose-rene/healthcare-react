@@ -126,18 +126,15 @@ const DueDateForm = ({
                 <Card.Body className="ps-5">
                     <Collapse in={openDueDate}>
                         <div>
-                            {
-                                // check for openDueDate will show if disabled due to opacity
-                                updateError && openDueDate && (
-                                    <PageAlert
-                                        variant="warning"
-                                        dismissible
-                                        timeout={6000}
-                                    >
-                                        {updateError}
-                                    </PageAlert>
-                                )
-                            }
+                            {updateError && (
+                                <PageAlert
+                                    variant="warning"
+                                    dismissible
+                                    timeout={6000}
+                                >
+                                    {updateError}
+                                </PageAlert>
+                            )}
                             <Row>
                                 <Col lg={6}>
                                     <LoadingOverlay
