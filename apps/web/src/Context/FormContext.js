@@ -1,11 +1,4 @@
-import React, {
-    useContext,
-    useState,
-    useMemo,
-    createContext,
-    useEffect,
-    useCallback,
-} from "react";
+import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
 import { template } from "../helpers/string";
@@ -93,7 +86,16 @@ const FormProvider = ({
 
     useEffect(() => {
         if (tick !== null && onFormChange) {
-            onFormChange(form);
+            let formValues = form;
+
+            // runs component pre submit data formatting
+            Object.keys(formatDatas).forEach((callbackName) => {
+                const callback = formatDatas[callbackName];
+
+                formValues = callback(formValues, getValue, callbackName);
+            });
+
+            onFormChange(formValues);
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps

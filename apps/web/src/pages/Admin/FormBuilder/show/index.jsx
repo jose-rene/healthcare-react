@@ -48,6 +48,13 @@ const FormView = ({
 
     const handleSubmit = (ff) => {
         console.log("handleSubmit11.ff", JSON.stringify(ff), ff);
+        // TODO :: send the form data to the api to persist the form data basically do
+        // the same as the form change function except this could mark the form done
+    };
+
+    const handleFormChange = (ff) => {
+        console.log("handleFormChange.ff", JSON.stringify(ff), ff);
+        // TODO :: send the form data to the api to persist the form data
     };
 
     if (formLoading || !form_slug) {
@@ -60,6 +67,7 @@ const FormView = ({
                 <h3>Show</h3>
                 {form.length > 0 && (
                     <Form
+                        onFormChange={handleFormChange}
                         onSubmit={handleSubmit}
                         validation={validation}
                         autocomplete="off"
