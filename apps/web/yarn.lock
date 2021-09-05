@@ -10184,10 +10184,10 @@ react-error-overlay@^6.0.7:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.9.tgz#3c743010c9359608c375ecd6bc76f35d93995b0a"
   integrity sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==
 
-react-form-builder3@^0.8.79:
-  version "0.8.79"
-  resolved "https://registry.yarnpkg.com/react-form-builder3/-/react-form-builder3-0.8.79.tgz#0e8e0efbb47f627be27d6909e6c876afdbcb3803"
-  integrity sha512-GtPepiatbKOclbZZYPHRdmsSrhVO1Ix3O/1WiNWCWUgOfSRNRJjgtSi5GOXnOaJ4HclSdS21M1rBnRFqlPUORg==
+react-form-builder3@^5.1.2:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/react-form-builder3/-/react-form-builder3-5.2.2.tgz#71cc9bea1f89f788553873e90955211ee998bc09"
+  integrity sha512-b0+7FZhu8mBgzv3SYHoxsYWLV8t0uTDFjzXW+4hvGnTxARs9Q7u+FG8dFmAx5PgA7GJ0cUo/sbcH9wg9jeJVuw==
   dependencies:
     beedle "^0.8.1"
     classnames "^2.2.6"

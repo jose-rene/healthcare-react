@@ -48,9 +48,9 @@ $position-values: (
 .table {
     .actions {
         @extend .m-2;
+        gap: 5px;
 
         .action {
-            @extend .me-2;
             @extend .p-2;
         }
     }

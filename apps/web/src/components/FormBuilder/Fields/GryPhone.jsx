@@ -1,18 +1,18 @@
 import React from "react";
-import ContextInput from "../../inputs/ContextInput";
+import PhoneInput from "../../inputs/PhoneInput";
 
 const GryPhone = (props) => {
     const allProps = {
-        ...(props.data ?? false),
-        ...props.data,
+        ...props,
+        ...(props.data ?? {}),
     };
 
-    allProps.name = allProps.custom_name;
+    const { custom_name = "phone" } = allProps;
 
     return (
-        <ContextInput
+        <PhoneInput
             label="phone"
-            placeholder="(000) 000-0000"
+            name={custom_name}
             {...allProps}
         />
     );

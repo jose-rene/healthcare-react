@@ -3,15 +3,15 @@ import PageLayout from "../../../../layouts/PageLayout";
 import Form from "components/elements/Form";
 import "../edit/style.scss";
 import RenderForm from "./RenderForm";
-import { Button } from "components";
 import useFormBuilder from "../../../../hooks/useFormBuilder";
+import SubmitButton from "../../../../components/elements/SubmitButton";
 
 const FormView = ({
     match: {
         params: { form_slug },
     },
 }) => {
-    const [{ form, formLoading }, { fireLoadForm }] = useFormBuilder({
+    const [{ form, formLoading, saving }, { fireLoadForm }] = useFormBuilder({
         formId: form_slug,
     });
 
@@ -66,7 +66,7 @@ const FormView = ({
                     >
                         <RenderForm formElements={form} />
 
-                        <Button type="submit" label="Submit" />
+                        <SubmitButton loading={saving} />
                     </Form>
                 )}
             </div>
