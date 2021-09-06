@@ -76,7 +76,7 @@ const RequestItemForm = ({
     };
     // add a new card for request items
     const addNewItemsCard = () => {
-        console.log("classifications -> ", payerProfile.classifications);
+        // console.log("classifications -> ", payerProfile.classifications);
         setRequestItemGroups((prevGroups) => [
             ...prevGroups,
             {

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { Alert, Container, Row, Col } from "react-bootstrap";
 import PageTitle from "components/PageTitle";
 import RequestForm from "components/request/RequestForm";
+import FapIcon from "components/elements/FapIcon";
 import PageLayout from "../../layouts/PageLayout";
 import useApiCall from "../../hooks/useApiCall";
 import { POST } from "../../config/URLs";
@@ -42,10 +43,7 @@ const NewRequestAdd = ({
             if (!request_id) {
                 try {
                     const { id } = await fireCreateRequest();
-
-                    if (saving || id) {
-                        history.push(`/member/${member_id}/request/${id}/edit`);
-                    }
+                    history.push(`/member/${member_id}/request/${id}/edit`);
                 } catch (e) {
                     console.log("error creating request:", e);
                     goToSearch();
@@ -75,8 +73,12 @@ const NewRequestAdd = ({
     const { member = {} } = data;
 
     const [name, dob] = useMemo(() => {
-        const { title = "", last_name = "", first_name = "", dob = "" } =
-            member || {};
+        const {
+            title = "",
+            last_name = "",
+            first_name = "",
+            dob = "",
+        } = member || {};
 
         return [`${title} ${first_name} ${last_name}`, dob];
     }, [member]);
@@ -108,8 +110,15 @@ const NewRequestAdd = ({
                                         </div>
                                     </div>
                                 </Alert>
-                                {!loading && data?.id && (
+                                {!loading && data?.id ? (
                                     <RequestForm data={data} />
+                                ) : (
+                                    <div className="text-center">
+                                        <FapIcon icon="spinner" size="2x" />
+                                        <span className="ms-2 align-middle">
+                                            Loading...
+                                        </span>
+                                    </div>
                                 )}
                             </div>
                         </Row>
