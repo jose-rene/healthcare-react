@@ -328,7 +328,7 @@ class UserTest extends TestCase
             ->assertJsonStructure(['message'])
             ->assertSee($this->user->email);
 
-        // verfiy user has been deleted
+        // verify user has been deleted
         $response = $this->get('/v1/user/' . $this->user->uuid);
         $response->assertStatus(404);
     }

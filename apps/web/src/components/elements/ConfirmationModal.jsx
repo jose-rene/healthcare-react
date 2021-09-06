@@ -9,9 +9,10 @@ const ConfirmationModal = ({
     content,
     handleAction,
     handleCancel,
-}) => {
-    return (
-        <Modal show={showModal} onHide={handleAction}>
+    loading,
+}) =>
+    (
+        <Modal show={showModal} onHide={handleCancel}>
             <div className="col-md-12 px-4 pt-4">
                 <div className="row mb-4">
                     <div className="col-md-12">{content}</div>
@@ -24,21 +25,21 @@ const ConfirmationModal = ({
                             className="btn-block"
                             outline
                             label="Cancel"
-                            onClick={() => handleCancel()}
+                            onClick={handleCancel}
                         />
                     </div>
 
                     <div className="col-md-3">
                         <Button
+                            loading={loading}
                             className="btn-blue text-btn btn-block"
                             label="Confirm"
-                            onClick={() => handleAction()}
+                            onClick={handleAction}
                         />
                     </div>
                 </div>
             </div>
         </Modal>
     );
-};
 
 export default ConfirmationModal;

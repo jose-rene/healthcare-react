@@ -64,27 +64,35 @@ const FormIndex = () => {
                 label: "Actions",
                 formatter: (val, { slug }) => {
                     return (
-                        <>
-                            <Link to={`/admin/forms/${slug}/edit`} title="Edit">
-                                <Icon icon="edit" size="lg" />
+                        <div className="actions">
+                            <Link className="action" to={`/admin/forms/${slug}/edit`} title="Edit">
+                                <Icon icon="edit" size="1x" />
                             </Link>
 
                             <Link
-                                className="ml-3"
+                                className="action"
                                 to={`/forms/${slug}/show`}
                                 title="View"
                             >
-                                <Icon icon="eye" size="lg" />
+                                <Icon icon="eye" size="1x" />
                             </Link>
 
                             <Link
-                                className="ml-3"
+                                className="action"
+                                onClick={() => handleCopyForm(slug)}
+                                title="Delete"
+                            >
+                                <Icon icon="copy" size="1x" />
+                            </Link>
+
+                            <Link
+                                className="action"
                                 onClick={() => handleDeleteForm(slug)}
                                 title="Delete"
                             >
-                                <Icon icon="trash" size="lg" />
+                                <Icon icon="trash" size="1x" />
                             </Link>
-                        </>
+                        </div>
                     );
                 },
             },
@@ -115,6 +123,21 @@ const FormIndex = () => {
 
     const handleDeleteForm = (slug) => {
         setShowDeleteConfirm(slug);
+    };
+
+    const handleCopyForm = async (slug) => {
+        const name = prompt("New Form Name?", slug + "_copy");
+
+        await firePostForm({
+            params: {
+                name,
+                copyFrom: slug,
+            },
+        });
+
+        if (!postForm) {
+            await redoSearch();
+        }
     };
 
     const handleDeleteConfirm = async () => {

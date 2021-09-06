@@ -4,13 +4,10 @@ import { generate as generateRandomString } from "randomstring";
 import React from "react";
 import { AUTH_TOKEN_NAME } from "../config/URLs";
 import Account from "../pages/Account/Account";
-import {
-    axiosMock,
-    profileResponse,
-    renderWithRouter,
-    screen,
-} from "../testUtils";
+import { axiosMock, profileResponse, renderWithRouter, screen } from "../testUtils";
 import { notificationResponse } from "./AlertList";
+import { GlobalProvider } from "../Context/GlobalContext";
+import "../fontawesome";
 
 describe("My Account Page", () => {
     const authToken = generateRandomString({
@@ -29,7 +26,7 @@ describe("My Account Page", () => {
             .onGet(/notifications/)
             .reply(200, notificationResponse);
         // render with redux
-        renderWithRouter(<Account />, {
+        renderWithRouter(<GlobalProvider><Account /></GlobalProvider>, {
             user: {
                 initializing: true,
                 primaryRole: false,
@@ -53,7 +50,7 @@ describe("My Account Page", () => {
                 message: "Fly a kite in a thunderstorm. - Benjamin Franklin",
             });
         // render with redux
-        renderWithRouter(<Account />, {
+        renderWithRouter(<GlobalProvider><Account /></GlobalProvider>, {
             user: {
                 initializing: true,
                 primaryRole: false,

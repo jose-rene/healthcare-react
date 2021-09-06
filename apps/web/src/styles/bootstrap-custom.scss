@@ -1,13 +1,5 @@
 @import "./variables";
 
-// required for the theme merge to take place
-//@import "~bootstrap/scss/functions";
-//@import "~bootstrap/scss/variables";
-
-// Merge the maps
-//$theme-colors: map-merge($theme-colors, $custom-colors);
-//$font-sizes: map-merge($font-sizes, $custom-font-sizes);
-
 // Import Bootstrap 5
 @import "~bootstrap/scss/bootstrap.scss";
 
@@ -28,10 +20,10 @@ $position-values: (
     100: 100%,
 );
 */
-.card { 
+.card {
     &.disabled {
         pointer-events: none;
-        opacity: 0.5 
+        opacity: 0.5
     }
 }
 
@@ -56,9 +48,9 @@ $position-values: (
 .table {
     .actions {
         @extend .m-2;
+        gap: 5px;
 
         .action {
-            @extend .me-2;
             @extend .p-2;
         }
     }
@@ -163,4 +155,20 @@ body {
 
 .tab-content {
     @extend .mt-4;
+}
+
+
+.dot {
+    width: 10px;
+    height: 10px;
+    margin: 7px 0 0 10px;
+    border-radius: 50%;
+
+    &.green-dot {
+        @extend .bg-green;
+    }
+
+    &.red-dot {
+        @extend .bg-danger;
+    }
 }

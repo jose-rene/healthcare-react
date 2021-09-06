@@ -68,7 +68,7 @@ const Button = ({
             className={className}
         >
             {icon && (
-                <Icon className="me-3" icon={icon} size={iconSize || size} />
+                <Icon className={`${renderedLabel ? "me-3" : ""}`} icon={icon} size={iconSize || size} />
             )}
             {renderedLabel}
             {loading && (

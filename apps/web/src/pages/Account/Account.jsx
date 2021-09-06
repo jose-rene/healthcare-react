@@ -8,7 +8,7 @@ import TabSecurity from "./Tabs/TabSecurity";
 import "../../styles/account.scss";
 import BroadcastAlert from "components/elements/BroadcastAlert";
 
-const Account = ({ currentUser }) => {
+const Account = ({ history, currentUser }) => {
     return (
         <PageLayout>
             <BroadcastAlert />
@@ -17,7 +17,7 @@ const Account = ({ currentUser }) => {
 
                 <Tabs defaultActiveKey="account">
                     <Tab eventKey="account" title="Account Info">
-                        <TabAccount />
+                        <TabAccount history={history} />
                     </Tab>
 
                     {currentUser.user_type === "ClinicalServicesUser" ? (

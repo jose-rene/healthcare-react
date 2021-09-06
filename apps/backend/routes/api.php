@@ -27,6 +27,7 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->get('/plan/idtypes', 'PlanController@idtypes');
 
     // user routes
+    $router->delete('/profile', 'UserController@profileDelete')->name('user.profile.delete');
     $router->get('/user/profile', 'UserController@profile')->name('user.profile');
     $router->put('/user/profile', 'UserController@profileSave')->name('user.profile.save');
     $router->post('/user/profile-image', 'UserController@profileImageSave')->name('user.profile.image.save');

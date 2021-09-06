@@ -3,15 +3,15 @@ import PageLayout from "../../../../layouts/PageLayout";
 import Form from "components/elements/Form";
 import "../edit/style.scss";
 import RenderForm from "./RenderForm";
-import { Button } from "components";
 import useFormBuilder from "../../../../hooks/useFormBuilder";
+import SubmitButton from "../../../../components/elements/SubmitButton";
 
 const FormView = ({
     match: {
         params: { form_slug },
     },
 }) => {
-    const [{ form, formLoading }, { fireLoadForm }] = useFormBuilder({
+    const [{ form, formLoading, saving }, { fireLoadForm }] = useFormBuilder({
         formId: form_slug,
     });
 
@@ -48,6 +48,13 @@ const FormView = ({
 
     const handleSubmit = (ff) => {
         console.log("handleSubmit11.ff", JSON.stringify(ff), ff);
+        // TODO :: send the form data to the api to persist the form data basically do
+        // the same as the form change function except this could mark the form done
+    };
+
+    const handleFormChange = (ff) => {
+        console.log("handleFormChange.ff", JSON.stringify(ff), ff);
+        // TODO :: send the form data to the api to persist the form data
     };
 
     if (formLoading || !form_slug) {
@@ -60,13 +67,14 @@ const FormView = ({
                 <h3>Show</h3>
                 {form.length > 0 && (
                     <Form
+                        onFormChange={handleFormChange}
                         onSubmit={handleSubmit}
                         validation={validation}
                         autocomplete="off"
                     >
                         <RenderForm formElements={form} />
 
-                        <Button type="submit" label="Submit" />
+                        <SubmitButton loading={saving} />
                     </Form>
                 )}
             </div>

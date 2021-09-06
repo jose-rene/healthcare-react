@@ -11,6 +11,7 @@ use App\Http\Resources\UserResource;
 use App\Jobs\PasswordExpireCheckJob;
 use App\Models\User;
 use Bouncer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -445,6 +446,22 @@ class UserController extends Controller
         return new MyUserResource($request->user());
     }
 
+    public function profileDelete(Request $request)
+    {
+        /** @var User $authed_user */
+        $authed_user = $request->user();
+
+        // allow user to only update their own profile
+        if ($authed_user->cannot('delete', $authed_user)) {
+            return response()->json(['message' => 'You do not have permissions for the requested resource.'], 403);
+        }
+
+        $authed_user->token()->revoke();
+        $authed_user->update(['inactive_at' => Carbon::now()]);
+
+        return response()->json(['message' => 'bye']);
+    }
+
     public function profileSave(Request $request)
     {
         $user = $request->user();
@@ -453,19 +470,24 @@ class UserController extends Controller
             return response()->json(['message' => 'You do not have permissions for the requested resource.'], 403);
         }
 
-        $data = $request->except('password', 'roles', 'user_type');
-        // validate the primary role
-        $role = Bouncer::role()->firstWhere(['name' => $data['primary_role']]);
-        if (empty($role) || !$user->roles->contains('name', $data['primary_role'])) {
-            return response()->json(['message' => 'Invalid primary role.'], 422);
-        }
-        // change the user type if applicable
-        if ($user->user_type_domain !== $role->domain) {
-            // change the user type
-            $data['user_type'] = User::mapTypeForDomain($role->domain);
+        $request_data = $request->except('password', 'roles', 'user_type');
+
+        if ($request->has('primary_role')) {
+            // validate the primary role
+            $user_found_role = Bouncer::role()->firstWhere(['name' => $request_data['primary_role']]);
+            if (empty($user_found_role) || !$user->roles->contains('name', $request_data['primary_role'])) {
+                return response()->json(['message' => 'Invalid primary role.'], 422);
+            }
+
+            // change the user type if applicable
+            if ($user->user_type_domain !== $user_found_role->domain) {
+                // change the user type
+                $request_data['user_type'] = User::mapTypeForDomain($user_found_role->domain);
+            }
         }
 
-        $user->update($data);
+
+        $user->update($request_data);
 
         return new MyUserResource($user);
     }

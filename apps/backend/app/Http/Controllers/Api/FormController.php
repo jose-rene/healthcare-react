@@ -42,7 +42,21 @@ class FormController extends Controller
 
     public function store(Request $request)
     {
-        Form::create(['fields' => []] + $request->all());
+        // if copyFrom is present then its required
+        $request->validate([
+            'copyFrom' => ['required', 'sometimes'],
+        ]);
+
+        $fields = [];
+
+        // get fields to copy from form slug
+        if (($copy_form_name = $request->get('copyFrom')) != null) {
+            $form   = Form::where('slug', $copy_form_name)->firstOrFail();
+            $fields = $form->fields;
+        }
+
+        // generate the new form with empty fields or copied fields from another form
+        Form::create(['fields' => $fields] + $request->all());
 
         return response()->noContent();
     }

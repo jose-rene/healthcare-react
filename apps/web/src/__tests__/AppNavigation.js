@@ -6,6 +6,8 @@ import { AUTH_TOKEN_NAME } from "../config/URLs";
 import AppNavigation from "../navigation/AppNavigation";
 import { axiosMock, fireEvent, profileResponse, render, screen, wait } from "../testUtils";
 import { notificationResponse } from "./AlertList";
+import { GlobalProvider } from "../Context/GlobalContext";
+import "../fontawesome";
 
 // mock the window location
 const initialLocation = window.location;
@@ -26,7 +28,7 @@ afterEach(() => {
 describe("App Navigation", () => {
     it("renders login with redux state defaults", async () => {
         // render with redux
-        render(<AppNavigation />, {
+        render(<GlobalProvider><AppNavigation /></GlobalProvider>, {
             userToken: generateRandomString({
                 length: 24,
                 charset: "alphanumeric",
@@ -40,7 +42,7 @@ describe("App Navigation", () => {
     });
     it("redirects from dashboard to login when not authenticated", async () => {
         // render with redux
-        render(<AppNavigation />, {
+        render(<GlobalProvider><AppNavigation /></GlobalProvider>, {
             isLoading: false,
             route: "/dashboard",
         });
@@ -65,7 +67,7 @@ describe("App Navigation", () => {
         });
         await AsyncStorage.setItem(AUTH_TOKEN_NAME, authToken);
         // render with redux
-        render(<AppNavigation />, {
+        render(<GlobalProvider><AppNavigation /></GlobalProvider>, {
             isLoading: false,
             route: "/dashboard",
         });
@@ -99,7 +101,7 @@ describe("App Navigation", () => {
         });
         await AsyncStorage.setItem(AUTH_TOKEN_NAME, authToken);
         // render with redux
-        render(<AppNavigation />, {
+        render(<GlobalProvider><AppNavigation /></GlobalProvider>, {
             isLoading: false,
             route: "/dashboard",
         });
@@ -143,7 +145,7 @@ describe("App Navigation", () => {
         });
         await AsyncStorage.setItem(AUTH_TOKEN_NAME, authToken);
         // render with redux
-        render(<AppNavigation />, {
+        render(<GlobalProvider><AppNavigation /></GlobalProvider>, {
             isLoading: false,
             route: "/dashboard",
         });
