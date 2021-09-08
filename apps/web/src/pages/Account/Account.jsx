@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
 import { Tabs, Tab } from "react-bootstrap";
 import PageLayout from "../../layouts/PageLayout";
 import TabAccount from "./Tabs/TabAccount";
@@ -7,8 +6,12 @@ import TabDocuments from "./Tabs/TabDocuments";
 import TabSecurity from "./Tabs/TabSecurity";
 import "../../styles/account.scss";
 import BroadcastAlert from "components/elements/BroadcastAlert";
+import { useUser } from "Context/UserContext";
 
-const Account = ({ history, currentUser }) => {
+const Account = ({ history }) => {
+    const { getUser } = useUser();
+    const currentUser = getUser();
+
     return (
         <PageLayout>
             <BroadcastAlert />
@@ -35,9 +38,4 @@ const Account = ({ history, currentUser }) => {
     );
 };
 
-const mapStateToProps = ({ auth, user }) => ({
-    localAuth: auth,
-    currentUser: user,
-});
-
-export default connect(mapStateToProps)(Account);
+export default Account;

@@ -7,16 +7,20 @@ import Icon from "components/elements/Icon";
 import { Button } from "components";
 import InputText from "components/inputs/InputText";
 import PasswordRequirements from "components/user/PasswordRequirements";
+import { useUser } from "Context/UserContext";
 import { BASE_URL, POST, PUT } from "../config/URLs";
 import useApiCall from "../hooks/useApiCall";
-import { connect } from "react-redux";
 
-const SetForgotPassword = ({ location: { search: params = "" }, authed }) => {
+const SetForgotPassword = ({ location: { search: params = "" } }) => {
     const [passwordChangeError, setPasswordChangeError] = useState(null);
+    const { isAuthed } = useUser();
+    const authed = isAuthed();
     const history = useHistory();
-    const { email, token, redirect = "/?action=password-updated" } = qs.parse(
-        params
-    );
+    const {
+        email,
+        token,
+        redirect = "/?action=password-updated",
+    } = qs.parse(params);
     const { register, handleSubmit, errors, watch, getValues } = useForm();
     const [goodPassword, setGoodPassword] = useState(false);
     const [passwordChecking, setPasswordChecking] = useState(false);
@@ -67,7 +71,6 @@ const SetForgotPassword = ({ location: { search: params = "" }, authed }) => {
                     );
 
                 default:
-                    return;
             }
         }
     };
@@ -166,8 +169,4 @@ const SetForgotPassword = ({ location: { search: params = "" }, authed }) => {
     );
 };
 
-const mapStateToProps = ({ user: { authed } }) => ({
-    authed,
-});
-
-export default connect(mapStateToProps)(SetForgotPassword);
+export default SetForgotPassword;

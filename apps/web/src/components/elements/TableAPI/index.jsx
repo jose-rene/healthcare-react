@@ -102,7 +102,7 @@ const TableAPI = ({
                 </div>
             </div>
             <div className="clearfix" />
-            <Table striped bordered hover responsive condensed>
+            <Table striped bordered hover responsive condensed="condensed">
                 <TableHeaders
                     headers={headers}
                     searchObj={searchObj}

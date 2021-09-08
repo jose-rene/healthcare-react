@@ -1,26 +1,23 @@
 import qs from "query-string";
 import React, { useRef, useState } from "react";
-import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import * as Yup from "yup";
 import Form from "components/elements/Form";
+import { useUser } from "Context/UserContext";
 import useAuth, { AuthError } from "../../hooks/useAuth";
-import { initializeUser } from "../../actions/userAction";
 import LoginForm from "./LoginForm";
 
 // this rule wants both the htmlFor and label nested, should be either not both
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-const Login = ({
-    authed,
-    initializeUser,
-    location: { search: params = "" } = {},
-}) => {
+const Login = ({ location: { search: params = "" } = {} }) => {
     const [{ loading, userLoading, error }, { authUser }] = useAuth();
     const { action = false, redirect = "/dashboard" } = qs.parse(params);
     const email = useRef();
     const [loginValues, setLoginValues] = useState({});
     const [tickClearValidation, setTickClearValidation] = useState(0);
+
+    const { initUser, isAuthed } = useUser();
 
     const validation = {
         email: {
@@ -39,7 +36,8 @@ const Login = ({
         setLoginValues(data);
         try {
             const { profile } = await authUser(data, { loadProfile: true });
-            await initializeUser(profile);
+            // await initializeUser(profile);
+            initUser(profile);
         } catch (e) {
             if (e instanceof AuthError) {
                 setTickClearValidation(tickClearValidation + 1);
@@ -50,7 +48,8 @@ const Login = ({
         }
     };
 
-    if (authed) {
+    if (isAuthed()) {
+        // return <div>Authed!!!</div>;
         return <Redirect to={redirect} />;
     }
 
@@ -73,12 +72,4 @@ const Login = ({
     );
 };
 
-const mapStateToProps = ({ user: { authed } }) => ({
-    authed,
-});
-
-const mapDispatchToProps = {
-    initializeUser,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;

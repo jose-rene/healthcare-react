@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { signOut } from "../actions/authAction";
-import { initializeUser } from "../actions/userAction";
+import { useUser } from "Context/UserContext";
 import { ADMIN } from "../actions/types";
 import useApiCall from "../hooks/useApiCall";
 import Account from "../pages/Account/Account";
@@ -35,24 +33,35 @@ import FormBuilderEdit from "../pages/Admin/FormBuilder/edit";
 import FormIndex from "../pages/Admin/FormBuilder/Index";
 import AdminUserList from "../pages/Admin/UserList";
 
-const AppNavigation = ({ initializing, initializeUser }) => {
+const AppNavigation = () => {
     const [{ loading }, fireInitializeUser] = useApiCall({
         url: "user/profile",
     });
 
+    const { initUser, getUser, logout } = useUser();
+    const { initializing } = getUser();
+
     useEffect(() => {
         /**
-         * on page load call the api to refresh the redux storage
+         * on page load call the api to refresh the user state
          */
-        (async () => {
-            try {
-                const response = await fireInitializeUser();
-                initializeUser(response);
-            } catch (e) {
-                initializeUser();
-            }
-        })();
-
+        let isMounted = true;
+        if (isMounted) {
+            (async () => {
+                try {
+                    const response = await fireInitializeUser();
+                    // initializeUser(response);
+                    initUser(response);
+                } catch (e) {
+                    console.log("fail!!!");
+                    logout();
+                }
+            })();
+        }
+        // cleanup
+        return () => {
+            isMounted = false;
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -211,10 +220,4 @@ const AppNavigation = ({ initializing, initializeUser }) => {
     );
 };
 
-const mapStateToProps = ({ user: { authed, initializing } }) => ({
-    initializing,
-});
-
-const mapDispatchToProps = { signOut, initializeUser };
-
-export default connect(mapStateToProps, mapDispatchToProps)(AppNavigation);
+export default AppNavigation;
