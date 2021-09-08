@@ -1,6 +1,5 @@
 import React from "react";
 import { Row } from "react-bootstrap";
-import { connect } from "react-redux";
 import AlertList from "components/elements/AlertList";
 import BroadcastAlert from "components/elements/BroadcastAlert";
 import RequestInfo from "components/elements/RequestInfo";
@@ -8,7 +7,7 @@ import RequestList from "components/elements/RequestList";
 import PageLayout from "../../layouts/PageLayout";
 import "../../styles/home.scss";
 
-const Index = ({ email, full_name }) => {
+const Index = () => {
     return (
         <PageLayout>
             <BroadcastAlert />
@@ -41,9 +40,4 @@ const Index = ({ email, full_name }) => {
     );
 };
 
-const mapStateToProps = ({ user: { email, full_name } }) => ({
-    email,
-    full_name,
-});
-
-export default connect(mapStateToProps)(Index);
+export default Index;

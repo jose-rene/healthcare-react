@@ -1,15 +1,12 @@
+import { useUser } from "Context/UserContext";
 import React from "react";
-import { connect } from "react-redux";
 import PrivateRoute from "./PrivateRoute";
 
-const RoleRouteRouter = ({
-    component: _component = "",
-    children,
-    authed,
-    primaryRole,
-    ...rest
-}) => {
+const RoleRouteRouter = ({ component: _component = "", children, ...rest }) => {
     let component = null;
+
+    const { getUser } = useUser();
+    const { primaryRole, authed } = getUser();
 
     try {
         component = primaryRole
@@ -31,8 +28,4 @@ const RoleRouteRouter = ({
     );
 };
 
-const mapStateToProps = ({ user: { primaryRole } }) => ({
-    primaryRole,
-});
-
-export default connect(mapStateToProps)(RoleRouteRouter);
+export default RoleRouteRouter;

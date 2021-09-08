@@ -25,7 +25,7 @@ const UserTopSearch = ({ handleSearch, searchObj }) => {
                 onSubmit={handleSearch}
             >
                 <div className="d-flex">
-                    <FloatingLabel label="Search Users" controlId="search">
+                    <FloatingLabel label="Search Users">
                         <RawInput
                             id="search"
                             name="search"

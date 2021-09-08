@@ -4,9 +4,9 @@ import { Col, Row, Button, Container } from "react-bootstrap";
 import BroadcastAlert from "components/elements/BroadcastAlert";
 import RequestInfo from "components/elements/RequestInfo";
 import UserList from "components/elements/UserList";
+import FapIcon from "components/elements/FapIcon";
 import PageLayout from "../../layouts/PageLayout";
 import "../../styles/home.scss";
-import FapIcon from "components/elements/FapIcon";
 
 const Home = () => {
     return (

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { useUser } from "Context/UserContext";
 import PageLayout from "../../layouts/PageLayout";
 import InputText from "../../components/inputs/InputText";
 import Button from "../../components/inputs/Button";
@@ -12,17 +12,19 @@ import useApiCall from "../../hooks/useApiCall";
 import Form from "../../components/elements/Form";
 import Icon from "../../components/elements/Icon";
 import { ACTIONS } from "../../helpers/table";
-import { setSearch } from "../../actions/searchAction";
 
-const RequestLookup = ({ search, setSearch }) => {
+const RequestLookup = () => {
+    const { getUser, setSearch } = useUser();
     const {
-        auth_number,
-        date_range,
-        from_date,
-        to_date,
-        request_status_id,
-        member_id,
-    } = search;
+        search: {
+            auth_number,
+            date_range,
+            from_date,
+            to_date,
+            request_status_id,
+            member_id,
+        },
+    } = getUser();
 
     const [
         {
@@ -284,12 +286,4 @@ const RequestLookup = ({ search, setSearch }) => {
     );
 };
 
-const mapStateToProps = ({ search }) => ({
-    search,
-});
-
-const mapDispatchToProps = {
-    setSearch,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(RequestLookup);
+export default RequestLookup;

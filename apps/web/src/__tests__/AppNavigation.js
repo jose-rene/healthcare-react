@@ -4,7 +4,14 @@ import { generate as generateRandomString } from "randomstring";
 import React from "react";
 import { AUTH_TOKEN_NAME } from "../config/URLs";
 import AppNavigation from "../navigation/AppNavigation";
-import { axiosMock, fireEvent, profileResponse, render, screen, wait } from "../testUtils";
+import {
+    axiosMock,
+    fireEvent,
+    profileResponse,
+    render,
+    screen,
+    wait,
+} from "../testUtils";
 import { notificationResponse } from "./AlertList";
 import { GlobalProvider } from "../Context/GlobalContext";
 import "../fontawesome";
@@ -28,13 +35,18 @@ afterEach(() => {
 describe("App Navigation", () => {
     it("renders login with redux state defaults", async () => {
         // render with redux
-        render(<GlobalProvider><AppNavigation /></GlobalProvider>, {
-            userToken: generateRandomString({
-                length: 24,
-                charset: "alphanumeric",
-            }),
-            isLoading: false,
-        });
+        render(
+            <GlobalProvider>
+                <AppNavigation />
+            </GlobalProvider>,
+            {
+                userToken: generateRandomString({
+                    length: 24,
+                    charset: "alphanumeric",
+                }),
+                isLoading: false,
+            }
+        );
         // wait for the state changes
         const login = await screen.findByRole("button", { name: /sign in/i });
         // expect to see the page
@@ -42,10 +54,15 @@ describe("App Navigation", () => {
     });
     it("redirects from dashboard to login when not authenticated", async () => {
         // render with redux
-        render(<GlobalProvider><AppNavigation /></GlobalProvider>, {
-            isLoading: false,
-            route: "/dashboard",
-        });
+        render(
+            <GlobalProvider>
+                <AppNavigation />
+            </GlobalProvider>,
+            {
+                isLoading: false,
+                route: "/dashboard",
+            }
+        );
         // wait for the state changes
         const login = await screen.findByRole("button", { name: /sign in/i });
         // expect to see the page
@@ -67,13 +84,18 @@ describe("App Navigation", () => {
         });
         await AsyncStorage.setItem(AUTH_TOKEN_NAME, authToken);
         // render with redux
-        render(<GlobalProvider><AppNavigation /></GlobalProvider>, {
-            isLoading: false,
-            route: "/dashboard",
-        });
+        render(
+            <GlobalProvider>
+                <AppNavigation />
+            </GlobalProvider>,
+            {
+                isLoading: false,
+                route: "/dashboard",
+            }
+        );
         await wait(() =>
             expect(window.location.assign).toHaveBeenCalledWith(
-                "/access-denied?redirect=%2Fdashboard",
+                "/access-denied?redirect=%2Fdashboard"
             )
         );
     });
@@ -101,10 +123,15 @@ describe("App Navigation", () => {
         });
         await AsyncStorage.setItem(AUTH_TOKEN_NAME, authToken);
         // render with redux
-        render(<GlobalProvider><AppNavigation /></GlobalProvider>, {
-            isLoading: false,
-            route: "/dashboard",
-        });
+        render(
+            <GlobalProvider>
+                <AppNavigation />
+            </GlobalProvider>,
+            {
+                isLoading: false,
+                route: "/dashboard",
+            }
+        );
 
         // wait for the state changes
         const dash = await screen.findByRole("button", { name: /search/i });
@@ -144,11 +171,16 @@ describe("App Navigation", () => {
             charset: "alphanumeric",
         });
         await AsyncStorage.setItem(AUTH_TOKEN_NAME, authToken);
-        // render with redux
-        render(<GlobalProvider><AppNavigation /></GlobalProvider>, {
-            isLoading: false,
-            route: "/dashboard",
-        });
+        // render without redux
+        render(
+            <GlobalProvider>
+                <AppNavigation />
+            </GlobalProvider>,
+            {
+                isLoading: false,
+                route: "/dashboard",
+            }
+        );
 
         // wait for the state changes
         const dash = await screen.findByRole("button", { name: /search/i });
