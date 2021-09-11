@@ -32,7 +32,7 @@ const FormIndex = () => {
     });
 
     useEffect(() => {
-        if (_GET('message') === 'edit-bad-form-slug') {
+        if (_GET("message") === "edit-bad-form-slug") {
             // TODO :: handle this better
             alert("Bad edit form slug");
         }
@@ -65,7 +65,11 @@ const FormIndex = () => {
                 formatter: (val, { slug }) => {
                     return (
                         <div className="actions">
-                            <Link className="action" to={`/admin/forms/${slug}/edit`} title="Edit">
+                            <Link
+                                className="action"
+                                to={`/admin/forms/${slug}/edit`}
+                                title="Edit"
+                            >
                                 <Icon icon="edit" size="1x" />
                             </Link>
 
@@ -97,6 +101,8 @@ const FormIndex = () => {
                 },
             },
         ];
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const [{ searchObj }, { updateSearchObj, redoSearch }] = useSearch({

@@ -11,7 +11,7 @@ export const GlobalProvider = ({ children }) => {
     const [totalMessageCount, setTotalMessageCount] = useState(0);
 
     const notifications = {
-        get ({ history = 5, withReset = false } = {}) {
+        get({ history = 5, withReset = false } = {}) {
             if (withReset) {
                 setMessages([]);
                 setMessageLevel("");
@@ -31,15 +31,31 @@ export const GlobalProvider = ({ children }) => {
                 {
                     id: 1,
                     subject: "rando message 1",
-                    message: "lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 ",
+                    message:
+                        "lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 ",
                     priority: "success",
                 },
-                { id: 2, subject: "rando message 2", message: "again", priority: "danger" },
-                { id: 3, subject: "rando message 1", message: "lorem 100 lorem 100 lorem 100 ", priority: "success" },
+                {
+                    id: 2,
+                    subject: "rando message 2",
+                    message: "again",
+                    priority: "danger",
+                },
+                {
+                    id: 3,
+                    subject: "rando message 1",
+                    message: "lorem 100 lorem 100 lorem 100 ",
+                    priority: "success",
+                },
             ];
 
-            if (notes.length == 0) {
-                return { notes, level: "", levelName: "", totalMessageCount: 0 };
+            if (notes.length === 0) {
+                return {
+                    notes,
+                    level: "",
+                    levelName: "",
+                    totalMessageCount: 0,
+                };
             }
 
             // make sure pecking order of priority is set
@@ -68,8 +84,12 @@ export const GlobalProvider = ({ children }) => {
          *
          * @param notification_ids = []
          */
-        async markRead (notification_ids) {
-            console.log(`TODO :: mark notification ids "${notification_ids.join(" and ")}" as read`);
+        async markRead(notification_ids) {
+            console.log(
+                `TODO :: mark notification ids "${notification_ids.join(
+                    " and "
+                )}" as read`
+            );
             // TODO :: send an array of notification ids.
             //const notification_ids.map(nId => {
             //

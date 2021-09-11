@@ -8,12 +8,14 @@ const MultiCheckbox = ({ values = [], name, ...props }) => {
     const checked = getValue(name, []);
     const error = getError({ name });
 
-    const handleOnChange = ({ target: { name, value, checked: isChecked } }) => {
+    const handleOnChange = ({
+        target: { name, value, checked: isChecked },
+    }) => {
         const newChecked = [...checked];
 
         if (!isChecked) {
             if (newChecked.includes(value)) {
-                const index = newChecked.findIndex(c => c == value);
+                const index = newChecked.findIndex((c) => c === value);
                 if (index >= 0) {
                     newChecked.splice(index, 1);
                     update(name, newChecked);
@@ -31,7 +33,7 @@ const MultiCheckbox = ({ values = [], name, ...props }) => {
 
     return (
         <>
-            {values.map(value => {
+            {values.map((value) => {
                 return (
                     <Checkbox
                         {...props}
