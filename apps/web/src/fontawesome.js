@@ -28,6 +28,8 @@ import {
     faCheckCircle,
     faBellOn,
     faCheck,
+    faFile,
+    faEye,
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add(
@@ -60,6 +62,8 @@ library.add(
     faChevronLeft,
     faBellOn,
     faCheck,
+    faFile,
+    faEye
 );
 /*
 if (process.env.NODE_ENV === "development") {

@@ -16,6 +16,8 @@ const TopNavNotifications = () => {
 
     useEffect(() => {
         get();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleMarkAllRead = () => {
@@ -51,7 +53,7 @@ const TopNavNotifications = () => {
             align="end"
             title={title}
         >
-            {(messages.length == 0 && (
+            {(messages.length === 0 && (
                 <NavDropdown.ItemText className="text-center">
                     All Caught up
                 </NavDropdown.ItemText>

@@ -1,10 +1,21 @@
 import React from "react";
 import { Row, Col, Container } from "react-bootstrap";
+
+import PageLayout from "layouts/PageLayout";
+
+import { useUser } from "Context/UserContext";
+
 import BroadcastAlert from "components/elements/BroadcastAlert";
-import PageLayout from "../../layouts/PageLayout";
-import "../../styles/home.scss";
+import RequestsTable from "components/elements/RequestsTable";
+
+import "styles/home.scss";
 
 const Home = () => {
+    const { getUser } = useUser();
+    const { first_name, last_name } = getUser();
+
+    const primary_name = first_name ?? last_name;
+
     return (
         <PageLayout>
             <Container fluid>
@@ -15,8 +26,9 @@ const Home = () => {
                 </Row>
                 <Row>
                     <Col md={12}>
-                        <h1>Welcome to your Portal</h1>
-                        <h3>Health Plan User Dashboard</h3>
+                        <h2>Hi {primary_name}</h2>
+
+                        <RequestsTable />
                     </Col>
                 </Row>
             </Container>
