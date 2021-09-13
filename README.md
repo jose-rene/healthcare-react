@@ -54,11 +54,21 @@ xterm should exist on macs and linux systems but might break in windows.
 * [Laravel bouncer - roles and permissions](https://github.com/JosephSilber/bouncer#cheat-sheet)
 * [Laravel Revisionable](https://github.com/VentureCraft/revisionable#control)
 
-## Quick tips 
+## Quick tips
 
-If you see errors that say something like "not enough watchers" clear it with `yarn watchman:reset` should work in most cases.
+If you see errors that say something like "not enough watchers" clear it with `yarn watchman:reset` should work in most
+cases.
 
 ### System resources
+
 In your IDE ignore these directories, they are compiled and are not useful to the IDE
+
 * apps/mobile/.expo
 * apps/backend/public
+
+## Notes
+
+### Form Builder
+
+When a form has been submitted, and completed_at in the database has been sent to a DateTime value the form cannot be
+answered again the controller will respond with a 422 form-complete error.

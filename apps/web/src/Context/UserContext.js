@@ -70,7 +70,7 @@ function UserProvider({ children }) {
         return state.authed;
     };
 
-    const updateAvartarUrl = (avatar_url) => {
+    const updateAvatarUrl = (avatar_url) => {
         dispatch({
             type: "update",
             payload: { avatar_url },
@@ -99,7 +99,7 @@ function UserProvider({ children }) {
                 getUser,
                 isAuthed,
                 logout,
-                updateAvartarUrl,
+                updateAvatarUrl,
                 setSearch,
             }}
         >

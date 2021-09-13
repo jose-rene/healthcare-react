@@ -32,11 +32,11 @@ const TopNavNotifications = () => {
             <>
                 <span className="c-pointer">
                     <FapIcon icon="bell-on" />
-                    {(totalMessageCount > 0 && (
+                    {totalMessageCount > 0 ? (
                         <Badge pill bg={messageLevel} className="badge-count">
                             {totalMessageCount}
                         </Badge>
-                    )) || (
+                    ): (
                         <Badge pill bg="success" className="badge-count">
                             <FapIcon size="1x" />
                         </Badge>
@@ -53,11 +53,11 @@ const TopNavNotifications = () => {
             align="end"
             title={title}
         >
-            {(messages.length === 0 && (
+            {messages.length === 0? (
                 <NavDropdown.ItemText className="text-center">
                     All Caught up
                 </NavDropdown.ItemText>
-            )) || (
+            ): (
                 <>
                     <NavDropdown.Item
                         className="text-muted text-center"

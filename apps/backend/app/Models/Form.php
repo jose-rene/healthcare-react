@@ -9,7 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  *
- **/
+ *
+ * @property int   $id
+ * @property array $fields
+ */
 class Form extends Model
 {
     use HasFactory, SoftDeletes, Sluggable;
@@ -39,5 +42,15 @@ class Form extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(FormAnswer::class);
+    }
+
+    public function userAnswers()
+    {
+        return $this->answers()->userAnswers();
     }
 }

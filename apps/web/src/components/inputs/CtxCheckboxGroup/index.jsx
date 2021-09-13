@@ -6,10 +6,10 @@ const CtxCheckboxGroup = ({
     name,
     children,
     customRule,
-    options: _options,
+    options: _options = [],
     ...props
 }) => {
-    const { getValue, editing, shouldShow, update } = useFormContext();
+    const { form, getValue, editing, shouldShow, update } = useFormContext();
 
     const options = useMemo(() => {
         return _options.map(({ text, label, ...otherOptionProps }) => ({
