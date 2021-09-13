@@ -20,7 +20,7 @@ import MultiCheckbox from "../../../components/inputs/Checkbox/MultiCheckbox";
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 const TabAccount = ({ history }) => {
-    const { getUser, updateAvartarUrl } = useUser();
+    const { getUser, updateAvatarUrl } = useUser();
     const currentUser = getUser();
     const { avatar_url } = currentUser;
 
@@ -29,7 +29,7 @@ const TabAccount = ({ history }) => {
     const [formData, setFormData] = useState({});
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileUploadError, setFileUploadError] = useState(null);
-    const [imagePath, setimagePath] = useState(avatar_url);
+    const [imagePath, setImage] = useState(avatar_url);
     const [showModal, setShowModal] = useState(false);
     const { generalError, success } = useToast();
 
@@ -95,8 +95,8 @@ const TabAccount = ({ history }) => {
         try {
             const result = await userImageSubmit({ params: formData });
             if (!loading && result) {
-                setimagePath(result.url); // need to check the backend api
-                updateAvartarUrl(result.url);
+                setImage(result.url); // need to check the backend api
+                updateAvatarUrl(result.url);
             }
         } catch (error) {
             console.log(error);

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import PageLayout from "../../../../layouts/PageLayout";
 import Form from "components/elements/Form";
 import "../edit/style.scss";
@@ -11,7 +11,8 @@ const FormView = ({
         params: { form_slug },
     },
 }) => {
-    const [{ form, formLoading, saving }, { fireLoadForm }] = useFormBuilder({
+    const [formDataLoaded, setFormDataLoaded] = useState(false);
+    const [{ form, defaultAnswers, formLoading, saving }, { fireLoadForm, fireSaveAnswers }] = useFormBuilder({
         formId: form_slug,
     });
 
@@ -23,7 +24,11 @@ const FormView = ({
             });
         }
 
-        fireLoadForm();
+        fireLoadForm().then(() => {
+            setTimeout(() => {
+                setFormDataLoaded(true);
+            }, 500);
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -47,14 +52,14 @@ const FormView = ({
     }, [form]);
 
     const handleSubmit = (ff) => {
-        console.log("handleSubmit11.ff", JSON.stringify(ff), ff);
-        // TODO :: send the form data to the api to persist the form data basically do
-        // the same as the form change function except this could mark the form done
+        fireSaveAnswers({ ...ff, completed_form: true });
     };
 
-    const handleFormChange = (ff) => {
-        console.log("handleFormChange.ff", JSON.stringify(ff), ff);
-        // TODO :: send the form data to the api to persist the form data
+    const handleFormChange = async (ff) => {
+        if (!formDataLoaded) {
+            return false; // answers are not done loaded don't auto save yet.
+        }
+        fireSaveAnswers(ff, { quickSave: true });
     };
 
     if (formLoading || !form_slug) {
@@ -71,6 +76,7 @@ const FormView = ({
                         onSubmit={handleSubmit}
                         validation={validation}
                         autocomplete="off"
+                        defaultData={defaultAnswers}
                     >
                         <RenderForm formElements={form} />
 

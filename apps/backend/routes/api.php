@@ -69,6 +69,7 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('training_document', 'TrainingDocumentsController')->only('index');
     Route::apiResource('request.document', 'DocumentRequestController')->only('index', 'store', 'update', 'destroy');
     Route::apiResource('form', 'FormController');
+    Route::apiResource('form.form_answers', 'FormAnswerController')->only(['store', 'show', 'update']);
     // test fmapi route
     Route::get('/fmtest', 'HomeController@fmtest');
 

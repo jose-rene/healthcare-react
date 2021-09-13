@@ -8,7 +8,7 @@ const CTXSelectWithFilter = ({ name, onChange: _onChange = false, ...props }) =>
 
     props.name = name;
     props.value = value;
-    props.error = getError(name);
+    props.error = getError({ name });
 
     props.onChange = e => {
         //props.debug && console.log('props.onChange', { e });
