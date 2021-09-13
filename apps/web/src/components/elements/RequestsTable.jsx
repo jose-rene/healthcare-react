@@ -48,8 +48,13 @@ const RequestsTable = () => {
                 const found = statusOptions.find(
                     ({ value }) => Number(value) === Number(request_status_id)
                 );
-
-                return found?.title || "";
+                // null status id maps to 0 string and inicates in progress
+                // eslint-disable-next-line no-nested-ternary
+                return found
+                    ? found.value === "0"
+                        ? "In Progress"
+                        : found.title
+                    : "";
             },
             label: "Status",
             type: String,
