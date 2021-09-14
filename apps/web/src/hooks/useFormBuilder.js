@@ -16,7 +16,10 @@ const useFormBuilder = ({ formId } = {}) => {
     });
 
     const [
-        { loading: formLoading, data: { fields = [], answers: defaultAnswers = {} } = {} },
+        {
+            loading: formLoading,
+            data: { fields = [], answers: defaultAnswers = {} } = {},
+        },
         fireLoadForm,
     ] = useApiCall({
         url: `form/${formId}`,
@@ -28,10 +31,10 @@ const useFormBuilder = ({ formId } = {}) => {
 
     useEffect(() => {
         if (!formId) {
-            throw {
+            throw new Error({
                 code: 403,
                 message: "missing formId in useFormBuilder",
-            };
+            });
         }
 
         const registered = Registry.list();
