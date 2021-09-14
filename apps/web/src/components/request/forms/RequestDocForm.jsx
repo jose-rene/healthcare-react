@@ -103,32 +103,34 @@ const RequestDocForm = ({
     // console.log("docs -> ", documents);
     return (
         <>
-            <Card className={`border-1 mt-3${disabled ? " disabled" : ""}`}>
-                <Card.Header className="border-0 bg-white ps-2">
+            <Card
+                className={`border-1 border-top-0 border-end-0 border-start-0 bg-light mt-3${
+                    disabled ? " disabled" : ""
+                }`}
+            >
+                <Card.Header className="border-0 bg-light ps-0">
                     <div className="d-flex">
                         <div>
                             <h5>
                                 <FapIcon
                                     icon="check-circle"
                                     type="fas"
-                                    className={`text-success me-1${
+                                    className={`text-success me-3${
                                         documents.length ? "" : " invisible"
                                     }`}
                                 />
-                                Request Documents
+                                Documents
                             </h5>
                         </div>
                         <div className="ms-auto">
-                            <Button
-                                variant="link"
-                                onClick={toggleOpenRequestDoc}
-                            >
-                                {openRequestDoc
-                                    ? "close"
-                                    : documents.length
-                                    ? "change"
-                                    : "add"}
-                            </Button>
+                            {!openRequestDoc && (
+                                <Button
+                                    variant="link"
+                                    onClick={toggleOpenRequestDoc}
+                                >
+                                    {documents.length ? "change" : "add"}
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </Card.Header>
@@ -149,7 +151,7 @@ const RequestDocForm = ({
                                 }}
                             >
                                 <Row>
-                                    <Col lg={6}>
+                                    <Col>
                                         {documents.length > 0 && (
                                             <>
                                                 <h6>Attached Documents</h6>
@@ -180,7 +182,7 @@ const RequestDocForm = ({
                                         <div
                                             {...getRootProps({
                                                 className:
-                                                    "alert alert-green cursor-pointer border-3",
+                                                    "alert alert-success cursor-pointer border-3",
                                             })}
                                         >
                                             <input {...getInputProps()} />
@@ -213,6 +215,15 @@ const RequestDocForm = ({
                                                         </ListGroupItem>
                                                     ))}
                                                 </ListGroup>
+                                                <Button
+                                                    variant="secondary"
+                                                    onClick={
+                                                        toggleOpenRequestDoc
+                                                    }
+                                                    className="me-3 mt-3"
+                                                >
+                                                    Cancel
+                                                </Button>
                                                 <Button
                                                     onClick={() => {
                                                         // setUploading(true);

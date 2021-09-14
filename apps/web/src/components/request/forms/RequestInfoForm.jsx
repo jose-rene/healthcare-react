@@ -131,15 +131,15 @@ const RequestInfoForm = ({
 
     return (
         <>
-            <Card className="border-1 mt-3">
-                <Card.Header className="border-0 bg-white ps-2">
+            <Card className="border-1 border-top-0 border-end-0 border-start-0 bg-light mt-3">
+                <Card.Header className="border-0 bg-light ps-0">
                     <div className="d-flex">
                         <div>
                             <h5>
                                 <FapIcon
                                     icon="check-circle"
                                     type="fas"
-                                    className={`text-success me-1${
+                                    className={`text-success me-3${
                                         filled ? "" : " invisible"
                                     }`}
                                 />
@@ -147,20 +147,18 @@ const RequestInfoForm = ({
                             </h5>
                         </div>
                         <div className="ms-auto">
-                            <Button
-                                variant="link"
-                                onClick={toggleOpenRequestInfo}
-                            >
-                                {openRequestInfo
-                                    ? "close"
-                                    : filled
-                                        ? "change"
-                                        : "add"}
-                            </Button>
+                            {!openRequestInfo && (
+                                <Button
+                                    variant="link"
+                                    onClick={toggleOpenRequestInfo}
+                                >
+                                    {filled ? "change" : "add"}
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </Card.Header>
-                <Card.Body className="ps-5">
+                <Card.Body className="ps-5 pb-0">
                     <Collapse in={openRequestInfo}>
                         <div>
                             {updateError && (
@@ -184,7 +182,7 @@ const RequestInfoForm = ({
                                 }}
                             >
                                 <Row>
-                                    <Col lg={6}>
+                                    <Col xl={8} lg={10}>
                                         <Row>
                                             <Col md="12" className="mb-3">
                                                 <FloatingLabel
@@ -194,6 +192,7 @@ const RequestInfoForm = ({
                                                     <Form.Control
                                                         type="text"
                                                         placeholder="Unique Assessment ID"
+                                                        autoComplete="off"
                                                         value={data.auth_number}
                                                         onChange={(e) =>
                                                             handleAuthChange(
@@ -270,7 +269,16 @@ const RequestInfoForm = ({
                                             ))}
                                         </Row>
                                         <Row>
-                                            <Col md="12" className="mb-3">
+                                            <Col className="mb-3">
+                                                <Button
+                                                    variant="secondary"
+                                                    onClick={
+                                                        toggleOpenRequestInfo
+                                                    }
+                                                    className="me-3"
+                                                >
+                                                    Cancel
+                                                </Button>
                                                 <Button onClick={handleSave}>
                                                     Save
                                                 </Button>

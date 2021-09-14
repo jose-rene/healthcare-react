@@ -95,31 +95,38 @@ const DueDateForm = ({
     // console.log("due date", due_date, due_time, due_na, requestDue);
     return (
         <>
-            <Card className={`border-1 mt-3${disabled ? " disabled" : ""}`}>
-                <Card.Header className="border-0 bg-white ps-2">
+            <Card
+                className={`border-1 border-top-0 border-end-0 border-start-0 bg-light mt-3${
+                    disabled ? " disabled" : ""
+                }`}
+            >
+                <Card.Header className="border-0 bg-light ps-0">
                     <div className="d-flex">
                         <div>
                             <h5>
                                 <FapIcon
                                     icon="check-circle"
                                     type="fas"
-                                    className={`text-success me-1${
+                                    className={`text-success me-3${
                                         requestDue || requestDueNa
                                             ? ""
                                             : " invisible"
                                     }`}
                                 />
-                                Request Due Date
+                                Due Date
                             </h5>
                         </div>
                         <div className="ms-auto">
-                            <Button variant="link" onClick={toggleOpenDueDate}>
-                                {openDueDate
-                                    ? "close"
-                                    : requestDue || requestDueNa
+                            {!openDueDate && (
+                                <Button
+                                    variant="link"
+                                    onClick={toggleOpenDueDate}
+                                >
+                                    {requestDue || requestDueNa
                                         ? "change"
                                         : "add"}
-                            </Button>
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </Card.Header>
@@ -136,7 +143,7 @@ const DueDateForm = ({
                                 </PageAlert>
                             )}
                             <Row>
-                                <Col lg={6}>
+                                <Col xl={8}>
                                     <LoadingOverlay
                                         active={requestLoading}
                                         spinner
@@ -148,8 +155,8 @@ const DueDateForm = ({
                                             }),
                                         }}
                                     >
-                                        <div className="d-flex align-items-center">
-                                            <div className="pb-1">
+                                        <div className="d-flex flex-column flex-sm-row align-items-sm-center mb-2">
+                                            <div>
                                                 <Form.Check
                                                     type="checkbox"
                                                     id="due_na"
@@ -157,14 +164,11 @@ const DueDateForm = ({
                                                     label="N/A"
                                                     checked={due_na}
                                                     onChange={updateData}
+                                                    className="pb-1"
+                                                    inline
                                                 />
                                             </div>
-                                            <div className="ms-4">
-                                                <Form.Label htmlFor="due_date">
-                                                    Due Date
-                                                </Form.Label>
-                                            </div>
-                                            <div className="ms-2">
+                                            <div className="me-3">
                                                 <Form.Control
                                                     className="mb-2"
                                                     id="due_date"
@@ -175,7 +179,7 @@ const DueDateForm = ({
                                                     onChange={updateData}
                                                 />
                                             </div>
-                                            <div className="ms-2 pb-2">
+                                            <div className="pb-2">
                                                 <Form.Select
                                                     name="due_time"
                                                     label="Time"
@@ -202,6 +206,13 @@ const DueDateForm = ({
                                         </div>
                                         <Row>
                                             <Col>
+                                                <Button
+                                                    variant="secondary"
+                                                    onClick={toggleOpenDueDate}
+                                                    className="me-3"
+                                                >
+                                                    Cancel
+                                                </Button>
                                                 <Button onClick={handleSave}>
                                                     Save
                                                 </Button>
@@ -216,13 +227,10 @@ const DueDateForm = ({
                         <div>
                             <Row className="mb-3">
                                 <Col className="fw-bold" sm={3}>
-                                    Due Date
-                                </Col>
-                                <Col>
                                     {requestDue || requestDueNa ? (
                                         requestDue ? (
                                             <p>{`${moment(requestDue).format(
-                                                "YYYY-MM-DD"
+                                                "ddd MM/DD/YYYY"
                                             )} ${moment(requestDue).format(
                                                 "LT"
                                             )}`}</p>

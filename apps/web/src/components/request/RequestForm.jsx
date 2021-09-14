@@ -27,25 +27,53 @@ const RequestForm = ({ data }) => {
     } = requestData;
 
     // section togglers
-    const [openMember, setOpenMember] = useState(false);
+    const [
+        [
+            openMember,
+            openRequestInfo,
+            openRequestItem,
+            openRequestDoc,
+            openDueDate,
+        ],
+        setToggler,
+    ] = useState([false, false, false, false, false]);
+    // const [openMember, setOpenMember] = useState(false);,
+    const setOpenMember = (open) => {
+        setToggler([open, false, false, false, false]);
+    };
     const toggleOpenMember = () => {
         setOpenMember(!openMember);
     };
-    const [openRequestInfo, setOpenRequestInfo] = useState(false);
+    // const [openRequestInfo, setOpenRequestInfo] = useState(false);
+    const setOpenRequestInfo = (open) => {
+        setToggler([false, open, false, false, false]);
+    };
     const toggleOpenRequestInfo = () => {
         setOpenRequestInfo(!openRequestInfo);
     };
-    const [openRequestItem, setOpenRequestItem] = useState(false);
+    // const [openRequestItem, setOpenRequestItem] = useState(false);
+    const setOpenRequestItem = (open) => {
+        setToggler([false, false, open, false, false]);
+    };
     const toggleOpenRequestItem = () => {
         setOpenRequestItem(!openRequestItem);
     };
-    const [openRequestDoc, setOpenRequestDoc] = useState(false);
+    // const [openRequestDoc, setOpenRequestDoc] = useState(false);
+    const setOpenRequestDoc = (open) => {
+        setToggler([false, false, false, open, false]);
+    };
     const toggleOpenRequestDoc = () => {
         setOpenRequestDoc(!openRequestDoc);
     };
-    const [openDueDate, setOpenDueDate] = useState(false);
+    // const [openDueDate, setOpenDueDate] = useState(false);
+    const setOpenDueDate = (open) => {
+        setToggler([false, false, false, false, open]);
+    };
     const toggleOpenDueDate = () => {
         setOpenDueDate(!openDueDate);
+    };
+    const closeAllForms = () => {
+        setToggler([false, false, false, false, false]);
     };
 
     useEffect(() => {
@@ -91,7 +119,7 @@ const RequestForm = ({ data }) => {
                 setOpenDueDate(true);
                 break;
         }
-    }, [step]);
+    }, [requestData]);
 
     // console.log("step -> ", step, data.status, requestDue);
 
@@ -107,7 +135,7 @@ const RequestForm = ({ data }) => {
             const result = await fireSubmit({ params: formData });
             // console.log(result);
             const { type_name: type } = formData;
-            // toggle the edit window
+            // toggle the edit window - no longer necessary
             if (type === "diagnosis") {
                 setOpenRequestInfo(false);
             }
@@ -143,6 +171,7 @@ const RequestForm = ({ data }) => {
 
     // submit request
     const submitRequest = () => {
+        closeAllForms();
         saveRequest({ type_name: "submit" });
     };
 
@@ -220,8 +249,19 @@ const RequestForm = ({ data }) => {
                 {step === 5 && (
                     <Row className="mt-3">
                         <Col lg={6}>
-                            <Button variant="primary" onClick={submitRequest}>
-                                Submit Request
+                            <Button
+                                variant="primary"
+                                onClick={submitRequest}
+                                disabled={requestLoading}
+                            >
+                                {requestLoading ? (
+                                    <>
+                                        <span className="me-2">Processing</span>
+                                        <FapIcon icon="spinner" />
+                                    </>
+                                ) : (
+                                    <span>Submit Request</span>
+                                )}
                             </Button>
                         </Col>
                     </Row>

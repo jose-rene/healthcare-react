@@ -5,23 +5,31 @@ import FapIcon from "components/elements/FapIcon";
 const MemberInfoForm = ({ memberData, openMember, toggleOpenMember }) => {
     return (
         <>
-            <Card className="border-1">
-                <Card.Header className="bg-white border-0 ps-2">
+            <Card
+                className="border-1 border-top-0 border-end-0 border-start-0 bg-light mt-4"
+                style={{ borderRadius: 0 }}
+            >
+                <Card.Header className="bg-light border-0 ps-0">
                     <div className="d-flex">
                         <div>
                             <h5>
                                 <FapIcon
                                     icon="check-circle"
                                     type="fas"
-                                    className="text-success me-1"
+                                    className="text-success me-3"
                                 />
                                 Member Info
                             </h5>
                         </div>
                         <div className="ms-auto">
-                            <Button variant="link" onClick={toggleOpenMember}>
-                                {openMember ? "close" : "change"}
-                            </Button>
+                            {!openMember && (
+                                <Button
+                                    variant="link"
+                                    onClick={toggleOpenMember}
+                                >
+                                    change
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </Card.Header>
@@ -31,6 +39,17 @@ const MemberInfoForm = ({ memberData, openMember, toggleOpenMember }) => {
                             <Row>
                                 <Col lg={6}>
                                     <h6>[Member Edit Form Here]</h6>
+                                </Col>
+                            </Row>
+                            <Row className="mt-3">
+                                <Col>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={toggleOpenMember}
+                                        className="me-3"
+                                    >
+                                        Cancel
+                                    </Button>
                                 </Col>
                             </Row>
                         </div>
