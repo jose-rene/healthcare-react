@@ -40,6 +40,10 @@ const RequestItemForm = ({
     }, [requestData]); */
     // combine request type selects and request detail select into a group
     const [requestItemGroups, setRequestItemGroups] = useState([]);
+    const requestDetailCount = requestItemGroups.filter(
+        (item) => item?.requestDetails?.value
+    ).length;
+
     // handle request details update
     const updateRequestDetails = (groups) => {
         setRequestItemGroups(groups);
@@ -190,28 +194,43 @@ const RequestItemForm = ({
     const handleClassificationChange = (selected, action, groupIndex) => {
         // get a copy of state
         const currentGroups = [...requestItemGroups];
-        // get the value
-        const { value } = selected;
-        // find the selected item for the request types
-        const selectedItem = payerProfile.classifications.find(
-            (item) => item.id === value
-        );
-        // this will basically clear out all selects and add a blank request type select
-        const updatedGroup = {
-            classification: {
-                options: mapOptions(payerProfile.classifications),
-                value,
-            },
-            typeSelects: [
-                {
-                    options: mapOptions(selectedItem.request_types),
+        // console.log(selected, action);
+        // if it were cleared
+        if (action?.action === "clear") {
+            const clearedGroup = {
+                classification: {
+                    options: mapOptions(payerProfile.classifications),
                     value: "",
                 },
-            ],
-            requestDetails: null,
-        };
-        // set this index to this updated group
-        currentGroups[groupIndex] = updatedGroup;
+                typeSelects: [],
+                requestDetails: null,
+            };
+            // set this index to this updated group
+            currentGroups[groupIndex] = clearedGroup;
+        } else {
+            // get the value
+            const { value } = selected;
+            // find the selected item for the request types
+            const selectedItem = payerProfile.classifications.find(
+                (item) => item.id === value
+            );
+            // this will basically clear out all selects and add a blank request type select
+            const updatedGroup = {
+                classification: {
+                    options: mapOptions(payerProfile.classifications),
+                    value,
+                },
+                typeSelects: [
+                    {
+                        options: mapOptions(selectedItem.request_types),
+                        value: "",
+                    },
+                ],
+                requestDetails: null,
+            };
+            // set this index to this updated group
+            currentGroups[groupIndex] = updatedGroup;
+        }
         // console.log(selected, action, value, selectedItem);
         // update state
         updateRequestDetails(currentGroups);
@@ -338,34 +357,37 @@ const RequestItemForm = ({
         console.log(data);
         saveRequest(data);
     };
+
     return (
         <>
-            <Card className={`border-1 mt-3${disabled ? " disabled" : ""}`}>
-                <Card.Header className="border-0 bg-white ps-2">
+            <Card
+                className={`border-1 border-top-0 border-end-0 border-start-0 bg-light mt-3${
+                    disabled ? " disabled" : ""
+                }`}
+            >
+                <Card.Header className="border-0 bg-light ps-0">
                     <div className="d-flex">
                         <div>
                             <h5>
                                 <FapIcon
                                     icon="check-circle"
                                     type="fas"
-                                    className={`text-success me-1${
+                                    className={`text-success me-3${
                                         requestItems.length ? "" : " invisible"
                                     }`}
                                 />
-                                Request Details
+                                Request Items
                             </h5>
                         </div>
                         <div className="ms-auto">
-                            <Button
-                                variant="link"
-                                onClick={toggleOpenRequestItem}
-                            >
-                                {openRequestItem
-                                    ? "close"
-                                    : requestItems.length
-                                    ? "change"
-                                    : "add"}
-                            </Button>
+                            {!openRequestItem && (
+                                <Button
+                                    variant="link"
+                                    onClick={toggleOpenRequestItem}
+                                >
+                                    {requestItems.length ? "change" : "add"}
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </Card.Header>
@@ -393,7 +415,7 @@ const RequestItemForm = ({
                                     </PageAlert>
                                 )}
                                 <Row>
-                                    <Col lg={6}>
+                                    <Col xl={8} lg={10}>
                                         {requestItemGroups.map(
                                             (selectGroup, groupIndex) => (
                                                 <Card
@@ -401,8 +423,23 @@ const RequestItemForm = ({
                                                     className="mb-3"
                                                 >
                                                     <Card.Header>
-                                                        Request Items
-                                                        {groupIndex > 0 && (
+                                                        <FapIcon
+                                                            icon="check-circle"
+                                                            type="fas"
+                                                            className={`text-success me-2${
+                                                                selectGroup
+                                                                    .requestDetails
+                                                                    ?.value
+                                                                    ?.length
+                                                                    ? ""
+                                                                    : " d-none"
+                                                            }`}
+                                                        />
+                                                        Request Item
+                                                        {groupIndex + 1}
+                                                        {selectGroup.requestDetails &&
+                                                            requestDetailCount >
+                                                                1 && (
                                                             <FapIcon
                                                                 icon="delete"
                                                                 role="button"
@@ -413,14 +450,13 @@ const RequestItemForm = ({
                                                                         groupIndex
                                                                     )
                                                                 }
-                                                            />
+                                                                />
                                                         )}
                                                     </Card.Header>
                                                     <Card.Body>
                                                         {selectGroup.classification && (
                                                             <>
                                                                 <h6 className="mt-0">
-                                                                    Select the
                                                                     Classification
                                                                 </h6>
                                                                 <Select2
@@ -471,9 +507,6 @@ const RequestItemForm = ({
                                                                     {index ===
                                                                         0 && (
                                                                         <h6 className="mt-3">
-                                                                            Select
-                                                                            the
-                                                                            Request
                                                                             Type
                                                                         </h6>
                                                                     )}
@@ -516,9 +549,7 @@ const RequestItemForm = ({
                                                         {selectGroup.requestDetails && (
                                                             <>
                                                                 <h6 className="mb-2 mt-4">
-                                                                    Select
-                                                                    Request
-                                                                    Item(s)
+                                                                    Details
                                                                 </h6>
                                                                 <Select2
                                                                     className="basic-multi-select"
@@ -561,6 +592,15 @@ const RequestItemForm = ({
                                             <Row>
                                                 <Col className="mb-3">
                                                     <Button
+                                                        variant="secondary"
+                                                        onClick={
+                                                            toggleOpenRequestItem
+                                                        }
+                                                        className="me-3"
+                                                    >
+                                                        Cancel
+                                                    </Button>
+                                                    <Button
                                                         onClick={handleSave}
                                                     >
                                                         Save
@@ -577,7 +617,7 @@ const RequestItemForm = ({
                         <div>
                             {requestItems.length > 0 ? (
                                 <Row>
-                                    <Col sm={6}>
+                                    <Col>
                                         {requestItems.map((item) => (
                                             <ListGroup
                                                 key={item.classification}
@@ -585,9 +625,7 @@ const RequestItemForm = ({
                                             >
                                                 <ListGroup.Item className="bg-light">
                                                     <h6 className="mb-0">
-                                                        {
-                                                            item.classification_name
-                                                        }
+                                                        {`${item.classification_name} > ${item.name}`}
                                                     </h6>
                                                 </ListGroup.Item>
                                                 {item.details.map((detail) => (

@@ -12,18 +12,18 @@ $font-family-base: Roboto;
 $grid-breakpoints: (xs:0, sm: 641px, md:768px, lg:992px, xl:1200px);
 $container-max-widths: (sm: 641px, md: 768px, lg: 992px, xl: 1200px);
 
-$blue: #1894E1;
-$green: #00A5A5;
-$info: rgba(43, 53, 61, 0.1);
+$blue: #0B53C1;
+$green: #85DFD8;
+$info: #424547;
 
 $theme-colors: (
-    "primary": $blue,
-    "secondary": $green,
-    "success": #198754, // #60ce56
-    "info": rgba(43, 53, 61, 0.1),
+    "primary": #1894E1,
+    "secondary": $green, // #caccce
+    "success": #00A5A5,
+    "info": $info,
     "warning": #ffc107,
     "danger": #dc3545,
-    "light": #cceded,
+    "light": #f6f9fc,
     "dark": #212529,
     "green": $green
 ) !default;

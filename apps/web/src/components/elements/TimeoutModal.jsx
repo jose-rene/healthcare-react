@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
 import { useTimer } from "react-timer-hook";
+import FapIcon from "./FapIcon";
 import Modal from "./Modal";
-import Button from "../inputs/Button";
 
 const TimeoutModal = ({
     show = false,
@@ -101,14 +102,9 @@ const TimeoutModal = ({
                 </div>
             )}
             <div className="text-center mt-3">
-                <Button
-                    block
-                    variant="primary"
-                    onClick={onHide}
-                    icon="cancel"
-                    label="Cancel"
-                    iconSize="1x"
-                />
+                <Button variant="primary" onClick={onHide}>
+                    Continue <FapIcon size="1x" icon="caret-right" />
+                </Button>
             </div>
         </Modal>
     );
