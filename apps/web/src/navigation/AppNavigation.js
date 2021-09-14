@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import RequestEdit from "pages/healthplan/RequestEdit";
 import { signOut } from "../actions/authAction";
 import { initializeUser } from "../actions/userAction";
 import { ADMIN } from "../actions/types";
@@ -105,6 +106,11 @@ const AppNavigation = ({ initializing, initializeUser }) => {
                     path="/member/:member_id/request/:request_id/edit"
                     middleware={["hp_user", "hp_manager", "hp_champion"]}
                     component={NewRequestAdd}
+                />
+                <PrivateRoute
+                    path="/requests/:id"
+                    middleware={["hp_user", "hp_manager", "hp_champion"]}
+                    component={RequestEdit}
                 />
                 <PrivateRoute
                     path="/healthplan/requests"
