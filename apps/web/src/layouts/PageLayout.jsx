@@ -1,9 +1,8 @@
 import React, { useMemo, useState } from "react";
-import { connect } from "react-redux";
 import { Button } from "react-bootstrap";
+import { useUser } from "Context/UserContext";
 import FapIcon from "../components/elements/FapIcon";
 import TimeoutModal from "../components/elements/TimeoutModal";
-import { signOut } from "../actions/authAction";
 import { INACTIVITY_TIMEOUT, LOGOUT_COUNTDOWN_TIME } from "../config/Login";
 import { PUT } from "../config/URLs";
 import useApiCall from "../hooks/useApiCall";
@@ -13,18 +12,19 @@ import SidebarHealthplan from "./components/sidebar/SidebarHealthplan";
 import MenuHealthplan from "./components/menu/MenuHealthplan";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
-const PageLayout = ({
-    full_name,
-    avatar_url,
-    signOut,
-    children,
-    primaryRole,
-    roles: _roles,
-    abilities,
-}) => {
+const PageLayout = ({ children }) => {
     const [{ showTimeoutModal }, { dismissTimeout }] = useIdleTimeout({
         timeout: INACTIVITY_TIMEOUT,
     });
+
+    const { getUser, logout: signOut } = useUser();
+    const {
+        full_name,
+        avatar_url,
+        primaryRole,
+        roles: _roles,
+        abilities,
+    } = getUser();
 
     // state for show mobile menu offcanvas
     const [showMenu, setMenu] = useState(false);
@@ -150,19 +150,4 @@ const PageLayout = ({
     );
 };
 
-const mapStateToProps = ({
-    user: { email, full_name, primaryRole, roles, abilities, avatar_url },
-}) => ({
-    email,
-    full_name,
-    roles,
-    abilities,
-    primaryRole,
-    avatar_url,
-});
-
-const mapDispatchToProps = {
-    signOut,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PageLayout);
+export default PageLayout;

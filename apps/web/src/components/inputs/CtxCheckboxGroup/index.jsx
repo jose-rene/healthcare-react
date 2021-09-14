@@ -6,7 +6,7 @@ const CtxCheckboxGroup = ({
     name,
     children,
     customRule,
-    options: _options,
+    options: _options = [],
     ...props
 }) => {
     const { getValue, editing, shouldShow, update } = useFormContext();

@@ -102,7 +102,7 @@ const TableAPI = ({
                 </div>
             </div>
             <div className="clearfix" />
-            <Table striped bordered hover responsive condensed>
+            <Table striped bordered hover responsive condensed="condensed">
                 <TableHeaders
                     headers={headers}
                     searchObj={searchObj}
@@ -110,25 +110,25 @@ const TableAPI = ({
                 />
                 <tbody>{renderBody}</tbody>
             </Table>
-            <div className="d-flex mt-3">
+            <div className="d-flex">
                 {totalPages > 1 && (
                     <>
-                        <TablePagination
-                            lastPage={lastPage}
-                            onChange={handlePagination}
-                            searchObj={searchObj}
-                            total_records={total_records}
-                            totalPages={totalPages}
+                        <Select
+                            label="Show"
+                            inlineLabel
+                            className="form-control"
+                            name="perPage"
+                            value={perPage}
+                            onChange={handlePerPageChange}
+                            options={paginationOptions}
                         />
                         <div className="ms-auto">
-                            <Select
-                                label="Show"
-                                inlineLabel
-                                className="form-control"
-                                name="perPage"
-                                value={perPage}
-                                onChange={handlePerPageChange}
-                                options={paginationOptions}
+                            <TablePagination
+                                lastPage={lastPage}
+                                onChange={handlePagination}
+                                searchObj={searchObj}
+                                total_records={total_records}
+                                totalPages={totalPages}
                             />
                         </div>
                     </>

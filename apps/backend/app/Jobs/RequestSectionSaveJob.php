@@ -190,7 +190,7 @@ class RequestSectionSaveJob
             'exists'   => 'An invalid request item was entered',
         ]);
         if ($validator->fails()) {
-            throw new HttpResponseException(response()->json(['errors' => $validator->errors()->first()], 422));
+            throw new HttpResponseException(response()->json(['errors' => ['request_item' => [$validator->errors()->first()]]], 422));
 
             return;
         }

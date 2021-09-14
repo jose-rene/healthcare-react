@@ -69,6 +69,7 @@ export default ({
         persist_changes = true,
         hasAuthedUrl: _hasAuthedUrl = hasAuthedUrl,
         loadingTimeoutMS = 100, // resolves the call but keeps loading for a few MS makes page interactions look cleaner
+        showLoading = true,
         ...config_override
     } = {}) => {
         let _configs = config;
@@ -88,7 +89,7 @@ export default ({
 
         try {
             const jwtToken = await AsyncStorage.getItem(
-                "@dme.login.access_token"
+                "@dme.login.access_token",
             );
 
             if (jwtToken) {
@@ -97,7 +98,10 @@ export default ({
         } catch (e) {}
 
         setError(false);
-        setLoading(true);
+
+        if (showLoading) {
+            setLoading(true);
+        }
 
         debug && console.info("useService.fire", { _configs });
 

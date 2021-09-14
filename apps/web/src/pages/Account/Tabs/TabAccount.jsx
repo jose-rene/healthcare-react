@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { connect } from "react-redux";
 import { Col, Row } from "react-bootstrap";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
@@ -8,9 +7,9 @@ import { Button } from "components";
 import Icon from "components/elements/Icon";
 import PageAlert from "components/elements/PageAlert";
 import ConfirmationModal from "components/elements/ConfirmationModal";
+import { useUser } from "Context/UserContext";
 import { validateImage } from "../../../helpers/validate";
 import useApiCall from "../../../hooks/useApiCall";
-import { updateAvartarUrl } from "../../../actions/userAction";
 import ContextSelect from "../../../components/inputs/Select/ContextSelect";
 import Form from "../../../components/elements/Form";
 import SubmitButton from "../../../components/elements/SubmitButton";
@@ -20,17 +19,17 @@ import useToast from "../../../hooks/useToast";
 import MultiCheckbox from "../../../components/inputs/Checkbox/MultiCheckbox";
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
-const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
-    const {
-        avatar_url,
-    } = currentUser;
+const TabAccount = ({ history }) => {
+    const { getUser, updateAvatarUrl } = useUser();
+    const currentUser = getUser();
+    const { avatar_url } = currentUser;
 
     const hiddenFileInput = useRef(null);
 
     const [formData, setFormData] = useState({});
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileUploadError, setFileUploadError] = useState(null);
-    const [imagePath, setimagePath] = useState(avatar_url);
+    const [imagePath, setImage] = useState(avatar_url);
     const [showModal, setShowModal] = useState(false);
     const { generalError, success } = useToast();
 
@@ -96,8 +95,8 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
         try {
             const result = await userImageSubmit({ params: formData });
             if (!loading && result) {
-                setimagePath(result.url); // need to check the backend api
-                updateAvartarUrl(result.url);
+                setImage(result.url); // need to check the backend api
+                updateAvatarUrl(result.url);
             }
         } catch (error) {
             console.log(error);
@@ -154,7 +153,10 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
                     <Row>
                         <Col lg={12}>
                             <div className="white-box">
-                                <Form onSubmit={onSubmit} defaultData={formData}>
+                                <Form
+                                    onSubmit={onSubmit}
+                                    defaultData={formData}
+                                >
                                     <Row>
                                         <Col lg={3}>
                                             <Row>
@@ -282,15 +284,25 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
                                                     />
                                                 </Col>
 
-                                                <Col lg={6} className="mt-3 mt-lg-0">
+                                                <Col
+                                                    lg={6}
+                                                    className="mt-3 mt-lg-0"
+                                                >
                                                     <div
                                                         className="form-control custom-checkbox d-flex pt-2 content-center align-center"
-                                                        style={{ gap: 15 }}>
+                                                        style={{ gap: 15 }}
+                                                    >
                                                         <MultiCheckbox
                                                             name="notification_prefs"
                                                             values={[
-                                                                { label: "Text", value: "sms" },
-                                                                { label: "Email", value: "mail" },
+                                                                {
+                                                                    label: "Text",
+                                                                    value: "sms",
+                                                                },
+                                                                {
+                                                                    label: "Email",
+                                                                    value: "mail",
+                                                                },
                                                             ]}
                                                         />
                                                     </div>
@@ -298,7 +310,9 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
 
                                                 <Col className="mt-3">
                                                     <SubmitButton
-                                                        loading={saving || loading}
+                                                        loading={
+                                                            saving || loading
+                                                        }
                                                     />
                                                 </Col>
                                             </Row>
@@ -498,16 +512,27 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
 
                                     <div className="box-same-line">
                                         <h2 className="box-inside-title">
-                                            {currentUser.deleted_at && "In-"}Active
+                                            {currentUser.deleted_at && "In-"}
+                                            Active
                                         </h2>
-                                        <div className={"dot " + (currentUser.deleted_at ? "red-dot" : "green-dot")} />
+                                        <div
+                                            className={`dot ${
+                                                currentUser.deleted_at
+                                                    ? "red-dot"
+                                                    : "green-dot"
+                                            }`}
+                                        />
                                     </div>
                                 </div>
 
                                 <p className="box-inside-text">
-                                    Mark your account in-active, you <span className="text-danger">
-                                    won't be able to login or do anything in the system
-                                </span> after doing this and you will automatically be logged out.
+                                    Mark your account in-active, you{" "}
+                                    <span className="text-danger">
+                                        won't be able to login or do anything in
+                                        the system
+                                    </span>{" "}
+                                    after doing this and you will automatically
+                                    be logged out.
                                 </p>
 
                                 <Button
@@ -554,12 +579,4 @@ const TabAccount = ({ history, currentUser, updateAvartarUrl }) => {
     );
 };
 
-const mapStateToProps = ({ user }) => ({
-    currentUser: user,
-});
-
-const mapDispatchToProps = {
-    updateAvartarUrl,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(TabAccount);
+export default TabAccount;

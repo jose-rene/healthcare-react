@@ -1,25 +1,24 @@
 import React, { useMemo } from "react";
-import Icon from "../Icon";
 import { Button as RButton } from "react-bootstrap";
+import Icon from "../Icon";
 
 const Button = ({
     size = "lg",
     onClick = undefined,
-    variant = "default",
+    variant = "primary",
     label = undefined,
     children,
     type = "button",
     block = false,
     outline = false,
-    className: classAppend = "",
+    className = null,
     bold = false,
     icon = undefined,
     iconSize = undefined,
     disabled = false,
     loading = false,
 }) => {
-    const className = useMemo(() => {
-        let cName = `btn ${classAppend}`;
+    /* const className = useMemo(() => {
 
         switch (variant.toLowerCase()) {
             case "cancel":
@@ -47,7 +46,7 @@ const Button = ({
         return cName;
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [outline, variant, block]);
+    }, [outline, variant, block]); */
 
     const renderedLabel = useMemo(() => {
         const lbl = label || children;
@@ -59,7 +58,7 @@ const Button = ({
 
     return (
         <RButton
-            variant="default"
+            variant="primary"
             size={size}
             // eslint-disable-next-line react/button-has-type
             type={type}
@@ -68,7 +67,11 @@ const Button = ({
             className={className}
         >
             {icon && (
-                <Icon className={`${renderedLabel ? "me-3" : ""}`} icon={icon} size={iconSize || size} />
+                <Icon
+                    className={`${renderedLabel ? "me-3" : ""}`}
+                    icon={icon}
+                    size={iconSize || size}
+                />
             )}
             {renderedLabel}
             {loading && (

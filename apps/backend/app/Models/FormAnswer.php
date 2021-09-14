@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  *
- **/
+ *
+ * @property int   $id
+ * @property array $form_data
+ * @property Form  $form
+ */
 class FormAnswer extends Model
 {
     use HasFactory, SoftDeletes;
@@ -39,5 +43,14 @@ class FormAnswer extends Model
     public function form()
     {
         return $this->belongsTo(Form::class);
+    }
+
+    public function scopeUserAnswers($query, $user_id = null)
+    {
+        if (!$user_id) {
+            $user_id = auth()->id();
+        }
+
+        return $query->where(compact('user_id'))->orderBy('updated_at', 'desc');
     }
 }

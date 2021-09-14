@@ -1,12 +1,11 @@
 import React from "react";
-import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
-import PageLayout from "../layouts/PageLayout";
 import QuestionnaireForm from "components/assessment/Questionnaire";
+import PageLayout from "../layouts/PageLayout";
 
 /* eslint-disable react/jsx-props-no-spreading */
 
-const Questionnaire = ({ email, full_name }) => {
+const Questionnaire = () => {
     const { id } = useParams();
     // console.log("questionnaire id", id);
     return (
@@ -16,9 +15,4 @@ const Questionnaire = ({ email, full_name }) => {
     );
 };
 
-const mapStateToProps = ({ user: { email, full_name } }) => ({
-    email,
-    full_name,
-});
-
-export default connect(mapStateToProps)(Questionnaire);
+export default Questionnaire;

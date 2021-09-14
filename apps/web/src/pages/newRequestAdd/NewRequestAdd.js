@@ -43,7 +43,10 @@ const NewRequestAdd = ({
             if (!request_id) {
                 try {
                     const { id } = await fireCreateRequest();
-                    history.push(`/member/${member_id}/request/${id}/edit`);
+
+                    if (id || saving) {
+                        history.push(`/member/${member_id}/request/${id}/edit`);
+                    }
                 } catch (e) {
                     console.log("error creating request:", e);
                     goToSearch();
@@ -73,12 +76,8 @@ const NewRequestAdd = ({
     const { member = {} } = data;
 
     const [name, dob] = useMemo(() => {
-        const {
-            title = "",
-            last_name = "",
-            first_name = "",
-            dob = "",
-        } = member || {};
+        const { title = "", last_name = "", first_name = "", dob = "" } =
+            member || {};
 
         return [`${title} ${first_name} ${last_name}`, dob];
     }, [member]);
@@ -86,25 +85,26 @@ const NewRequestAdd = ({
     return (
         <PageLayout>
             <Container fluid>
-                <PageTitle
-                    title="New Request"
-                    backLink="/healthplan/start-request"
-                />
-                <Row>
-                    <Col lg={8}>
+                <Row className="justify-content-lg-center">
+                    <Col xl={10}>
+                        <PageTitle
+                            title="New Request"
+                            backLink="/healthplan/start-request"
+                        />
+                    </Col>
+                </Row>
+                <Row className="justify-content-lg-center">
+                    <Col xl={10}>
                         <Row>
                             <div className="col-md-12">
-                                <Alert variant="green" className="px-4 py-3">
-                                    <div className="d-flex w-100">
+                                <Alert variant="success" className="px-4 py-3">
+                                    <div className="d-flex align-items-center w-100">
                                         <div>
-                                            <p className="fs-7 mb-2 text-muted">
-                                                Patient Identification
-                                            </p>
-                                            <h6 className="mb-0">{name}</h6>
+                                            <h5 className="mb-0">{name}</h5>
                                         </div>
                                         <div className="ms-auto">
                                             <p className="fs-7 mb-2 text-muted">
-                                                Information
+                                                Date of Birth
                                             </p>
                                             <h6 className="mb-0">{dob}</h6>
                                         </div>
@@ -115,7 +115,7 @@ const NewRequestAdd = ({
                                 ) : (
                                     <div className="text-center">
                                         <FapIcon icon="spinner" size="2x" />
-                                        <span className="ms-2 align-middle">
+                                        <span className="fs-3 ms-2 align-middle">
                                             Loading...
                                         </span>
                                     </div>

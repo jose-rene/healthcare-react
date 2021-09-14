@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Registry, ElementStore } from "react-form-builder3";
 import useApiCall from "./useApiCall";
-import { PUT } from "../config/URLs";
+import { PUT, POST } from "../config/URLs";
 import CustomFormElements from "../components/FormBuilder/Fields";
 
 const useFormBuilder = ({ formId } = {}) => {
@@ -10,8 +10,16 @@ const useFormBuilder = ({ formId } = {}) => {
         method: PUT,
     });
 
+    const [{ loading: savingAnswers }, fireSaveAnswers] = useApiCall({
+        url: `form/${formId}/form_answers`,
+        method: POST,
+    });
+
     const [
-        { loading: formLoading, data: { form: { fields = [] } = {} } = {} },
+        {
+            loading: formLoading,
+            data: { fields = [], answers: defaultAnswers = {} } = {},
+        },
         fireLoadForm,
     ] = useApiCall({
         url: `form/${formId}`,
@@ -63,7 +71,9 @@ const useFormBuilder = ({ formId } = {}) => {
     }, []);
 
     useEffect(() => {
-        setForm(fields);
+        if (fields.length > 0) {
+            setForm(fields);
+        }
         setLoaded(true);
     }, [fields]);
 
@@ -71,17 +81,27 @@ const useFormBuilder = ({ formId } = {}) => {
         return formLoading && loaded;
     }, [formLoading, loaded]);
 
+    const saveAnswers = (params, { completed_form = false } = {}) => {
+        const newAnswers = {
+            form_data: params,
+            completed_form,
+        };
+
+        fireSaveAnswers({ params: newAnswers });
+    };
+
     return [
         {
             form,
+            defaultAnswers,
             items,
             formLoading,
             formLoaded,
             loaded,
-            saving,
+            saving: saving || savingAnswers,
             savedData: data,
         },
-        { setForm, fireLoadForm },
+        { setForm, fireLoadForm, fireSaveAnswers: saveAnswers },
     ];
 };
 

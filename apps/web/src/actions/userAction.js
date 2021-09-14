@@ -8,6 +8,6 @@ export const setUser = (email, full_name, roles = []) => (dispatch) => {
     dispatch({ type: FETCH_USER, email, full_name, roles });
 };
 
-export const updateAvartarUrl = (avatar_url) => (dispatch) => {
+export const updateAvatarUrl = (avatar_url) => (dispatch) => {
     dispatch({ type: UPDATE_AVATAR_URL, avatar_url });
 };

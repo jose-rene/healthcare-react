@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
 import { Redirect, useLocation } from "react-router-dom";
-import { connect } from "react-redux";
 import { Alert, Spinner } from "react-bootstrap";
+import { useUser } from "Context/UserContext";
 import useAuth from "../hooks/useAuth";
-import { initializeUser } from "../actions/userAction";
 
-const Federated = ({ authed, initializeUser }) => {
+const Federated = () => {
     // for the authorization request
     const [{ error }, { authSsoUser }] = useAuth();
     const location = useLocation();
+    const { initUser, isAuthed } = useUser();
+    const authed = isAuthed();
 
     // intially send sso request based on url
     useEffect(() => {
@@ -17,7 +18,7 @@ const Federated = ({ authed, initializeUser }) => {
                 const { profile } = await authSsoUser(location, {
                     loadProfile: true,
                 });
-                await initializeUser(profile);
+                initUser(profile);
             } catch (e) {
                 console.log("Profile loading error:", e);
             }
@@ -70,12 +71,4 @@ const Federated = ({ authed, initializeUser }) => {
     );
 };
 
-const mapStateToProps = ({ user: { authed } }) => ({
-    authed,
-});
-
-const mapDispatchToProps = {
-    initializeUser,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Federated);
+export default Federated;

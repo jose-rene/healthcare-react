@@ -1,15 +1,14 @@
 import React from "react";
-import { Provider } from "react-redux";
-import store from "./store";
+import { UserProvider } from "Context/UserContext";
 import AppNavigation from "./navigation/AppNavigation";
 import Flash from "./components/flash/Flash";
 
 function App() {
     return (
-        <Provider store={store}>
+        <UserProvider>
             <AppNavigation />
             <Flash />
-        </Provider>
+        </UserProvider>
     );
 }
 

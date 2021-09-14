@@ -42,7 +42,7 @@ class HealthPlanUser extends Model
 
     public function requests()
     {
-        return $this->hasMany(Request::class, 'payer_id');
+        return $this->hasMany(Request::class, 'payer_id', 'payer_id');
     }
 
     /*

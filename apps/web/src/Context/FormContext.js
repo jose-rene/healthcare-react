@@ -1,4 +1,11 @@
-import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
+import React, {
+    useContext,
+    useState,
+    useMemo,
+    createContext,
+    useEffect,
+    useCallback,
+} from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
 import { template } from "../helpers/string";
@@ -51,6 +58,14 @@ const FormProvider = ({
     );
 
     useEffect(() => {
+        return () => {
+            handleFormChange(form);
+        };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
         setValidationRules(validation);
     }, [validation]);
 
@@ -86,20 +101,26 @@ const FormProvider = ({
 
     useEffect(() => {
         if (tick !== null && onFormChange) {
-            let formValues = form;
-
-            // runs component pre submit data formatting
-            Object.keys(formatDatas).forEach((callbackName) => {
-                const callback = formatDatas[callbackName];
-
-                formValues = callback(formValues, getValue, callbackName);
-            });
-
-            onFormChange(formValues);
+            handleFormChange();
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tick]);
+
+    const handleFormChange = () => {
+        let formValues = form;
+
+        // runs component pre submit data formatting
+        Object.keys(formatDatas).forEach((callbackName) => {
+            const callback = formatDatas[callbackName];
+
+            formValues = callback(formValues, getValue, callbackName);
+        });
+
+        if (typeof onFormChange == "function") {
+            onFormChange(formValues);
+        }
+    };
 
     const validateForm = () => {
         let errorTest = {};
@@ -187,8 +208,10 @@ const FormProvider = ({
         return get(form, key, defaultValue);
     };
 
-    const update = (obj) => {
-        setForm({ ...form, ...obj });
+    const update = (name, value) => {
+        const oldForm = { ...form };
+        set(oldForm, name, value);
+        setForm(() => oldForm);
     };
 
     const onChange = ({ target: { name, value, type = "text" } }) => {

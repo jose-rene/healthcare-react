@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\FormResource;
 use App\Models\Form;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,7 +12,9 @@ class FormController extends Controller
 {
     public function index(Request $request)
     {
-        return Form::paginate($request->get('perPage', 50));
+        $forms = Form::paginate($request->get('perPage', 50));
+
+        return FormResource::collection($forms);
     }
 
     /**
@@ -22,7 +25,7 @@ class FormController extends Controller
      */
     public function show(Form $form)
     {
-        return response()->json(compact('form'));
+        return new FormResource($form);
     }
 
     /**
@@ -37,7 +40,7 @@ class FormController extends Controller
         $fields = $request->get('form', []);
         $form->update(compact('fields'));
 
-        return response()->json(['message' => 'ok']);
+        return response()->noContent();
     }
 
     public function store(Request $request)
