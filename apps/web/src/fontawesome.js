@@ -30,6 +30,8 @@ import {
     faCheck,
     faFile,
     faEye,
+    faFlag,
+    faEdit,
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add(
@@ -63,7 +65,9 @@ library.add(
     faBellOn,
     faCheck,
     faFile,
-    faEye
+    faEye,
+    faFlag,
+    faEdit
 );
 /*
 if (process.env.NODE_ENV === "development") {

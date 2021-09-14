@@ -1,4 +1,11 @@
-import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
+import React, {
+    useContext,
+    useState,
+    useMemo,
+    createContext,
+    useEffect,
+    useCallback,
+} from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
 import { template } from "../helpers/string";
@@ -47,13 +54,15 @@ const FormProvider = ({
                 setTick(tick + 1);
             }
         }, debounceMs),
-        [form],
+        [form]
     );
 
     useEffect(() => {
         return () => {
             handleFormChange(form);
         };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

@@ -8,16 +8,12 @@ import TableAPI from "components/elements/TableAPI";
 import useApiCall from "../../hooks/useApiCall";
 import useSearch from "../../hooks/useSearch";
 
-import "../../styles/healthplan.scss";
-
 const SearchMember = () => {
-    const [
-        { loading, data: { data = [], meta = {} } = {} },
-        memberSearch,
-    ] = useApiCall({
-        method: "post",
-        url: "member/search",
-    });
+    const [{ loading, data: { data = [], meta = {} } = {} }, memberSearch] =
+        useApiCall({
+            method: "post",
+            url: "member/search",
+        });
 
     const [searchStr, setSearchStr] = useState("");
 

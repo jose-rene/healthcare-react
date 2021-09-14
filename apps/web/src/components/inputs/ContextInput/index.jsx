@@ -1,9 +1,10 @@
 import React from "react";
-import { useFormContext } from "../../../Context/FormContext";
-import { Input } from "../../index";
+import { useFormContext } from "Context/FormContext";
+import { Input } from "components";
 
 const ContextInput = ({ name, customRule, ...props }) => {
-    const { getValue, onChange, getError, editing, shouldShow, autocomplete } = useFormContext();
+    const { getValue, onChange, getError, editing, shouldShow, autocomplete } =
+        useFormContext();
     const value = getValue(name);
     const errorMessage = getError({ name });
     props.value = value;
