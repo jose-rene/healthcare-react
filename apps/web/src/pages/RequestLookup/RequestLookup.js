@@ -119,7 +119,7 @@ const RequestLookup = () => {
                             to={
                                 !request_status_id
                                     ? `/member/${member_id}/request/${request_id}/edit`
-                                    : `/member/${member_id}/request/${request_id}`
+                                    : `/requests/${request_id}`
                             }
                         >
                             <FapIcon

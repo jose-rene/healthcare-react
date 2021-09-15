@@ -27,16 +27,16 @@ const RequestsTable = () => {
     });
 
     const [statusOptions] = useState([
-        { id: "all", value: "0", title: "All" },
-        { id: "received", value: "1", title: "Received" },
-        { id: "assigned", value: "2", title: "Assigned" },
-        { id: "scheduled", value: "3", title: "Scheduled" },
-        { id: "assessed", value: "4", title: "Assessed" },
-        { id: "submitted", value: "5", title: "Submitted" },
-        { id: "completed", value: "6", title: "Completed" },
-        { id: "on_hold", value: "7", title: "On Hold" },
-        { id: "cancelled", value: "8", title: "Cancelled" },
-        { id: "reopened", value: "9", title: "Reopened" },
+        { id: "all", value: 0, title: "All" },
+        { id: "received", value: 1, title: "Received" },
+        { id: "assigned", value: 2, title: "Assigned" },
+        { id: "scheduled", value: 3, title: "Scheduled" },
+        { id: "assessed", value: 4, title: "Assessed" },
+        { id: "submitted", value: 5, title: "Submitted" },
+        { id: "completed", value: 6, title: "Completed" },
+        { id: "on_hold", value: 7, title: "On Hold" },
+        { id: "cancelled", value: 8, title: "Cancelled" },
+        { id: "reopened", value: 9, title: "Reopened" },
     ]);
 
     const [headers] = useState([
@@ -46,15 +46,10 @@ const RequestsTable = () => {
             columnMap: "request_status_id",
             formatter: (request_status_id) => {
                 const found = statusOptions.find(
-                    ({ value }) => Number(value) === Number(request_status_id)
+                    ({ value }) => value === request_status_id
                 );
-                // null status id maps to 0 string and inicates in progress
-                // eslint-disable-next-line no-nested-ternary
-                return found
-                    ? found.value === "0"
-                        ? "In Progress"
-                        : found.title
-                    : "";
+
+                return found?.title || "In Progress";
             },
             label: "Status",
             type: String,
@@ -89,14 +84,24 @@ const RequestsTable = () => {
             columnMap: "member.id",
             type: ACTIONS,
             disableSortBy: true,
-            formatter(member_id, { id: request_id }) {
+            formatter(member_id, { id: request_id, request_status_id }) {
                 return (
                     <>
+                        <Link
+                            className="px-2"
+                            to={
+                                !request_status_id
+                                    ? `/member/${member_id}/request/${request_id}/edit`
+                                    : `/requests/${request_id}`
+                            }
+                        >
+                            <FapIcon
+                                size="1x"
+                                icon={!request_status_id ? `edit` : `eye`}
+                            />
+                        </Link>
                         <Link className="px-2" to="#">
                             <FapIcon icon="file" size="1x" title="Report" />
-                        </Link>
-                        <Link className="pl-2" to="#">
-                            <FapIcon icon="eye" size="1x" title="View" />
                         </Link>
                     </>
                 );
