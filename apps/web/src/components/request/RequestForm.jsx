@@ -119,9 +119,9 @@ const RequestForm = ({ data }) => {
                 setOpenDueDate(true);
                 break;
         }
-    }, [requestData]);
 
-    // console.log("step -> ", step, data.status, requestDue);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [requestData]);
 
     // api call to update request
     const [{ error: updateError, loading: requestLoading }, fireSubmit] =
