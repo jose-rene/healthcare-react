@@ -27,17 +27,10 @@ const RequestInfoView = ({
     const [data, setData] = useState({
         type_name: "diagnosis",
         codes: [],
-        auth_number: auth_number ?? "",
     });
 
     // const [auth_number, setAuthNumber] = useState("");
     const [codes, setCodes] = useState([]);
-
-    const handleAuthChange = (auth_number) => {
-        setData((prevData) => {
-            return { ...prevData, auth_number };
-        });
-    };
 
     const updateData = (codeData) => {
         setCodes(codeData);

@@ -4,6 +4,7 @@ import { Button, Card, Col, Collapse, Row, Form } from "react-bootstrap";
 import FapIcon from "components/elements/FapIcon";
 import PageAlert from "components/elements/PageAlert";
 import LoadingOverlay from "react-loading-overlay";
+import { useUser } from "Context/UserContext";
 
 /* eslint-disable react/prop-types */
 /* eslint-disable no-nested-ternary */
@@ -17,6 +18,10 @@ const DueDateView = ({
     saveRequest,
     updateError,
 }) => {
+    // get the user time zone
+    const { getUser } = useUser();
+    const { timeZone, utcOffset } = getUser();
+
     const [{ due_date, due_time, due_na }, setDueDate] = useState({
         due_date: "",
         due_time: "",
@@ -25,42 +30,47 @@ const DueDateView = ({
 
     useEffect(() => {
         if (requestDue) {
-            setDueDate({
-                due_date: moment(requestDue).format("YYYY-MM-DD"),
-                due_time: moment(requestDue).format("HH:mm"),
+            setDueDate((prevDue) => ({
+                ...prevDue,
+                due_date: moment
+                    .utc(requestDue)
+                    .utcOffset(utcOffset)
+                    .format("YYYY-MM-DD"),
+                due_time: moment
+                    .utc(requestDue)
+                    .utcOffset(utcOffset)
+                    .format("HH:mm"),
                 due_na: false,
-            });
+            }));
         } else if (requestDueNa) {
-            setDueDate({ due_date: "", due_time: "", due_na: true });
+            setDueDate((prevDue) => ({
+                ...prevDue,
+                due_date: "",
+                due_time: "",
+                due_na: true,
+            }));
         }
     }, [requestDue, requestDueNa]);
 
     const updateData = ({ target: { name, value, checked } }) => {
-        console.log(name, value, checked);
-        if (name === "due_date") {
-            setDueDate((prevDueDate) => ({
-                ...prevDueDate,
-                [name]: moment(value).format("YYYY-MM-DD"),
-                due_na: false,
-            }));
-            return;
-        }
-        if (name === "due_time") {
-            setDueDate((prevDueDate) => ({
-                ...prevDueDate,
-                [name]: moment(value, "HH:mm").format("HH:mm"),
-                due_na: false,
-            }));
-            return;
-        }
-
+        // console.log(name, value, checked);
         if (name === "due_na") {
-            setDueDate({
+            setDueDate((prevDue) => ({
+                ...prevDue,
                 due_date: "",
                 due_time: "",
                 due_na: checked,
-            });
+            }));
+            return;
         }
+        setDueDate((prevDue) => ({
+            ...prevDue,
+            [name]:
+                name === "due_date"
+                    ? moment(value).format("YYYY-MM-DD")
+                    : moment(value, "HH:mm").format("HH:mm"),
+            due_na: false,
+        }));
     };
 
     const getTimes = useMemo(() => {
@@ -89,6 +99,7 @@ const DueDateView = ({
             type_name: "due",
             due_at: `${due_date} ${due_time}`,
             due_at_na: due_na,
+            timeZone,
         });
     };
     // console.log("due date", due_date, due_time, due_na, requestDue);
@@ -210,11 +221,14 @@ const DueDateView = ({
                                 <Col>
                                     {requestDue || requestDueNa ? (
                                         requestDue ? (
-                                            <p>{`${moment(requestDue).format(
-                                                "ddd MM/DD/YYYY"
-                                            )} ${moment(requestDue).format(
-                                                "LT"
-                                            )}`}</p>
+                                            <p>
+                                                {moment
+                                                    .utc(requestDue)
+                                                    .utcOffset(utcOffset)
+                                                    .format(
+                                                        "ddd MM/DD/YYYY LT"
+                                                    )}
+                                            </p>
                                         ) : (
                                             <p>N/A</p>
                                         )

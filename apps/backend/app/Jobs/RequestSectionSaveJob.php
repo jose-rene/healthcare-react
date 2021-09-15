@@ -144,10 +144,15 @@ class RequestSectionSaveJob
             return;
         }
         // update date if valid
-        $this->request->update(request()->validate([
-            'due_at' => ['required', 'date', 'after:today'],
-            'notes'  => [], // form - due_date + time
-        ]));
+        if (null === ($due = request()->input('due_at')) || empty($due)) {
+            throw new HttpResponseException(response()->json(['errors' => ['action' => ['Due date is required']]], 422));
+        }
+        $dueDate = Carbon::parse($due, request()->input('timeZone'))->tz('UTC');
+        if ($dueDate->isToday() || $dueDate->isPast()) {
+            throw new HttpResponseException(response()->json(['errors' => ['action' => ['Due date must be in the future']]], 422));
+        }
+
+        $this->request->update(['due_at' => $dueDate]);
         // refresh the request
         $this->request->refresh();
     }

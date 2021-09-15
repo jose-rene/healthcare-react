@@ -1,5 +1,6 @@
 import React, { useContext, useReducer } from "react";
 import AsyncStorage from "@react-native-community/async-storage";
+import moment from "moment";
 
 const UserContext = React.createContext();
 
@@ -14,6 +15,8 @@ function userReducer(state, action) {
                     primaryRole,
                     authed: !!action.payload.email,
                     initializing: false,
+                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    utcOffset: moment().utcOffset(),
                 },
             };
         }
@@ -49,6 +52,8 @@ const initialState = {
     roles: [],
     abilities: [],
     primaryRole: undefined,
+    timeZone: null,
+    utcOffset: null,
     search: initialSearch,
 };
 
