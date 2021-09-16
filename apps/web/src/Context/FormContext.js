@@ -39,7 +39,6 @@ const FormProvider = ({
     const [valid, setValid] = useState(false);
     const [validationRules, setValidationRules] = useState(validation);
     const [formatDatas, setFormatDatas] = useState({});
-    // const {scrollRef} = useContext(GlobalContext);
 
     const debouncedOnFormChange = useCallback(
         debounce(() => {
@@ -59,7 +58,9 @@ const FormProvider = ({
     }, []);
 
     useEffect(() => {
-        setValidationRules(validation);
+        if (validation) {
+            setValidationRules(prev => ({ ...prev, ...validation }));
+        }
     }, [validation]);
 
     useEffect(() => {
@@ -123,6 +124,7 @@ const FormProvider = ({
                 rules = [],
                 customRule = "",
                 yupSchema,
+                callback,
             } = validationRules[fieldName];
             const { [fieldName]: value = "" } = form;
 
@@ -132,6 +134,16 @@ const FormProvider = ({
                     ...errorTest,
                     [fieldName]: { message: "This field is required" },
                 };
+            }
+
+            if (callback) {
+                const message = callback(form, fieldName, value);
+                if (message !== true) {
+                    errorTest = {
+                        ...errorTest,
+                        [fieldName]: { message },
+                    };
+                }
             }
 
             // yupSchema validation
