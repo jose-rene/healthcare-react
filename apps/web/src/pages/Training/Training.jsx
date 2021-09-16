@@ -1,12 +1,15 @@
 import React, { useEffect, useMemo } from "react";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Container } from "react-bootstrap";
 
-import PageLayout from "../../layouts/PageLayout";
+import PageLayout from "layouts/PageLayout";
+
+import PageTitle from "components/PageTitle";
+
 import TabCompliance from "./Tabs/TabCompliance";
 import TabPortalTraining from "./Tabs/TabPortalTraining";
 import TabResources from "./Tabs/TabResources";
 
-import useApiCall from "../../hooks/useApiCall";
+import useApiCall from "hooks/useApiCall";
 
 const mockTrainingDocuments = [
     {
@@ -81,8 +84,8 @@ const Training = () => {
 
     return (
         <PageLayout>
-            <div className="content-box">
-                <h1 className="box-title mb-3 pb-2">Training Materials</h1>
+            <Container fluid>
+                <PageTitle title="Training Materials" hideBack />
 
                 <Tabs defaultActiveKey="compliances">
                     <Tab
@@ -123,7 +126,7 @@ const Training = () => {
                         />
                     </Tab>
                 </Tabs>
-            </div>
+            </Container>
         </PageLayout>
     );
 };
