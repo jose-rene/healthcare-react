@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import moment from "moment";
+import dayjs from "dayjs";
 import InputText from "../../components/inputs/InputText";
 import Select from "../../components/inputs/Select";
 import Textarea from "../../components/inputs/Textarea";
@@ -20,8 +20,8 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate, dueNa, setDueNa }) => {
     useEffect(() => {
         if (memberData?.due_at) {
             setDueDate({
-                date: moment(memberData.due_at).format("YYYY-MM-DD"),
-                time: moment(memberData.due_at).format("HH:mm"),
+                date: dayjs(memberData.due_at).format("YYYY-MM-DD"),
+                time: dayjs(memberData.due_at).format("HH:mm"),
             });
         }
     }, [memberData]);
@@ -40,14 +40,14 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate, dueNa, setDueNa }) => {
         if (name === "due_date") {
             currentDueDate = {
                 ...dueDate,
-                date: moment(value).format("YYYY-MM-DD"),
+                date: dayjs(value).format("YYYY-MM-DD"),
             };
         }
 
         if (name === "due_time") {
             currentDueDate = {
                 ...dueDate,
-                time: moment(value, "HH:mm").format("HH:mm"),
+                time: dayjs(value, "HH:mm").format("HH:mm"),
             };
         }
 
@@ -118,8 +118,8 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate, dueNa, setDueNa }) => {
     const getTimes = () => {
         const times = [{ value: "", text: "" }];
         // start at 7AM
-        const today = moment(
-            `${moment().format("YYYYMMDD")}07:00`,
+        let today = dayjs(
+            `${dayjs().format("YYYYMMDD")}07:00`,
             "YYYYMMDDHH:mm"
         );
         // half hour increments until 9PM
@@ -129,7 +129,7 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate, dueNa, setDueNa }) => {
                 value: today.format("HH:mm"),
                 title: today.format("LT"),
             });
-            today.add(30, "minutes");
+            today = today.add(30, "minutes");
         }
         return times;
     };

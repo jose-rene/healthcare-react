@@ -134,7 +134,8 @@ export default ({
                 validationError =
                     "Unknown Application Error, please try again.";
             }
-            setError(validationError ?? err);
+
+            setError(validationError || err.message);
             setLoading(false);
             throw err;
         } finally {

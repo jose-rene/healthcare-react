@@ -21,7 +21,7 @@ dayjs.extend(customParseFormat);
 /* eslint-disable react/prop-types */
 /* eslint-disable no-nested-ternary */
 
-const DueDateForm = ({
+const DueDateView = ({
     requestDue,
     requestDueNa,
     requestLoading,
@@ -29,10 +29,12 @@ const DueDateForm = ({
     toggleOpenDueDate,
     saveRequest,
     updateError,
-    disabled,
 }) => {
+    // get the user time zone
     const { getUser } = useUser();
     const { timeZone, utcOffset } = getUser();
+
+    console.log(timeZone, utcOffset);
 
     const [{ due_date, due_time, due_na }, setDueDate] = useState({
         due_date: "",
@@ -42,7 +44,8 @@ const DueDateForm = ({
 
     useEffect(() => {
         if (requestDue) {
-            setDueDate({
+            setDueDate((prevDue) => ({
+                ...prevDue,
                 due_date: dayjs
                     .utc(requestDue, "MM/DD/YYYY hh:mm:ss")
                     .local()
@@ -52,9 +55,14 @@ const DueDateForm = ({
                     .local()
                     .format("HH:mm"),
                 due_na: false,
-            });
+            }));
         } else if (requestDueNa) {
-            setDueDate({ due_date: "", due_time: "", due_na: true });
+            setDueDate((prevDue) => ({
+                ...prevDue,
+                due_date: "",
+                due_time: "",
+                due_na: true,
+            }));
         }
     }, [requestDue, requestDueNa]);
 
@@ -82,7 +90,7 @@ const DueDateForm = ({
     const getTimes = useMemo(() => {
         return () => {
             const times = [{ value: "", title: "Time" }];
-            // start at 7AM
+            // start at 7AM, dayjs is immutable so we have to reset today
             let today = dayjs(
                 `${dayjs().format("YYYYMMDD")}07:00`,
                 "YYYYMMDDHH:mm"
@@ -94,7 +102,7 @@ const DueDateForm = ({
                     value: today.format("HH:mm"),
                     title: today.format("LT"),
                 });
-                today = today.add(30, "minutes");
+                today = today.add(30, "minute");
             }
             return times;
         };
@@ -111,42 +119,24 @@ const DueDateForm = ({
     // console.log("due date", due_date, due_time, due_na, requestDue);
     return (
         <>
-            <Card
-                className={`border-1 border-top-0 border-end-0 border-start-0 bg-light mt-3${
-                    disabled ? " disabled" : ""
-                }`}
-            >
-                <Card.Header className="border-0 bg-light ps-0">
+            <Card className="border-1 border-top-0 border-end-0 border-start-0 bg-light mt-3">
+                <Card.Header className="border-0 bg-light ps-2">
                     <div className="d-flex">
                         <div>
-                            <h5>
-                                <FapIcon
-                                    icon="check-circle"
-                                    type="fas"
-                                    className={`text-success me-3${
-                                        requestDue || requestDueNa
-                                            ? ""
-                                            : " invisible"
-                                    }`}
-                                />
-                                Due Date
-                            </h5>
+                            <h5 className="ms-2">Due Date</h5>
                         </div>
                         <div className="ms-auto">
-                            {!openDueDate && (
-                                <Button
-                                    variant="link"
-                                    onClick={toggleOpenDueDate}
-                                >
-                                    {requestDue || requestDueNa
+                            <Button variant="link" onClick={toggleOpenDueDate}>
+                                {openDueDate
+                                    ? "close"
+                                    : requestDue || requestDueNa
                                         ? "change"
                                         : "add"}
-                                </Button>
-                            )}
+                            </Button>
                         </div>
                     </div>
                 </Card.Header>
-                <Card.Body className="ps-5">
+                <Card.Body className="px-3">
                     <Collapse in={openDueDate}>
                         <div>
                             {updateError && (
@@ -159,7 +149,7 @@ const DueDateForm = ({
                                 </PageAlert>
                             )}
                             <Row>
-                                <Col xl={8}>
+                                <Col lg={6}>
                                     <LoadingOverlay
                                         active={requestLoading}
                                         spinner
@@ -242,7 +232,7 @@ const DueDateForm = ({
                     <Collapse in={!openDueDate}>
                         <div>
                             <Row className="mb-3">
-                                <Col className="fw-bold" sm={3}>
+                                <Col>
                                     {requestDue || requestDueNa ? (
                                         requestDue ? (
                                             <p>
@@ -283,4 +273,4 @@ const DueDateForm = ({
     );
 };
 
-export default DueDateForm;
+export default DueDateView;

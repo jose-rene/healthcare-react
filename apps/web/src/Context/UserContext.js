@@ -14,6 +14,7 @@ function userReducer(state, action) {
                     primaryRole,
                     authed: !!action.payload.email,
                     initializing: false,
+                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
                 },
             };
         }
@@ -49,6 +50,7 @@ const initialState = {
     roles: [],
     abilities: [],
     primaryRole: undefined,
+    timeZone: null,
     search: initialSearch,
 };
 
