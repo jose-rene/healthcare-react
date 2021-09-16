@@ -1,101 +1,109 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { Col, Row } from "react-bootstrap";
-import InputText from "components/inputs/InputText";
-import { Button } from "components";
+import React, { useState } from "react";
+import { Col, Row, Container } from "react-bootstrap";
+import InputText from "components/inputs/ContextInput";
+import { useUser } from "../../../Context/UserContext";
+import Form from "../../../components/elements/Form";
+import SubmitButton from "../../../components/elements/SubmitButton";
+import { REQUIRED } from "../../../Context/FormContext";
+import useApiCall from "../../../hooks/useApiCall";
+import { PUT } from "../../../config/URLs";
+import ApiValidationErrors from "../../../components/request/ApiValidationErrors";
 
-const TabSecurity = ({ currentUser }) => {
-    const { email } = currentUser;
+const TabSecurity = ({ history }) => {
+    const { getUser } = useUser();
+    const { email } = getUser();
+    const [{ loading }, fireUpdatePassword] = useApiCall({
+        method: PUT,
+        url: "user/password-confirmed",
+    });
+    const [formValues, setFormValues] = useState({ email });
+    const [errors, setErrors] = useState({});
 
-    const { errors, register } = useForm();
+    const validation = {
+        current_password: { rules: [REQUIRED] },
+        password: {
+            rules: [REQUIRED],
+
+            callback: (form) => {
+                const {
+                    password = "",
+                    password_confirmation = "1",
+                } = form;
+
+                return password == password_confirmation ? true : "Password and password confirmation must match";
+            },
+        },
+        password_confirmation: {
+            rules: [REQUIRED],
+        },
+    };
+
+    const handleSubmit = async (params) => {
+        setFormValues(params);
+        setErrors({});
+        try {
+            await fireUpdatePassword({ params });
+            history.push("/");
+        } catch (e) {
+            const {
+                errors = {},
+            } = e.response?.data || {};
+
+            setErrors(errors);
+        }
+    };
 
     return (
-        <Row>
-            <Col lg={8}>
-                <div className="white-box">
-                    <Row>
-                        <Col lg={12}>
-                            <div className="box-same-line">
-                                <h2 className="box-inside-title">
-                                    Change Password
-                                </h2>
-                            </div>
+        <Container>
+            <Form onSubmit={handleSubmit} defaultData={formValues} validation={validation}>
+                <ApiValidationErrors errors={errors} />
+                <Row>
+                    <Col md={12}>
+                        <div className="box-same-line">
+                            <h2 className="box-inside-title">
+                                Change Password
+                            </h2>
+                        </div>
+                    </Col>
 
-                            <p
-                                className="box-inside-text"
-                                style={{
-                                    marginBottom: "32px",
-                                    width: "80%",
-                                }}
-                            >
-                                To change your password, enter your current
-                                password in the field below and click{" "}
-                                <b>Authenticate</b>. After you have
-                                authenticated, enter your new password, retype
-                                it for it for confirmation and click Change
-                                Password.
-                            </p>
-                        </Col>
+                    <Col md={{ offset: 3, span: 6 }}>
+                        <InputText
+                            name="email"
+                            label="Email"
+                            type="email"
+                        />
+                    </Col>
 
-                        <Col lg={6}>
-                            <InputText
-                                name="email"
-                                label="Email"
-                                type="email"
-                                value={email}
-                                errors={errors}
-                                ref={register({
-                                    pattern: {
-                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                        message:
-                                            "Please enter a valid email address",
-                                    },
-                                })}
-                            />
-                        </Col>
+                    <Col md={{ offset: 3, span: 6 }}>
+                        <InputText
+                            name="current_password"
+                            type="password"
+                            label="Current Password"
+                        />
+                    </Col>
 
-                        <Col lg={6} />
+                    <Col md={{ offset: 3, span: 6 }}>
+                        <InputText
+                            name="password"
+                            type="password"
+                            label="New Password"
+                        />
+                    </Col>
 
-                        <Col lg={6}>
-                            <InputText
-                                type="password"
-                                label="Current Password"
-                            />
-                        </Col>
+                    <Col md={{ offset: 3, span: 6 }}>
+                        <InputText
+                            name="password_confirmation"
+                            type="password"
+                            label="Confirm New Password"
+                        />
+                    </Col>
 
-                        <Col lg={6}>
-                            <Button
-                                label="Authenticate"
-                                outline
-                                className="auth-btn mb-md-3 py-2"
-                            />
-                        </Col>
-
-                        <Col lg={6}>
-                            <InputText type="password" label="New Password" />
-                        </Col>
-
-                        <Col lg={6} />
-
-                        <Col lg={6}>
-                            <InputText
-                                type="password"
-                                label="Confirm New Password"
-                            />
-                        </Col>
-
-                        <Col lg={12} style={{ textAlign: "center" }}>
-                            <Button label="Cancel" variant="cancel" />
-                            <Button
-                                label="Change Password"
-                                outline
-                                className="ml-3"
-                            />
-                        </Col>
-                    </Row>
-                </div>
-            </Col>
-        </Row>
+                    <Col md={12}>
+                        <SubmitButton title="Change Password" loading={loading} />
+                    </Col>
+                </Row>
+            </Form>
+        </Container>
     );
 };
 

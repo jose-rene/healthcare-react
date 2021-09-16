@@ -32,6 +32,7 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->put('/user/profile', 'UserController@profileSave')->name('user.profile.save');
     $router->post('/user/profile-image', 'UserController@profileImageSave')->name('user.profile.image.save');
     $router->put('/user/password', 'PasswordController@authedChangePassword');
+    $router->put('/user/password-confirmed', 'PasswordController@authedChangePasswordWithConfirm');
 
     // clinical user routes
     Route::put('clinicaluser/update', 'ClinicalServicesUserController@update')->name('clinicaluser.update');
