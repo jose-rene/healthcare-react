@@ -1,11 +1,4 @@
-import React, {
-    useContext,
-    useState,
-    useMemo,
-    createContext,
-    useEffect,
-    useCallback,
-} from "react";
+import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
 import { template } from "../helpers/string";
@@ -214,6 +207,16 @@ const FormProvider = ({
         setForm(() => oldForm);
     };
 
+    const objUpdate = (obj) => {
+        const oldForm = { ...form };
+
+        Object.keys(obj).forEach(o => {
+            set(oldForm.o, obj[o]);
+        });
+
+        setForm(() => oldForm);
+    };
+
     const onChange = ({ target: { name, value, type = "text" } }) => {
         const oldForm = { ...form };
         if (type === "checkbox") {
@@ -251,6 +254,7 @@ const FormProvider = ({
                 addFormatData,
                 update,
                 onChange,
+                objUpdate,
                 getValue,
                 getError,
                 clear,
