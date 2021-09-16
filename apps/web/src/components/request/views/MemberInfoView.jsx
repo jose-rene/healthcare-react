@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, Card, Col, Collapse, Row } from "react-bootstrap";
-import FapIcon from "components/elements/FapIcon";
 
 const MemberInfoView = ({ memberData, openMember, toggleOpenMember }) => {
     return (

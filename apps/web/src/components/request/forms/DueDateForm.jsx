@@ -1,10 +1,22 @@
 import React, { useState, useEffect, useMemo } from "react";
-import moment from "moment";
 import { Button, Card, Col, Collapse, Row, Form } from "react-bootstrap";
 import FapIcon from "components/elements/FapIcon";
 import PageAlert from "components/elements/PageAlert";
 import LoadingOverlay from "react-loading-overlay";
 import { useUser } from "Context/UserContext";
+import dayjs from "dayjs";
+
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+const advancedFormat = require("dayjs/plugin/advancedFormat");
+const localizedFormat = require("dayjs/plugin/localizedFormat");
+const customParseFormat = require("dayjs/plugin/customParseFormat");
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(advancedFormat);
+dayjs.extend(localizedFormat);
+dayjs.extend(customParseFormat);
 
 /* eslint-disable react/prop-types */
 /* eslint-disable no-nested-ternary */
@@ -31,13 +43,13 @@ const DueDateForm = ({
     useEffect(() => {
         if (requestDue) {
             setDueDate({
-                due_date: moment
-                    .utc(requestDue)
-                    .utcOffset(utcOffset)
+                due_date: dayjs
+                    .utc(requestDue, "MM/DD/YYYY hh:mm:ss")
+                    .local()
                     .format("YYYY-MM-DD"),
-                due_time: moment
-                    .utc(requestDue)
-                    .utcOffset(utcOffset)
+                due_time: dayjs
+                    .utc(requestDue, "MM/DD/YYYY hh:mm:ss")
+                    .local()
                     .format("HH:mm"),
                 due_na: false,
             });
@@ -47,39 +59,32 @@ const DueDateForm = ({
     }, [requestDue, requestDueNa]);
 
     const updateData = ({ target: { name, value, checked } }) => {
-        console.log(name, value, checked);
-        if (name === "due_date") {
-            setDueDate((prevDueDate) => ({
-                ...prevDueDate,
-                [name]: moment(value).format("YYYY-MM-DD"),
-                due_na: false,
-            }));
-            return;
-        }
-        if (name === "due_time") {
-            setDueDate((prevDueDate) => ({
-                ...prevDueDate,
-                [name]: moment(value, "HH:mm").format("HH:mm"),
-                due_na: false,
-            }));
-            return;
-        }
-
+        // console.log(name, value, checked);
         if (name === "due_na") {
-            setDueDate({
+            setDueDate((prevDue) => ({
+                ...prevDue,
                 due_date: "",
                 due_time: "",
                 due_na: checked,
-            });
+            }));
+            return;
         }
+        setDueDate((prevDue) => ({
+            ...prevDue,
+            [name]:
+                name === "due_date"
+                    ? dayjs(value).format("YYYY-MM-DD")
+                    : dayjs(value, "HH:mm").format("HH:mm"),
+            due_na: false,
+        }));
     };
 
     const getTimes = useMemo(() => {
         return () => {
             const times = [{ value: "", title: "Time" }];
             // start at 7AM
-            const today = moment(
-                `${moment().format("YYYYMMDD")}07:00`,
+            let today = dayjs(
+                `${dayjs().format("YYYYMMDD")}07:00`,
                 "YYYYMMDDHH:mm"
             );
             // half hour increments until 9PM
@@ -89,7 +94,7 @@ const DueDateForm = ({
                     value: today.format("HH:mm"),
                     title: today.format("LT"),
                 });
-                today.add(30, "minutes");
+                today = today.add(30, "minutes");
             }
             return times;
         };
@@ -241,11 +246,14 @@ const DueDateForm = ({
                                     {requestDue || requestDueNa ? (
                                         requestDue ? (
                                             <p>
-                                                {moment
-                                                    .utc(requestDue)
-                                                    .utcOffset(utcOffset)
+                                                {dayjs
+                                                    .utc(
+                                                        requestDue,
+                                                        "MM/DD/YYYY hh:mm:ss"
+                                                    )
+                                                    .local()
                                                     .format(
-                                                        "ddd MM/DD/YYYY LT"
+                                                        "ddd MM/DD/YYYY h:mm A z"
                                                     )}
                                             </p>
                                         ) : (

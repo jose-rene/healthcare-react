@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Col, Row } from "react-bootstrap";
-import moment from "moment";
 
 import { Button } from "components";
 import FapIcon from "components/elements/FapIcon";
@@ -12,6 +11,7 @@ import useApiCall from "hooks/useApiCall";
 import useSearch from "hooks/useSearch";
 
 import { ACTIONS } from "helpers/table";
+import dayjs from "dayjs";
 
 const RequestsTable = () => {
     const history = useHistory();
@@ -64,14 +64,14 @@ const RequestsTable = () => {
             label: "Received",
             type: Date,
             formatter: (date) =>
-                date ? moment(date).format("MM/DD/YYYY") : "-",
+                date ? dayjs(date).format("MM/DD/YYYY") : "-",
         },
         {
             columnMap: "due_at",
             label: "Schedule Date",
             type: Date,
             formatter: (date) =>
-                date ? moment(date).format("MM/DD/YYYY") : "-",
+                date ? dayjs(date).format("MM/DD/YYYY") : "-",
         },
         {
             columnMap: "activities.0.message",

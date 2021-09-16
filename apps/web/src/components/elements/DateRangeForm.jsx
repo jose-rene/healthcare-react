@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Col } from "react-bootstrap";
-import moment from "moment";
 
 import { useFormContext } from "Context/FormContext";
 
 import ContextInput from "components/inputs/ContextInput";
 import ContextSelect from "components/contextInputs/Select";
+import dayjs from "dayjs";
 
 const DateRangeForm = ({ searchObj, setSearchObj }) => {
     const { update } = useFormContext();
@@ -18,9 +18,9 @@ const DateRangeForm = ({ searchObj, setSearchObj }) => {
     ]);
 
     const updateDateRange = ({ target: { value } }) => {
-        const toValue = value ? moment().format("YYYY-MM-DD") : "";
+        const toValue = value ? dayjs().format("YYYY-MM-DD") : "";
         const fromValue = value
-            ? moment().subtract(value, "days").format("YYYY-MM-DD")
+            ? dayjs().subtract(value, "days").format("YYYY-MM-DD")
             : "";
         setSearchObj({
             ...searchObj,

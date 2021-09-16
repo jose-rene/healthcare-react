@@ -1,16 +1,23 @@
-import moment from 'moment';
-import { generate as generateRandomString } from 'randomstring';
-import React from 'react';
-import routeData from 'react-router';
-import Login from '../pages/Login';
-import { axiosMock, fireEvent, profileResponse, renderWithRouter, screen, wait } from '../testUtils';
+import dayjs from "dayjs";
+import { generate as generateRandomString } from "randomstring";
+import React from "react";
+import routeData from "react-router";
+import Login from "../pages/Login";
+import {
+    axiosMock,
+    fireEvent,
+    profileResponse,
+    renderWithRouter,
+    screen,
+    wait,
+} from "../testUtils";
 
 // mock useLocation
 const mockLocation = {
-    pathname: '/dashboard',
-    hash: '',
-    search: '',
-    state: '',
+    pathname: "/dashboard",
+    hash: "",
+    search: "",
+    state: "",
 };
 
 beforeEach(() => {
@@ -126,12 +133,14 @@ describe("Login Page", () => {
                 charset: "alphanumeric",
             }),
             token_type: "Bearer",
-            expires_at: moment()
-                .add(7, "minutes")
-                .format("YYYY-MM-DD hh:mm:ss"),
+            expires_at: dayjs().add(7, "minute").format("YYYY-MM-DD hh:mm:ss"),
         };
         // /login/
-        axiosMock().onPost().reply(200, response).onGet(/profile/).reply(200, profileResponse);
+        axiosMock()
+            .onPost()
+            .reply(200, response)
+            .onGet(/profile/)
+            .reply(200, profileResponse);
         // render with redux and router
         renderWithRouter(<Login />, initialReduxState);
         // wait for the state changes

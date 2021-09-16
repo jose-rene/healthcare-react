@@ -1,9 +1,14 @@
-import moment from 'moment';
-import { generate as generateRandomString } from 'randomstring';
-import React from 'react';
-import routeData from 'react-router';
-import Federated from '../pages/Federated';
-import { axiosMock, profileResponse, renderWithRouter, screen } from '../testUtils';
+import dayjs from "dayjs";
+import { generate as generateRandomString } from "randomstring";
+import React from "react";
+import routeData from "react-router";
+import Federated from "../pages/Federated";
+import {
+    axiosMock,
+    profileResponse,
+    renderWithRouter,
+    screen,
+} from "../testUtils";
 
 // redux
 const initialReduxState = {
@@ -13,7 +18,7 @@ const initialReduxState = {
     },
 };
 // mock url
-const expires = moment().add(5, 'minutes');
+const expires = dayjs().add(5, "minute");
 const signature = generateRandomString(32);
 // mock useLocation
 const mockLocation = {
@@ -38,11 +43,13 @@ describe("SSO Login Page", () => {
                 charset: "alphanumeric",
             }),
             token_type: "Bearer",
-            expires_at: moment()
-                .add(7, "minutes")
-                .format("YYYY-MM-DD hh:mm:ss"),
+            expires_at: dayjs().add(7, "minute").format("YYYY-MM-DD hh:mm:ss"),
         };
-        axiosMock().onGet().replyOnce(200, response).onGet(/profile/).reply(200, profileResponse);
+        axiosMock()
+            .onGet()
+            .replyOnce(200, response)
+            .onGet(/profile/)
+            .reply(200, profileResponse);
 
         // render with redux and router
         renderWithRouter(<Federated />, {

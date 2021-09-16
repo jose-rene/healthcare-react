@@ -147,7 +147,12 @@ class RequestSectionSaveJob
         if (null === ($due = request()->input('due_at')) || empty($due)) {
             throw new HttpResponseException(response()->json(['errors' => ['action' => ['Due date is required']]], 422));
         }
-        $dueDate = Carbon::parse($due, request()->input('timeZone'))->tz('UTC');
+        try {
+            $dueDate = Carbon::parse($due, request()->input('timeZone'))->tz('UTC');
+        }
+        catch (\Exception $e) {
+            throw new HttpResponseException(response()->json(['errors' => ['action' => ['Could not process Due Date']]], 422));
+        }
         if ($dueDate->isToday() || $dueDate->isPast()) {
             throw new HttpResponseException(response()->json(['errors' => ['action' => ['Due date must be in the future']]], 422));
         }

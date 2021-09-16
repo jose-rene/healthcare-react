@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Row, Col, Container } from "react-bootstrap";
-import moment from "moment";
 
 import PageLayout from "layouts/PageLayout";
 
@@ -19,6 +18,7 @@ import FapIcon from "components/elements/FapIcon";
 import useApiCall from "hooks/useApiCall";
 
 import { ACTIONS } from "helpers/table";
+import dayjs from "dayjs";
 
 const RequestLookup = () => {
     const { getUser, setSearch } = useUser();
@@ -82,14 +82,14 @@ const RequestLookup = () => {
             label: "Received",
             type: Date,
             formatter: (date) =>
-                date ? moment(date).format("MM/DD/YYYY") : "-",
+                date ? dayjs(date).format("MM/DD/YYYY") : "-",
         },
         {
             columnMap: "due_at",
             label: "Schedule Date",
             type: String,
             formatter: (date) =>
-                date ? moment(date).format("MM/DD/YYYY") : "-",
+                date ? dayjs(date).format("MM/DD/YYYY") : "-",
         },
 
         // TODO :: DEV :: NOTE :: this will basically show the last status change

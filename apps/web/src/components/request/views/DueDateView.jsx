@@ -1,10 +1,22 @@
 import React, { useState, useEffect, useMemo } from "react";
-import moment from "moment";
 import { Button, Card, Col, Collapse, Row, Form } from "react-bootstrap";
 import FapIcon from "components/elements/FapIcon";
 import PageAlert from "components/elements/PageAlert";
 import LoadingOverlay from "react-loading-overlay";
 import { useUser } from "Context/UserContext";
+import dayjs from "dayjs";
+
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+const advancedFormat = require("dayjs/plugin/advancedFormat");
+const localizedFormat = require("dayjs/plugin/localizedFormat");
+const customParseFormat = require("dayjs/plugin/customParseFormat");
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(advancedFormat);
+dayjs.extend(localizedFormat);
+dayjs.extend(customParseFormat);
 
 /* eslint-disable react/prop-types */
 /* eslint-disable no-nested-ternary */
@@ -22,6 +34,8 @@ const DueDateView = ({
     const { getUser } = useUser();
     const { timeZone, utcOffset } = getUser();
 
+    console.log(timeZone, utcOffset);
+
     const [{ due_date, due_time, due_na }, setDueDate] = useState({
         due_date: "",
         due_time: "",
@@ -32,13 +46,13 @@ const DueDateView = ({
         if (requestDue) {
             setDueDate((prevDue) => ({
                 ...prevDue,
-                due_date: moment
-                    .utc(requestDue)
-                    .utcOffset(utcOffset)
+                due_date: dayjs
+                    .utc(requestDue, "MM/DD/YYYY hh:mm:ss")
+                    .local()
                     .format("YYYY-MM-DD"),
-                due_time: moment
-                    .utc(requestDue)
-                    .utcOffset(utcOffset)
+                due_time: dayjs
+                    .utc(requestDue, "MM/DD/YYYY hh:mm:ss")
+                    .local()
                     .format("HH:mm"),
                 due_na: false,
             }));
@@ -67,8 +81,8 @@ const DueDateView = ({
             ...prevDue,
             [name]:
                 name === "due_date"
-                    ? moment(value).format("YYYY-MM-DD")
-                    : moment(value, "HH:mm").format("HH:mm"),
+                    ? dayjs(value).format("YYYY-MM-DD")
+                    : dayjs(value, "HH:mm").format("HH:mm"),
             due_na: false,
         }));
     };
@@ -76,9 +90,9 @@ const DueDateView = ({
     const getTimes = useMemo(() => {
         return () => {
             const times = [{ value: "", title: "Time" }];
-            // start at 7AM
-            const today = moment(
-                `${moment().format("YYYYMMDD")}07:00`,
+            // start at 7AM, dayjs is immutable so we have to reset today
+            let today = dayjs(
+                `${dayjs().format("YYYYMMDD")}07:00`,
                 "YYYYMMDDHH:mm"
             );
             // half hour increments until 9PM
@@ -88,7 +102,7 @@ const DueDateView = ({
                     value: today.format("HH:mm"),
                     title: today.format("LT"),
                 });
-                today.add(30, "minutes");
+                today = today.add(30, "minute");
             }
             return times;
         };
@@ -222,11 +236,14 @@ const DueDateView = ({
                                     {requestDue || requestDueNa ? (
                                         requestDue ? (
                                             <p>
-                                                {moment
-                                                    .utc(requestDue)
-                                                    .utcOffset(utcOffset)
+                                                {dayjs
+                                                    .utc(
+                                                        requestDue,
+                                                        "MM/DD/YYYY hh:mm:ss"
+                                                    )
+                                                    .local()
                                                     .format(
-                                                        "ddd MM/DD/YYYY LT"
+                                                        "ddd MM/DD/YYYY h:mm A z"
                                                     )}
                                             </p>
                                         ) : (
