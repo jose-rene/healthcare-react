@@ -8,7 +8,7 @@ import ContextSelect from "components/contextInputs/Select";
 import dayjs from "dayjs";
 
 const DateRangeForm = ({ searchObj, setSearchObj }) => {
-    const { update } = useFormContext();
+    const { objUpdate } = useFormContext();
 
     const [dateRangeOptions] = useState([
         { id: "", title: "", val: "" },
@@ -29,7 +29,7 @@ const DateRangeForm = ({ searchObj, setSearchObj }) => {
             date_range: value,
         });
 
-        update({
+        objUpdate({
             from_date: fromValue,
             to_date: toValue,
             date_range: value,
