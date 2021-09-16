@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Col, Row } from "react-bootstrap";
 
 import TableAPI from "components/elements/TableAPI";
-import { ACTIONS } from "../../../helpers/table";
+
+import { ACTIONS } from "helpers/table";
 
 const TabResources = ({ pdfData, videoData, meta, loading }) => {
     const [pdfFileUrl, setPdfFileUrl] = useState(null);
@@ -105,95 +106,93 @@ const TabResources = ({ pdfData, videoData, meta, loading }) => {
     return (
         <Tabs defaultActiveKey="pdf" className="inside-tabs">
             <Tab eventKey="pdf" title="PDF">
-                <div className="row">
-                    <div className="col-md-7">
-                        <div className="white-box mt-0">
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <TableAPI // need to update real data
-                                        searchObj={{}}
-                                        headers={pdfHeaders}
-                                        loading={loading}
-                                        data={pdfData}
-                                        dataMeta={meta} // need to update backend api
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <Row>
+                    <Col md={7}>
+                        <Row>
+                            <Col md={12}>
+                                <TableAPI // need to update real data
+                                    searchObj={{}}
+                                    headers={pdfHeaders}
+                                    loading={loading}
+                                    data={pdfData}
+                                    dataMeta={meta} // need to update backend api
+                                />
+                            </Col>
+                        </Row>
+                    </Col>
 
-                    <div className="col-md-5 d-none d-sm-block">
-                        <div className="white-box mt-0">
-                            <div className="row">
-                                {pdfFileUrl ? (
-                                    <div className="col-md-12">
-                                        <embed
-                                            key={pdfFileUrl}
-                                            src={pdfFileUrl}
-                                            style={{
-                                                width: "100%",
-                                                height: "40rem",
-                                            }}
-                                            alt="Document Viewer"
-                                            pluginspage="https://www.adobe.com/products/acrobat/readstep2.html"
-                                        />
-                                    </div>
-                                ) : (
-                                    <div className="col-md-12 d-flex justify-content-center">
-                                        No Preview
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <Col md={5}>
+                        <Row>
+                            {pdfFileUrl ? (
+                                <Col md={12}>
+                                    <embed
+                                        key={pdfFileUrl}
+                                        src={pdfFileUrl}
+                                        style={{
+                                            width: "100%",
+                                            height: "40rem",
+                                        }}
+                                        alt="Document Viewer"
+                                        pluginspage="https://www.adobe.com/products/acrobat/readstep2.html"
+                                    />
+                                </Col>
+                            ) : (
+                                <Col
+                                    md={12}
+                                    className="d-flex justify-content-center"
+                                >
+                                    No Preview
+                                </Col>
+                            )}
+                        </Row>
+                    </Col>
+                </Row>
             </Tab>
             <Tab eventKey="video" title="Video">
-                <div className="row">
-                    <div className="col-md-7">
-                        <div className="white-box mt-0">
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <TableAPI // need to update real data
-                                        searchObj={{}}
-                                        headers={videoHeaders}
-                                        loading={loading}
-                                        data={videoData}
-                                        dataMeta={meta} // need to update backend api
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <Row>
+                    <Col md={7}>
+                        <Row>
+                            <Col md={12}>
+                                <TableAPI // need to update real data
+                                    searchObj={{}}
+                                    headers={videoHeaders}
+                                    loading={loading}
+                                    data={videoData}
+                                    dataMeta={meta} // need to update backend api
+                                />
+                            </Col>
+                        </Row>
+                    </Col>
 
-                    <div className="col-md-5 d-none d-sm-block">
-                        <div className="white-box mt-0">
-                            <div className="row">
-                                {videoFileUrl ? (
-                                    <div className="col-md-12">
-                                        <video
-                                            style={{
-                                                width: "100%",
-                                                height: "auto",
-                                                borderRadius: "6px",
-                                            }}
-                                            controls
-                                        >
-                                            <source
-                                                src={videoFileUrl}
-                                                type="video/mp4"
-                                            />
-                                        </video>
-                                    </div>
-                                ) : (
-                                    <div className="col-md-12 d-flex justify-content-center">
-                                        No Preview
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <Col md={5}>
+                        <Row>
+                            {videoFileUrl ? (
+                                <Col md={12}>
+                                    <video
+                                        style={{
+                                            width: "100%",
+                                            height: "auto",
+                                            borderRadius: "6px",
+                                        }}
+                                        controls
+                                    >
+                                        <source
+                                            src={videoFileUrl}
+                                            type="video/mp4"
+                                        />
+                                    </video>
+                                </Col>
+                            ) : (
+                                <Col
+                                    md={12}
+                                    className="d-flex justify-content-center"
+                                >
+                                    No Preview
+                                </Col>
+                            )}
+                        </Row>
+                    </Col>
+                </Row>
             </Tab>
         </Tabs>
     );

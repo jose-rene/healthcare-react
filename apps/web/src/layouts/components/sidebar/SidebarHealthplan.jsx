@@ -23,7 +23,7 @@ const SidebarHealthplan = ({ logOut, primaryRole, abilities, open }) => {
                 <FapIcon icon="user" size="lg" className="me-2" />
                 <span className={textClass}>Account</span>
             </Nav.Link>
-            <Nav.Link href="/training">
+            <Nav.Link href="/healthplan/training">
                 <FapIcon icon="book-reader" size="lg" className="me-2" />
                 <span className={textClass}>Training</span>
             </Nav.Link>

@@ -40,7 +40,7 @@ const MenuHealthplan = ({ logOut, primaryRole, abilities, ...props }) => {
                         <span className={textClass}>Account</span>
                     </Nav.Link>
                     <Nav.Link
-                        href="/training"
+                        href="/healthplan/training"
                         className="list-group-item border-end-0"
                     >
                         <FapIcon
