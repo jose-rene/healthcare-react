@@ -62,6 +62,16 @@ class ClinicalServicesUser extends Model
         return $this->belongsTo(ClinicalUserStatus::class, 'clinical_user_status_id')->select(['id', 'name']);
     }
 
+    public function requests()
+    {
+        return $this->hasMany(Request::class);
+    }
+
+    public function reviewerRequests()
+    {
+        return $this->hasMany(Request::class, 'reviewer_id');
+    }
+
     public function therapyNetwork()
     {
         return $this->belongsTo(TherapyNetwork::class, 'therapy_network_id')->select(['id', 'name']);
