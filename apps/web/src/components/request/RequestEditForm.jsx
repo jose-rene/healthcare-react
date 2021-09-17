@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Button, Card, Col, Row } from "react-bootstrap";
 import PageAlert from "components/elements/PageAlert";
@@ -125,9 +125,9 @@ const RequestEditForm = ({ data }) => {
     };
 
     // submit request
-    const submitRequest = () => {
-        saveRequest({ type_name: "submit" });
-    };
+    // const submitRequest = () => {
+    //     saveRequest({ type_name: "submit" });
+    // };
 
     return (
         memberData &&

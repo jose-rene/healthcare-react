@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-    Button,
     Card,
     Col,
     Collapse,
@@ -8,10 +7,6 @@ import {
     ListGroupItem,
     Row,
 } from "react-bootstrap";
-import Select2 from "react-select";
-import FapIcon from "components/elements/FapIcon";
-import PageAlert from "components/elements/PageAlert";
-import LoadingOverlay from "react-loading-overlay";
 /* eslint-disable react/no-array-index-key */
 
 const RequestItemForm = ({
@@ -29,8 +24,6 @@ const RequestItemForm = ({
         request_type_details: [],
     });
 
-    const { request_type_details: details = [] } = data;
-
     // console.log("req items ", disabled, requestItems);
 
     /* const [requestClassifications, setRequestClassifications] = useState([]);
@@ -40,6 +33,8 @@ const RequestItemForm = ({
     }, [requestData]); */
     // combine request type selects and request detail select into a group
     const [requestItemGroups, setRequestItemGroups] = useState([]);
+
+    console.log(requestItemGroups);
     // handle request details update
     const updateRequestDetails = (groups) => {
         setRequestItemGroups(groups);
@@ -187,157 +182,157 @@ const RequestItemForm = ({
         setParams(data);
     }, [data]); */
 
-    const handleClassificationChange = (selected, action, groupIndex) => {
-        // get a copy of state
-        const currentGroups = [...requestItemGroups];
-        // get the value
-        const { value } = selected;
-        // find the selected item for the request types
-        const selectedItem = payerProfile.classifications.find(
-            (item) => item.id === value
-        );
-        // this will basically clear out all selects and add a blank request type select
-        const updatedGroup = {
-            classification: {
-                options: mapOptions(payerProfile.classifications),
-                value,
-            },
-            typeSelects: [
-                {
-                    options: mapOptions(selectedItem.request_types),
-                    value: "",
-                },
-            ],
-            requestDetails: null,
-        };
-        // set this index to this updated group
-        currentGroups[groupIndex] = updatedGroup;
-        // console.log(selected, action, value, selectedItem);
-        // update state
-        updateRequestDetails(currentGroups);
-    };
-    const handleSelectChange = (selected, action, index, groupIndex) => {
-        let i;
-        // make a copy of state
-        const currentGroups = [...requestItemGroups];
-        // the value of this select
-        const value = selected?.value ?? "";
-        // check if we selects need to be removed from state
-        if (currentGroups[groupIndex].typeSelects.length > index + 1) {
-            // when this select changes, remove the selects above this index
-            currentGroups[groupIndex].typeSelects.length = index + 1;
-            // console.log("reset index -> ", currentGroups[groupIndex].typeSelects);
-        }
-        // if there are details they would no longer be shown, since a request type changed, reset to null
-        currentGroups[groupIndex].requestDetails = null;
-        // setRequestDetail(null);
-        // clear
-        if (action?.action && action.action === "clear") {
-            // set the value of this type to blank
-            currentGroups[groupIndex].typeSelects[index].value = "";
-            // update state
-            updateRequestDetails(currentGroups);
-            return;
-        }
-        // populate the next select or request types
-        // get the nested request_types to use
-        // search in classifications for selected and get req types
-        const selectedClassification = payerProfile.classifications.find(
-            (item) => item.id === currentGroups[groupIndex].classification.value
-        );
-        let reqTypes = selectedClassification.request_types;
-        /* eslint-disable */
-        if (index > 0) {
-            for (i = 0; i < index; i++) {
-                const found = reqTypes.find(
-                    (type) =>
-                        type.id ===
-                        currentGroups[groupIndex].typeSelects[i].value
-                );
-                if (found?.request_types) {
-                    reqTypes = found.request_types;
-                }
-            }
-        }
-        /* eslint-enable */
+    // const handleClassificationChange = (selected, action, groupIndex) => {
+    //     // get a copy of state
+    //     const currentGroups = [...requestItemGroups];
+    //     // get the value
+    //     const { value } = selected;
+    //     // find the selected item for the request types
+    //     const selectedItem = payerProfile.classifications.find(
+    //         (item) => item.id === value
+    //     );
+    //     // this will basically clear out all selects and add a blank request type select
+    //     const updatedGroup = {
+    //         classification: {
+    //             options: mapOptions(payerProfile.classifications),
+    //             value,
+    //         },
+    //         typeSelects: [
+    //             {
+    //                 options: mapOptions(selectedItem.request_types),
+    //                 value: "",
+    //             },
+    //         ],
+    //         requestDetails: null,
+    //     };
+    //     // set this index to this updated group
+    //     currentGroups[groupIndex] = updatedGroup;
+    //     // console.log(selected, action, value, selectedItem);
+    //     // update state
+    //     updateRequestDetails(currentGroups);
+    // };
+    // const handleSelectChange = (selected, action, index, groupIndex) => {
+    //     let i;
+    //     // make a copy of state
+    //     const currentGroups = [...requestItemGroups];
+    //     // the value of this select
+    //     const value = selected?.value ?? "";
+    //     // check if we selects need to be removed from state
+    //     if (currentGroups[groupIndex].typeSelects.length > index + 1) {
+    //         // when this select changes, remove the selects above this index
+    //         currentGroups[groupIndex].typeSelects.length = index + 1;
+    //         // console.log("reset index -> ", currentGroups[groupIndex].typeSelects);
+    //     }
+    //     // if there are details they would no longer be shown, since a request type changed, reset to null
+    //     currentGroups[groupIndex].requestDetails = null;
+    //     // setRequestDetail(null);
+    //     // clear
+    //     if (action?.action && action.action === "clear") {
+    //         // set the value of this type to blank
+    //         currentGroups[groupIndex].typeSelects[index].value = "";
+    //         // update state
+    //         updateRequestDetails(currentGroups);
+    //         return;
+    //     }
+    //     // populate the next select or request types
+    //     // get the nested request_types to use
+    //     // search in classifications for selected and get req types
+    //     const selectedClassification = payerProfile.classifications.find(
+    //         (item) => item.id === currentGroups[groupIndex].classification.value
+    //     );
+    //     let reqTypes = selectedClassification.request_types;
+    //     /* eslint-disable */
+    //     if (index > 0) {
+    //         for (i = 0; i < index; i++) {
+    //             const found = reqTypes.find(
+    //                 (type) =>
+    //                     type.id ===
+    //                     currentGroups[groupIndex].typeSelects[i].value
+    //             );
+    //             if (found?.request_types) {
+    //                 reqTypes = found.request_types;
+    //             }
+    //         }
+    //     }
+    //     /* eslint-enable */
 
-        // find the request type for this value in the reqTypes array
-        const foundReqType = reqTypes.find((type) => type.id === value);
-        // setRequestVals((prevVals) => [...prevVals, value]);
-        // set the value of the select
-        currentGroups[groupIndex].typeSelects[index].value = value;
-        // if there are child request types, add the next select
-        if (foundReqType?.request_types && foundReqType.request_types.length) {
-            // append the next select
-            currentGroups[groupIndex].typeSelects = [
-                ...currentGroups[groupIndex].typeSelects,
-                {
-                    options: mapOptions(foundReqType.request_types),
-                    value: "",
-                },
-            ];
-            // set state
-            updateRequestDetails(currentGroups);
-        } else if (foundReqType?.details) {
-            // show the request details
-            // console.log("details => ", foundReqType.details);
-            currentGroups[groupIndex].requestDetails = {
-                options: mapOptions(foundReqType.details),
-                value: mapOptions(
-                    foundReqType.details.filter((detail) => detail.is_default)
-                ),
-            };
-            // console.log("current groups update details", currentGroups);
-            updateRequestDetails(currentGroups);
-            // auto add the next card to enter another request type
-            if (!currentGroups[groupIndex + 1]) {
-                addNewItemsCard();
-            }
-        }
-        // console.log("found -> ", index, foundReqType);
-    };
-    const handleDetailChange = (selected, action, index) => {
-        // setRequestDetail((prevDetail) => ({ ...prevDetail, value: selected }));
-        const currentGroups = [...requestItemGroups];
-        currentGroups[index].requestDetails.value = selected;
-        updateRequestDetails(currentGroups);
-        // can probably be done with es6?
-        /* setRequestItemGroups((prevItems) => ([
-            ...prevItems,
-            [0: {...prevItems[0],
-            value: selected,}]
-        ])); */
-    };
-    const handleGroupRemove = (index) => {
-        if (requestItemGroups.length < 2) {
-            return;
-        }
-        const currentGroups = [...requestItemGroups];
-        // do not remove if the previous one has details and there is not a next one
-        const prev = index - 1;
-        const next = index + 1;
-        if (
-            prev >= 0 &&
-            requestItemGroups[prev]?.requestDetails &&
-            !requestItemGroups[next]
-        ) {
-            // reset if length of selects is greater than one
-            if (requestItemGroups[index].typeSelects.length > 1) {
-                currentGroups[index].typeSelects.length = 1;
-                currentGroups[index].typeSelects[0].value = null;
-                currentGroups[index].details = null;
-                updateRequestDetails(currentGroups);
-            }
-            return;
-        }
-        currentGroups.splice(index, 1);
-        updateRequestDetails(currentGroups);
-    };
+    //     // find the request type for this value in the reqTypes array
+    //     const foundReqType = reqTypes.find((type) => type.id === value);
+    //     // setRequestVals((prevVals) => [...prevVals, value]);
+    //     // set the value of the select
+    //     currentGroups[groupIndex].typeSelects[index].value = value;
+    //     // if there are child request types, add the next select
+    //     if (foundReqType?.request_types && foundReqType.request_types.length) {
+    //         // append the next select
+    //         currentGroups[groupIndex].typeSelects = [
+    //             ...currentGroups[groupIndex].typeSelects,
+    //             {
+    //                 options: mapOptions(foundReqType.request_types),
+    //                 value: "",
+    //             },
+    //         ];
+    //         // set state
+    //         updateRequestDetails(currentGroups);
+    //     } else if (foundReqType?.details) {
+    //         // show the request details
+    //         // console.log("details => ", foundReqType.details);
+    //         currentGroups[groupIndex].requestDetails = {
+    //             options: mapOptions(foundReqType.details),
+    //             value: mapOptions(
+    //                 foundReqType.details.filter((detail) => detail.is_default)
+    //             ),
+    //         };
+    //         // console.log("current groups update details", currentGroups);
+    //         updateRequestDetails(currentGroups);
+    //         // auto add the next card to enter another request type
+    //         if (!currentGroups[groupIndex + 1]) {
+    //             addNewItemsCard();
+    //         }
+    //     }
+    //     // console.log("found -> ", index, foundReqType);
+    // };
+    // const handleDetailChange = (selected, action, index) => {
+    //     // setRequestDetail((prevDetail) => ({ ...prevDetail, value: selected }));
+    //     const currentGroups = [...requestItemGroups];
+    //     currentGroups[index].requestDetails.value = selected;
+    //     updateRequestDetails(currentGroups);
+    //     // can probably be done with es6?
+    //     /* setRequestItemGroups((prevItems) => ([
+    //         ...prevItems,
+    //         [0: {...prevItems[0],
+    //         value: selected,}]
+    //     ])); */
+    // };
+    // const handleGroupRemove = (index) => {
+    //     if (requestItemGroups.length < 2) {
+    //         return;
+    //     }
+    //     const currentGroups = [...requestItemGroups];
+    //     // do not remove if the previous one has details and there is not a next one
+    //     const prev = index - 1;
+    //     const next = index + 1;
+    //     if (
+    //         prev >= 0 &&
+    //         requestItemGroups[prev]?.requestDetails &&
+    //         !requestItemGroups[next]
+    //     ) {
+    //         // reset if length of selects is greater than one
+    //         if (requestItemGroups[index].typeSelects.length > 1) {
+    //             currentGroups[index].typeSelects.length = 1;
+    //             currentGroups[index].typeSelects[0].value = null;
+    //             currentGroups[index].details = null;
+    //             updateRequestDetails(currentGroups);
+    //         }
+    //         return;
+    //     }
+    //     currentGroups.splice(index, 1);
+    //     updateRequestDetails(currentGroups);
+    // };
 
-    const handleSave = () => {
-        console.log(data);
-        saveRequest(data);
-    };
+    // const handleSave = () => {
+    //     console.log(data);
+    //     saveRequest(data);
+    // };
     return (
         <>
             <Card className="border-1 border-top-0 border-end-0 border-start-0 bg-light mt-3">

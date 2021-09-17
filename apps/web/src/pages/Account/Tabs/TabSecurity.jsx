@@ -25,12 +25,11 @@ const TabSecurity = ({ history }) => {
             rules: [REQUIRED],
 
             callback: (form) => {
-                const {
-                    password = "",
-                    password_confirmation = "1",
-                } = form;
+                const { password = "", password_confirmation = "1" } = form;
 
-                return password == password_confirmation ? true : "Password and password confirmation must match";
+                return password === password_confirmation
+                    ? true
+                    : "Password and password confirmation must match";
             },
         },
         password_confirmation: {
@@ -45,9 +44,7 @@ const TabSecurity = ({ history }) => {
             await fireUpdatePassword({ params });
             history.push("/");
         } catch (e) {
-            const {
-                errors = {},
-            } = e.response?.data || {};
+            const { errors = {} } = e.response?.data || {};
 
             setErrors(errors);
         }
@@ -55,7 +52,11 @@ const TabSecurity = ({ history }) => {
 
     return (
         <Container>
-            <Form onSubmit={handleSubmit} defaultData={formValues} validation={validation}>
+            <Form
+                onSubmit={handleSubmit}
+                defaultData={formValues}
+                validation={validation}
+            >
                 <ApiValidationErrors errors={errors} />
                 <Row>
                     <Col md={12}>
@@ -67,11 +68,7 @@ const TabSecurity = ({ history }) => {
                     </Col>
 
                     <Col md={{ offset: 3, span: 6 }}>
-                        <InputText
-                            name="email"
-                            label="Email"
-                            type="email"
-                        />
+                        <InputText name="email" label="Email" type="email" />
                     </Col>
 
                     <Col md={{ offset: 3, span: 6 }}>
@@ -99,7 +96,10 @@ const TabSecurity = ({ history }) => {
                     </Col>
 
                     <Col md={12}>
-                        <SubmitButton title="Change Password" loading={loading} />
+                        <SubmitButton
+                            title="Change Password"
+                            loading={loading}
+                        />
                     </Col>
                 </Row>
             </Form>
