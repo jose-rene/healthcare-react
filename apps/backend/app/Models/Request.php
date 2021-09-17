@@ -153,9 +153,23 @@ class Request extends Model
         return $this->hasOne(Member::class, 'payer_user_id');
     }
 
-    public function scopeSearch($query)
+    public function scopeSearch($query, User $user)
     {
-        // TODO :: implement the search pipeline
+        switch ($user->user_type) {
+            // business admin and engineering can see all requests
+            case 1:
+            case 4:
+                break;
+            case 2: // healthplan
+                $query->where('payer_id', $user->healthPlanUser->payer_id);
+                break;
+            case 3: // therapist
+                $query->where('clinician_id', $user->clinicalServicesUser->id);
+                break;
+            default:
+                return null;
+                break;
+        }
 
         return app(Pipeline::class)
             ->send($query)

@@ -47,7 +47,15 @@ class UserSeeder extends Seeder
                 'phoneable_id' => $admin,
             ]);
             $admin->phones()->save($phone);
-            Bouncer::sync($admin)->roles(['hp_manager', 'hp_champion', 'hp_user', 'hp_finance', 'software_engineer']);
+            Bouncer::sync($admin)->roles([
+                'hp_manager',
+                'hp_champion',
+                'hp_user',
+                'hp_finance',
+                'software_engineer',
+                'field_clinician',
+                'clinical_reviewer',
+            ]);
             // add the user types
             $admin->engineeringUser(EngineeringUser::create());
             // add payer for hp user type
@@ -55,6 +63,12 @@ class UserSeeder extends Seeder
             $hpUser->payer()->associate($payer)->save();
             // add the hp user type
             $admin->healthPlanUser()->save($hpUser);
+            // add the field clinician user type
+            $admin->clinicalServicesUser()->create([
+                'clinical_type_id'        => 1,
+                'clinical_user_status_id' => 1,
+                'clinical_user_type_id'   => 1, // this is probably uneccessary it's handled by role
+            ]);
         }
 
 //        $users = User::factory()->count(random_int(1000, 5000))->create();

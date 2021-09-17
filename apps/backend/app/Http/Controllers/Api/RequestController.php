@@ -58,7 +58,8 @@ class RequestController extends Controller
      */
     public function index(Request $request)
     {
-        $data = ModelRequest::search()->paginate($request->get('perPage', 50));
+        $user = auth()->user();
+        $data = ModelRequest::search($user)->paginate($request->get('perPage', 50));
 
         return RequestResource::collection($data);
     }
