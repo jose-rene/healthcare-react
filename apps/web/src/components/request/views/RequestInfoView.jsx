@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-    Button,
-    Card,
-    Col,
-    Collapse,
-    Row,
-    FloatingLabel,
-    Form,
-} from "react-bootstrap";
+import { Button, Card, Col, Collapse, Row } from "react-bootstrap";
 import AsyncSelect from "react-select/async";
 import FapIcon from "components/elements/FapIcon";
 import useApiCall from "hooks/useApiCall";
@@ -120,7 +112,7 @@ const RequestInfoView = ({
         console.log(data);
         saveRequest(data);
     };
-    const filled = requestCodes.length && auth_number;
+    // const filled = requestCodes.length && auth_number;
 
     return (
         <>
@@ -206,7 +198,7 @@ const RequestInfoView = ({
                                                             item.code
                                                                 ? {
                                                                       label: item.description,
-                                                                    value: item.code,
+                                                                      value: item.code,
                                                                   }
                                                                 : null
                                                         }

@@ -53,21 +53,21 @@ const RequestDocView = ({
     };
 
     // api call to delete document request
-    const [{ loading: isRemoving }, fireDocRemove] = useApiCall({
-        method: "delete",
-    });
+    // const [{ loading: isRemoving }, fireDocRemove] = useApiCall({
+    //     method: "delete",
+    // });
     // removed document handler
-    const removeDocument = async ($documentId) => {
-        try {
-            await fireDocRemove({
-                url: `request/${requestId}/document/${$documentId}`,
-                keepLoading: true,
-            });
-            refreshRequest();
-        } catch (e) {
-            console.log("Document delete error:", e);
-        }
-    };
+    // const removeDocument = async ($documentId) => {
+    //     try {
+    //         await fireDocRemove({
+    //             url: `request/${requestId}/document/${$documentId}`,
+    //             keepLoading: true,
+    //         });
+    //         refreshRequest();
+    //     } catch (e) {
+    //         console.log("Document delete error:", e);
+    //     }
+    // };
 
     // handle file upload
     const [{ error: fileError, loading: isUploading }, fileSubmit] = useApiCall(
@@ -126,7 +126,8 @@ const RequestDocView = ({
                         <div>
                             <LoadingOverlay
                                 active={
-                                    isUploading || isRemoving || requestLoading
+                                    // isUploading || isRemoving || requestLoading
+                                    isUploading || requestLoading
                                 }
                                 spinner
                                 text="Processing Documents..."

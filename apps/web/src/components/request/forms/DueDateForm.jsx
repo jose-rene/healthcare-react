@@ -32,7 +32,7 @@ const DueDateForm = ({
     disabled,
 }) => {
     const { getUser } = useUser();
-    const { timeZone, utcOffset } = getUser();
+    const { timeZone } = getUser();
 
     const [{ due_date, due_time, due_na }, setDueDate] = useState({
         due_date: "",
