@@ -214,6 +214,7 @@ const RequestLookup = () => {
                                         type="submit"
                                         variant="primary"
                                         disabled={loading}
+                                        className="w-100"
                                         block
                                     >
                                         Search Requests
