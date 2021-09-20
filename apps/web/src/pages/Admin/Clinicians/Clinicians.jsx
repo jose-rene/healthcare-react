@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Form } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import { Row, Col, Container } from "react-bootstrap";
 
-import Select from "components/inputs/Select";
+import PageLayout from "layouts/PageLayout";
+
 import { Button } from "components";
-
-import Icon from "components/elements/Icon";
+import PageTitle from "components/PageTitle";
 import TableAPI from "components/elements/TableAPI";
+import ContextSelect from "components/contextInputs/Select";
+import FapIcon from "components/elements/FapIcon";
 
-import PageLayout from "../../../layouts/PageLayout";
+import useApiCall from "hooks/useApiCall";
+import useSearch from "hooks/useSearch";
 
-import { ACTIONS } from "../../../helpers/table";
-
-import useApiCall from "../../../hooks/useApiCall";
-import useSearch from "../../../hooks/useSearch";
+import { ACTIONS } from "helpers/table";
 
 const Clinicians = (props) => {
     const [
@@ -36,18 +35,6 @@ const Clinicians = (props) => {
         url: "admin/clinicaluser/search",
     });
 
-    useEffect(() => {
-        fireGetParams();
-        fireDoSearch();
-        setSearchStatus(false);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const [searchStatus, setSearchStatus] = useState(false);
-    const [userStatusesOptions, setUserStatusesOptions] = useState([]);
-    const [userTypesOptions, setUserTypesOptions] = useState([]);
-
     const [headers] = useState([
         { columnMap: "name", label: "Name", type: String },
         { columnMap: "clinical_user_type.name", label: "Type", type: String },
@@ -65,26 +52,41 @@ const Clinicians = (props) => {
             formatter(id) {
                 return (
                     <>
-                        <Link to={`/admin/clinicians/${id}/edit`}>
-                            <Icon
+                        <Link
+                            className="px-2"
+                            to={`/admin/clinicians/${id}/edit`}
+                        >
+                            <FapIcon
                                 size="1x"
                                 icon="edit"
                                 className="me-2 bg-secondary text-white rounded-circle p-1"
                             />
                         </Link>
 
-                        <Icon
-                            size="1x"
-                            icon="info-circle"
-                            className="me-2 bg-secondary text-white rounded-circle p-1"
-                        />
+                        <Link className="px-2">
+                            <FapIcon
+                                size="1x"
+                                icon="info-circle"
+                                className="me-2 bg-secondary text-white rounded-circle p-1"
+                            />
+                        </Link>
                     </>
                 );
             },
         },
     ]);
 
-    const { handleSubmit, register } = useForm();
+    const [searchStatus, setSearchStatus] = useState(false);
+    const [userStatusesOptions, setUserStatusesOptions] = useState([]);
+    const [userTypesOptions, setUserTypesOptions] = useState([]);
+
+    useEffect(() => {
+        fireGetParams();
+        redoSearch();
+        setSearchStatus(false);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (!user_statuses) {
@@ -120,6 +122,16 @@ const Clinicians = (props) => {
         setUserTypesOptions(typesArr);
     }, [user_types]);
 
+    const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
+        {
+            searchObj: {
+                sortColumn: headers[0].columnMap,
+                sortDirection: "asc",
+                perPage: 10,
+            },
+        }
+    );
+
     const onSubmit = (formData) => {
         redoSearch(formData);
     };
@@ -132,15 +144,6 @@ const Clinicians = (props) => {
             console.log(e);
         }
     };
-
-    const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
-        {
-            searchObj: {
-                sortColumn: headers[0].columnMap,
-                sortDirection: "asc",
-            },
-        }
-    );
 
     const handleTableChange = (props) => {
         updateSearchObj(props);
@@ -155,76 +158,73 @@ const Clinicians = (props) => {
 
     return (
         <PageLayout>
-            <div className="content-box">
-                <div className="d-flex">
-                    <h1 className="box-title mb-3 me-4">Clinicians</h1>
-                    <Button
-                        icon="plus"
-                        iconSize="sm"
-                        className="btn btn-sm mb-3"
-                        label="Add"
-                        onClick={() => handleNewClinician()}
-                    />
-                </div>
+            <Container fluid>
+                <PageTitle
+                    title="Clinicians"
+                    actions={[
+                        {
+                            icon: "plus",
+                            label: "Add",
+                            onClick: handleNewClinician,
+                        },
+                    ]}
+                    hideBack
+                />
 
-                <div className="form-row">
-                    <div className="col-md-12">
-                        <Form onSubmit={handleSubmit(onSubmit)}>
-                            <div className="white-box white-box-small">
-                                <div className="row m-0">
-                                    <div className="col-md-3">
-                                        <Select
-                                            name="type_id"
-                                            label="Type"
-                                            options={userTypesOptions}
-                                            ref={register({})}
-                                            onChange={formUpdateSearchObj}
-                                        />
-                                    </div>
-
-                                    <div className="col-md-3">
-                                        <Select
-                                            name="status_id"
-                                            label="Status"
-                                            options={userStatusesOptions}
-                                            ref={register({})}
-                                            onChange={formUpdateSearchObj}
-                                        />
-                                    </div>
-
-                                    <div className="col-md-3 align-self-end">
-                                        <Button
-                                            type="submit"
-                                            disabled={loading}
-                                            className="btn btn-block btn-primary mb-md-3 py-2"
-                                        >
-                                            Search
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </Form>
-                    </div>
-
-                    <div className="col-md-12">
-                        <div className="white-box white-box-small">
-                            {!searchStatus && (
-                                <div className="no-result">Do the search</div>
-                            )}
-                            {searchStatus && (
-                                <TableAPI
-                                    searchObj={searchObj}
-                                    headers={headers}
-                                    loading={loading}
-                                    data={data}
-                                    dataMeta={meta}
-                                    onChange={handleTableChange}
+                <Row>
+                    <Col md={12}>
+                        <Row>
+                            <Col md={3}>
+                                <ContextSelect
+                                    name="type_id"
+                                    label="Type"
+                                    options={userTypesOptions}
+                                    onChange={formUpdateSearchObj}
                                 />
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            </Col>
+
+                            <Col md={3}>
+                                <ContextSelect
+                                    name="status_id"
+                                    label="Status"
+                                    options={userStatusesOptions}
+                                    onChange={formUpdateSearchObj}
+                                />
+                            </Col>
+
+                            <Col md={3}>
+                                <Button
+                                    variant="primary"
+                                    disabled={loading}
+                                    className="w-100"
+                                    onClick={onSubmit}
+                                    block
+                                >
+                                    Search
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Col>
+
+                    <Col md={12}>
+                        {!searchStatus && (
+                            <div className="text-center py-2 bg-white">
+                                Do the search
+                            </div>
+                        )}
+                        {searchStatus && (
+                            <TableAPI
+                                searchObj={searchObj}
+                                headers={headers}
+                                loading={loading}
+                                data={data}
+                                dataMeta={meta}
+                                onChange={handleTableChange}
+                            />
+                        )}
+                    </Col>
+                </Row>
+            </Container>
         </PageLayout>
     );
 };
