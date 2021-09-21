@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo } from "react";
 import { NavDropdown, Badge } from "react-bootstrap";
-import FapIcon from "../../../components/elements/FapIcon";
-import { useGlobalContext } from "../../../Context/GlobalContext";
+
+import FapIcon from "components/elements/FapIcon";
+
+import { useGlobalContext } from "Context/GlobalContext";
 
 import "./index.scss";
-import { Button } from "../../../components";
 
 const TopNavNotifications = () => {
     const {
@@ -83,13 +84,12 @@ const TopNavNotifications = () => {
                             >
                                 <div className="d-flex">
                                     <div className="text-center align-self-center">
-                                        <Button
-                                            className="text-center text-white"
+                                        <FapIcon
+                                            icon="check-circle"
+                                            type="fas"
+                                            size="2x"
+                                            className="text-success"
                                             onClick={() => markRead[m.id]}
-                                            size="sm"
-                                            block
-                                            variant="secondary"
-                                            icon="check"
                                         />
                                     </div>
                                     <div className="ps-3 flex-grow-1">
@@ -106,6 +106,15 @@ const TopNavNotifications = () => {
                             </NavDropdown.Item>
                         );
                     })}
+                    <NavDropdown.Item
+                        className="text-muted text-end"
+                        style={{
+                            width: "25rem",
+                        }}
+                        href="/notifications"
+                    >
+                        Show All ({messages.length} / {totalMessageCount})
+                    </NavDropdown.Item>
                 </>
             )}
         </NavDropdown>

@@ -21,6 +21,7 @@ import Login from "../pages/Login";
 import Error from "../pages/NotFound";
 import Questionnaire from "../pages/Questionnaire";
 import SetForgotPassword from "../pages/SetForgotPassword";
+import NotificationList from "pages/NotificationList";
 import PrivateRoute from "../route/PrivateRoute";
 import RoleRouteRouter from "../route/RoleRoute";
 import AdminPayer from "../pages/Test/AdminPayer";
@@ -209,6 +210,11 @@ const AppNavigation = () => {
                     path="/admin/users"
                     middleware={["hp_user", "hp_champion"]} // need to change admin
                     component={AdminUserList}
+                />
+
+                <PrivateRoute
+                    path="/notifications"
+                    component={NotificationList}
                 />
 
                 <PrivateRoute path="/questionnaire/:id">

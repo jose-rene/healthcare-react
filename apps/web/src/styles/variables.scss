@@ -1,35 +1,45 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900');
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900");
 
 // Override default variables before the import, eg:
 // $body-bg: #000;
 $font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-"Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-sans-serif !default;
-
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif !default;
 
 $font-family-base: Roboto;
 
-$grid-breakpoints: (xs:0, sm: 641px, md:768px, lg:992px, xl:1200px);
-$container-max-widths: (sm: 641px, md: 768px, lg: 992px, xl: 1200px);
+$grid-breakpoints: (
+    xs: 0,
+    sm: 641px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+);
+$container-max-widths: (
+    sm: 641px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+);
 
-$blue: #0B53C1;
-$green: #85DFD8;
+$blue: #0b53c1;
+$green: #85dfd8;
 $info: #424547;
 
 $theme-colors: (
-    "primary": #1894E1,
-    "secondary": $green, // #caccce
-    "success": #00A5A5,
+    "primary": #1894e1,
+    "secondary": $green,
+    // #caccce
+    "success": #00a5a5,
     "info": $info,
     "warning": #ffc107,
     "danger": #dc3545,
     "light": #f6f9fc,
     "dark": #212529,
-    "green": $green
+    "green": $green,
+    "teal": #20c997,
 ) !default;
-;
-
-$border-radius: .75em;
+$border-radius: 0.75em;
 $border-radius-lg: $border-radius;
 $border-radius-sm: $border-radius;
 $border-color: #dadee0;
@@ -45,12 +55,12 @@ $body-color: #2b353d;
 $border-radius: 0.5rem;
 $border-radius-lg: 0.5rem;
 
-$form-floating-height:            calc(3.0rem + 2px);
-$form-floating-line-height:       1.0;
+$form-floating-height: calc(3rem + 2px);
+$form-floating-line-height: 1;
 /*$form-floating-padding-x:       $input-padding-x;
 $form-floating-padding-y:         1rem;
 $form-floating-input-padding-t:   1.25rem;*/
-$form-floating-input-padding-b:   .5rem;
+$form-floating-input-padding-b: 0.5rem;
 /*$form-floating-label-opacity:     .65;
 $form-floating-label-transform:   scale(.85) translateY(-.5rem) translateX(.15rem);
 $form-floating-transition:        opacity .1s ease-in-out, transform .1s ease-in-out;
@@ -59,5 +69,5 @@ $form-floating-transition:        opacity .1s ease-in-out, transform .1s ease-in
 $h7-font-size: 0.875rem;
 
 $custom-font-sizes: (
-  7: $h7-font-size
+    7: $h7-font-size,
 );
