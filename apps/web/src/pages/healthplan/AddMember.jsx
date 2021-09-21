@@ -28,9 +28,6 @@ const AddMember = (props) => {
 
     const [member, setMember] = useState(null);
     const [initialData, setInitialData] = useState(null);
-    const [contactMethods, setContactMethods] = useState([
-        { type: "type", phone_email: "phone_email" },
-    ]);
 
     const [
         { data: payerProfile, loading: pageLoading },
@@ -44,7 +41,7 @@ const AddMember = (props) => {
         url: "member",
     });
 
-    const [validation, setValidation] = useState({
+    const [validation] = useState({
         plan: {
             yupSchema: Yup.string().required("Plan is required"),
         },
@@ -148,26 +145,6 @@ const AddMember = (props) => {
     }, [titles]);
 
     useEffect(() => {
-        let contactMethodsValidation = {};
-
-        contactMethods.forEach(({ type, phone_email }, index) => {
-            contactMethodsValidation = {
-                ...contactMethodsValidation,
-                [type]: {
-                    yupSchema: Yup.string().required("Type is required"),
-                },
-                [phone_email]: {
-                    yupSchema: Yup.string().required("Phone/Email is required"),
-                },
-            };
-        });
-
-        setValidation({ ...validation, ...contactMethodsValidation });
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [contactMethods]);
-
-    useEffect(() => {
         setInitialData({
             first_name,
             last_name,
@@ -204,24 +181,13 @@ const AddMember = (props) => {
     }, []);
 
     const onSubmit = async (formData) => {
+
         if (loading) {
             return false;
         }
 
-        const sendContactsData = [];
-        contactMethods.forEach((v) => {
-            sendContactsData.push({
-                type: formData[v.type],
-                value: formData[v.phone_email],
-            });
-        });
-        const formSendData = {
-            ...formData,
-            contacts: sendContactsData,
-        };
-
         try {
-            const result = await fireSubmit({ params: formSendData });
+            const result = await fireSubmit({ params: formData });
             setMember(result);
         } catch (e) {
             console.log("Member create error:", e);
@@ -244,7 +210,7 @@ const AddMember = (props) => {
                     </div>
                 ) : (
                     <>
-                        {member ? (
+                        {member && (
                             <PageAlert
                                 className="mt-3"
                                 variant="success"
@@ -253,15 +219,15 @@ const AddMember = (props) => {
                             >
                                 Member Successfully Added.
                             </PageAlert>
-                        ) : null}
-                        <Form
-                            autocomplete={false}
-                            defaultData={member ? member : initialData}
-                            validation={validation}
-                            onSubmit={onSubmit}
-                        >
-                            <Row xl={12}>
-                                <>
+                        )}
+                        <Container>
+                            <Form
+                                autocomplete={false}
+                                defaultData={member || initialData}
+                                validation={validation}
+                                onSubmit={onSubmit}
+                            >
+                                <Row xl={12}>
                                     {planOptions.length > 0 ? (
                                         <Col md={6}>
                                             <ContextSelect
@@ -281,145 +247,129 @@ const AddMember = (props) => {
                                             readOnly
                                         />
                                     )}
-                                    <Col md={6}></Col>
-                                </>
+                                    <Col md={6} />
 
-                                <Col md={12}>
-                                    <h1
-                                        className="box-outside-title title-second"
-                                        style={{ marginBottom: "32px" }}
-                                    >
-                                        Member Identification Info
-                                    </h1>
-                                </Col>
+                                    <Col md={12}>
+                                        <h1 className="box-outside-title title-second my-4">Member Identification
+                                            Info</h1>
+                                    </Col>
 
-                                <Col md={6}>
-                                    <ContextInput
-                                        name="member_number"
-                                        label="Member ID*"
-                                    />
-                                </Col>
+                                    <Col md={6}>
+                                        <ContextInput
+                                            name="member_number"
+                                            label="Member ID*"
+                                        />
+                                    </Col>
 
-                                <Col md={6}>
-                                    <ContextSelect
-                                        name="member_number_type"
-                                        label="Member ID Type*"
-                                        options={memberNumberTypesOptions}
-                                    />
-                                </Col>
+                                    <Col md={6}>
+                                        <ContextSelect
+                                            name="member_number_type"
+                                            label="Member ID Type*"
+                                            options={memberNumberTypesOptions}
+                                        />
+                                    </Col>
 
-                                <Col md={6}>
-                                    <ContextSelect
-                                        name="line_of_business"
-                                        label="Line of Business"
-                                        options={lobOptions}
-                                    />
-                                </Col>
+                                    <Col md={6}>
+                                        <ContextSelect
+                                            name="line_of_business"
+                                            label="Line of Business"
+                                            options={lobOptions}
+                                        />
+                                    </Col>
 
-                                <Col md={12}>
-                                    <h1
-                                        className="box-outside-title title-second"
-                                        style={{ marginBottom: "32px" }}
-                                    >
-                                        Basic Info
-                                    </h1>
-                                </Col>
+                                    <Col md={12}>
+                                        <h1 className="box-outside-title title-second my-4">Basic Info</h1>
+                                    </Col>
 
-                                <Col md={6}>
-                                    <ContextSelect
-                                        name="title"
-                                        label="Title*"
-                                        options={titlesOptions}
-                                    />
-                                </Col>
+                                    <Col md={6}>
+                                        <ContextSelect
+                                            name="title"
+                                            label="Title*"
+                                            options={titlesOptions}
+                                        />
+                                    </Col>
 
-                                <Col md={6}>
-                                    <ContextInput
-                                        name="dob"
-                                        label="Date of Birth*"
-                                        type="date"
-                                    />
-                                </Col>
+                                    <Col md={6}>
+                                        <ContextInput
+                                            name="dob"
+                                            label="Date of Birth*"
+                                            type="date"
+                                            className="w-100"
+                                        />
+                                    </Col>
 
-                                <Col md={6}>
-                                    <ContextInput
-                                        name="first_name"
-                                        label="First Name*"
-                                    />
-                                </Col>
+                                    <Col md={6}>
+                                        <ContextInput
+                                            name="first_name"
+                                            label="First Name*"
+                                        />
+                                    </Col>
 
-                                <Col md={6}>
-                                    <ContextInput
-                                        name="last_name"
-                                        label="Last Name"
-                                    />
-                                </Col>
+                                    <Col md={6}>
+                                        <ContextInput
+                                            name="last_name"
+                                            label="Last Name"
+                                        />
+                                    </Col>
 
-                                <Col md={6}>
-                                    <ContextSelect
-                                        name="gender"
-                                        label="Gender*"
-                                        options={[
-                                            {
-                                                id: "male",
-                                                title: "Male",
-                                                val: "male",
-                                            },
-                                            {
-                                                id: "female",
-                                                title: "Female",
-                                                val: "female",
-                                            },
-                                        ]}
-                                    />
-                                </Col>
+                                    <Col md={6}>
+                                        <ContextSelect
+                                            name="gender"
+                                            label="Gender*"
+                                            options={[
+                                                {
+                                                    id: "male",
+                                                    title: "Male",
+                                                    val: "male",
+                                                },
+                                                {
+                                                    id: "female",
+                                                    title: "Female",
+                                                    val: "female",
+                                                },
+                                            ]}
+                                        />
+                                    </Col>
 
-                                <Col md={6}>
-                                    <ContextSelect
-                                        name="language"
-                                        label="Language*"
-                                        options={languageOptions}
-                                    />
-                                </Col>
+                                    <Col md={6}>
+                                        <ContextSelect
+                                            name="language"
+                                            label="Language*"
+                                            options={languageOptions}
+                                        />
+                                    </Col>
 
-                                <Col md={12}>
-                                    <AddressForm />
-                                </Col>
+                                    <Col md={12}>
+                                        <AddressForm />
+                                    </Col>
 
-                                <Col md={12}>
-                                    <h1
-                                        className="box-outside-title title-second"
-                                        style={{ marginBottom: "32px" }}
-                                    >
-                                        Contact Methods
-                                    </h1>
-                                </Col>
+                                    <Col md={12}>
+                                        <h1 className="box-outside-title title-second my-4">Contact Methods</h1>
+                                    </Col>
 
-                                <Col md={12}>
-                                    <ContactMethods
-                                        contactMethods={contactMethods}
-                                        setContactMethods={setContactMethods}
-                                    />
-                                </Col>
+                                    <Col md={12} className="mb-3">
+                                        <ContactMethods />
+                                    </Col>
 
-                                <Col md={12}>
-                                    {formError ? (
-                                        <PageAlert
-                                            className="mt-3"
-                                            variant="warning"
-                                            timeout={5000}
-                                            dismissible
-                                        >
-                                            Error: {formError}
-                                        </PageAlert>
-                                    ) : null}
-                                </Col>
+                                    <Col md={12}>
+                                        {formError && (
+                                            <PageAlert
+                                                className="mt-3"
+                                                variant="warning"
+                                                timeout={5000}
+                                                dismissible
+                                            >
+                                                Error: {formError}
+                                            </PageAlert>
+                                        )}
+                                    </Col>
 
-                                <Col md={12}>
-                                    <FormButtons submitLabel="Create New Request" />
-                                </Col>
-                            </Row>
-                        </Form>
+                                    <Col md={12}>
+                                        <FormButtons submitLabel="Create New Request" />
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </Container>
                     </>
                 )}
             </Container>

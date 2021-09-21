@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { Button as RButton } from "react-bootstrap";
+import FapIcon from "../FapIcon";
 import Icon from "../Icon";
 
 const Button = ({
@@ -18,36 +19,6 @@ const Button = ({
     disabled = false,
     loading = false,
 }) => {
-    /* const className = useMemo(() => {
-
-        switch (variant.toLowerCase()) {
-            case "cancel":
-            case "warn":
-                cName += " btn-outline-secondary";
-                break;
-            case "secondary":
-                cName += " btn-secondary";
-                break;
-
-            case "icon":
-                cName = " btn-icon";
-                break;
-            default:
-                cName += outline
-                    ? ` btn-outline-${variant}`
-                    : ` btn-${variant}`;
-                break;
-        }
-
-        if (block) {
-            cName += " btn-block";
-        }
-
-        return cName;
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [outline, variant, block]); */
-
     const renderedLabel = useMemo(() => {
         const lbl = label || children;
 
@@ -58,13 +29,13 @@ const Button = ({
 
     return (
         <RButton
-            variant="primary"
+            variant={variant}
             size={size}
             // eslint-disable-next-line react/button-has-type
             type={type}
             onClick={onClick}
             disabled={disabled}
-            className={className}
+            className={`${className ?? ""}${block ? " btn-block" : ""}`}
         >
             {icon && (
                 <Icon
@@ -75,12 +46,9 @@ const Button = ({
             )}
             {renderedLabel}
             {loading && (
-                <Icon
-                    className="align-middle fa-spin ms-3"
-                    size={iconSize || size}
-                >
-                    spinner
-                </Icon>
+                <span className="ms-2">
+                    <FapIcon icon="spinner" size={iconSize || size} />
+                </span>
             )}
         </RButton>
     );
