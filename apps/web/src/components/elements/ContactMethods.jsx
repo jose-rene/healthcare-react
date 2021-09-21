@@ -1,20 +1,32 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import { isEmpty } from "lodash";
-
-import ContextInput from "components/inputs/ContextInput";
-import ContextSelect from "components/contextInputs/Select";
 import { Button } from "components/index";
 
 import types from "config/Types.json";
+import { useFormContext } from "../../Context/FormContext";
+import ContactMethodRow from "./ContactMethodRow";
 
-const ContactMethods = ({ contactMethods, setContactMethods }) => {
+const ContactMethods = () => {
+    const { update, getValue } = useFormContext();
+    const contactMethods = getValue("contact_methods", []);
+
+    useEffect(() => {
+        if (contactMethods.length == 0) {
+            addNewContactMethod();
+        }
+    }, [contactMethods]);
+
+    const handleOnChange = (index, { target: { name, value } }) => {
+        update(`contact_methods.${index}.${name}`, value);
+    };
+
     const typesOptions = useMemo(() => {
         if (isEmpty(types)) {
             return [];
         }
 
-        const result = [{ id: "", title: "", val: "" }];
+        const result = [];
         for (const [key, value] of Object.entries(types)) {
             result.push({
                 id: value,
@@ -28,63 +40,37 @@ const ContactMethods = ({ contactMethods, setContactMethods }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [types]);
 
-    const renderContactMethods = () => {
-        return contactMethods.map(({ type, phone_email }, index) => (
-            <Row key={type}>
-                <Col md={4}>
-                    <ContextSelect
-                        name={type}
-                        label="Type*"
-                        options={typesOptions}
-                        required
-                    />
-                </Col>
-
-                <Col md={4}>
-                    <ContextInput
-                        name={phone_email}
-                        label="Phone/Email*"
-                        required
-                    />
-                </Col>
-
-                {contactMethods.length > 1 && (
-                    <Col md={4}>
-                        <Button
-                            className="btn btn-danger px-3 mb-3"
-                            label="remove"
-                            icon="cancel"
-                            iconSize="1x"
-                            onClick={() => removeContactMethod(type)}
-                        />
-                    </Col>
-                )}
-            </Row>
-        ));
-    };
-
     const addNewContactMethod = () => {
         const index = contactMethods.length;
 
-        setContactMethods(
-            contactMethods.concat({
-                type: `type_${index}`,
-                phone_email: `phone_email_${index}`,
-            })
-        );
+        update(`contact_methods.${index}`, {
+            type: "",
+            phone_email: "",
+        });
     };
 
-    const removeContactMethod = (type) => {
-        const filtered = contactMethods.filter((item) => {
-            return type !== item.type;
+    const removeContactMethod = (contactIndex) => {
+        const filtered = contactMethods.filter((item, itemIndex) => {
+            return contactIndex !== itemIndex;
         });
 
-        setContactMethods(filtered);
+        update("contact_methods", filtered);
     };
 
     return (
         <Row>
-            {renderContactMethods()}
+            <Col md={12}>
+                {contactMethods.map((c, index) => (
+                    <ContactMethodRow
+                        types={typesOptions}
+                        key={`contact-row-${index}`}
+                        showRemove={contactMethods.length > 1}
+                        onRemove={() => removeContactMethod(index)}
+                        onChange={e => handleOnChange(index, e)}
+                        {...c}
+                    />
+                ))}
+            </Col>
 
             <Col md={12}>
                 <Button
@@ -92,7 +78,7 @@ const ContactMethods = ({ contactMethods, setContactMethods }) => {
                     variant="primary"
                     size="lg"
                     block
-                    onClick={() => addNewContactMethod()}
+                    onClick={addNewContactMethod}
                 >
                     + Add new contact method
                 </Button>

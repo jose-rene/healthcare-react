@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useMemo } from "react";
 
 export const GlobalContext = createContext({});
 
@@ -10,6 +10,23 @@ export const GlobalProvider = ({ children }) => {
     const [messageLevel, setMessageLevel] = useState("info");
     const [totalMessageCount, setTotalMessageCount] = useState(0);
 
+    // pecking order for notifications
+    const priorities = useMemo(
+        () => ({
+            1: "primary", // low
+            2: "primary", // med
+            3: "warning", // high
+            4: "danger", // urgent
+        }),
+        []
+    );
+
+    // get the bootstrap class for the message level
+    const mapMessageClass = (level) => {
+        const { [level]: className = "" } = priorities;
+        return className;
+    };
+
     const notifications = {
         get({ history = 5, withReset = false } = {}) {
             if (withReset) {
@@ -18,14 +35,6 @@ export const GlobalProvider = ({ children }) => {
                 setTotalMessageCount(0);
             }
 
-            // pecking order for notifications
-            const priority = {
-                primary: 1,
-                success: 2,
-                warning: 3,
-                danger: 4,
-            };
-
             // TODO :: get notifications from the server
             const notes = [
                 {
@@ -33,19 +42,19 @@ export const GlobalProvider = ({ children }) => {
                     subject: "rando message 1",
                     message:
                         "lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 ",
-                    priority: "success",
+                    priority: 1,
                 },
                 {
                     id: 2,
                     subject: "rando message 2",
                     message: "again",
-                    priority: "danger",
+                    priority: 4,
                 },
                 {
                     id: 3,
                     subject: "rando message 1",
                     message: "lorem 100 lorem 100 lorem 100 ",
-                    priority: "success",
+                    priority: 1,
                 },
             ];
 
@@ -60,25 +69,19 @@ export const GlobalProvider = ({ children }) => {
 
             // make sure pecking order of priority is set
             const levels = notes.sort((m1, m2) => {
-                const mk1 = priority[m1.priority];
-                const mk2 = priority[m2.priority];
-
-                if (mk1 < mk2) return -1;
-                if (mk1 > mk2) return 1;
+                if (m1.priority > m2.priority) return -1;
+                if (m1.priority < m2.priority) return 1;
                 return 0;
             });
-            levels.reverse();
 
-            const mLevel = levels[0];
-            const mLevelName = mLevel.priority;
-            const level = priority[mLevelName] || "";
-            const totalMessageCount = notes.length;
+            const { priority: level = "" } = levels[0];
+            const { [level]: levelName = "" } = priorities;
 
             setMessages(notes);
-            setMessageLevel(mLevelName);
-            setTotalMessageCount(totalMessageCount);
+            setMessageLevel(levelName);
+            setTotalMessageCount(notes.length);
 
-            return { notes, level, levelName: mLevelName, totalMessageCount };
+            return { notes, level, levelName, totalMessageCount };
         },
         /**
          *
@@ -91,9 +94,9 @@ export const GlobalProvider = ({ children }) => {
                 )}" as read`
             );
             // TODO :: send an array of notification ids.
-            //const notification_ids.map(nId => {
+            // const notification_ids.map(nId => {
             //
-            //};
+            // };
         },
     };
 
@@ -108,6 +111,7 @@ export const GlobalProvider = ({ children }) => {
                 messages,
                 messageLevel,
                 totalMessageCount,
+                mapMessageClass,
             }}
         >
             {children}
