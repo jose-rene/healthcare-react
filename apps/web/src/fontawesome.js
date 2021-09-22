@@ -33,6 +33,8 @@ import {
     faEye,
     faFlag,
     faEdit,
+    faBriefcaseMedical,
+    faPhoneSquare,
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add(
@@ -69,7 +71,9 @@ library.add(
     faFile,
     faEye,
     faFlag,
-    faEdit
+    faEdit,
+    faBriefcaseMedical,
+    faPhoneSquare
 );
 /*
 if (process.env.NODE_ENV === "development") {
