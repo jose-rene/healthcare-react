@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import CheckBoxGroup from "../CheckBoxGroup";
 import { useFormContext } from "../../../Context/FormContext";
 
@@ -9,7 +9,12 @@ const CtxCheckboxGroup = ({
     options: _options = [],
     ...props
 }) => {
-    const { getValue, editing, shouldShow, update } = useFormContext();
+    const { form, getValue, editing, shouldShow, update } = useFormContext();
+    const values = getValue(name, []);
+
+    useEffect(() => {
+        console.log({ form });
+    }, [form]);
 
     const options = useMemo(() => {
         return _options.map(({ text, label, ...otherOptionProps }) => ({
@@ -23,10 +28,8 @@ const CtxCheckboxGroup = ({
         return null;
     }
 
-    const values = getValue(name, []);
-
     const handleOnChange = ({ target: { name: fieldName, checked } }) => {
-        update({ [fieldName]: checked });
+        update(fieldName, checked);
     };
 
     return (

@@ -1,11 +1,12 @@
 import React from "react";
-import { Card } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import Button from "../inputs/Button";
 import FormElement from "./FormElement";
 import Icon from "./Icon";
 // import ContextInput from "../inputs/ContextInput";
 
-const FormGroup = ({ elements, addRepeater, removeRepeater }) => {
+const FormGroup = ({ span = 12, elements, addRepeater, removeRepeater }) => {
+    console.log({ elements });
     return (
         <>
             {elements.map(
@@ -16,7 +17,7 @@ const FormGroup = ({ elements, addRepeater, removeRepeater }) => {
                     index,
                     label,
                     fields,
-                    props: { customRule, customValidation },
+                    props: { customRule, customValidation, span } = {},
                     ...props
                 }) => {
                     const heading =
@@ -56,19 +57,23 @@ const FormGroup = ({ elements, addRepeater, removeRepeater }) => {
                                 {heading} {addBtn} {removeBtn}
                             </Card.Header>
                             <Card.Body>
-                                <FormGroup elements={fields} />
+                                <Row>
+                                    <FormGroup elements={fields} span={span || 12} />
+                                </Row>
                             </Card.Body>
                         </Card>
                     ) : (
-                        <FormElement
-                            elementType={elementType}
-                            id={id}
-                            custom_name={custom_name}
-                            label={label}
-                            {...props}
-                            customRule={customRule}
-                            customValidation={customValidation}
-                        />
+                        <Col md={span || 12}>
+                            <FormElement
+                                elementType={elementType}
+                                id={id}
+                                custom_name={custom_name}
+                                label={label}
+                                {...props}
+                                customRule={customRule}
+                                customValidation={customValidation}
+                            />
+                        </Col>
                     );
                 }
             )}

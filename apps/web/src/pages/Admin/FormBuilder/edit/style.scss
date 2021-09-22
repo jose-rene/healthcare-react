@@ -3,6 +3,13 @@
     display: none !important;
 }
 
+.react-form-builder-toolbar {
+    > ul {
+        position: fixed;
+        width: 100%;
+    }
+}
+
 .gry-editor {
     @import "../../../../../node_modules/react-form-builder3/dist/app.css";
 }
