@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import { isEmpty } from "lodash";
 
@@ -19,6 +19,22 @@ const AddressForm = ({ addressTypesOptions, showPrimary = false }) => {
     const [alertMessage, setAlertMessage] = useState("");
     const [countyOptions, setCountyOptions] = useState([]);
     const [lookingUpZipcode, setLookingUpZipcode] = useState(false);
+
+    useEffect(() => {
+        if (!countyOptions.length) {
+            const county = getValue("county");
+            if (county) {
+                setCountyOptions([
+                    {
+                        id: county,
+                        title: county,
+                        val: county,
+                    },
+                ]);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const statesOptions = useMemo(() => {
         if (isEmpty(states)) {
