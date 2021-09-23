@@ -1,26 +1,23 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Row, Col, Container } from "react-bootstrap";
+import { Row, Col, Container, Alert } from "react-bootstrap";
 import { isEmpty } from "lodash";
 import * as Yup from "yup";
 
 import PageLayout from "layouts/PageLayout";
 
 import Form from "components/elements/Form";
-import BroadcastAlert from "components/elements/BroadcastAlert";
 import ContextInput from "components/inputs/ContextInput";
 import ContextSelect from "components/contextInputs/Select";
 import PageAlert from "components/elements/PageAlert";
 import AddressForm from "components/elements/AddressForm";
 import FormButtons from "components/contextInputs/FormButtons";
 import ContactMethods from "components/elements/ContactMethods";
-import Icon from "components/elements/Icon";
 import PageTitle from "components/PageTitle";
 
 import useApiCall from "hooks/useApiCall";
 
 import titles from "config/Titles.json";
-
-import "styles/home.scss";
+import FapIcon from "components/elements/FapIcon";
 
 const AddMember = (props) => {
     const {
@@ -215,42 +212,47 @@ const AddMember = (props) => {
         }
     };
 
-    console.log("plan", plan);
-
     return (
         <PageLayout>
             <Container fluid>
-                <BroadcastAlert />
-                <PageTitle title="New Member Info" hideBack />
-                <p className="box-legenda">
-                    Please enter the following information before proceeding
-                    with the new request. Fields marked with * are required
-                </p>
-
-                {pageLoading ? (
-                    <div className="d-flex justify-content-center">
-                        <Icon icon="spinner" />
-                    </div>
-                ) : (
-                    <>
-                        {member && (
-                            <PageAlert
-                                className="mt-3"
-                                variant="success"
-                                timeout={5000}
-                                dismissible
-                            >
-                                Member Successfully Added.
-                            </PageAlert>
-                        )}
-                        <Container>
-                            <Form
-                                autocomplete={false}
-                                defaultData={member || initialData}
-                                validation={validation}
-                                onSubmit={onSubmit}
-                            >
-                                <Row xl={12}>
+                <Row className="justify-content-lg-center">
+                    <Col xl={10}>
+                        <PageTitle title="New Member Info" hideBack />
+                        <Alert variant="success" className="px-4 py-3 mb-4">
+                            Please enter the following information before
+                            proceeding with the new request. Fields marked with
+                            * are required.
+                        </Alert>
+                    </Col>
+                </Row>
+                <Row className="justify-content-lg-center">
+                    <Col xl={10}>
+                        {pageLoading ? (
+                            <div className="text-center">
+                                <FapIcon icon="spinner" size="2x" />
+                                <span className="fs-3 ms-2 align-middle">
+                                    Loading...
+                                </span>
+                            </div>
+                        ) : (
+                            <>
+                                {member && (
+                                    <PageAlert
+                                        className="mt-3"
+                                        variant="success"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Member Successfully Added.
+                                    </PageAlert>
+                                )}
+                                <Form
+                                    autocomplete={false}
+                                    defaultData={member || initialData}
+                                    validation={validation}
+                                    onSubmit={onSubmit}
+                                    className="row"
+                                >
                                     {planOptions.length > 0 ? (
                                         <Col md={6}>
                                             <ContextSelect
@@ -397,11 +399,11 @@ const AddMember = (props) => {
                                     <Col md={12}>
                                         <FormButtons submitLabel="Create New Request" />
                                     </Col>
-                                </Row>
-                            </Form>
-                        </Container>
-                    </>
-                )}
+                                </Form>
+                            </>
+                        )}
+                    </Col>
+                </Row>
             </Container>
         </PageLayout>
     );
