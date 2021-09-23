@@ -32,9 +32,9 @@ const DueDateView = ({
 }) => {
     // get the user time zone
     const { getUser } = useUser();
-    const { timeZone, utcOffset } = getUser();
+    const { timeZone } = getUser();
 
-    console.log(timeZone, utcOffset);
+    // console.log(timeZone, utcOffset);
 
     const [{ due_date, due_time, due_na }, setDueDate] = useState({
         due_date: "",

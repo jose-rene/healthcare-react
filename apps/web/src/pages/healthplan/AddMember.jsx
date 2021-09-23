@@ -1,40 +1,42 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Row, Col, Container } from "react-bootstrap";
+import { Row, Col, Container, Alert } from "react-bootstrap";
 import { isEmpty } from "lodash";
 import * as Yup from "yup";
 
 import PageLayout from "layouts/PageLayout";
 
 import Form from "components/elements/Form";
-import BroadcastAlert from "components/elements/BroadcastAlert";
 import ContextInput from "components/inputs/ContextInput";
 import ContextSelect from "components/contextInputs/Select";
 import PageAlert from "components/elements/PageAlert";
 import AddressForm from "components/elements/AddressForm";
 import FormButtons from "components/contextInputs/FormButtons";
 import ContactMethods from "components/elements/ContactMethods";
-import Icon from "components/elements/Icon";
 import PageTitle from "components/PageTitle";
 
 import useApiCall from "hooks/useApiCall";
 
 import titles from "config/Titles.json";
-
-import "styles/home.scss";
+import FapIcon from "components/elements/FapIcon";
 
 const AddMember = (props) => {
-    const { first_name = "", last_name = "", dob = "" } =
-        props.history.location?.state || {};
+    const {
+        first_name = "",
+        last_name = "",
+        dob = "",
+    } = props.history.location?.state || {};
 
     const [member, setMember] = useState(null);
     const [initialData, setInitialData] = useState(null);
+    const [plan, setPlan] = useState(null);
+    const [contactMethods, setContactMethods] = useState([
+        { type: "type", phone_email: "phone_email" },
+    ]);
 
-    const [
-        { data: payerProfile, loading: pageLoading },
-        payerProfileRequest,
-    ] = useApiCall({
-        url: "payer/profile",
-    });
+    const [{ data: payerProfile, loading: pageLoading }, payerProfileRequest] =
+        useApiCall({
+            url: "payer/profile",
+        });
 
     const [{ data, loading, error: formError }, fireSubmit] = useApiCall({
         method: "post",
@@ -86,25 +88,42 @@ const AddMember = (props) => {
         },
     });
 
+    useEffect(() => {
+        // set initial plan
+        setPlan(payerProfile?.payers?.length ? payerProfile?.payers[0] : null);
+    }, [payerProfile]);
+
     const planOptions = useMemo(() => {
-        if (isEmpty(payerProfile) || !payerProfile.payers.length) {
+        if (!payerProfile?.payers?.length) {
             return [];
         }
 
-        return payerProfile.payers.map(({ id, company_name }) => {
-            return { id, title: company_name, val: id };
-        });
+        return payerProfile.payers.map(
+            ({ id, company_name, lines_of_business }) => {
+                return {
+                    id,
+                    title: company_name,
+                    val: id,
+                    lines_of_business,
+                };
+            }
+        );
     }, [payerProfile]);
+
+    const updatePlan = (e) => {
+        const newPlan = planOptions.find((item) => item.id === e.target.value);
+        setPlan(newPlan);
+    };
 
     const lobOptions = useMemo(() => {
-        if (isEmpty(payerProfile) || !payerProfile.lines_of_business.length) {
+        if (!plan?.lines_of_business?.length) {
             return [];
         }
 
-        return payerProfile.lines_of_business.map(({ id, name }) => {
+        return plan.lines_of_business.map(({ id, name }) => {
             return { id, title: name, val: id };
         });
-    }, [payerProfile]);
+    }, [plan]);
 
     const memberNumberTypesOptions = useMemo(() => {
         if (isEmpty(payerProfile) || !payerProfile.member_number_types.length) {
@@ -167,7 +186,7 @@ const AddMember = (props) => {
     ]);
 
     useEffect(() => {
-        if (!isEmpty(data)) {
+        if (data?.id) {
             props.history.push(`/member/${data.id}/request/add`);
         }
 
@@ -181,7 +200,6 @@ const AddMember = (props) => {
     }, []);
 
     const onSubmit = async (formData) => {
-
         if (loading) {
             return false;
         }
@@ -197,45 +215,54 @@ const AddMember = (props) => {
     return (
         <PageLayout>
             <Container fluid>
-                <BroadcastAlert />
-                <PageTitle title="New Member Info" hideBack />
-                <p className="box-legenda">
-                    Please enter the following information before proceeding
-                    with the new request. Fields marked with * are required
-                </p>
-
-                {pageLoading ? (
-                    <div className="d-flex justify-content-center">
-                        <Icon icon="spinner" />
-                    </div>
-                ) : (
-                    <>
-                        {member && (
-                            <PageAlert
-                                className="mt-3"
-                                variant="success"
-                                timeout={5000}
-                                dismissible
-                            >
-                                Member Successfully Added.
-                            </PageAlert>
-                        )}
-                        <Container>
-                            <Form
-                                autocomplete={false}
-                                defaultData={member || initialData}
-                                validation={validation}
-                                onSubmit={onSubmit}
-                            >
-                                <Row xl={12}>
+                <Row className="justify-content-lg-center">
+                    <Col xl={10}>
+                        <PageTitle title="New Member Info" hideBack />
+                        <Alert variant="success" className="px-4 py-3 mb-4">
+                            Please enter the following information before
+                            proceeding with the new request. Fields marked with
+                            * are required.
+                        </Alert>
+                    </Col>
+                </Row>
+                <Row className="justify-content-lg-center">
+                    <Col xl={10}>
+                        {pageLoading ? (
+                            <div className="text-center">
+                                <FapIcon icon="spinner" size="2x" />
+                                <span className="fs-3 ms-2 align-middle">
+                                    Loading...
+                                </span>
+                            </div>
+                        ) : (
+                            <>
+                                {member && (
+                                    <PageAlert
+                                        className="mt-3"
+                                        variant="success"
+                                        timeout={5000}
+                                        dismissible
+                                    >
+                                        Member Successfully Added.
+                                    </PageAlert>
+                                )}
+                                <Form
+                                    autocomplete={false}
+                                    defaultData={member || initialData}
+                                    validation={validation}
+                                    onSubmit={onSubmit}
+                                    className="row"
+                                >
                                     {planOptions.length > 0 ? (
                                         <Col md={6}>
                                             <ContextSelect
                                                 name="plan"
                                                 label="Plan*"
+                                                value={plan?.id ?? ""}
                                                 options={planOptions}
                                                 required
                                                 large
+                                                onChange={updatePlan}
                                             />
                                         </Col>
                                     ) : (
@@ -250,8 +277,9 @@ const AddMember = (props) => {
                                     <Col md={6} />
 
                                     <Col md={12}>
-                                        <h1 className="box-outside-title title-second my-4">Member Identification
-                                            Info</h1>
+                                        <h1 className="box-outside-title title-second my-4">
+                                            Member Identification Info
+                                        </h1>
                                     </Col>
 
                                     <Col md={6}>
@@ -278,7 +306,9 @@ const AddMember = (props) => {
                                     </Col>
 
                                     <Col md={12}>
-                                        <h1 className="box-outside-title title-second my-4">Basic Info</h1>
+                                        <h1 className="box-outside-title title-second my-4">
+                                            Basic Info
+                                        </h1>
                                     </Col>
 
                                     <Col md={6}>
@@ -344,7 +374,9 @@ const AddMember = (props) => {
                                     </Col>
 
                                     <Col md={12}>
-                                        <h1 className="box-outside-title title-second my-4">Contact Methods</h1>
+                                        <h1 className="box-outside-title title-second my-4">
+                                            Contact Methods
+                                        </h1>
                                     </Col>
 
                                     <Col md={12} className="mb-3">
@@ -367,11 +399,11 @@ const AddMember = (props) => {
                                     <Col md={12}>
                                         <FormButtons submitLabel="Create New Request" />
                                     </Col>
-                                </Row>
-                            </Form>
-                        </Container>
-                    </>
-                )}
+                                </Form>
+                            </>
+                        )}
+                    </Col>
+                </Row>
             </Container>
         </PageLayout>
     );

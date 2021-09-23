@@ -34,7 +34,7 @@ const RequestItemForm = ({
     // combine request type selects and request detail select into a group
     const [requestItemGroups, setRequestItemGroups] = useState([]);
 
-    console.log(requestItemGroups);
+    // console.log(requestItemGroups);
     // handle request details update
     const updateRequestDetails = (groups) => {
         setRequestItemGroups(groups);
