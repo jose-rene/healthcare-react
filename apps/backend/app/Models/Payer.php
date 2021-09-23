@@ -190,6 +190,16 @@ class Payer extends Model
     }
 
     /**
+     * Returns the parent company.
+     *
+     * @return Illuminate\Database\Eloquent\Collection of Payer
+     */
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    /**
      * Returns one level of children or child payers.
      *
      * @return Illuminate\Database\Eloquent\Collection of Payer

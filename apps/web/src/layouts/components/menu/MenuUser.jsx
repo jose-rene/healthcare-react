@@ -29,6 +29,7 @@ const MenuUser = ({
                         style={{ height: "40px" }}
                         src={avatar_url || "/images/icons/user.png"}
                     />
+                    <FapIcon icon="angle-down" />
                 </>
             }
         >

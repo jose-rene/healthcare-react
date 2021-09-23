@@ -197,6 +197,8 @@ const RequestForm = ({ data }) => {
                         memberData,
                         openMember,
                         toggleOpenMember,
+                        refreshRequest,
+                        requestLoading,
                     }}
                 />
                 <RequestInfoForm

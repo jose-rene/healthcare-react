@@ -23,21 +23,23 @@ import titles from "config/Titles.json";
 import "styles/home.scss";
 
 const AddMember = (props) => {
-    const { first_name = "", last_name = "", dob = "" } =
-        props.history.location?.state || {};
+    const {
+        first_name = "",
+        last_name = "",
+        dob = "",
+    } = props.history.location?.state || {};
 
     const [member, setMember] = useState(null);
     const [initialData, setInitialData] = useState(null);
+    const [plan, setPlan] = useState(null);
     const [contactMethods, setContactMethods] = useState([
         { type: "type", phone_email: "phone_email" },
     ]);
 
-    const [
-        { data: payerProfile, loading: pageLoading },
-        payerProfileRequest,
-    ] = useApiCall({
-        url: "payer/profile",
-    });
+    const [{ data: payerProfile, loading: pageLoading }, payerProfileRequest] =
+        useApiCall({
+            url: "payer/profile",
+        });
 
     const [{ data, loading, error: formError }, fireSubmit] = useApiCall({
         method: "post",
@@ -89,25 +91,42 @@ const AddMember = (props) => {
         },
     });
 
+    useEffect(() => {
+        // set initial plan
+        setPlan(payerProfile?.payers?.length ? payerProfile?.payers[0] : null);
+    }, [payerProfile]);
+
     const planOptions = useMemo(() => {
-        if (isEmpty(payerProfile) || !payerProfile.payers.length) {
+        if (!payerProfile?.payers?.length) {
             return [];
         }
 
-        return payerProfile.payers.map(({ id, company_name }) => {
-            return { id, title: company_name, val: id };
-        });
+        return payerProfile.payers.map(
+            ({ id, company_name, lines_of_business }) => {
+                return {
+                    id,
+                    title: company_name,
+                    val: id,
+                    lines_of_business,
+                };
+            }
+        );
     }, [payerProfile]);
+
+    const updatePlan = (e) => {
+        const newPlan = planOptions.find((item) => item.id === e.target.value);
+        setPlan(newPlan);
+    };
 
     const lobOptions = useMemo(() => {
-        if (isEmpty(payerProfile) || !payerProfile.lines_of_business.length) {
+        if (!plan?.lines_of_business?.length) {
             return [];
         }
 
-        return payerProfile.lines_of_business.map(({ id, name }) => {
+        return plan.lines_of_business.map(({ id, name }) => {
             return { id, title: name, val: id };
         });
-    }, [payerProfile]);
+    }, [plan]);
 
     const memberNumberTypesOptions = useMemo(() => {
         if (isEmpty(payerProfile) || !payerProfile.member_number_types.length) {
@@ -190,7 +209,7 @@ const AddMember = (props) => {
     ]);
 
     useEffect(() => {
-        if (!isEmpty(data)) {
+        if (data?.id) {
             props.history.push(`/member/${data.id}/request/add`);
         }
 
@@ -228,6 +247,8 @@ const AddMember = (props) => {
         }
     };
 
+    console.log("plan", plan);
+
     return (
         <PageLayout>
             <Container fluid>
@@ -256,7 +277,7 @@ const AddMember = (props) => {
                         ) : null}
                         <Form
                             autocomplete={false}
-                            defaultData={member ? member : initialData}
+                            defaultData={member || initialData}
                             validation={validation}
                             onSubmit={onSubmit}
                         >
@@ -267,9 +288,11 @@ const AddMember = (props) => {
                                             <ContextSelect
                                                 name="plan"
                                                 label="Plan*"
+                                                value={plan?.id ?? ""}
                                                 options={planOptions}
                                                 required
                                                 large
+                                                onChange={updatePlan}
                                             />
                                         </Col>
                                     ) : (
@@ -281,7 +304,7 @@ const AddMember = (props) => {
                                             readOnly
                                         />
                                     )}
-                                    <Col md={6}></Col>
+                                    <Col md={6} />
                                 </>
 
                                 <Col md={12}>
