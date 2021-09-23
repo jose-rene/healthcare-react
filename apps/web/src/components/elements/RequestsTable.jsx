@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Col, Row } from "react-bootstrap";
 
+import { useUser } from "Context/UserContext";
+
 import { Button } from "components";
 import FapIcon from "components/elements/FapIcon";
 import ContextSelect from "components/contextInputs/Select";
@@ -15,6 +17,9 @@ import dayjs from "dayjs";
 
 const RequestsTable = () => {
     const history = useHistory();
+
+    const { getUser } = useUser();
+    const { primaryRole } = getUser();
 
     const [
         {
@@ -68,7 +73,7 @@ const RequestsTable = () => {
         },
         {
             columnMap: "due_at",
-            label: "Schedule Date",
+            label: "Due Date",
             type: Date,
             formatter: (date) =>
                 date ? dayjs(date).format("MM/DD/YYYY") : "-",
@@ -87,22 +92,22 @@ const RequestsTable = () => {
             formatter(member_id, { id: request_id, request_status_id }) {
                 return (
                     <>
-                        <Link
-                            className="px-2"
-                            to={
-                                !request_status_id
-                                    ? `/member/${member_id}/request/${request_id}/edit`
-                                    : `/requests/${request_id}`
-                            }
-                        >
+                        <Link className="px-2" to="#">
                             <FapIcon
                                 size="1x"
                                 icon={!request_status_id ? `edit` : `eye`}
                             />
                         </Link>
-                        <Link className="px-2" to="#">
-                            <FapIcon icon="file" size="1x" title="Report" />
-                        </Link>
+                        {primaryRole !== "clinical_reviewer" &&
+                            primaryRole !== "field_clinician" && (
+                                <Link className="px-2" to="#">
+                                    <FapIcon
+                                        icon="file"
+                                        size="1x"
+                                        title="Report"
+                                    />
+                                </Link>
+                            )}
                     </>
                 );
             },
@@ -156,13 +161,16 @@ const RequestsTable = () => {
                                 options={statusOptions}
                                 onChange={formUpdateSearchObj}
                             />
-                            <Button
-                                variant="primary"
-                                className="mb-3 mx-3"
-                                onClick={() => handleNewRequest()}
-                            >
-                                Create New Request
-                            </Button>
+                            {primaryRole !== "clinical_reviewer" &&
+                                primaryRole !== "field_clinician" && (
+                                    <Button
+                                        variant="primary"
+                                        className="mb-3 mx-3"
+                                        onClick={() => handleNewRequest()}
+                                    >
+                                        Create New Request
+                                    </Button>
+                                )}
                         </div>
                     </div>
                 </Col>
