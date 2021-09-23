@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import checkMiddleware from "../../helpers/user";
+import checkMiddleware from "../../../helpers/user";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const PageSidebar = ({ logOut, primaryRole, abilities, showMenu }) => {
@@ -23,7 +23,7 @@ const PageSidebar = ({ logOut, primaryRole, abilities, showMenu }) => {
                 {checkMiddleware(
                     ["hp_user", "hp_manager", "hp_champion"], // need to change role with admin
                     primaryRole,
-                    abilities,
+                    abilities
                 ) && (
                     <li
                         className={
@@ -47,7 +47,7 @@ const PageSidebar = ({ logOut, primaryRole, abilities, showMenu }) => {
                 {checkMiddleware(
                     ["hp_user", "hp_manager", "hp_champion"], // need to change role with admin
                     primaryRole,
-                    abilities,
+                    abilities
                 ) && (
                     <li
                         className={
@@ -68,7 +68,7 @@ const PageSidebar = ({ logOut, primaryRole, abilities, showMenu }) => {
                 {checkMiddleware(
                     ["hp_user", "hp_manager", "hp_champion"], // need to change role with admin
                     primaryRole,
-                    abilities,
+                    abilities
                 ) && (
                     <li
                         className={
@@ -86,7 +86,7 @@ const PageSidebar = ({ logOut, primaryRole, abilities, showMenu }) => {
                 {checkMiddleware(
                     ["hp_user", "hp_manager", "hp_champion"],
                     primaryRole,
-                    abilities,
+                    abilities
                 ) && (
                     <li
                         className={
@@ -109,7 +109,7 @@ const PageSidebar = ({ logOut, primaryRole, abilities, showMenu }) => {
                 {checkMiddleware(
                     ["hp_user", "hp_manager", "hp_champion"],
                     primaryRole,
-                    abilities,
+                    abilities
                 ) && (
                     <li
                         className={
