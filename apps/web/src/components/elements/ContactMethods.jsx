@@ -12,9 +12,11 @@ const ContactMethods = () => {
     const contactMethods = getValue("contact_methods", []);
 
     useEffect(() => {
-        if (contactMethods.length == 0) {
+        if (contactMethods.length === 0) {
             addNewContactMethod();
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [contactMethods]);
 
     const handleOnChange = (index, { target: { name, value } }) => {
@@ -66,7 +68,7 @@ const ContactMethods = () => {
                         key={`contact-row-${index}`}
                         showRemove={contactMethods.length > 1}
                         onRemove={() => removeContactMethod(index)}
-                        onChange={e => handleOnChange(index, e)}
+                        onChange={(e) => handleOnChange(index, e)}
                         {...c}
                     />
                 ))}
