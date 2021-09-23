@@ -14,7 +14,7 @@ import states from "config/States.json";
 import { BASE_URL, API_KEY } from "config/Map";
 
 const AddressForm = ({ addressTypesOptions, showPrimary = false }) => {
-    const { getValue, update } = useFormContext();
+    const { getValue, objUpdate } = useFormContext();
 
     const [alertMessage, setAlertMessage] = useState("");
     const [countyOptions, setCountyOptions] = useState([]);
@@ -99,7 +99,7 @@ const AddressForm = ({ addressTypesOptions, showPrimary = false }) => {
                 }
             });
 
-            update(addressTemp);
+            objUpdate(addressTemp);
         } catch (error) {
             setAlertMessage("Address fetch error!");
         } finally {
@@ -129,11 +129,7 @@ const AddressForm = ({ addressTypesOptions, showPrimary = false }) => {
             )}
 
             <Col md={12}>
-                <ContextInput
-                    name="address_1"
-                    label="Address 1*"
-                    onChange={update}
-                />
+                <ContextInput name="address_1" label="Address 1*" />
             </Col>
 
             <Col md={12}>
