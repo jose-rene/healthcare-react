@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Container, Row, Col } from "react-bootstrap";
 import { isEmpty } from "lodash";
+
+import PageLayout from "layouts/PageLayout";
+
 import { Button } from "components";
 import Checkbox from "components/inputs/Checkbox";
-import Icon from "components/elements/Icon";
 import TableAPI from "components/elements/TableAPI";
 import Form from "components/elements/Form";
-import { Container } from "react-bootstrap";
-import PageLayout from "../../../layouts/PageLayout";
-import { ACTIONS } from "../../../helpers/table";
-import useApiCall from "../../../hooks/useApiCall";
-import PageTitle from "../../../components/PageTitle";
-import TableSearchForm from "./TableSearchForm";
-import useSearch from "../../../hooks/useSearch";
-import useToast from "../../../hooks/useToast";
-import "../../../styles/companies.scss";
+import PageTitle from "components/PageTitle";
+import ContextInput from "components/inputs/ContextInput";
+import ContextSelect from "components/contextInputs/Select";
+import PhoneInput from "components/inputs/PhoneInput";
+import ZipcodeInput from "components/inputs/ZipcodeInput";
+import FapIcon from "components/elements/FapIcon";
+
+import useApiCall from "hooks/useApiCall";
+import useSearch from "hooks/useSearch";
+import useToast from "hooks/useToast";
+
+import { ACTIONS } from "helpers/table";
+
+import "styles/companies.scss";
 
 const Companies = (props) => {
     const { generalError } = useToast();
@@ -43,19 +51,17 @@ const Companies = (props) => {
             columnMap: "id",
             label: (
                 <Checkbox
-                    inline
-                    className="px-auto header-checkbox"
+                    className="mx-2"
                     checked={checkedAll}
                     onChange={() => handleCheckTableAll()}
                 />
             ),
-            type: ACTIONS,
+            type: String,
             disableSortBy: true,
             formatter(company_id) {
                 return (
                     <Checkbox
-                        inline
-                        className="px-auto header-checkbox"
+                        className="mx-2"
                         checked={checkList.indexOf(company_id) >= 0}
                         onChange={() => handleCheckTableLine(company_id)}
                     />
@@ -89,18 +95,12 @@ const Companies = (props) => {
             formatter(id) {
                 return (
                     <div className="actions">
-                        <Link
-                            to={`/admin/company/${id}/edit`}
-                            className="action bg-primary text-white"
-                        >
-                            <Icon size="1x" icon="edit" />
+                        <Link to={`/admin/company/${id}/edit`} className="pr-2">
+                            <FapIcon size="1x" icon="edit" />
                         </Link>
 
-                        <Link
-                            to={`/admin/company/${id}`}
-                            className="action  bg-info text-white"
-                        >
-                            <Icon size="1x" icon="info-circle" />
+                        <Link to={`/admin/company/${id}`} className="pl-2">
+                            <FapIcon size="1x" icon="info-circle" />
                         </Link>
                     </div>
                 );
@@ -207,62 +207,121 @@ const Companies = (props) => {
                     ]}
                 />
 
-                <div className="mb-3">
-                    <Button
-                        icon="copy"
-                        size="sm"
-                        className="me-3 text-white p-2 px-4"
-                        variant="secondary"
-                        label="Duplicate"
-                        onClick={handleDuplication}
-                    />
+                <Row>
+                    <Col md={3}>
+                        <Button
+                            icon="copy"
+                            size="sm"
+                            className="me-3 text-white p-2 px-4"
+                            variant="primary"
+                            label="Duplicate"
+                            onClick={handleDuplication}
+                        />
 
-                    <Button
-                        icon="print"
-                        size="sm"
-                        className="me-3 text-white p-2 px-4"
-                        variant="secondary"
-                        label="Print"
-                        onClick={handlePrint}
-                    />
-                </div>
+                        <Button
+                            icon="print"
+                            size="sm"
+                            className="me-3 text-white p-2 px-4"
+                            variant="primary"
+                            label="Print"
+                            onClick={handlePrint}
+                        />
+                    </Col>
+                </Row>
 
-                <div className="form-row">
-                    <div className="col-md-12">
+                <Row className="mt-3">
+                    <Col md={12}>
                         <Form onSubmit={redoSearch} defaultData={searchObj}>
-                            <TableSearchForm
-                                categoryOptions={categoryOptions}
-                                subCategoryOptions={subCategoryOptions}
-                                loading={loading}
-                                redoSearch={redoSearch}
-                            />
-                        </Form>
-                    </div>
+                            <Row>
+                                <Col md={3}>
+                                    <ContextInput
+                                        name="company_name"
+                                        label="Name"
+                                    />
+                                </Col>
 
-                    <div className="col-md-12">
-                        <div className="white-box white-box-small">
-                            <div className="row">
-                                <div className="col-md-12">
-                                    {!searchStatus && (
-                                        <div className="no-result">
-                                            Do the search
-                                        </div>
-                                    )}
-                                    {searchStatus && (
-                                        <TableAPI
-                                            searchObj={searchObj}
-                                            headers={headers}
-                                            loading={loading}
-                                            data={data}
-                                            dataMeta={meta}
-                                            onChange={handleTableChange}
-                                        />
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                <Col md={3}>
+                                    <ContextInput
+                                        name="address.address_1"
+                                        label="Street"
+                                    />
+                                </Col>
+
+                                <Col md={3}>
+                                    <ContextInput
+                                        name="address.city"
+                                        label="City"
+                                    />
+                                </Col>
+
+                                <Col md={3}>
+                                    <ZipcodeInput
+                                        name="address.zip"
+                                        label="ZIP"
+                                    />
+                                </Col>
+
+                                <Col md={3}>
+                                    <PhoneInput
+                                        type="phone"
+                                        name="phone"
+                                        label="Phone"
+                                    />
+                                </Col>
+
+                                <Col md={3}>
+                                    <ContextSelect
+                                        name="category"
+                                        label="Category"
+                                        options={categoryOptions}
+                                    />
+                                </Col>
+
+                                <Col md={3}>
+                                    <ContextSelect
+                                        name="subCategory"
+                                        label="Subcategory"
+                                        options={subCategoryOptions}
+                                    />
+                                </Col>
+
+                                <Col md={3}>
+                                    <Button
+                                        type="submit"
+                                        variant="primary"
+                                        disabled={loading}
+                                        className="w-100"
+                                        block
+                                    >
+                                        Search
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </Col>
+
+                    <Col md={12}>
+                        <Row>
+                            <Col md={12}>
+                                {!searchStatus && (
+                                    <div className="text-center py-2 bg-white">
+                                        Do the search
+                                    </div>
+                                )}
+                                {searchStatus && (
+                                    <TableAPI
+                                        searchObj={searchObj}
+                                        headers={headers}
+                                        loading={loading}
+                                        data={data}
+                                        dataMeta={meta}
+                                        onChange={handleTableChange}
+                                    />
+                                )}
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
             </Container>
         </PageLayout>
     );
