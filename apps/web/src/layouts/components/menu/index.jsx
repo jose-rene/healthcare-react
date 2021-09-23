@@ -4,6 +4,7 @@ import { Nav, Offcanvas } from "react-bootstrap";
 
 import MenuHealthplan from "./MenuHealthplan";
 import MenuClinician from "./MenuClinician";
+import MenuAdmin from "./MenuAdmin";
 
 import FapIcon from "components/elements/FapIcon";
 
@@ -51,6 +52,8 @@ const Menu = ({ logOut, primaryRole, abilities, ...props }) => {
 
                     {(primaryRole === "clinical_reviewer" ||
                         primaryRole === "field_clinician") && <MenuClinician />}
+
+                    {primaryRole === "software_engineer" && <MenuAdmin />}
 
                     <Nav.Link
                         eventKey="logout"

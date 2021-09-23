@@ -2,8 +2,9 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 
-import SidebarHealthplan from "layouts/components/sidebar/SidebarHealthplan";
-import SidebarClinician from "layouts/components/sidebar/SidebarClinician";
+import SidebarHealthplan from "./SidebarHealthplan";
+import SidebarClinician from "./SidebarClinician";
+import SidebarAdmin from "./SidebarAdmin";
 
 import FapIcon from "components/elements/FapIcon";
 
@@ -38,6 +39,10 @@ const Sidebar = ({ logOut, primaryRole, abilities, open }) => {
             {(primaryRole === "clinical_reviewer" ||
                 primaryRole === "field_clinician") && (
                 <SidebarClinician {...{ open }} />
+            )}
+
+            {primaryRole === "software_engineer" && (
+                <SidebarAdmin {...{ open }} />
             )}
 
             <Nav.Link
