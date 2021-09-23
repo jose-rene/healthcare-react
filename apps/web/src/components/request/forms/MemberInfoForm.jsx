@@ -1,15 +1,11 @@
-/* eslint-disable no-nested-ternary */
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Button, Card, Col, Collapse, Row } from "react-bootstrap";
 import FapIcon from "components/elements/FapIcon";
-import AddressForm from "components/elements/AddressForm";
 import Form from "components/elements/Form";
-import PhoneInput from "components/inputs/PhoneInput";
-import ContextSelect from "components/contextInputs/Select";
-import ContextInput from "components/inputs/ContextInput";
 import * as Yup from "yup";
 import useApiCall from "hooks/useApiCall";
 import LoadingOverlay from "react-loading-overlay";
+import MemberForm from "../MemberForm";
 
 const MemberInfoForm = ({
     memberData,
@@ -41,58 +37,6 @@ const MemberInfoForm = ({
         plan: payer?.id ?? "",
     });
 
-    const [plan, setPlan] = useState(null);
-    // set initial plan
-    /* useEffect(() => {
-        if (payer.sibilngs?.length)
-            setPlan(payer?.payers?.length ? payer?.payers[0] : null);
-    }, [payer]); */
-
-    // plan options (child payers)
-    const planOptions = useMemo(() => {
-        const plansKey = payer.payers?.length
-            ? "payers"
-            : payer.siblings?.length
-                ? "siblings"
-                : null;
-        if (!plansKey) {
-            return [];
-        }
-        const selected = payer[plansKey].find((item) => {
-            return item.id === payer.id;
-        });
-        setPlan(selected);
-        return payer[plansKey].map(
-            ({ id, company_name, lines_of_business }) => {
-                return {
-                    id,
-                    title: company_name,
-                    val: id,
-                    lines_of_business,
-                };
-            }
-        );
-    }, [payer]);
-
-    // line of business options, based on chosen plan
-    const lobOptions = useMemo(() => {
-        if (!plan?.lines_of_business?.length) {
-            return [];
-        }
-
-        const options = plan.lines_of_business.map(({ id, name }) => {
-            return { id, title: name, val: id };
-        });
-
-        return [{ id: "0", title: "", val: "" }, ...options];
-    }, [plan]);
-
-    // handle plan change
-    const updatePlan = (e) => {
-        const newPlan = planOptions.find((item) => item.id === e.target.value);
-        setPlan(newPlan);
-    };
-
     const validation = {
         phone: {
             yupSchema: Yup.string().trim().required("Phone number is required"),
@@ -119,11 +63,10 @@ const MemberInfoForm = ({
     };
 
     // api call to update request
-    const [{ error: updateError, loading: memberLoading }, updateMember] =
-        useApiCall({
-            method: "put",
-            url: `member/${memberId}`,
-        });
+    const [{ loading: memberLoading }, updateMember] = useApiCall({
+        method: "put",
+        url: `member/${memberId}`,
+    });
 
     const handleSave = async (formData) => {
         // the api call will set loading, rerending page, form will revert to defaultData, has to be set here
@@ -203,56 +146,8 @@ const MemberInfoForm = ({
                                             onSubmit={handleSave}
                                             defaultData={defaultData}
                                         >
-                                            <AddressForm />
+                                            <MemberForm payer={payer} />
                                             <Row>
-                                                <Col md={6}>
-                                                    <PhoneInput
-                                                        name="phone"
-                                                        label="Phone"
-                                                    />
-                                                </Col>
-                                                <Col md={6}>
-                                                    <ContextInput
-                                                        name="member_number"
-                                                        label="Member ID"
-                                                    />
-                                                </Col>
-                                            </Row>
-                                            <Row>
-                                                {planOptions.length > 0 ? (
-                                                    <Col xl={6}>
-                                                        <ContextSelect
-                                                            name="plan"
-                                                            label="Plan"
-                                                            value={
-                                                                plan?.id ?? ""
-                                                            }
-                                                            options={
-                                                                planOptions
-                                                            }
-                                                            required
-                                                            large
-                                                            onChange={
-                                                                updatePlan
-                                                            }
-                                                        />
-                                                    </Col>
-                                                ) : (
-                                                    <ContextInput
-                                                        hidden
-                                                        name="plan"
-                                                        label="Plan"
-                                                        value={payer.id || ""}
-                                                        readOnly
-                                                    />
-                                                )}
-                                                <Col xl={6}>
-                                                    <ContextSelect
-                                                        name="line_of_business"
-                                                        label="Line of Business"
-                                                        options={lobOptions}
-                                                    />
-                                                </Col>
                                                 <Col>
                                                     <Button
                                                         variant="secondary"

@@ -13,7 +13,7 @@ import { useFormContext } from "Context/FormContext";
 import states from "config/States.json";
 import { BASE_URL, API_KEY } from "config/Map";
 
-const AddressForm = ({ addressTypesOptions }) => {
+const AddressForm = ({ addressTypesOptions, showPrimary = false }) => {
     const { getValue, update } = useFormContext();
 
     const [alertMessage, setAlertMessage] = useState("");
@@ -71,7 +71,7 @@ const AddressForm = ({ addressTypesOptions }) => {
                 return;
             }
 
-            let addressTemp = {};
+            const addressTemp = {};
 
             address_components.forEach((v) => {
                 const { short_name, types } = v || {};
@@ -175,12 +175,15 @@ const AddressForm = ({ addressTypesOptions }) => {
                     options={countyOptions}
                 />
             </Col>
-
-            <Col md={12}>
-                <div className="form-control py-2">
-                    <ContextCheckbox label="Primary" name="is_primary" />
-                </div>
-            </Col>
+            {showPrimary && (
+                <Col md={6}>
+                    <ContextCheckbox
+                        label="Primary"
+                        name="is_primary"
+                        wrapperClass="form-check py-3 px-0"
+                    />
+                </Col>
+            )}
         </Row>
     );
 };

@@ -173,6 +173,8 @@ const RequestEditForm = ({ data }) => {
                                 memberData,
                                 openMember,
                                 toggleOpenMember,
+                                refreshRequest,
+                                requestLoading,
                             }}
                         />
                         <RequestInfoView
