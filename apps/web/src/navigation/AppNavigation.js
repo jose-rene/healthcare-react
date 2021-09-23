@@ -33,7 +33,7 @@ import AdminAddClinicians from "../pages/Admin/Clinicians/AddClinicians";
 import FormView from "../pages/Admin/FormBuilder/show";
 import FormBuilderEdit from "../pages/Admin/FormBuilder/edit";
 import FormIndex from "../pages/Admin/FormBuilder/Index";
-import AdminUserList from "../pages/Admin/UserList";
+import AdminUserList from "pages/Admin/UserList";
 
 const AppNavigation = () => {
     const [{ loading }, fireInitializeUser] = useApiCall({
