@@ -18,6 +18,7 @@ import useApiCall from "hooks/useApiCall";
 
 import titles from "config/Titles.json";
 import FapIcon from "components/elements/FapIcon";
+import MemberInfoForm from "components/elements/MemberInfoForm";
 
 const AddMember = (props) => {
     const {
@@ -28,10 +29,6 @@ const AddMember = (props) => {
 
     const [member, setMember] = useState(null);
     const [initialData, setInitialData] = useState(null);
-    const [plan, setPlan] = useState(null);
-    const [contactMethods, setContactMethods] = useState([
-        { type: "type", phone_email: "phone_email" },
-    ]);
 
     const [{ data: payerProfile, loading: pageLoading }, payerProfileRequest] =
         useApiCall({
@@ -88,52 +85,6 @@ const AddMember = (props) => {
         },
     });
 
-    useEffect(() => {
-        // set initial plan
-        setPlan(payerProfile?.payers?.length ? payerProfile?.payers[0] : null);
-    }, [payerProfile]);
-
-    const planOptions = useMemo(() => {
-        if (!payerProfile?.payers?.length) {
-            return [];
-        }
-
-        return payerProfile.payers.map(
-            ({ id, company_name, lines_of_business }) => {
-                return {
-                    id,
-                    title: company_name,
-                    val: id,
-                    lines_of_business,
-                };
-            }
-        );
-    }, [payerProfile]);
-
-    const updatePlan = (e) => {
-        const newPlan = planOptions.find((item) => item.id === e.target.value);
-        setPlan(newPlan);
-    };
-
-    const lobOptions = useMemo(() => {
-        if (!plan?.lines_of_business?.length) {
-            return [];
-        }
-
-        return plan.lines_of_business.map(({ id, name }) => {
-            return { id, title: name, val: id };
-        });
-    }, [plan]);
-
-    const memberNumberTypesOptions = useMemo(() => {
-        if (isEmpty(payerProfile) || !payerProfile.member_number_types.length) {
-            return [];
-        }
-        return payerProfile.member_number_types.map(({ id, title }) => {
-            return { id, title, val: id };
-        });
-    }, [payerProfile]);
-
     const languageOptions = useMemo(() => {
         if (!payerProfile?.languages?.length) {
             return [];
@@ -169,21 +120,13 @@ const AddMember = (props) => {
             last_name,
             dob,
             language: "6", // 6 is English
-            plan: planOptions[0]?.val,
-            member_number_type: memberNumberTypesOptions[0]?.val,
-            line_of_business: lobOptions[0]?.val,
+            plan: "",
+            member_number_type: "",
+            line_of_business: "",
             title: titlesOptions[0]?.val,
             gender: "male",
         });
-    }, [
-        first_name,
-        last_name,
-        dob,
-        planOptions,
-        lobOptions,
-        memberNumberTypesOptions,
-        titlesOptions,
-    ]);
+    }, [first_name, last_name, dob, titlesOptions]);
 
     useEffect(() => {
         if (data?.id) {
@@ -253,57 +196,7 @@ const AddMember = (props) => {
                                     onSubmit={onSubmit}
                                     className="row"
                                 >
-                                    {planOptions.length > 0 ? (
-                                        <Col md={6}>
-                                            <ContextSelect
-                                                name="plan"
-                                                label="Plan*"
-                                                value={plan?.id ?? ""}
-                                                options={planOptions}
-                                                required
-                                                large
-                                                onChange={updatePlan}
-                                            />
-                                        </Col>
-                                    ) : (
-                                        <ContextInput
-                                            hidden
-                                            name="plan"
-                                            label="Plan"
-                                            value={payerProfile.id || ""}
-                                            readOnly
-                                        />
-                                    )}
-                                    <Col md={6} />
-
-                                    <Col md={12}>
-                                        <h1 className="box-outside-title title-second my-4">
-                                            Member Identification Info
-                                        </h1>
-                                    </Col>
-
-                                    <Col md={6}>
-                                        <ContextInput
-                                            name="member_number"
-                                            label="Member ID*"
-                                        />
-                                    </Col>
-
-                                    <Col md={6}>
-                                        <ContextSelect
-                                            name="member_number_type"
-                                            label="Member ID Type*"
-                                            options={memberNumberTypesOptions}
-                                        />
-                                    </Col>
-
-                                    <Col md={6}>
-                                        <ContextSelect
-                                            name="line_of_business"
-                                            label="Line of Business"
-                                            options={lobOptions}
-                                        />
-                                    </Col>
+                                    <MemberInfoForm payer={payerProfile} />
 
                                     <Col md={12}>
                                         <h1 className="box-outside-title title-second my-4">

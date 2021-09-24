@@ -9,7 +9,7 @@ import ContactMethodRow from "./ContactMethodRow";
 
 const ContactMethods = () => {
     const { update, getValue } = useFormContext();
-    const contactMethods = getValue("contact_methods", []);
+    const contactMethods = getValue("contacts", []);
 
     useEffect(() => {
         if (contactMethods.length === 0) {
@@ -20,7 +20,7 @@ const ContactMethods = () => {
     }, [contactMethods]);
 
     const handleOnChange = (index, { target: { name, value } }) => {
-        update(`contact_methods.${index}.${name}`, value);
+        update(`contacts.${index}.${name}`, value);
     };
 
     const typesOptions = useMemo(() => {
@@ -45,9 +45,9 @@ const ContactMethods = () => {
     const addNewContactMethod = () => {
         const index = contactMethods.length;
 
-        update(`contact_methods.${index}`, {
+        update(`contacts.${index}`, {
             type: "",
-            phone_email: "",
+            value: "",
         });
     };
 
@@ -56,20 +56,20 @@ const ContactMethods = () => {
             return contactIndex !== itemIndex;
         });
 
-        update("contact_methods", filtered);
+        update("contacts", filtered);
     };
 
     return (
         <Row>
             <Col md={12}>
-                {contactMethods.map((c, index) => (
+                {contactMethods.map((item, index) => (
                     <ContactMethodRow
                         types={typesOptions}
                         key={`contact-row-${index}`}
                         showRemove={contactMethods.length > 1}
                         onRemove={() => removeContactMethod(index)}
                         onChange={(e) => handleOnChange(index, e)}
-                        {...c}
+                        {...item}
                     />
                 ))}
             </Col>
