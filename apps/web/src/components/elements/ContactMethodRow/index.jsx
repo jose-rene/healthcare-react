@@ -6,7 +6,7 @@ import Select from "../../inputs/Select";
 const ContactMethodRow = ({
     // input names
     type,
-    phone_email,
+    value,
 
     // other props
     types = [],
@@ -30,11 +30,11 @@ const ContactMethodRow = ({
 
             <Col md={5}>
                 <Input
-                    name="phone_email"
+                    name="value"
                     label="Phone/Email*"
                     required
                     onChange={onChange}
-                    value={phone_email}
+                    value={value}
                 />
             </Col>
 
@@ -49,7 +49,9 @@ const ContactMethodRow = ({
                         onClick={onRemove}
                     />
                 </Col>
-            ) : <Col md={2} />}
+            ) : (
+                <Col md={2} />
+            )}
         </Row>
     );
 };
