@@ -88,7 +88,7 @@ const MemberInfoForm = ({
             });
         }
         try {
-            const result = await updateMember({ params: formData });
+            await updateMember({ params: formData });
             refreshRequest();
         } catch (err) {
             console.log(err);
