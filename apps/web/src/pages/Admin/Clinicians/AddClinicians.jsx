@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import * as Yup from "yup";
 
-import { Form } from "react-bootstrap";
-import { useForm } from "react-hook-form";
-
-import PageLayout from "../../../layouts/PageLayout";
+import PageLayout from "layouts/PageLayout";
 
 import { Button } from "components";
-import Select from "components/inputs/Select";
-import InputText from "components/inputs/InputText";
+import PageTitle from "components/PageTitle";
+import Form from "components/elements/Form";
+import ContextInput from "components/inputs/ContextInput";
+import ContextSelect from "components/contextInputs/Select";
+import PhoneInput from "components/inputs/PhoneInput";
 
 import PageAlert from "components/elements/PageAlert";
 
-import useApiCall from "../../../hooks/useApiCall";
-import useToast from "../../../hooks/useToast";
+import useApiCall from "hooks/useApiCall";
+import useToast from "hooks/useToast";
 
 const AddClinicians = (props) => {
-    const { handleSubmit, register, errors } = useForm();
-
     const { success: successMessage } = useToast();
 
     const [typesOptions, setTypesOptions] = useState([]);
@@ -24,6 +24,42 @@ const AddClinicians = (props) => {
     const [userStatusesOptions, setUserStatusesOptions] = useState([]);
     const [therapyNetworksOptions, setTherapyNetworksOptions] = useState([]);
     const [rolesOptions, setRolesOptions] = useState([]);
+    const [defaultData, setDefaultData] = useState({});
+
+    const validation = {
+        clinical_type_id: {
+            yupSchema: Yup.string().required("Type is required"),
+        },
+        clinical_user_type_id: {
+            yupSchema: Yup.string().required("User Type is required"),
+        },
+        clinical_user_status_id: {
+            yupSchema: Yup.string().required("Status is required"),
+        },
+        primary_role: {
+            yupSchema: Yup.string().required("Primary Role is required"),
+        },
+        title: {
+            yupSchema: Yup.string().required("Title is required"),
+        },
+        first_name: {
+            yupSchema: Yup.string().required("First Name is required"),
+        },
+        last_name: {
+            yupSchema: Yup.string().required("Last Name is required"),
+        },
+        email: {
+            yupSchema: Yup.string()
+                .matches(
+                    /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    "Please enter a valid email address"
+                )
+                .required("Email is required"),
+        },
+        phone: {
+            yupSchema: Yup.string().required("Phone is required"),
+        },
+    };
 
     const editCliniciansId = props.location.pathname.split("/")[3];
     const pageStatus =
@@ -44,12 +80,16 @@ const AddClinicians = (props) => {
         url: "admin/clinicaluser/params",
     });
 
-    const [{ error: formError }, postCliniciansRequest] = useApiCall({
-        method: "post",
-        url: "admin/clinicaluser",
-    });
+    const [{ loading: addLoading, error: formError }, postCliniciansRequest] =
+        useApiCall({
+            method: "post",
+            url: "admin/clinicaluser",
+        });
 
-    const [{ error: formUpdateError }, updateCliniciansRequest] = useApiCall({
+    const [
+        { loading: updateLoading, error: formUpdateError },
+        updateCliniciansRequest,
+    ] = useApiCall({
         method: "put",
         url: `admin/clinicaluser/${editCliniciansId}`,
     });
@@ -72,10 +112,6 @@ const AddClinicians = (props) => {
                 id,
                 title: name,
                 val: id,
-                selected:
-                    editClinicians?.clinical_type?.id === id
-                        ? "selected"
-                        : false,
             });
         });
 
@@ -89,10 +125,6 @@ const AddClinicians = (props) => {
                 id,
                 title: name,
                 val: id,
-                selected:
-                    editClinicians?.clinical_user_type?.id === id
-                        ? "selected"
-                        : false,
             });
         });
 
@@ -106,10 +138,6 @@ const AddClinicians = (props) => {
                 id,
                 title: name,
                 val: id,
-                selected:
-                    editClinicians?.clinical_user_status?.id === id
-                        ? "selected"
-                        : false,
             });
         });
 
@@ -123,10 +151,6 @@ const AddClinicians = (props) => {
                 id,
                 title: name,
                 val: id,
-                selected:
-                    editClinicians?.therapy_network?.id === id
-                        ? "selected"
-                        : false,
             });
         });
 
@@ -140,22 +164,36 @@ const AddClinicians = (props) => {
                 id: name,
                 title,
                 val: name,
-                selected:
-                    editClinicians?.primary_role === name ? "selected" : false,
             });
         });
 
         setRolesOptions(rolesArr);
     }, [roles, editClinicians]);
 
+    useEffect(() => {
+        setDefaultData({
+            clinical_type_id: editClinicians?.clinical_type?.id,
+            clinical_user_type_id: editClinicians?.clinical_user_type?.id,
+            clinical_user_status_id: editClinicians?.clinical_user_status?.id,
+            therapy_network_id: editClinicians?.therapy_network?.id,
+            primary_role: editClinicians?.primary_role,
+            title: editClinicians?.title,
+            first_name: editClinicians?.first_name,
+            last_name: editClinicians?.last_name,
+            email: editClinicians?.email,
+            phone: editClinicians?.phone_primary,
+        });
+    }, [editClinicians]);
+
     const handleBack = () => {
         props.history.push("/admin/clinicians");
     };
 
     const onSubmit = async (formValues) => {
+        let result;
         try {
             if (pageStatus === "Add") {
-                const result = await postCliniciansRequest({
+                result = await postCliniciansRequest({
                     params: formValues,
                 });
 
@@ -163,7 +201,7 @@ const AddClinicians = (props) => {
                     successMessage("Clinician successfully added.");
                 }
             } else if (pageStatus === "Update") {
-                const result = await updateCliniciansRequest({
+                result = await updateCliniciansRequest({
                     params: formValues,
                 });
 
@@ -172,6 +210,18 @@ const AddClinicians = (props) => {
                 }
             }
 
+            setDefaultData({
+                clinical_type_id: result?.clinical_type?.id,
+                clinical_user_type_id: result?.clinical_user_type?.id,
+                clinical_user_status_id: result?.clinical_user_status?.id,
+                therapy_network_id: result?.therapy_network?.id,
+                primary_role: result?.primary_role,
+                title: result?.title,
+                first_name: result?.first_name,
+                last_name: result?.last_name,
+                email: result?.email,
+                phone: result?.phone_primary,
+            });
             props.history.push(`/admin/clinicians`);
         } catch (e) {
             if (pageStatus === "Add") {
@@ -184,26 +234,21 @@ const AddClinicians = (props) => {
 
     return (
         <PageLayout>
-            <div className="content-box">
-                <div className="row d-flex justify-content-start p-3">
-                    <div className="d-flex">
-                        <Button
-                            icon="chevron-left"
-                            iconSize="sm"
-                            className="btn btn-sm mb-5 py-2 px-3"
-                            outline
-                            label="Back"
-                            onClick={() => handleBack()}
+            <Container fluid>
+                <Row>
+                    <Col>
+                        <PageTitle
+                            title={
+                                pageStatus === "Update"
+                                    ? "Edit Clinician"
+                                    : "Add Clinician"
+                            }
+                            onBack={handleBack}
                         />
+                    </Col>
+                </Row>
 
-                        <h1 className="box-title ml-4">
-                            {pageStatus === "Update" ? "Edit" : "Add"}{" "}
-                            Clinicians
-                        </h1>
-                    </div>
-                </div>
-
-                <div className="col-md-6">
+                <Col md={6}>
                     {formError ? (
                         <PageAlert
                             className="mt-3"
@@ -224,145 +269,92 @@ const AddClinicians = (props) => {
                             Error: {formUpdateError}
                         </PageAlert>
                     ) : null}
-                </div>
-                <Form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="form-row">
-                        <div className="col-md-6">
-                            <Select
+                </Col>
+                <Form
+                    autocomplete={false}
+                    validation={validation}
+                    defaultData={defaultData}
+                    onSubmit={onSubmit}
+                >
+                    <Row>
+                        <Col md={6}>
+                            <ContextSelect
                                 name="clinical_type_id"
                                 label="Type*"
                                 options={typesOptions}
-                                defaultValue={editClinicians?.clinical_type?.id}
-                                ref={register({
-                                    required: "Type is required",
-                                })}
-                                errors={errors}
                             />
-                        </div>
-                        <div className="col-md-6">
-                            <Select
+                        </Col>
+                        <Col md={6}>
+                            <ContextSelect
                                 name="clinical_user_type_id"
                                 label="User Type*"
                                 options={userTypesOptions}
-                                defaultValue={
-                                    editClinicians?.clinical_user_type?.id
-                                }
-                                ref={register({
-                                    required: "User Type is required",
-                                })}
-                                errors={errors}
                             />
-                        </div>
-                        <div className="col-md-6">
-                            <Select
+                        </Col>
+                        <Col md={6}>
+                            <ContextSelect
                                 name="clinical_user_status_id"
                                 label="Status*"
                                 options={userStatusesOptions}
-                                defaultValue={
-                                    editClinicians?.clinical_user_status?.id
-                                }
-                                ref={register({
-                                    required: "Status is required",
-                                })}
-                                errors={errors}
                             />
-                        </div>
-                        <div className="col-md-6">
-                            <Select
+                        </Col>
+                        <Col md={6}>
+                            <ContextSelect
                                 name="therapy_network_id"
                                 label="Therapy Network"
                                 options={therapyNetworksOptions}
-                                defaultValue={
-                                    editClinicians?.therapy_network?.id
-                                }
-                                ref={register({})}
-                                errors={errors}
                             />
-                        </div>
-                        <div className="col-md-6">
-                            <Select
+                        </Col>
+                        <Col md={6}>
+                            <ContextSelect
                                 name="primary_role"
                                 label="Primary Role*"
                                 options={rolesOptions}
-                                defaultValue={editClinicians?.primary_role}
-                                ref={register({
-                                    required: "Primary Role is required",
-                                })}
-                                errors={errors}
                             />
-                        </div>
-                        <div className="col-md-6">
-                            <InputText
-                                name="title"
-                                label="Title*"
-                                defaultValue={editClinicians?.title}
-                                ref={register({
-                                    required: "Title is required",
-                                })}
-                                errors={errors}
-                            />
-                        </div>
-                        <div className="col-md-6">
-                            <InputText
+                        </Col>
+                        <Col md={6}>
+                            <ContextInput name="title" label="Title*" />
+                        </Col>
+                        <Col md={6}>
+                            <ContextInput
                                 name="first_name"
                                 label="First Name*"
-                                defaultValue={editClinicians?.first_name}
-                                ref={register({
-                                    required: "First Name is required",
-                                })}
-                                errors={errors}
                             />
-                        </div>
-                        <div className="col-md-6">
-                            <InputText
-                                name="last_name"
-                                label="Last Name*"
-                                defaultValue={editClinicians?.last_name}
-                                ref={register({
-                                    required: "Last Name is required",
-                                })}
-                                errors={errors}
-                            />
-                        </div>
-                        <div className="col-md-6">
-                            <InputText
+                        </Col>
+                        <Col md={6}>
+                            <ContextInput name="last_name" label="Last Name*" />
+                        </Col>
+                        <Col md={6}>
+                            <ContextInput
                                 name="email"
                                 label="Email*"
                                 type="email"
-                                defaultValue={editClinicians?.email}
-                                ref={register({
-                                    required: "Email is required",
-                                    pattern: {
-                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                        message:
-                                            "Please enter a valid email address",
-                                    },
-                                })}
-                                errors={errors}
                             />
-                        </div>
-                        <div className="col-md-6">
-                            <InputText
+                        </Col>
+                        <Col md={6}>
+                            <PhoneInput
+                                type="phone"
                                 name="phone"
-                                label="Phone*"
-                                defaultValue={editClinicians?.phone_primary}
-                                ref={register({
-                                    required: "Phone is required",
-                                })}
-                                errors={errors}
+                                label="Phone"
                             />
-                        </div>
+                        </Col>
 
-                        <div className="col-md-12 mt-2">
+                        <Col md={3}>
                             <Button
                                 type="submit"
-                                className="btn btn-block btn-primary"
                                 label={pageStatus}
+                                variant="primary"
+                                disabled={
+                                    pageStatus === "Update"
+                                        ? updateLoading
+                                        : addLoading
+                                }
+                                block
                             />
-                        </div>
-                    </div>
+                        </Col>
+                    </Row>
                 </Form>
-            </div>
+            </Container>
         </PageLayout>
     );
 };

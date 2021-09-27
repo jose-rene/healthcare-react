@@ -87,7 +87,7 @@ const MemberInfoView = ({
             });
         }
         try {
-            const result = await updateMember({ params: formData });
+            await updateMember({ params: formData });
             refreshRequest("member");
         } catch (err) {
             console.log(err);
