@@ -8,8 +8,8 @@ import { PUT } from "../config/URLs";
 import useApiCall from "../hooks/useApiCall";
 import useIdleTimeout from "../hooks/useIdleTimeout";
 import PageHeader from "./components/Header";
-import SidebarHealthplan from "./components/sidebar/SidebarHealthplan";
-import MenuHealthplan from "./components/menu/MenuHealthplan";
+import Sidebar from "./components/sidebar/index";
+import Menu from "./components/menu";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const PageLayout = ({ children }) => {
@@ -96,7 +96,7 @@ const PageLayout = ({ children }) => {
                     }`}
                 >
                     <div className="position-fixed d-flex flex-column h-100 min-vh-100 bg-white">
-                        <SidebarHealthplan
+                        <Sidebar
                             {...{ logOut, primaryRole, abilities, open }}
                         />
                         <div className="mt-auto text-center">
@@ -131,10 +131,11 @@ const PageLayout = ({ children }) => {
                         </div>
                     </div>
                 </div>
-                <MenuHealthplan
+                <Menu
                     show={showMenu}
                     onHide={handleCloseMenu}
                     backdrop
+                    {...{ logOut, primaryRole, abilities, open }}
                 />
                 <div className="p-3 flex-grow-1" style={{ marginTop: "70px" }}>
                     {children}

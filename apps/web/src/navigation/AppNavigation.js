@@ -1,39 +1,44 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import RequestEdit from "pages/healthplan/RequestEdit";
+
 import { useUser } from "Context/UserContext";
-import { ADMIN } from "../actions/types";
-import useApiCall from "../hooks/useApiCall";
-import Account from "../pages/Account/Account";
-import Table from "../pages/Test/Table";
-import HpAddUser from "../pages/healthplan/AddUser";
-import HpEditUser from "../pages/healthplan/EditUser";
-import HpAddMember from "../pages/healthplan/AddMember";
-import HpSearchMember from "../pages/healthplan/SearchMember";
-import HpTraining from "../pages/Training/Training";
-import NewRequestAdd from "../pages/newRequestAdd/NewRequestAdd";
-import RequestLookup from "../pages/RequestLookup/RequestLookup";
-import Assessment from "../pages/Assessment";
-import Error401 from "../pages/Errors/401";
-import Federated from "../pages/Federated";
-import ForgotPassword from "../pages/ForgotPassword";
-import Login from "../pages/Login";
-import Error from "../pages/NotFound";
-import Questionnaire from "../pages/Questionnaire";
-import SetForgotPassword from "../pages/SetForgotPassword";
+
+import { ADMIN } from "actions/types";
+
+import PrivateRoute from "route/PrivateRoute";
+import RoleRouteRouter from "route/RoleRoute";
+
+import useApiCall from "hooks/useApiCall";
+
+import RequestEdit from "pages/healthplan/RequestEdit";
+import Account from "pages/Account/Account";
+import Table from "pages/Test/Table";
+import HpAddUser from "pages/healthplan/AddUser";
+import HpEditUser from "pages/healthplan/EditUser";
+import HpAddMember from "pages/healthplan/AddMember";
+import HpSearchMember from "pages/healthplan/SearchMember";
+import HpTraining from "pages/Training/Training";
+import NewRequestAdd from "pages/newRequestAdd/NewRequestAdd";
+import RequestLookup from "pages/RequestLookup/RequestLookup";
+import Assessment from "pages/Assessment";
+import Error401 from "pages/Errors/401";
+import Federated from "pages/Federated";
+import ForgotPassword from "pages/ForgotPassword";
+import Login from "pages/Login";
+import Error from "pages/NotFound";
+import Questionnaire from "pages/Questionnaire";
+import SetForgotPassword from "pages/SetForgotPassword";
 import NotificationList from "pages/NotificationList";
-import PrivateRoute from "../route/PrivateRoute";
-import RoleRouteRouter from "../route/RoleRoute";
-import AdminPayer from "../pages/Test/AdminPayer";
-import AdminCompanies from "../pages/Admin/Companies/Companies";
-import AdminAddCompanies from "../pages/Admin/Companies/AddCompanies";
-import AdminDetailCompanies from "../pages/Admin/Companies/DetailCompanies";
-import AdminClinicians from "../pages/Admin/Clinicians/Clinicians";
-import AdminAddClinicians from "../pages/Admin/Clinicians/AddClinicians";
-import FormView from "../pages/Admin/FormBuilder/show";
-import FormBuilderEdit from "../pages/Admin/FormBuilder/edit";
-import FormIndex from "../pages/Admin/FormBuilder/Index";
-import AdminUserList from "../pages/Admin/UserList";
+import AdminPayer from "pages/Test/AdminPayer";
+import AdminCompanies from "pages/Admin/Companies/Companies";
+import AdminAddCompanies from "pages/Admin/Companies/AddCompanies";
+import AdminDetailCompanies from "pages/Admin/Companies/DetailCompanies";
+import AdminClinicians from "pages/Admin/Clinicians/Clinicians";
+import AdminAddClinicians from "pages/Admin/Clinicians/AddClinicians";
+import FormView from "pages/Admin/FormBuilder/show";
+import FormBuilderEdit from "pages/Admin/FormBuilder/edit";
+import FormIndex from "pages/Admin/FormBuilder/Index";
+import AdminUserList from "pages/Admin/UserList";
 
 const AppNavigation = () => {
     const [{ loading }, fireInitializeUser] = useApiCall({

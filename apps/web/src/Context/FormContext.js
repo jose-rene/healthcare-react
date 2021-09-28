@@ -1,4 +1,11 @@
-import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
+import React, {
+    useContext,
+    useState,
+    useMemo,
+    createContext,
+    useEffect,
+    useCallback,
+} from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
 import { template } from "../helpers/string";
@@ -59,7 +66,7 @@ const FormProvider = ({
 
     useEffect(() => {
         if (validation) {
-            setValidationRules(prev => ({ ...prev, ...validation }));
+            setValidationRules((prev) => ({ ...prev, ...validation }));
         }
     }, [validation]);
 
@@ -111,7 +118,7 @@ const FormProvider = ({
             formValues = callback(formValues, getValue, callbackName);
         });
 
-        if (typeof onFormChange == "function") {
+        if (typeof onFormChange === "function") {
             onFormChange(formValues);
         }
     };
@@ -221,11 +228,9 @@ const FormProvider = ({
 
     const objUpdate = (obj) => {
         const oldForm = { ...form };
-
-        Object.keys(obj).forEach(o => {
-            set(oldForm.o, obj[o]);
+        Object.keys(obj).forEach((o) => {
+            set(oldForm, o, obj[o]);
         });
-
         setForm(() => oldForm);
     };
 

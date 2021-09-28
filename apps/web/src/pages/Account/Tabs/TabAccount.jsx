@@ -10,7 +10,7 @@ import ConfirmationModal from "components/elements/ConfirmationModal";
 import { useUser } from "Context/UserContext";
 import { validateImage } from "../../../helpers/validate";
 import useApiCall from "../../../hooks/useApiCall";
-import ContextSelect from "../../../components/inputs/Select/ContextSelect";
+import ContextSelect from "../../../components/contextInputs/Select";
 import Form from "../../../components/elements/Form";
 import SubmitButton from "../../../components/elements/SubmitButton";
 import PhoneInput from "../../../components/inputs/PhoneInput";

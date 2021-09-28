@@ -56,19 +56,11 @@ const Clinicians = (props) => {
                             className="px-2"
                             to={`/admin/clinicians/${id}/edit`}
                         >
-                            <FapIcon
-                                size="1x"
-                                icon="edit"
-                                className="me-2 bg-secondary text-white rounded-circle p-1"
-                            />
+                            <FapIcon size="1x" icon="edit" />
                         </Link>
 
                         <Link className="px-2">
-                            <FapIcon
-                                size="1x"
-                                icon="info-circle"
-                                className="me-2 bg-secondary text-white rounded-circle p-1"
-                            />
+                            <FapIcon size="1x" icon="info-circle" />
                         </Link>
                     </>
                 );

@@ -163,6 +163,9 @@ const RequestForm = ({ data }) => {
             if (form && form === "doc") {
                 setOpenRequestDoc(false);
             }
+            if (form && form === "member") {
+                setOpenMember(false);
+            }
             setRequestData(result);
         } catch (e) {
             console.log("Request update error:", e);
@@ -197,6 +200,8 @@ const RequestForm = ({ data }) => {
                         memberData,
                         openMember,
                         toggleOpenMember,
+                        refreshRequest,
+                        requestLoading,
                     }}
                 />
                 <RequestInfoForm
