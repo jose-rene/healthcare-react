@@ -3,10 +3,8 @@ import { Card, Col, Row } from "react-bootstrap";
 import Button from "../inputs/Button";
 import FormElement from "./FormElement";
 import Icon from "./Icon";
-// import ContextInput from "../inputs/ContextInput";
 
 const FormGroup = ({ span = 12, elements, addRepeater, removeRepeater }) => {
-    console.log({ elements });
     return (
         <>
             {elements.map(

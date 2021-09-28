@@ -1,17 +1,16 @@
 import React from "react";
 import Checkbox from "../Checkbox";
 
-const CheckBoxGroup = ({ options = false, name, value = 1, onChange, checked = false, ...props }) => {
+const CheckBoxGroup = ({ options = false, name, onChange, checked = false }) => {
     return (
         <div>
             {options.map(({ text, label, value, children, ...opt }) => {
-                console.log("CheckBoxGroup.checkbox", { name: `${name}[${value}]` }, { props });
                 return (
                     <Checkbox
                         label={text || label}
                         name={`${name}[${value}]`}
                         value={true}
-                        checked={checked}
+                        checked={checked[value]}
                         onChange={onChange} {...opt}>{children}
                     </Checkbox>
                 );
