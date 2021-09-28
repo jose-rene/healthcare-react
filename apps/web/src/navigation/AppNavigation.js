@@ -152,68 +152,68 @@ const AppNavigation = () => {
 
                 <PrivateRoute
                     path="/forms/:form_slug/show"
-                    middleware={["software_engineer"]} // need to change admin
+                    middleware={["software_engineer"]}
                     component={FormView}
                 />
 
                 <PrivateRoute
                     path="/admin/forms/:form_slug/edit"
-                    middleware={["software_engineer"]} // need to change admin
+                    middleware={["software_engineer"]}
                     component={FormBuilderEdit}
                 />
 
                 <PrivateRoute
                     path="/admin/forms"
-                    middleware={["software_engineer"]} // need to change admin
+                    middleware={["software_engineer"]}
                     component={FormIndex}
                 />
 
                 <PrivateRoute
                     path="/admin/companies"
-                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    middleware={["software_engineer"]}
                     component={AdminCompanies}
                 />
 
                 <PrivateRoute
                     path="/admin/add-companies"
-                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    middleware={["software_engineer"]}
                     component={AdminAddCompanies}
                 />
 
                 <PrivateRoute
                     path="/admin/company/:id"
-                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    middleware={["software_engineer"]}
                     component={AdminDetailCompanies}
                 />
 
                 <PrivateRoute
                     path="/admin/company/:id/edit"
-                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    middleware={["software_engineer"]}
                     component={AdminDetailCompanies}
                 />
 
                 <PrivateRoute
                     exact
                     path="/admin/clinicians"
-                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    middleware={["software_engineer"]}
                     component={AdminClinicians}
                 />
 
                 <PrivateRoute
                     path="/admin/add-clinicians"
-                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    middleware={["software_engineer"]}
                     component={AdminAddClinicians}
                 />
 
                 <PrivateRoute
                     path="/admin/clinicians/:id/edit"
-                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    middleware={["software_engineer"]}
                     component={AdminAddClinicians}
                 />
 
                 <PrivateRoute
                     path="/admin/users"
-                    middleware={["hp_user", "hp_champion"]} // need to change admin
+                    middleware={["software_engineer"]}
                     component={AdminUserList}
                 />
 
