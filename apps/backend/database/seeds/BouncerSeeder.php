@@ -16,6 +16,7 @@ class BouncerSeeder extends Seeder
         'Force delete payers',
         'Create Members',
         'Force delete members',
+        'Assign Clinicians',
         'Work Gryphon',
     ];
 

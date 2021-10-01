@@ -49,6 +49,8 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->get('/request/summary', 'RequestController@summary');
     $router->get('/request/inspire', 'RequestController@inspire');
     $router->get('/request/list', 'RequestController@inspire');
+    $router->put('/request/{request}/assign/', 'RequestController@assign')->name('request.assign');
+
 //    $router->get('/request/types', [RequestTypesController::class, 'index'])->name('request.types.index');
 //    $router->get('/requesttype', 'RequestTypeController@index')->name('requesttypes.index');
 

@@ -13,6 +13,7 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request as Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class RequestController extends Controller
 {
@@ -125,6 +126,32 @@ class RequestController extends Controller
      */
     public function show(ModelRequest $request)
     {
+        return new RequestResource($request);
+    }
+
+    /**
+     * Assign clinician to a request.
+     *
+     * @param Request $request
+     * @return RequestResource
+     */
+    public function assign(ModelRequest $request, Request $httpRequest)
+    {
+        $user = auth()->user();
+        if (!$user->can('assign_clinicians')) {
+            throw new AuthorizationException('You are not authoized to assign clinicians.');
+        }
+        if (null === ($id = $request->input('therapist_id')) || null === ($therapist = User::find($id))) {
+            throw new HttpResponseException(response()->json(['errors' => ['therapist_id' => ['Invalid Therapist']]], 422));
+        }
+        $params = ['therapist_id', $therapist->id];
+        // @todo, there may need to be further logic for cancelled cases, etc
+        if ($request->status_id === 1) {
+            // change from submitted to assigned
+            $params['status_id'] = 2;
+        }
+        $request->update($params);
+
         return new RequestResource($request);
     }
 
