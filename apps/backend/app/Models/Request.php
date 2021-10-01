@@ -161,7 +161,14 @@ class Request extends Model
             case 4:
                 break;
             case 2: // healthplan
-                $query->where('payer_id', $user->healthPlanUser->payer_id);
+                $payerIds = [];
+                // add child payers if applicable
+                if (null !== ($childPayers = $user->healthPlanUser->payer->children)) {
+                    $payerIds = $childPayers->pluck('id')->all();
+                }
+                // add the users associated payer
+                array_unshift($payerIds, $user->healthPlanUser->payer_id);
+                $query->whereIn('payer_id', $payerIds);
                 break;
             case 3: // therapist
                 $query->where('clinician_id', $user->clinicalServicesUser->id);

@@ -7,6 +7,18 @@ function userReducer(state, action) {
     switch (action.type) {
         case "initialize": {
             const primaryRole = action.payload.primary_role ?? "peon";
+            // timezone stuff
+            const formatter = Intl.DateTimeFormat("en-US", {
+                day: "numeric",
+                month: "numeric",
+                year: "numeric",
+                timeZoneName: "short",
+            });
+            const [timeZoneName] = formatter
+                .format(new Date())
+                .split(/\s+/)
+                .reverse();
+
             return {
                 ...state,
                 ...action.payload,
@@ -15,6 +27,7 @@ function userReducer(state, action) {
                     authed: !!action.payload.email,
                     initializing: false,
                     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    timeZoneName,
                 },
             };
         }
@@ -68,6 +81,14 @@ function UserProvider({ children }) {
         return state;
     };
 
+    const userCan = (ability) => {
+        return ability && state.abilities.includes(ability);
+    };
+
+    const userIs = (role) => {
+        return role && state.primaryRole === role;
+    };
+
     const isAuthed = () => {
         return state.authed;
     };
@@ -103,6 +124,8 @@ function UserProvider({ children }) {
                 logout,
                 updateAvatarUrl,
                 setSearch,
+                userCan,
+                userIs,
             }}
         >
             {children}

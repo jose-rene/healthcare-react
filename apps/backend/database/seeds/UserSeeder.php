@@ -55,6 +55,9 @@ class UserSeeder extends Seeder
                 'software_engineer',
                 'field_clinician',
                 'clinical_reviewer',
+                'coo',
+                'client_services_manager',
+                'client_services_specialist',
             ]);
             // add the user types
             $admin->engineeringUser(EngineeringUser::create());
@@ -69,6 +72,8 @@ class UserSeeder extends Seeder
                 'clinical_user_status_id' => 1,
                 'clinical_user_type_id'   => 1, // this is probably uneccessary it's handled by role
             ]);
+            // add the admin services user
+            $admin->businessOperationsUser()->create();
         }
 
 //        $users = User::factory()->count(random_int(1000, 5000))->create();
