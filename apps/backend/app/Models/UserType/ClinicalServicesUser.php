@@ -13,11 +13,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ClinicalServicesUser extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'clinical_users';
-
-    use HasFactory, SoftDeletes;
 
     public $dates = ['date_hired'];
     /**

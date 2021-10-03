@@ -10,6 +10,7 @@ use App\Models\Activity\Activity;
 use App\Models\UserType\ClinicalServicesUser;
 use App\Models\UserType\EngineeringUser;
 use App\Models\UserType\HealthPlanUser;
+use App\Models\UserType\BusinessOperationsUser;
 use App\Traits\Uuidable;
 use Carbon\Carbon;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
@@ -235,6 +236,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function healthPlanUser()
     {
         return $this->hasOne(HealthPlanUser::class);
+    }
+
+    /**
+     * Relationship to Business Operations User Type.
+     *
+     * @return App\Models\UserType\BusinessOperationsUser
+     */
+    public function businessOperationsUser()
+    {
+        return $this->hasOne(BusinessOperationsUser::class);
     }
 
     /**

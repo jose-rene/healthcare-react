@@ -5,18 +5,17 @@ import PageAlert from "components/elements/PageAlert";
 import LoadingOverlay from "react-loading-overlay";
 import { useUser } from "Context/UserContext";
 import dayjs from "dayjs";
+import {
+    fromUtc,
+    fromUtcDate,
+    fromUtcTime,
+    formatDate,
+    formatTime,
+} from "../../../helpers/datetime";
 
-const utc = require("dayjs/plugin/utc");
-const timezone = require("dayjs/plugin/timezone");
-const advancedFormat = require("dayjs/plugin/advancedFormat");
 const localizedFormat = require("dayjs/plugin/localizedFormat");
-const customParseFormat = require("dayjs/plugin/customParseFormat");
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(advancedFormat);
 dayjs.extend(localizedFormat);
-dayjs.extend(customParseFormat);
 
 /* eslint-disable react/prop-types */
 /* eslint-disable no-nested-ternary */
@@ -32,7 +31,7 @@ const DueDateForm = ({
     disabled,
 }) => {
     const { getUser } = useUser();
-    const { timeZone } = getUser();
+    const { timeZone, timeZoneName } = getUser();
 
     const [{ due_date, due_time, due_na }, setDueDate] = useState({
         due_date: "",
@@ -43,14 +42,8 @@ const DueDateForm = ({
     useEffect(() => {
         if (requestDue) {
             setDueDate({
-                due_date: dayjs
-                    .utc(requestDue, "MM/DD/YYYY hh:mm:ss")
-                    .local()
-                    .format("YYYY-MM-DD"),
-                due_time: dayjs
-                    .utc(requestDue, "MM/DD/YYYY hh:mm:ss")
-                    .local()
-                    .format("HH:mm"),
+                due_date: fromUtcDate(requestDue),
+                due_time: fromUtcTime(requestDue),
                 due_na: false,
             });
         } else if (requestDueNa) {
@@ -71,10 +64,7 @@ const DueDateForm = ({
         }
         setDueDate((prevDue) => ({
             ...prevDue,
-            [name]:
-                name === "due_date"
-                    ? dayjs(value).format("YYYY-MM-DD")
-                    : dayjs(value, "HH:mm").format("HH:mm"),
+            [name]: name === "due_date" ? formatDate(value) : formatTime(value),
             due_na: false,
         }));
     };
@@ -246,15 +236,10 @@ const DueDateForm = ({
                                     {requestDue || requestDueNa ? (
                                         requestDue ? (
                                             <p>
-                                                {dayjs
-                                                    .utc(
-                                                        requestDue,
-                                                        "MM/DD/YYYY hh:mm:ss"
-                                                    )
-                                                    .local()
-                                                    .format(
-                                                        "ddd MM/DD/YYYY h:mm A z"
-                                                    )}
+                                                {fromUtc(
+                                                    requestDue,
+                                                    timeZoneName
+                                                )}
                                             </p>
                                         ) : (
                                             <p>N/A</p>

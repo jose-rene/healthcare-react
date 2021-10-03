@@ -90,24 +90,33 @@ const RequestsTable = () => {
             type: ACTIONS,
             disableSortBy: true,
             formatter(member_id, { id: request_id, request_status_id }) {
+                const isClinician =
+                    primaryRole === "clinical_reviewer" ||
+                    primaryRole === "field_clinician";
+
                 return (
                     <>
-                        <Link className="px-2" to="#">
+                        <Link
+                            className="px-2"
+                            to={
+                                // eslint-disable-next-line no-nested-ternary
+                                isClinician
+                                    ? `/asessment/${request_id}`
+                                    : !request_status_id
+                                        ? `/member/${member_id}/request/${request_id}/edit`
+                                        : `/requests/${request_id}`
+                            }
+                        >
                             <FapIcon
                                 size="1x"
                                 icon={!request_status_id ? `edit` : `eye`}
                             />
                         </Link>
-                        {primaryRole !== "clinical_reviewer" &&
-                            primaryRole !== "field_clinician" && (
-                                <Link className="px-2" to="#">
-                                    <FapIcon
-                                        icon="file"
-                                        size="1x"
-                                        title="Report"
-                                    />
-                                </Link>
-                            )}
+                        {!isClinician && (
+                            <Link className="px-2" to="#">
+                                <FapIcon icon="file" size="1x" title="Report" />
+                            </Link>
+                        )}
                     </>
                 );
             },
@@ -163,14 +172,14 @@ const RequestsTable = () => {
                             />
                             {primaryRole !== "clinical_reviewer" &&
                                 primaryRole !== "field_clinician" && (
-                                    <Button
-                                        variant="primary"
-                                        className="mb-3 mx-3"
-                                        onClick={() => handleNewRequest()}
-                                    >
+                                <Button
+                                    variant="primary"
+                                    className="mb-3 mx-3"
+                                    onClick={() => handleNewRequest()}
+                                >
                                         Create New Request
-                                    </Button>
-                                )}
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </Col>
