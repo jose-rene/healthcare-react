@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { Row, Col } from "react-bootstrap";
 
 import TableAPI from "components/elements/TableAPI";
 
-import { ACTIONS } from "../../../../helpers/table";
+import { ACTIONS } from "helpers/table";
 
 const testData = [{ company: "DME Consulting, Inc" }];
 
@@ -17,15 +18,17 @@ const TabTherapyNetwork = () => {
     ]);
 
     return (
-        <div className="white-box white-box-small">
-            <TableAPI
-                searchObj={{}}
-                headers={headers}
-                loading={false}
-                data={testData}
-                dataMeta={{}}
-            />
-        </div>
+        <Row className="mt-4">
+            <Col md={12}>
+                <TableAPI
+                    searchObj={{}}
+                    headers={headers}
+                    loading={false}
+                    data={testData}
+                    dataMeta={{}}
+                />
+            </Col>
+        </Row>
     );
 };
 

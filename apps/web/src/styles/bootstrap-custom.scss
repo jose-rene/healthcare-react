@@ -82,7 +82,6 @@ body {
 
 @import "./layout.scss";
 
-
 // media queries
 
 @include media-breakpoint-down(lg) {
@@ -101,14 +100,6 @@ body {
 
     .sidebar {
         display: none;
-    }
-
-    //.content-container {
-    //    padding-left: 0px;
-    //}
-
-    .content-box {
-        padding: 32px 24px;
     }
 
     .attention-alert {
@@ -135,10 +126,6 @@ body {
     &-pointer {
         cursor: pointer;
     }
-}
-
-.tab-content {
-    @extend .mt-4;
 }
 
 .dot {

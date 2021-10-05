@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { Row, Col } from "react-bootstrap";
 
 import { Button } from "components";
 import TableAPI from "components/elements/TableAPI";
-import Icon from "components/elements/Icon";
+import FapIcon from "components/elements/FapIcon";
 
-import { ACTIONS } from "../../../../helpers/table";
+import { ACTIONS } from "helpers/table";
 
 const testData = [
     {
@@ -28,16 +29,8 @@ const TabReviewers = () => {
             formatter(id) {
                 return (
                     <>
-                        <Icon
-                            size="1x"
-                            icon="edit"
-                            className="me-2 bg-primary text-white rounded-circle p-1"
-                        />
-                        <Icon
-                            size="1x"
-                            icon="trash-alt"
-                            className="bg-danger text-white rounded-circle p-1"
-                        />
+                        <FapIcon className="mx-1" size="1x" icon="edit" />
+                        <FapIcon className="mx-1" size="1x" icon="trash-alt" />
                     </>
                 );
             },
@@ -45,29 +38,34 @@ const TabReviewers = () => {
     ]);
 
     return (
-        <div className="row">
-            <div className="col-md-6">
-                <div className="d-flex justify-content-between mt-4">
-                    <h1 className="box-subtitle">Associated Reviewers</h1>
-                    <Button icon="plus" iconSize="sm" label="Add" />
-                </div>
+        <Row className="mt-4">
+            <Col md={6}>
+                <Row>
+                    <Col md={12} className="d-flex justify-content-between">
+                        <h4 className="mt-2">Associated Reviewers</h4>
+                        <Button icon="plus" iconSize="sm" label="Add" />
+                    </Col>
 
-                <div className="white-box mt-0">
-                    <TableAPI
-                        searchObj={{}}
-                        headers={headers}
-                        loading={false}
-                        data={testData}
-                        dataMeta={{}}
-                    />
-                </div>
-            </div>
-            <div className="col-md-6">
-                <h1 className="box-subtitle mt-4">External Abbreviations</h1>
+                    <Col md={12}>
+                        <TableAPI
+                            searchObj={{}}
+                            headers={headers}
+                            loading={false}
+                            data={testData}
+                            dataMeta={{}}
+                        />
+                    </Col>
+                </Row>
+            </Col>
 
-                <div className="white-box external-abbreviations mt-0"></div>
-            </div>
-        </div>
+            <Col md={6}>
+                <Row>
+                    <Col md={12} className="d-flex justify-content-between">
+                        <h4 className="mt-2">External Abbreviations</h4>
+                    </Col>
+                </Row>
+            </Col>
+        </Row>
     );
 };
 

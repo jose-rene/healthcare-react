@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Row, Col } from "react-bootstrap";
 
 import { Button } from "components";
 import TableAPI from "components/elements/TableAPI";
@@ -82,13 +82,11 @@ const TabReports = () => {
         if (eventBlockList.indexOf(currentTab) === -1) {
             setActiveTab(currentTab);
         }
-
-
     };
 
     return (
-        <div className="row">
-            <div className="col-md-12">
+        <Row>
+            <Col md={12}>
                 <Tabs
                     defaultActiveKey={activeTab}
                     className="inside-tabs position-relative"
@@ -96,33 +94,37 @@ const TabReports = () => {
                     onSelect={handleTabs}
                 >
                     <Tab eventKey="history" title="History">
-                        <div className="white-box mt-0">
-                            <TableAPI
-                                searchObj={{}}
-                                headers={historyHeader}
-                                loading={false}
-                                data={historyTestData}
-                                dataMeta={{}}
-                            />
-                        </div>
+                        <Row className="py-4 bg-white mx-0">
+                            <Col md={12}>
+                                <TableAPI
+                                    searchObj={{}}
+                                    headers={historyHeader}
+                                    loading={false}
+                                    data={historyTestData}
+                                    dataMeta={{}}
+                                />
+                            </Col>
+                        </Row>
                     </Tab>
 
                     <Tab eventKey="autoSend" title="SutoSend">
-                        <div className="white-box mt-0">
-                            <TableAPI
-                                searchObj={{}}
-                                headers={[]}
-                                loading={false}
-                                data={[]}
-                                dataMeta={{}}
-                            />
-                        </div>
+                        <Row className="py-4 bg-white mx-0">
+                            <Col md={12}>
+                                <TableAPI
+                                    searchObj={{}}
+                                    headers={[]}
+                                    loading={false}
+                                    data={[]}
+                                    dataMeta={{}}
+                                />
+                            </Col>
+                        </Row>
                     </Tab>
 
                     <Tab eventKey="defaults" title="Defaults">
-                        <div className="white-box mt-0">
-                            <div className="row col-md-12 d-flex">
-                                <div className="col-md-4">
+                        <Row className="py-4 bg-white mx-0">
+                            <Col md={4}>
+                                <div>
                                     <Select
                                         label="Period"
                                         options={[
@@ -143,9 +145,11 @@ const TabReports = () => {
                                             },
                                         ]}
                                     />
+                                </div>
 
+                                <div className="mt-3">
                                     <Select
-                                        label="Period"
+                                        label="Summary"
                                         options={[
                                             {
                                                 id: "summary",
@@ -165,138 +169,142 @@ const TabReports = () => {
                                         ]}
                                     />
                                 </div>
-                                <div className="col-md-4">
-                                    <div className="d-flex justify-content-between">
-                                        <span>Request Classifications</span>
-                                        <p>
-                                            <u className="text-primary">
-                                                toogle all
-                                            </u>
-                                        </p>
-                                    </div>
-                                    <div className="form-control outline-checkbox">
-                                        <Checkbox
-                                            labelLeft
-                                            name="chart_review"
-                                            label="Chart Review"
-                                        />
-                                    </div>
-                                    <div className="form-control outline-checkbox mt-3">
-                                        <Checkbox
-                                            labelLeft
-                                            name="complex_assessment"
-                                            label="Complex Assessment"
-                                        />
-                                    </div>
-                                    <div className="form-control outline-checkbox mt-3">
-                                        <Checkbox
-                                            labelLeft
-                                            name="em_home_assessment"
-                                            label="EM-Home Assessment"
-                                        />
-                                    </div>
-                                    <div className="form-control outline-checkbox mt-3">
-                                        <Checkbox
-                                            labelLeft
-                                            name="home_modification"
-                                            label="Home Modification"
-                                        />
-                                    </div>
-                                    <div className="form-control outline-checkbox mt-3">
-                                        <Checkbox
-                                            labelLeft
-                                            name="home_modification"
-                                            label="Home Modification"
-                                        />
-                                    </div>
-                                    <div className="form-control outline-checkbox mt-3">
-                                        <Checkbox
-                                            labelLeft
-                                            name="in_home_assessment"
-                                            label="In-Home Assessment"
-                                        />
-                                    </div>
-                                    <div className="form-control outline-checkbox mt-3">
-                                        <Checkbox
-                                            labelLeft
-                                            name="speech_device_chart_review"
-                                            label="Speech Device - Chart Review"
-                                        />
-                                    </div>
-                                    <div className="form-control outline-checkbox mt-3 mb-3">
-                                        <Checkbox
-                                            labelLeft
-                                            name="workplace_ergonomic_assessment"
-                                            label="Workplace Ergonomic Assessment"
-                                        />
-                                    </div>
+                            </Col>
+
+                            <Col md={4}>
+                                <div className="d-flex justify-content-between">
+                                    <span>Request Classifications</span>
+                                    <p>
+                                        <u className="text-primary">
+                                            toogle all
+                                        </u>
+                                    </p>
                                 </div>
-                                <div className="col-md-4">
-                                    <div className="d-flex justify-content-between">
-                                        <span>Lines of Business</span>
-                                        <p>
-                                            <u className="text-primary">
-                                                toogle all
-                                            </u>
-                                        </p>
-                                    </div>
-                                    <div className="form-control outline-checkbox">
-                                        <Checkbox
-                                            labelLeft
-                                            name="duals"
-                                            label="Duals (SNP)"
-                                        />
-                                    </div>
-                                    <div className="form-control outline-checkbox mt-3">
-                                        <Checkbox
-                                            labelLeft
-                                            name="group_health"
-                                            label="GroupHealth"
-                                        />
-                                    </div>
-                                    <div className="form-control outline-checkbox mt-3">
-                                        <Checkbox
-                                            labelLeft
-                                            name="medi_cal"
-                                            label="MediCal"
-                                        />
-                                    </div>
-                                    <div className="form-control outline-checkbox mt-3">
-                                        <Checkbox
-                                            labelLeft
-                                            name="medicare"
-                                            label="Medicare"
-                                        />
-                                    </div>
-                                    <div className="form-control outline-checkbox mt-3">
-                                        <Checkbox
-                                            labelLeft
-                                            name="home_modification"
-                                            label="Home Modification"
-                                        />
-                                    </div>
-                                    <div className="form-control outline-checkbox mt-3">
-                                        <Checkbox
-                                            labelLeft
-                                            name="other"
-                                            label="Other"
-                                        />
-                                    </div>
+                                <div className="form-control outline-checkbox">
+                                    <Checkbox
+                                        labelLeft
+                                        name="chart_review"
+                                        label="Chart Review"
+                                    />
                                 </div>
-                            </div>
-                        </div>
+                                <div className="form-control outline-checkbox mt-3">
+                                    <Checkbox
+                                        labelLeft
+                                        name="complex_assessment"
+                                        label="Complex Assessment"
+                                    />
+                                </div>
+                                <div className="form-control outline-checkbox mt-3">
+                                    <Checkbox
+                                        labelLeft
+                                        name="em_home_assessment"
+                                        label="EM-Home Assessment"
+                                    />
+                                </div>
+                                <div className="form-control outline-checkbox mt-3">
+                                    <Checkbox
+                                        labelLeft
+                                        name="home_modification"
+                                        label="Home Modification"
+                                    />
+                                </div>
+                                <div className="form-control outline-checkbox mt-3">
+                                    <Checkbox
+                                        labelLeft
+                                        name="home_modification"
+                                        label="Home Modification"
+                                    />
+                                </div>
+                                <div className="form-control outline-checkbox mt-3">
+                                    <Checkbox
+                                        labelLeft
+                                        name="in_home_assessment"
+                                        label="In-Home Assessment"
+                                    />
+                                </div>
+                                <div className="form-control outline-checkbox mt-3">
+                                    <Checkbox
+                                        labelLeft
+                                        name="speech_device_chart_review"
+                                        label="Speech Device - Chart Review"
+                                    />
+                                </div>
+                                <div className="form-control outline-checkbox mt-3 mb-3">
+                                    <Checkbox
+                                        labelLeft
+                                        name="workplace_ergonomic_assessment"
+                                        label="Workplace Ergonomic Assessment"
+                                    />
+                                </div>
+                            </Col>
+
+                            <Col md={4}>
+                                <div className="d-flex justify-content-between">
+                                    <span>Lines of Business</span>
+                                    <p>
+                                        <u className="text-primary">
+                                            toogle all
+                                        </u>
+                                    </p>
+                                </div>
+                                <div className="form-control outline-checkbox">
+                                    <Checkbox
+                                        labelLeft
+                                        name="duals"
+                                        label="Duals (SNP)"
+                                    />
+                                </div>
+                                <div className="form-control outline-checkbox mt-3">
+                                    <Checkbox
+                                        labelLeft
+                                        name="group_health"
+                                        label="GroupHealth"
+                                    />
+                                </div>
+                                <div className="form-control outline-checkbox mt-3">
+                                    <Checkbox
+                                        labelLeft
+                                        name="medi_cal"
+                                        label="MediCal"
+                                    />
+                                </div>
+                                <div className="form-control outline-checkbox mt-3">
+                                    <Checkbox
+                                        labelLeft
+                                        name="medicare"
+                                        label="Medicare"
+                                    />
+                                </div>
+                                <div className="form-control outline-checkbox mt-3">
+                                    <Checkbox
+                                        labelLeft
+                                        name="home_modification"
+                                        label="Home Modification"
+                                    />
+                                </div>
+                                <div className="form-control outline-checkbox mt-3">
+                                    <Checkbox
+                                        labelLeft
+                                        name="other"
+                                        label="Other"
+                                    />
+                                </div>
+                            </Col>
+                        </Row>
                     </Tab>
 
                     <Tab eventKey="customReports" title="Custom Reports">
-                        <div className="white-box mt-0">
-                            <TableAPI
-                                searchObj={{}}
-                                headers={customReportsHeader}
-                                loading={false}
-                                data={customReportsTestData}
-                                dataMeta={{}}
-                            />
-                        </div>
+                        <Row className="py-4 bg-white mx-0">
+                            <Col md={12}>
+                                <TableAPI
+                                    searchObj={{}}
+                                    headers={customReportsHeader}
+                                    loading={false}
+                                    data={customReportsTestData}
+                                    dataMeta={{}}
+                                />
+                            </Col>
+                        </Row>
                     </Tab>
 
                     <Tab
@@ -307,14 +315,14 @@ const TabReports = () => {
                                 icon="sync-alt"
                                 iconSize="sm"
                                 outline
-                                className="p-2 btn-outline-light border-0 text-dark"
                                 label="Refresh"
+                                className="mb-3 py-1"
                             />
                         }
                     />
                 </Tabs>
-            </div>
-        </div>
+            </Col>
+        </Row>
     );
 };
 

@@ -1,11 +1,14 @@
 import React, { useMemo, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import { isEmpty } from "lodash";
+
 import { Button } from "components/index";
 
-import types from "config/Types.json";
-import { useFormContext } from "../../Context/FormContext";
 import ContactMethodRow from "./ContactMethodRow";
+
+import { useFormContext } from "Context/FormContext";
+
+import types from "config/Types.json";
 
 const ContactMethods = () => {
     const { update, getValue } = useFormContext();

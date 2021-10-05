@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { Row, Col } from "react-bootstrap";
 
-import Select from "components/inputs/Select";
 import { Button } from "components";
+import Select from "components/inputs/Select";
 import TableAPI from "components/elements/TableAPI";
-import Icon from "components/elements/Icon";
+import FapIcon from "components/elements/FapIcon";
 
-import { ACTIONS } from "../../../../helpers/table";
+import { ACTIONS } from "helpers/table";
 
 const testData = [
     {
@@ -34,22 +35,16 @@ const GeographicFilters = () => {
             type: ACTIONS,
             disableSortBy: true,
             formatter(id) {
-                return (
-                    <Icon
-                        size="1x"
-                        icon="trash-alt"
-                        className="bg-danger text-white rounded-circle p-1"
-                    />
-                );
+                return <FapIcon size="1x" icon="trash-alt" />;
             },
         },
     ]);
 
     return (
-        <>
-            <div className="row col-lg-8 col-md-12">
-                <div className="white-box row ml-0 pe-4">
-                    <div className="col-md-5">
+        <Row>
+            <Col md={12} lg={8} className="mt-4">
+                <Row>
+                    <Col md={5}>
                         <Select
                             inlineLabel
                             name="filterType"
@@ -72,9 +67,9 @@ const GeographicFilters = () => {
                                 },
                             ]}
                         />
-                    </div>
+                    </Col>
 
-                    <div className="col-md-5">
+                    <Col md={5}>
                         <Select
                             inlineLabel
                             name="data"
@@ -97,32 +92,25 @@ const GeographicFilters = () => {
                                 },
                             ]}
                         />
-                    </div>
+                    </Col>
 
-                    <div className="col-md-2">
-                        <Button
-                            className="p-1"
-                            icon="plus"
-                            iconSize="sm"
-                            label="Add"
-                        />
-                    </div>
-                </div>
-            </div>
+                    <Col md={2}>
+                        <Button icon="plus" iconSize="sm" label="Add" block />
+                    </Col>
+                </Row>
+            </Col>
 
-            <div className="row mt-5 col-lg-8 col-md-12">
-                <h1 className="box-subtitle">Geographic Filters</h1>
-                <div className="white-box mt-0">
-                    <TableAPI
-                        searchObj={{}}
-                        headers={headers}
-                        loading={false}
-                        data={testData}
-                        dataMeta={{}}
-                    />
-                </div>
-            </div>
-        </>
+            <Col md={12} lg={8} className="mt-5">
+                <h4>Geographic Filters</h4>
+                <TableAPI
+                    searchObj={{}}
+                    headers={headers}
+                    loading={false}
+                    data={testData}
+                    dataMeta={{}}
+                />
+            </Col>
+        </Row>
     );
 };
 

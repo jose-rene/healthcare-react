@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { Row, Col } from "react-bootstrap";
 
+import { Button } from "components";
 import InputText from "components/inputs/InputText";
 import Select from "components/inputs/Select";
-import { Button } from "components";
 import TableAPI from "components/elements/TableAPI";
 
 const testData = [
@@ -51,59 +52,52 @@ const TabPricing = () => {
 
     return (
         <>
-            <div className="row mt-4 d-flex justify-content-end">
-                <div className="col-md-6">
-                    <div className="d-flex justify-content-end">
-                        <Select
-                            inlineLabel
-                            label="Template"
-                            className="me-2"
-                            placeholder="Select"
-                            options={[
-                                {
-                                    id: "option1",
-                                    val: "option1",
-                                    title: "Option 1",
-                                },
-                                {
-                                    id: "option2",
-                                    val: "option2",
-                                    title: "Option 2",
-                                },
-                            ]}
-                        />
+            <Row className="mt-4 d-flex justify-content-end">
+                <Col md={3}></Col>
+                <Col md={3} className="d-flex justify-content-end">
+                    <Select
+                        inlineLabel
+                        label="Template"
+                        placeholder="Select"
+                        options={[
+                            {
+                                id: "option1",
+                                val: "option1",
+                                title: "Option 1",
+                            },
+                            {
+                                id: "option2",
+                                val: "option2",
+                                title: "Option 2",
+                            },
+                        ]}
+                    />
 
-                        <Button
-                            outline
-                            label="Hide Empty"
-                            variant="warn"
-                            className="btn btn-light pricing-hide-button"
-                        />
-                    </div>
-                </div>
-                <div className="col-md-3">
-                    <div className="d-flex align-items-baseline justify-content-between">
-                        <label className="me-2">No Show Fee</label>
-                        <InputText placeholder="$250,00" />
-                    </div>
-                </div>
-                <div className="col-md-3">
-                    <div className="d-flex align-items-baseline justify-content-between">
-                        <label className="me-2">Urgency</label>
-                        <InputText placeholder="$250,00" />
-                    </div>
-                </div>
-            </div>
+                    <Button
+                        label="Hide Empty"
+                        className="mb-3 mx-2"
+                        variant="primary"
+                    />
+                </Col>
+                <Col md={3}>
+                    <InputText label="No Show Fee" placeholder="$250,00" />
+                </Col>
+                <Col md={3}>
+                    <InputText label="Urgency" placeholder="$250,00" />
+                </Col>
+            </Row>
 
-            <div className="row p-3">
-                <TableAPI
-                    searchObj={{}}
-                    headers={headers}
-                    loading={false}
-                    data={testData}
-                    dataMeta={{}}
-                />
-            </div>
+            <Row>
+                <Col md={12}>
+                    <TableAPI
+                        searchObj={{}}
+                        headers={headers}
+                        loading={false}
+                        data={testData}
+                        dataMeta={{}}
+                    />
+                </Col>
+            </Row>
         </>
     );
 };

@@ -40,6 +40,7 @@ import {
     faBuilding,
     faUserNurse,
     faUsers,
+    faTrashAlt,
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add(
@@ -83,7 +84,8 @@ library.add(
     faBook,
     faBuilding,
     faUserNurse,
-    faUsers
+    faUsers,
+    faTrashAlt
 );
 /*
 if (process.env.NODE_ENV === "development") {

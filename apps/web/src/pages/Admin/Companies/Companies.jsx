@@ -95,11 +95,11 @@ const Companies = (props) => {
             formatter(id) {
                 return (
                     <div className="actions">
-                        <Link to={`/admin/company/${id}/edit`} className="pr-2">
+                        <Link to={`/admin/company/${id}/edit`} className="mx-1">
                             <FapIcon size="1x" icon="edit" />
                         </Link>
 
-                        <Link to={`/admin/company/${id}`} className="pl-2">
+                        <Link to={`/admin/company/${id}`} className="mx-1">
                             <FapIcon size="1x" icon="info-circle" />
                         </Link>
                     </div>

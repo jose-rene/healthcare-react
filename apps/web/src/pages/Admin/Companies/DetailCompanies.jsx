@@ -20,14 +20,9 @@ import useApiCall from "../../../hooks/useApiCall";
 import PageTitle from "../../../components/PageTitle";
 
 const DetailCompanies = (props) => {
-    const {
-        match,
-        history,
-    } = props;
+    const { match, history } = props;
 
-    const {
-        id: company_id = false,
-    } = match.params || {};
+    const { id: company_id = false } = match.params || {};
 
     const [{ data, loading }, companyDetailRequest] = useApiCall();
 
@@ -47,78 +42,83 @@ const DetailCompanies = (props) => {
 
     return (
         <PageLayout>
-            {!loading && (<div className="content-box">
-                <PageTitle
-                    title={(company_id ? "Edit" : "Add") + " Company"}
-                    onBack={handleBack}
-                />
+            {!loading && (
+                <>
+                    <PageTitle
+                        title={(company_id ? "Edit" : "Add") + " Company"}
+                        onBack={handleBack}
+                    />
 
-                <Tabs defaultActiveKey="companyInfo">
-                    <Tab eventKey="companyInfo" title="Company Info">
-                        <TabCompanyInfo
-                            company_id={company_id}
-                            data={data}
-                            updateSuccess={updateSuccess}
-                            setUpdateSuccess={setUpdateSuccess}
-                        />
-                    </Tab>
+                    <Tabs defaultActiveKey="companyInfo">
+                        <Tab eventKey="companyInfo" title="Company Info">
+                            <TabCompanyInfo
+                                company_id={company_id}
+                                data={data}
+                                updateSuccess={updateSuccess}
+                                setUpdateSuccess={setUpdateSuccess}
+                            />
+                        </Tab>
 
-                    <Tab eventKey="narrReports" title="Narr.Reports">
-                        <TabNarrReports />
-                    </Tab>
+                        <Tab eventKey="narrReports" title="Narr.Reports">
+                            <TabNarrReports />
+                        </Tab>
 
-                    <Tab eventKey="requestTypes" title="Request Types">
-                        <TabRequestTypes />
-                    </Tab>
+                        <Tab eventKey="requestTypes" title="Request Types">
+                            <TabRequestTypes />
+                        </Tab>
 
-                    <Tab eventKey="pricing" title="Pricing">
-                        <TabPricing />
-                    </Tab>
+                        <Tab eventKey="pricing" title="Pricing">
+                            <TabPricing />
+                        </Tab>
 
-                    <Tab eventKey="criteria" title="Criteria">
-                        <TabCriteria />
-                    </Tab>
+                        <Tab eventKey="criteria" title="Criteria">
+                            <TabCriteria />
+                        </Tab>
 
-                    <Tab eventKey="billing" title="Billing">
-                        <TabBilling />
-                    </Tab>
+                        <Tab eventKey="billing" title="Billing">
+                            <TabBilling />
+                        </Tab>
 
-                    <Tab eventKey="therapyNetworks" title="Therapy Networks">
-                        <TabTherapyNetworks />
-                    </Tab>
+                        <Tab
+                            eventKey="therapyNetworks"
+                            title="Therapy Networks"
+                        >
+                            <TabTherapyNetworks />
+                        </Tab>
 
-                    <Tab eventKey="reviewers" title="Reviewers">
-                        <TabReviewers />
-                    </Tab>
+                        <Tab eventKey="reviewers" title="Reviewers">
+                            <TabReviewers />
+                        </Tab>
 
-                    <Tab eventKey="assocCompanies" title="Assoc.Companies">
-                        <TabAssocCompanies />
-                    </Tab>
+                        <Tab eventKey="assocCompanies" title="Assoc.Companies">
+                            <TabAssocCompanies />
+                        </Tab>
 
-                    <Tab
-                        eventKey="geographicFilters"
-                        title="Geographic Filters"
-                    >
-                        <TabGeographicFilters />
-                    </Tab>
+                        <Tab
+                            eventKey="geographicFilters"
+                            title="Geographic Filters"
+                        >
+                            <TabGeographicFilters />
+                        </Tab>
 
-                    <Tab eventKey="reports" title="Reports">
-                        <TabReports />
-                    </Tab>
+                        <Tab eventKey="reports" title="Reports">
+                            <TabReports />
+                        </Tab>
 
-                    <Tab eventKey="templates" title="Templates">
-                        <TabTemplates />
-                    </Tab>
+                        <Tab eventKey="templates" title="Templates">
+                            <TabTemplates />
+                        </Tab>
 
-                    <Tab eventKey="notes" title="Notes">
-                        <TabNotes />
-                    </Tab>
+                        <Tab eventKey="notes" title="Notes">
+                            <TabNotes />
+                        </Tab>
 
-                    <Tab eventKey="misc" title="Misc">
-                        <TabMisc />
-                    </Tab>
-                </Tabs>
-            </div>)}
+                        <Tab eventKey="misc" title="Misc">
+                            <TabMisc />
+                        </Tab>
+                    </Tabs>
+                </>
+            )}
         </PageLayout>
     );
 };
