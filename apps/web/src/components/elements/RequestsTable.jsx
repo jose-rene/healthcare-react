@@ -13,13 +13,13 @@ import useApiCall from "hooks/useApiCall";
 import useSearch from "hooks/useSearch";
 
 import { ACTIONS } from "helpers/table";
-import dayjs from "dayjs";
+import { fromUtc, formatDate } from "helpers/datetime";
 
 const RequestsTable = () => {
     const history = useHistory();
 
     const { getUser } = useUser();
-    const { primaryRole } = getUser();
+    const { primaryRole, timeZoneName } = getUser();
 
     const [
         {
@@ -68,15 +68,13 @@ const RequestsTable = () => {
             columnMap: "created_at",
             label: "Received",
             type: Date,
-            formatter: (date) =>
-                date ? dayjs(date).format("MM/DD/YYYY") : "-",
+            formatter: (date) => (date ? formatDate(date) : "-"),
         },
         {
             columnMap: "due_at",
             label: "Due Date",
             type: Date,
-            formatter: (date) =>
-                date ? dayjs(date).format("MM/DD/YYYY") : "-",
+            formatter: (date) => (date ? fromUtc(date, timeZoneName) : "-"),
         },
         {
             columnMap: "activities.0.message",
@@ -103,8 +101,8 @@ const RequestsTable = () => {
                                 isClinician
                                     ? `/asessment/${request_id}`
                                     : !request_status_id
-                                        ? `/member/${member_id}/request/${request_id}/edit`
-                                        : `/requests/${request_id}`
+                                    ? `/member/${member_id}/request/${request_id}/edit`
+                                    : `/requests/${request_id}`
                             }
                         >
                             <FapIcon
@@ -172,14 +170,14 @@ const RequestsTable = () => {
                             />
                             {primaryRole !== "clinical_reviewer" &&
                                 primaryRole !== "field_clinician" && (
-                                <Button
-                                    variant="primary"
-                                    className="mb-3 mx-3"
-                                    onClick={() => handleNewRequest()}
-                                >
+                                    <Button
+                                        variant="primary"
+                                        className="mb-3 mx-3"
+                                        onClick={() => handleNewRequest()}
+                                    >
                                         Create New Request
-                                </Button>
-                            )}
+                                    </Button>
+                                )}
                         </div>
                     </div>
                 </Col>
