@@ -6,7 +6,7 @@ import Checkbox from "components/inputs/Checkbox";
 
 const EmailTemplate = ({ subject, body }) => {
     return (
-        <div className="py-3">
+        <>
             <div className="row">
                 <div className="col-md-3">
                     <span className="submission-text-bold">Email Contents</span>
@@ -47,7 +47,7 @@ const EmailTemplate = ({ subject, body }) => {
                     />
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

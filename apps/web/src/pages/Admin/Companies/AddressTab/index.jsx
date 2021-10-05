@@ -1,15 +1,19 @@
 import React, { useState } from "react";
-import { ACTIONS } from "../../../../helpers/table";
-import Icon from "../../../../components/elements/Icon";
-import ConfirmationModal from "../../../../components/elements/ConfirmationModal";
-import PageAlert from "../../../../components/elements/PageAlert";
-import TableAPI from "../../../../components/elements/TableAPI";
-import useApiCall from "../../../../hooks/useApiCall";
-import useToast from "../../../../hooks/useToast";
-import AddressForm from "../../../../components/elements/AddressForm";
-import Form from "../../../../components/elements/Form";
-import { Button } from "../../../../components";
-import Modal from "../../../../components/elements/Modal";
+import { Row, Col } from "react-bootstrap";
+
+import { Button } from "components";
+import FapIcon from "components/elements/FapIcon";
+import ConfirmationModal from "components/elements/ConfirmationModal";
+import PageAlert from "components/elements/PageAlert";
+import TableAPI from "components/elements/TableAPI";
+import AddressForm from "components/elements/AddressForm";
+import Form from "components/elements/Form";
+import Modal from "components/elements/Modal";
+
+import useApiCall from "hooks/useApiCall";
+import useToast from "hooks/useToast";
+
+import { ACTIONS } from "helpers/table";
 
 const AddressTab = ({
     company_id,
@@ -68,16 +72,16 @@ const AddressTab = ({
             formatter(id, address) {
                 return (
                     <div className="actions">
-                        <Icon
+                        <FapIcon
                             size="1x"
                             icon="edit"
-                            className="action bg-primary text-white"
+                            className="mx-1"
                             onClick={() => setEditAddress(address)}
                         />
-                        <Icon
+                        <FapIcon
                             size="1x"
                             icon="trash-alt"
-                            className="action bg-danger text-white"
+                            className="mx-1"
                             onClick={() => handleDeleteAddress(id)}
                         />
                     </div>
@@ -141,10 +145,10 @@ const AddressTab = ({
     };
 
     /* eslint-disable */
-    const handleUpdateAddress = async () => {
+    const handleUpdateAddress = async (formData) => {
         try {
             const result = await addressInfoUpdateRequest({
-                params: editAddress,
+                params: formData,
             });
 
             if (result) {
@@ -206,86 +210,100 @@ const AddressTab = ({
                 <Form
                     className="form-row p-3"
                     defaultData={{ address: editAddress }}
-                    onSubmit={handleAddressSave}
+                    onSubmit={handleUpdateAddress}
                 >
                     <AddressForm />
 
-                    <div className="col-md-12">
-                        <div className="row">
-                            <div className="col-md-6" />
+                    <Row>
+                        <Col md={12}>
+                            <Row>
+                                <Col md={6}></Col>
 
-                            <div className="col-md-3 mt-3">
-                                <Button
-                                    variant="primary"
-                                    block
-                                    label="Update"
-                                    type="submit"
-                                />
-                            </div>
+                                <Col md={3} className="mt-3">
+                                    <Button
+                                        variant="primary"
+                                        block
+                                        label="Update"
+                                        type="submit"
+                                    />
+                                </Col>
 
-                            <div className="col-md-3 mt-3">
-                                <Button
-                                    outline
-                                    className="btn btn-block"
-                                    label="Cancel"
-                                    onClick={handleClose}
-                                />
-                            </div>
-                        </div>
-                    </div>
+                                <Col md={3} className="mt-3">
+                                    <Button
+                                        outline
+                                        block
+                                        label="Cancel"
+                                        onClick={handleClose}
+                                    />
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
                 </Form>
             </Modal>
 
-            <div className="white-box mt-0">
-                {addressDeleteInfoError ? (
+            <Row className="bg-white py-4 mx-0">
+                <Col md={6}>
+                    {addressDeleteInfoError ? (
+                        <PageAlert
+                            className="mt-3 w-100"
+                            variant="warning"
+                            timeout={5000}
+                            dismissible
+                        >
+                            Error: {addressDeleteInfoError}
+                        </PageAlert>
+                    ) : null}
+
                     <PageAlert
+                        show={addressDeleteStatus}
+                        className="mt-3 w-100"
+                        variant="success"
+                        timeout={5000}
+                        dismissible
+                    >
+                        Address Info successfully deleted.
+                    </PageAlert>
+
+                    <PageAlert
+                        show={!!addressInfoError}
                         className="mt-3 w-100"
                         variant="warning"
                         timeout={5000}
                         dismissible
                     >
-                        Error: {addressDeleteInfoError}
+                        Error: {addressInfoError}
                     </PageAlert>
-                ) : null}
 
-                <PageAlert
-                    show={addressDeleteStatus}
-                    className="mt-3 w-100"
-                    variant="success"
-                    timeout={5000}
-                    dismissible
-                >
-                    Address Info successfully deleted.
-                </PageAlert>
+                    <PageAlert
+                        show={addressUpdateStatus}
+                        className="mt-3 w-100"
+                        variant="success"
+                        timeout={5000}
+                        dismissible
+                    >
+                        Address Info successfully updated.
+                    </PageAlert>
 
-                <PageAlert
-                    show={!!addressInfoError}
-                    className="mt-3 w-100"
-                    variant="warning"
-                    timeout={5000}
-                    dismissible
-                >
-                    Error: {addressInfoError}
-                </PageAlert>
+                    <TableAPI
+                        searchObj={{}}
+                        headers={addressHeaders}
+                        loading={false}
+                        data={address_list}
+                        dataMeta={{}}
+                    />
+                </Col>
 
-                <PageAlert
-                    show={addressUpdateStatus}
-                    className="mt-3 w-100"
-                    variant="success"
-                    timeout={5000}
-                    dismissible
-                >
-                    Address Info successfully updated.
-                </PageAlert>
+                <Col md={6}>
+                    <Form onSubmit={handleAddressSave}>
+                        <AddressForm
+                            addressTypesOptions={addressTypesOptions}
+                        />
 
-                <TableAPI
-                    searchObj={{}}
-                    headers={addressHeaders}
-                    loading={false}
-                    data={address_list}
-                    dataMeta={{}}
-                />
-            </div>
+                        <Button typ="submit" label="Add" block />
+                    </Form>
+                </Col>
+            </Row>
         </>
     );
 };

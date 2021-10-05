@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Row, Col } from "react-bootstrap";
 import { isEmpty } from "lodash";
-import useApiCall from "../../../../hooks/useApiCall";
+
 import AddressTab from "../AddressTab";
 import ContactTab from "../ContactTab";
 import CompanyDetailForm from "../CompanyDetailForm";
 
-const TabCompanyInfo = ({
-    data,
-    setUpdateSuccess,
-    company_id,
-}) => {
+import useApiCall from "hooks/useApiCall";
 
+const TabCompanyInfo = ({ data, setUpdateSuccess, company_id }) => {
     const {
         id: payerId,
         category,
@@ -24,7 +21,8 @@ const TabCompanyInfo = ({
         url: "/admin/company/categories",
     });
 
-    const [companyInfoActiveTab, setCompanyInfoActiveTab] = useState("contact-methods");
+    const [companyInfoActiveTab, setCompanyInfoActiveTab] =
+        useState("contact-methods");
     const [payerCategoryOptions, setPayerCategoryOptions] = useState([]);
     const [memberIdTypesOptions, setMemberIdTypesOptions] = useState([]);
     const [addressTypesOptions, setAddressTypesOptions] = useState([]);
@@ -104,8 +102,8 @@ const TabCompanyInfo = ({
                 memberIdTypesValue={memberIdTypesValue}
             />
 
-            <div className="row m-0">
-                <div className="col-md-6 ps-0">
+            <Row>
+                <Col md={12}>
                     <Tabs
                         defaultActiveKey="contact-methods"
                         activeKey={companyInfoActiveTab}
@@ -129,8 +127,8 @@ const TabCompanyInfo = ({
                             />
                         </Tab>
                     </Tabs>
-                </div>
-            </div>
+                </Col>
+            </Row>
         </>
     );
 };
