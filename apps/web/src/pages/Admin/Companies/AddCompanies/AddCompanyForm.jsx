@@ -15,11 +15,11 @@ const AddCompanyForm = ({
     setValidation,
 }) => {
     const {
-        form: { company_type = "" },
+        form: { category = "" },
     } = useFormContext();
 
     useEffect(() => {
-        if (company_type === "1") {
+        if (category === "1") {
             setValidation({
                 ...validation,
                 payer_category: {
@@ -36,7 +36,7 @@ const AddCompanyForm = ({
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [company_type]);
+    }, [category]);
 
     return (
         <>
@@ -45,13 +45,13 @@ const AddCompanyForm = ({
             </Col>
             <Col md={{ span: 6, offset: 3 }}>
                 <Select
-                    name="company_type"
+                    name="category"
                     label="Company Type"
                     options={categoryOptions}
                 />
             </Col>
             <Col md={{ span: 6, offset: 3 }}>
-                {company_type === "1" && (
+                {category === "1" && (
                     <Select
                         name="payer_category"
                         label="Payer Type"

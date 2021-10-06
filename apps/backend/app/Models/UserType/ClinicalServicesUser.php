@@ -7,6 +7,7 @@ use App\Models\ClinicalType;
 use App\Models\ClinicalUserStatus;
 use App\Models\ClinicalUserType;
 use App\Models\TherapyNetwork;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

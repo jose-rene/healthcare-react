@@ -21,15 +21,18 @@ class ClinicalServicesUserTest extends TestCase
 
     protected $admin;
     protected $member;
+    protected $user;
 
     /**
-     * Test clinical user search.
+     * Test clinical user update.
      *
      * @return void
      */
     public function testClinicalUserUpdate()
     {
-        $this->withoutExceptionHandling();
+        Passport::actingAs(
+            $this->user
+        );
         // get clinical user
         $response = $this->json('GET', route('api.user.profile'));
         // validate response code and structure
@@ -45,6 +48,24 @@ class ClinicalServicesUserTest extends TestCase
             ->assertJsonPath('phone_primary', $formData['phone'])
             ->assertJsonPath('notification_prefs', $formData['notification_prefs'])
             ->assertJsonPath('title', $formData['title']);
+    }
+
+    /**
+     * Test clinical user search with no params.
+     *
+     * @return void
+     */
+    public function testClinicalUserSearch()
+    {
+        Passport::actingAs(
+            $this->admin
+        );
+        // search clinical user
+        $response = $this->json('GET', route('api.admin.clinicaluser.search'));
+        // there will be 2 clinical users, the one created and the one seeded
+        $response
+        ->assertOk()
+        ->assertJsonPath('meta.total', 2);
     }
 
     /**
@@ -76,6 +97,9 @@ class ClinicalServicesUserTest extends TestCase
         Artisan::call('db:seed', [
             '--class' => 'ClinicalUserRelatedSeeder',
         ]);
+        Artisan::call('db:seed', [
+            '--class' => 'ClinicalServicesUserSeeder',
+        ]);
         // create a clinician user
         $this->user = User::factory()->create([
             'user_type' => 3,
@@ -86,10 +110,12 @@ class ClinicalServicesUserTest extends TestCase
         ClinicalServicesUser::factory()->create([
             'user_id' => $this->user
         ]);
+        // clinical user
         Bouncer::sync($this->user)->roles(['field_clinician']);
         $this->user->save();
-        Passport::actingAs(
-            $this->user
-        );
+        // admin users
+        $this->admin = User::factory()->create(['user_type' => 4, 'primary_role' => 'client_services_specialist']);
+        Bouncer::sync($this->admin)->roles(['client_services_specialist']);
+        $this->admin->save();
     }
 }

@@ -23,7 +23,7 @@ class ClinicalServicesUserFactory extends Factory
     public function definition()
     {
         return [
-            'user_id'                 => fn ()                 => User::factory()->create(['user_type' => User::mapType('ClinicalServicesUser')]),
+            'user_id'                 => fn() => User::factory()->create(['user_type' => User::mapType('ClinicalServicesUser')]),
             'clinical_user_type_id'   => 1,
             'clinical_type_id'        => 1,
             'clinical_user_status_id' => 1,
