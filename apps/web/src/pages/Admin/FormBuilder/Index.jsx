@@ -84,7 +84,7 @@ const FormIndex = () => {
                             <Link
                                 className="action"
                                 onClick={() => handleCopyForm(slug)}
-                                title="Delete"
+                                title="Duplicate"
                             >
                                 <Icon icon="copy" size="1x" />
                             </Link>

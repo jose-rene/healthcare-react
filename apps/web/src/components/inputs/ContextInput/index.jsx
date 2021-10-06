@@ -22,7 +22,7 @@ const ContextInput = ({ name, customRule, ...props }) => {
         props.error = errorMessage;
     }
 
-    return <Input name={name} {...props} />;
+    return <Input name={name} {...props} className={editing ? "mt-3 form-control" : "form-control"} />;
 };
 
 export default ContextInput;

@@ -10,6 +10,7 @@ const CtxCheckboxGroup = ({
     ...props
 }) => {
     const { getValue, editing, shouldShow, update } = useFormContext();
+    const values = getValue(name, []);
 
     const options = useMemo(() => {
         return _options.map(({ text, label, ...otherOptionProps }) => ({
@@ -23,15 +24,13 @@ const CtxCheckboxGroup = ({
         return null;
     }
 
-    const values = getValue(name, []);
-
     const handleOnChange = ({ target: { name: fieldName, checked } }) => {
-        update({ [fieldName]: checked });
+        update(fieldName, checked);
     };
 
     return (
         <CheckBoxGroup
-            value={values}
+            checked={values}
             name={name}
             options={options}
             {...props}

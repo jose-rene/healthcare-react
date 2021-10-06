@@ -31,6 +31,9 @@ const RenderForm = ({ formElements }) => {
                     const childElement = subFields.find((child) => {
                         return child.id === childId;
                     });
+                    if (!childElement) {
+                        return "<p>Empty</p>";
+                    }
                     if (item.key === "GryInputGroupRepeater") {
                         return {
                             ...childElement,
