@@ -5,7 +5,7 @@ import TableAPI from "components/elements/TableAPI";
 
 import { ACTIONS } from "helpers/table";
 
-const TabResources = ({ pdfData, videoData, meta, loading }) => {
+const TabWebinar = ({ pdfData, videoData, meta, loading }) => {
     const [pdfFileUrl, setPdfFileUrl] = useState(null);
     const [videoFileUrl, setVideoFileUrl] = useState(null);
 
@@ -198,4 +198,4 @@ const TabResources = ({ pdfData, videoData, meta, loading }) => {
     );
 };
 
-export default TabResources;
+export default TabWebinar;
