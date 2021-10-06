@@ -8,6 +8,7 @@ import PageTitle from "components/PageTitle";
 import TabCompliance from "./Tabs/TabCompliance";
 import TabPortalTraining from "./Tabs/TabPortalTraining";
 import TabResources from "./Tabs/TabResources";
+import TabWebinar from "./Tabs/TabWebinar";
 
 import useApiCall from "hooks/useApiCall";
 
@@ -119,6 +120,19 @@ const Training = () => {
                         onEnter={() => handleTab(3)} // training document type id of database
                     >
                         <TabResources
+                            pdfData={pdfData}
+                            videoData={videoData}
+                            meta={meta}
+                            loading={loading}
+                        />
+                    </Tab>
+
+                    <Tab
+                        eventKey="webinar"
+                        title="Webinar"
+                        onEnter={() => handleTab(4)} // training document type id of database
+                    >
+                        <TabWebinar
                             pdfData={pdfData}
                             videoData={videoData}
                             meta={meta}

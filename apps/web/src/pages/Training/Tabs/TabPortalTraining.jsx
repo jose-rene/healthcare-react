@@ -104,7 +104,7 @@ const TabPortalTraining = ({ pdfData, videoData, meta, loading }) => {
     };
 
     return (
-        <Tabs defaultActiveKey="pdf" className="inside-tabs">
+        <Tabs defaultActiveKey="pdf" className="inside-tabs mb-4">
             <Tab eventKey="pdf" title="PDF">
                 <Row>
                     <Col md={7}>
