@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UserListResource;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
 {
@@ -17,7 +17,7 @@ class UserController extends Controller
      * Display a listing of the resource.
      * @param Request $request
      *
-     * @return AnonymousResourceCollection
+     * @return UserListResource
      */
     public function index(Request $request)
     {
@@ -25,7 +25,7 @@ class UserController extends Controller
         $data = User::searchAllUsers($user)->paginate($request->get('perPage', 50));
         // $data = User::paginate($request->get('perPage', 50));
 
-        return UserResource::collection($data);
+        return UserListResource::collection($data);
     }
 
     /**
