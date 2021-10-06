@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { useFormContext } from "../../../Context/FormContext";
 import Button from "../../inputs/Button";
 
@@ -16,22 +16,24 @@ export const DuplicateButton = (props = {}) => {
 };
 
 GryInputGroup.register = {
-    element: 'OneColumnRow',
-    name: 'Input Group',
-    custom_name: 'group',
+    element: "OneColumnRow",
+    name: "Input Group",
+    custom_name: "group",
     isContainer: true,
     static: false,
     canHaveAnswer: false,
-    label: '',
-    icon: 'fas fa-columns',
+    canHaveSpanSettings: true,
+    label: "",
+    icon: "fas fa-columns",
+    span_width: 12,
 
-    buttons: [
-    ],
+    buttons: [],
 
     props: {
-        custom_name: 'group',
+        custom_name: "group",
         customValidation: ``,
         customRules: ``,
+        span_width: 12,
     },
 };
 

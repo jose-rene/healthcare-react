@@ -1,11 +1,4 @@
-import React, {
-    useContext,
-    useState,
-    useMemo,
-    createContext,
-    useEffect,
-    useCallback,
-} from "react";
+import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
 import { template } from "../helpers/string";
@@ -36,7 +29,7 @@ const FormProvider = ({
     defaultData = {},
     editing: _editing = false,
     onFormChange,
-    debounceMs = 2000,
+    debounceMs = 1000,
 }) => {
     const [editing, setEditing] = useState(_editing);
     const [form, setForm] = useState(defaultData);
@@ -58,7 +51,7 @@ const FormProvider = ({
 
     useEffect(() => {
         return () => {
-            handleFormChange(form);
+            handleFormChange();
         };
 
         // eslint-disable-next-line react-hooks/exhaustive-deps

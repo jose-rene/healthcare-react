@@ -132,6 +132,7 @@ export default class FormElementsEdit extends React.Component {
             canHaveDisplayHorizontal,
             canHaveOptionCorrect,
             canHaveOptionValue,
+            canHaveSpanSettings,
         } = this.props.element;
 
         const this_files = this.props.files.length ? this.props.files : [];
@@ -331,7 +332,7 @@ export default class FormElementsEdit extends React.Component {
                     <div className="custom-control custom-checkbox">
                         <input id="display-on-alternate" className="custom-control-input" type="checkbox"
                                checked={this_checked_alternate_form} value={true}
-                               onChange={this.editElementProp.bind(this, 'alternateForm', 'checked')} />
+                               onChange={this.editElementProp.bind(this, "alternateForm", "checked")} />
                         <label className="custom-control-label" htmlFor="display-on-alternate">
                             Display on alternate/signature Page?
                         </label>
@@ -339,13 +340,27 @@ export default class FormElementsEdit extends React.Component {
                 </div>
                 }
 
-                {this.props.element.hasOwnProperty('step') &&
+                {canHaveSpanSettings &&
+                <div className="form-group">
+                    <div className="custom-control custom-checkbox">
+                        <label className="custom-control-label" htmlFor="span_width">
+                            Span settings, Number from 1 to 12
+                        </label>
+                        <input id="span_width" type="text" className="form-control"
+                               defaultValue={this.props.element?.span_width || this.props.element.props?.span_width}
+                               onBlur={this.updateElement.bind(this)}
+                               onChange={this.editElementProp.bind(this, "span_width", "value")} />
+                    </div>
+                </div>
+                }
+
+                {this.props.element.hasOwnProperty("step") &&
                 <div className="form-group">
                     <div className="form-group-range">
                         <label className="control-label" htmlFor="rangeStep">Step</label>
                         <input id="rangeStep" type="number" className="form-control"
                                defaultValue={this.props.element.step} onBlur={this.updateElement.bind(this)}
-                               onChange={this.editElementProp.bind(this, 'step', 'value')} />
+                               onChange={this.editElementProp.bind(this, "step", "value")} />
                     </div>
                 </div>
                 }
