@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Tabs, Tab, DropdownButton, Dropdown } from "react-bootstrap";
+import { Tabs, Tab, DropdownButton, Dropdown, Row, Col } from "react-bootstrap";
 
 import InputText from "components/inputs/InputText";
 import Select from "components/inputs/Select";
@@ -13,8 +13,6 @@ const TabBilling = () => {
         if (eventBlockList.indexOf(currentTab) === -1) {
             setActiveTab(currentTab);
         }
-
-
     };
 
     const handleDropdown = (evt) => {
@@ -22,161 +20,142 @@ const TabBilling = () => {
     };
 
     return (
-        <div className="row">
-            <div className="col-md-6">
+        <Row>
+            <Col md={6}>
                 <Tabs
                     defaultActiveKey="claims-address"
                     className="inside-tabs position-relative"
                 >
                     <Tab eventKey="claims-address" title="Claims Address">
-                        <div className="white-box mt-0">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <InputText
-                                        label="Address Line 1"
-                                        value="1240 South Loop Road"
-                                    />
-                                </div>
-                                <div className="col-md-6">
-                                    <Select
-                                        label="City"
-                                        options={[
-                                            {
-                                                id: "alameda",
-                                                val: "alameda",
-                                                title: "Alameda",
-                                            },
-                                            {
-                                                id: "option1",
-                                                val: "option1",
-                                                title: "Option 1",
-                                            },
-                                            {
-                                                id: "option2",
-                                                val: "option2",
-                                                title: "Option 2",
-                                            },
-                                        ]}
-                                    />
-                                </div>
-                            </div>
+                        <Row className="py-4 bg-white mx-0">
+                            <Col md={6}>
+                                <InputText
+                                    label="Address Line 1"
+                                    value="1240 South Loop Road"
+                                />
+                            </Col>
+                            <Col md={6}>
+                                <Select
+                                    label="City"
+                                    options={[
+                                        {
+                                            id: "alameda",
+                                            val: "alameda",
+                                            title: "Alameda",
+                                        },
+                                        {
+                                            id: "option1",
+                                            val: "option1",
+                                            title: "Option 1",
+                                        },
+                                        {
+                                            id: "option2",
+                                            val: "option2",
+                                            title: "Option 2",
+                                        },
+                                    ]}
+                                />
+                            </Col>
 
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <Select
-                                        label="State"
-                                        options={[
-                                            {
-                                                id: "ca",
-                                                val: "ca",
-                                                title: "CA",
-                                            },
-                                            {
-                                                id: "option1",
-                                                val: "option1",
-                                                title: "Option 1",
-                                            },
-                                            {
-                                                id: "option2",
-                                                val: "option2",
-                                                title: "Option 2",
-                                            },
-                                        ]}
-                                    />
-                                </div>
-                                <div className="col-md-6">
-                                    <InputText label="ZIP Code" value="94502" />
-                                </div>
-                            </div>
+                            <Col md={6}>
+                                <Select
+                                    label="State"
+                                    options={[
+                                        {
+                                            id: "ca",
+                                            val: "ca",
+                                            title: "CA",
+                                        },
+                                        {
+                                            id: "option1",
+                                            val: "option1",
+                                            title: "Option 1",
+                                        },
+                                        {
+                                            id: "option2",
+                                            val: "option2",
+                                            title: "Option 2",
+                                        },
+                                    ]}
+                                />
+                            </Col>
+                            <Col md={6}>
+                                <InputText label="ZIP Code" value="94502" />
+                            </Col>
 
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <Select
-                                        label="State"
-                                        options={[
-                                            {
-                                                id: "county",
-                                                val: "county",
-                                                title: "County",
-                                            },
-                                            {
-                                                id: "option1",
-                                                val: "option1",
-                                                title: "Option 1",
-                                            },
-                                            {
-                                                id: "option2",
-                                                val: "option2",
-                                                title: "Option 2",
-                                            },
-                                        ]}
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                            <Col md={6}>
+                                <Select
+                                    label="State"
+                                    options={[
+                                        {
+                                            id: "county",
+                                            val: "county",
+                                            title: "County",
+                                        },
+                                        {
+                                            id: "option1",
+                                            val: "option1",
+                                            title: "Option 1",
+                                        },
+                                        {
+                                            id: "option2",
+                                            val: "option2",
+                                            title: "Option 2",
+                                        },
+                                    ]}
+                                />
+                            </Col>
+                        </Row>
                     </Tab>
 
                     <Tab eventKey="rebilling" title="Rebilling">
-                        <div className="white-box mt-0">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <InputText
-                                        label="Payment Due"
-                                        placeholder="(days)"
-                                    />
-                                </div>
-                                <div className="col-md-6">
-                                    <InputText
-                                        label="First Rebill"
-                                        placeholder="(days)"
-                                    />
-                                </div>
-                            </div>
+                        <Row className="py-4 bg-white mx-0">
+                            <Col md={6}>
+                                <InputText
+                                    label="Payment Due"
+                                    placeholder="(days)"
+                                />
+                            </Col>
+                            <Col md={6}>
+                                <InputText
+                                    label="First Rebill"
+                                    placeholder="(days)"
+                                />
+                            </Col>
 
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <InputText
-                                        label="Rebilling Period"
-                                        placeholder="(days)"
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                            <Col md={6}>
+                                <InputText
+                                    label="Rebilling Period"
+                                    placeholder="(days)"
+                                />
+                            </Col>
+                        </Row>
                     </Tab>
 
                     <Tab eventKey="billing-contact" title="Billing Contact">
-                        <div className="white-box mt-0">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <InputText
-                                        label="Name"
-                                        value="Jacob Jones"
-                                    />
-                                </div>
-                            </div>
+                        <Row className="py-4 bg-white mx-0">
+                            <Col md={6}>
+                                <InputText label="Name" value="Jacob Jones" />
+                            </Col>
 
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <InputText
-                                        label="Email"
-                                        value="jacob@mail.com"
-                                    />
-                                </div>
-                            </div>
+                            <Col md={6}>
+                                <InputText
+                                    label="Email"
+                                    value="jacob@mail.com"
+                                />
+                            </Col>
 
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <InputText
-                                        label="Phone"
-                                        value="(406) 555-0120"
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                            <Col md={6}>
+                                <InputText
+                                    label="Phone"
+                                    value="(406) 555-0120"
+                                />
+                            </Col>
+                        </Row>
                     </Tab>
                 </Tabs>
-            </div>
-            <div className="col-md-6">
+            </Col>
+            <Col md={6}>
                 <Tabs
                     defaultActiveKey={activeTab}
                     className="inside-tabs position-relative"
@@ -187,47 +166,46 @@ const TabBilling = () => {
                         eventKey="billing-submission"
                         title="Billing Submission"
                     >
-                        <div className="white-box mt-0">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <InputText
-                                        label="Billing Provider"
-                                        value="1240 South Loop Road"
-                                    />
-                                </div>
-                                <div className="col-md-6">
-                                    <InputText
-                                        label="Address"
-                                        value="548 Market Street Suite 75842"
-                                    />
-                                </div>
-                            </div>
+                        <Row className="py-4 bg-white mx-0">
+                            <Col md={6}>
+                                <InputText
+                                    label="Billing Provider"
+                                    value="1240 South Loop Road"
+                                />
+                            </Col>
+                            <Col md={6}>
+                                <InputText
+                                    label="Address"
+                                    value="548 Market Street Suite 75842"
+                                />
+                            </Col>
 
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <Select
-                                        label="City"
-                                        options={[
-                                            {
-                                                id: "san francisco",
-                                                val: "san francisco",
-                                                title: "San Francisco",
-                                            },
-                                            {
-                                                id: "option1",
-                                                val: "option1",
-                                                title: "Option 1",
-                                            },
-                                            {
-                                                id: "option2",
-                                                val: "option2",
-                                                title: "Option 2",
-                                            },
-                                        ]}
-                                    />
-                                </div>
-                                <div className="col-md-6 d-flex">
-                                    <div className="col-md-6 ps-0">
+                            <Col md={6}>
+                                <Select
+                                    label="City"
+                                    options={[
+                                        {
+                                            id: "san francisco",
+                                            val: "san francisco",
+                                            title: "San Francisco",
+                                        },
+                                        {
+                                            id: "option1",
+                                            val: "option1",
+                                            title: "Option 1",
+                                        },
+                                        {
+                                            id: "option2",
+                                            val: "option2",
+                                            title: "Option 2",
+                                        },
+                                    ]}
+                                />
+                            </Col>
+
+                            <Col md={6}>
+                                <Row>
+                                    <Col md={6}>
                                         <Select
                                             label="State"
                                             options={[
@@ -248,72 +226,61 @@ const TabBilling = () => {
                                                 },
                                             ]}
                                         />
-                                    </div>
-                                    <div className="col-md-6 pe-0">
+                                    </Col>
+                                    <Col md={6}>
                                         <InputText
                                             label="ZIP Code"
                                             value="2464"
                                         />
-                                    </div>
-                                </div>
-                            </div>
+                                    </Col>
+                                </Row>
+                            </Col>
 
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <InputText label="Payer ID" value="95237" />
-                                </div>
-                                <div className="col-md-6">
-                                    <InputText
-                                        label="Phone"
-                                        value="866-886-9992"
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                            <Col md={6}>
+                                <InputText label="Payer ID" value="95237" />
+                            </Col>
+                            <Col md={6}>
+                                <InputText label="Phone" value="866-886-9992" />
+                            </Col>
+                        </Row>
                     </Tab>
 
                     <Tab eventKey="payments/po" title="Payments / PO">
-                        <div className="white-box mt-0">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <Select
-                                        label="Default Payment Type"
-                                        options={[
-                                            {
-                                                id: "mastercard",
-                                                val: "mastercard",
-                                                title: "Mastercard",
-                                            },
-                                            {
-                                                id: "option1",
-                                                val: "option1",
-                                                title: "Option 1",
-                                            },
-                                            {
-                                                id: "option2",
-                                                val: "option2",
-                                                title: "Option 2",
-                                            },
-                                        ]}
-                                    />
-                                </div>
-                            </div>
+                        <Row className="py-4 bg-white mx-0">
+                            <Col md={6}>
+                                <Select
+                                    label="Default Payment Type"
+                                    options={[
+                                        {
+                                            id: "mastercard",
+                                            val: "mastercard",
+                                            title: "Mastercard",
+                                        },
+                                        {
+                                            id: "option1",
+                                            val: "option1",
+                                            title: "Option 1",
+                                        },
+                                        {
+                                            id: "option2",
+                                            val: "option2",
+                                            title: "Option 2",
+                                        },
+                                    ]}
+                                />
+                            </Col>
 
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <InputText
-                                        label="Reference Number Label"
-                                        value="0"
-                                    />
-                                </div>
-                            </div>
+                            <Col md={6}>
+                                <InputText
+                                    label="Reference Number Label"
+                                    value="0"
+                                />
+                            </Col>
 
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <InputText label="PO Number" value="0" />
-                                </div>
-                            </div>
-                        </div>
+                            <Col md={6}>
+                                <InputText label="PO Number" value="0" />
+                            </Col>
+                        </Row>
                     </Tab>
 
                     <Tab
@@ -343,8 +310,8 @@ const TabBilling = () => {
                         }
                     />
                 </Tabs>
-            </div>
-        </div>
+            </Col>
+        </Row>
     );
 };
 

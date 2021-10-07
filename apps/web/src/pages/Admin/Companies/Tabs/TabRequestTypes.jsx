@@ -1,13 +1,14 @@
 import React, { useState } from "react";
+import { Row, Col } from "react-bootstrap";
 
-import Select from "components/inputs/Select";
 import { Button } from "components";
+import Select from "components/inputs/Select";
 import TableAPI from "components/elements/TableAPI";
-import Icon from "components/elements/Icon";
+import FapIcon from "components/elements/FapIcon";
 import Checkbox from "components/inputs/Checkbox";
 import Modal from "components/elements/Modal";
 
-import { ACTIONS } from "../../../../helpers/table";
+import { ACTIONS } from "helpers/table";
 
 const testData = [
     {
@@ -85,16 +86,12 @@ const TabReuqestTypes = () => {
             formatter(id) {
                 return (
                     <>
-                        <Icon
+                        <FapIcon
                             size="1x"
                             icon="info-circle"
-                            className="me-2 bg-secondary text-white rounded-circle p-1"
+                            className="mx-1"
                         />
-                        <Icon
-                            size="1x"
-                            icon="trash-alt"
-                            className="bg-danger text-white rounded-circle p-1"
-                        />
+                        <FapIcon size="1x" icon="trash-alt" className="mx-1" />
                     </>
                 );
             },
@@ -121,8 +118,9 @@ const TabReuqestTypes = () => {
 
     return (
         <>
-            <div className="row mt-4 d-flex justify-content-end">
-                <div className="col-md-6 col-lg-3">
+            <Row className=" mt-4">
+                <Col md={5}></Col>
+                <Col md={3}>
                     <Select
                         inlineLabel
                         label="Classification"
@@ -144,8 +142,8 @@ const TabReuqestTypes = () => {
                             },
                         ]}
                     />
-                </div>
-                <div className="col-md-6 col-lg-3">
+                </Col>
+                <Col md={3}>
                     <Select
                         inlineLabel
                         label="Category"
@@ -167,27 +165,29 @@ const TabReuqestTypes = () => {
                             },
                         ]}
                     />
-                </div>
-                <div className="col-auto">
+                </Col>
+                <Col>
                     <Button
-                        className="p-1"
+                        className="p-2"
                         label="Add"
                         icon="plus"
                         iconSize="sm"
                         onClick={() => handleModal()}
                     />
-                </div>
-            </div>
+                </Col>
+            </Row>
 
-            <div className="white-box white-box-small">
-                <TableAPI
-                    searchObj={{}}
-                    headers={headers}
-                    loading={false}
-                    data={testData}
-                    dataMeta={{}}
-                />
-            </div>
+            <Row>
+                <Col md={12}>
+                    <TableAPI
+                        searchObj={{}}
+                        headers={headers}
+                        loading={false}
+                        data={testData}
+                        dataMeta={{}}
+                    />
+                </Col>
+            </Row>
 
             <Modal
                 show={showModal}
@@ -195,72 +195,69 @@ const TabReuqestTypes = () => {
                 title="Add/Remove Request Types"
                 hasClose
             >
-                <div className="col-md-12">
-                    <div className="row d-flex justify-content-end">
-                        <div className="col-md-5">
-                            <Select
-                                label="Classification"
-                                options={[
-                                    {
-                                        id: "all",
-                                        val: "all",
-                                        title: "All",
-                                    },
-                                    {
-                                        id: "option1",
-                                        val: "option1",
-                                        title: "Option 1",
-                                    },
-                                    {
-                                        id: "option2",
-                                        val: "option2",
-                                        title: "Option 2",
-                                    },
-                                ]}
-                            />
-                        </div>
-                        <div className="col-md-5">
-                            <Select
-                                label="Category"
-                                options={[
-                                    {
-                                        id: "all",
-                                        val: "all",
-                                        title: "All",
-                                    },
-                                    {
-                                        id: "option1",
-                                        val: "option1",
-                                        title: "Option 1",
-                                    },
-                                    {
-                                        id: "option2",
-                                        val: "option2",
-                                        title: "Option 2",
-                                    },
-                                ]}
-                            />
-                        </div>
-                        <div className="col-md-2">
-                            <Button
-                                className="p-1 modal-add-button"
-                                label="Add"
-                                icon="plus"
-                                iconSize="sm"
-                            />
-                        </div>
-                    </div>
+                <Row>
+                    <Col md={12}>
+                        <Row>
+                            <Col md={5}>
+                                <Select
+                                    label="Classification"
+                                    options={[
+                                        {
+                                            id: "all",
+                                            val: "all",
+                                            title: "All",
+                                        },
+                                        {
+                                            id: "option1",
+                                            val: "option1",
+                                            title: "Option 1",
+                                        },
+                                        {
+                                            id: "option2",
+                                            val: "option2",
+                                            title: "Option 2",
+                                        },
+                                    ]}
+                                />
+                            </Col>
+                            <Col md={5}>
+                                <Select
+                                    label="Category"
+                                    options={[
+                                        {
+                                            id: "all",
+                                            val: "all",
+                                            title: "All",
+                                        },
+                                        {
+                                            id: "option1",
+                                            val: "option1",
+                                            title: "Option 1",
+                                        },
+                                        {
+                                            id: "option2",
+                                            val: "option2",
+                                            title: "Option 2",
+                                        },
+                                    ]}
+                                />
+                            </Col>
+                            <Col md={2}>
+                                <Button className="p-2" label="Add" block />
+                            </Col>
 
-                    <div className="row p-3">
-                        <TableAPI
-                            searchObj={{}}
-                            headers={modalHeaders}
-                            loading={false}
-                            data={testData}
-                            dataMeta={{}}
-                        />
-                    </div>
-                </div>
+                            <Col md={12}>
+                                <TableAPI
+                                    searchObj={{}}
+                                    headers={modalHeaders}
+                                    loading={false}
+                                    data={testData}
+                                    dataMeta={{}}
+                                />
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
             </Modal>
         </>
     );

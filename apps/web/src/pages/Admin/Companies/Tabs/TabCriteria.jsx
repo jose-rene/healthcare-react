@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Row, Col } from "react-bootstrap";
 
 import Select from "components/inputs/Select";
 import InputText from "components/inputs/InputText";
@@ -96,36 +97,35 @@ const TabCriteria = () => {
     ]);
 
     return (
-        <>
-            <div className="row mt-4 d-flex justify-content-end">
-                <div className="col-md-6 col-lg-4">
-                    <Select
-                        inlineLabel
-                        label="View By Request Type"
-                        className="me-2"
-                        placeholder="Select"
-                        options={[
-                            {
-                                id: "all",
-                                val: "all",
-                                title: "All",
-                            },
-                            {
-                                id: "option1",
-                                val: "option1",
-                                title: "Option 1",
-                            },
-                            {
-                                id: "option2",
-                                val: "option2",
-                                title: "Option 2",
-                            },
-                        ]}
-                    />
-                </div>
-            </div>
+        <Row className="mt-4">
+            <Col md={9}></Col>
+            <Col md={3}>
+                <Select
+                    inlineLabel
+                    label="View By Request Type"
+                    className="me-2"
+                    placeholder="Select"
+                    options={[
+                        {
+                            id: "all",
+                            val: "all",
+                            title: "All",
+                        },
+                        {
+                            id: "option1",
+                            val: "option1",
+                            title: "Option 1",
+                        },
+                        {
+                            id: "option2",
+                            val: "option2",
+                            title: "Option 2",
+                        },
+                    ]}
+                />
+            </Col>
 
-            <div className="white-box white-box-small">
+            <Col md={12}>
                 <TableAPI
                     searchObj={{}}
                     headers={headers}
@@ -133,8 +133,8 @@ const TabCriteria = () => {
                     data={testData}
                     dataMeta={{}}
                 />
-            </div>
-        </>
+            </Col>
+        </Row>
     );
 };
 

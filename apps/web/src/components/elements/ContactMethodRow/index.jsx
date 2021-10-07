@@ -1,5 +1,6 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
+
 import { Button, Input } from "../../index";
 import Select from "../../inputs/Select";
 
@@ -16,7 +17,7 @@ const ContactMethodRow = ({
 }) => {
     return (
         <Row>
-            <Col md={5}>
+            <Col md={4}>
                 <Select
                     addEmpty
                     name="type"
@@ -28,7 +29,7 @@ const ContactMethodRow = ({
                 />
             </Col>
 
-            <Col md={5}>
+            <Col md={4}>
                 <Input
                     name="value"
                     label="Phone/Email*"
@@ -39,7 +40,7 @@ const ContactMethodRow = ({
             </Col>
 
             {showRemove ? (
-                <Col md={2}>
+                <Col md={4}>
                     <Button
                         block
                         variant="danger"

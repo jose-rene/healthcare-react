@@ -8,11 +8,10 @@ import PageAlert from "components/elements/PageAlert";
 import Form from "components/elements/Form";
 import PageTitle from "components/PageTitle";
 
-import AddCompanyForm from "./AddCompanyForm";
-
 import useApiCall from "hooks/useApiCall";
 
 import validate from "helpers/validate";
+import AddCompanyForm from "./AddCompanyForm";
 
 const AddCompanies = (props) => {
     const [{ error: formError }, postCompanyRequest] = useApiCall({
@@ -24,7 +23,7 @@ const AddCompanies = (props) => {
         name: {
             yupSchema: validate.string().required("Company Name is required"),
         },
-        company_type: {
+        category: {
             yupSchema: validate.string().required("Company Type is required"),
         },
     });

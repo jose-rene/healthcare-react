@@ -1,35 +1,34 @@
 import React, { useState } from "react";
-import useApiCall from "../../../../hooks/useApiCall";
-import ConfirmationModal from "../../../../components/elements/ConfirmationModal";
-import Modal from "../../../../components/elements/Modal";
-import InputText from "../../../../components/inputs/ContextInput";
-import Checkbox from "../../../../components/inputs/Checkbox";
-import { Button } from "../../../../components";
-import PageAlert from "../../../../components/elements/PageAlert";
-import TableAPI from "../../../../components/elements/TableAPI";
-import useToast from "../../../../hooks/useToast";
-import { ACTIONS } from "../../../../helpers/table";
-import Icon from "../../../../components/elements/Icon";
-import ContactMethods from "../../../../components/elements/ContactMethods";
-import Form from "../../../../components/elements/Form";
+import { Row, Col } from "react-bootstrap";
 
-const ContactTab = ({
-    company_id,
-    payerId,
-    contacts,
-}) => {
+import { Button } from "components";
+import ConfirmationModal from "components/elements/ConfirmationModal";
+import Modal from "components/elements/Modal";
+import InputText from "components/inputs/ContextInput";
+import Checkbox from "components/inputs/Checkbox";
+import PageAlert from "components/elements/PageAlert";
+import TableAPI from "components/elements/TableAPI";
+import FapIcon from "components/elements/FapIcon";
+import ContactMethods from "components/elements/ContactMethods";
+import Form from "components/elements/Form";
+
+import useToast from "hooks/useToast";
+import useApiCall from "hooks/useApiCall";
+
+import { ACTIONS } from "helpers/table";
+
+const ContactTab = ({ company_id, payerId, contacts }) => {
     const { generalError } = useToast();
-
-    const [contactMethods, setContactMethods] = useState([
-        { type: "type", phone_email: "phone_email" },
-    ]);
 
     const [contactDeleteStatus, setContactDeleteStatus] = useState(false);
     const [contactAddStatus, setContactAddStatus] = useState(false);
     const [editContact, setEditContact] = useState(null);
     const [contactUpdateStatus, setContactUpdateStatus] = useState(false);
     const [deleteContact, setDeleteContact] = useState(null);
-    const [showDeleteContactConfirmationModal, setShowDeleteContactConfirmationModal] = useState(false);
+    const [
+        showDeleteContactConfirmationModal,
+        setShowDeleteContactConfirmationModal,
+    ] = useState(false);
 
     const [contactHeaders] = useState([
         {
@@ -49,48 +48,44 @@ const ContactTab = ({
             label: "Actions",
             type: ACTIONS,
             disableSortBy: true,
-            formatter (id, contact) {
+            formatter(id, contact) {
                 return (
-                    <div className="actions">
-                        <Icon
+                    <>
+                        <FapIcon
                             size="1x"
                             icon="edit"
-                            className="action bg-primary text-white"
-                            onClick={() =>
-                                setEditContact({ ...contact })
-                            }
+                            className="mx-1"
+                            onClick={() => setEditContact({ ...contact })}
                         />
-                        <Icon
+                        <FapIcon
                             size="1x"
                             icon="trash-alt"
-                            className="action bg-danger text-white"
-                            onClick={() => handleDeleteContact(id, contact.type)}
+                            className="mx-1"
+                            onClick={() =>
+                                handleDeleteContact(id, contact.type)
+                            }
                         />
-                    </div>
+                    </>
                 );
             },
         },
     ]);
 
-    const [
-        { error: contactDeleteInfoError },
-        contactInfoDeleteRequest,
-    ] = useApiCall({
-        method: "delete",
-    });
+    const [{ error: contactDeleteInfoError }, contactInfoDeleteRequest] =
+        useApiCall({
+            method: "delete",
+        });
 
     const [{ error: contactInfoError }, contactInfoUpdateRequest] = useApiCall({
         method: "put",
         url: `/admin/payer/${payerId}/${editContact?.type}/${editContact?.id}`,
     });
 
-    const [
-        { error: contactMethodsError },
-        requestContactMethodsData,
-    ] = useApiCall({
-        method: "post",
-        url: `/admin/payer/${company_id}/contact`,
-    });
+    const [{ error: contactMethodsError }, requestContactMethodsData] =
+        useApiCall({
+            method: "post",
+            url: `/admin/payer/${company_id}/contact`,
+        });
 
     const handleClose = () => {
         setEditContact(false);
@@ -176,32 +171,6 @@ const ContactTab = ({
 
     return (
         <>
-            <PageAlert
-                show={!!contactMethodsError}
-                className="mt-3 w-100"
-                variant="warning"
-                timeout={5000}
-                dismissible
-            >
-                Error: {contactMethodsError}
-            </PageAlert>
-
-            <PageAlert
-                show={contactAddStatus}
-                className="mt-3 w-100"
-                variant="success"
-                timeout={5000}
-                dismissible
-            >
-                Contact successfully added.
-            </PageAlert>
-
-            <ContactMethods
-                contactMethods={contactMethods}
-                setContactMethods={setContactMethods}
-                data-todo="fix setContactMethodsValue"
-            />
-
             <ConfirmationModal
                 showModal={showDeleteContactConfirmationModal}
                 content="Are you sure that you will delete this contact?"
@@ -209,102 +178,126 @@ const ContactTab = ({
                 handleCancel={handleContactClose}
             />
 
-            <Modal
-                show={!!editContact}
-                onHide={handleClose}
-            >
-                <Form onSubmit={handleSubmit} defaultData={editContact}>
-                    <div className="col-md-12">
-                        <InputText
-                            label={editContact?.description}
-                            name="contact"
-                        />
-                    </div>
-
-                    <div className="col-md-12">
-                        <div className="form-control custom-checkbox">
-                            <Checkbox
-                                labelLeft
-                                label="Primary"
-                                name="is_primary"
+            <Modal show={!!editContact} onHide={handleClose}>
+                <Form onSubmit={handleUpdateContact} defaultData={editContact}>
+                    <Row>
+                        <Col md={12}>
+                            <InputText
+                                label={editContact?.description}
+                                name="contact"
                             />
-                        </div>
-                    </div>
+                        </Col>
 
-                    <div className="col-md-12">
-                        <div className="row">
-                            <div className="col-md-6" />
-
-                            <div className="col-md-3 mt-3">
-                                <Button
-                                    className="btn btn-block"
-                                    label="Update"
-                                    onClick={handleUpdateContact}
+                        <Col md={12}>
+                            <div className="form-control custom-checkbox">
+                                <Checkbox
+                                    labelLeft
+                                    label="Primary"
+                                    name="is_primary"
                                 />
                             </div>
+                        </Col>
 
-                            <div className="col-md-3 mt-3">
-                                <Button
-                                    outline
-                                    className="btn btn-block"
-                                    label="Cancel"
-                                    onClick={handleClose}
-                                />
-                            </div>
-                        </div>
-                    </div>
+                        <Col md={12}>
+                            <Row>
+                                <Col md={6}></Col>
+
+                                <Col md={3} className="mt-3">
+                                    <Button label="Update" block />
+                                </Col>
+
+                                <Col md={3} className="mt-3">
+                                    <Button
+                                        label="Cancel"
+                                        onClick={handleClose}
+                                        block
+                                    />
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
                 </Form>
             </Modal>
 
-            <div className="white-box mt-0">
-                <PageAlert
-                    show={!!contactInfoError}
-                    className="mt-3 w-100"
-                    variant="warning"
-                    timeout={5000}
-                    dismissible
-                >
-                    Error: {contactInfoError}
-                </PageAlert>
+            <Row className="bg-white py-4 mx-0">
+                <Col md={6}>
+                    <PageAlert
+                        show={!!contactInfoError}
+                        className="mt-3 w-100"
+                        variant="warning"
+                        timeout={5000}
+                        dismissible
+                    >
+                        Error: {contactInfoError}
+                    </PageAlert>
 
-                <PageAlert
-                    show={contactUpdateStatus}
-                    className="mt-3 w-100"
-                    variant="success"
-                    timeout={5000}
-                    dismissible
-                >
-                    Contact Info successfully updated.
-                </PageAlert>
+                    <PageAlert
+                        show={contactUpdateStatus}
+                        className="mt-3 w-100"
+                        variant="success"
+                        timeout={5000}
+                        dismissible
+                    >
+                        Contact Info successfully updated.
+                    </PageAlert>
 
-                <PageAlert
-                    show={contactDeleteInfoError}
-                    className="mt-3 w-100"
-                    variant="warning"
-                    timeout={5000}
-                    dismissible
-                >
-                    Error: {contactDeleteInfoError}
-                </PageAlert>
+                    <PageAlert
+                        show={contactDeleteInfoError}
+                        className="mt-3 w-100"
+                        variant="warning"
+                        timeout={5000}
+                        dismissible
+                    >
+                        Error: {contactDeleteInfoError}
+                    </PageAlert>
 
-                <PageAlert
-                    show={contactDeleteStatus}
-                    className="mt-3 w-100"
-                    variant="success"
-                    timeout={5000}
-                    dismissible
-                >
-                    Contact Info successfully deleted.
-                </PageAlert>
+                    <PageAlert
+                        show={contactDeleteStatus}
+                        className="mt-3 w-100"
+                        variant="success"
+                        timeout={5000}
+                        dismissible
+                    >
+                        Contact Info successfully deleted.
+                    </PageAlert>
 
-                <TableAPI
-                    searchObj={{}}
-                    headers={contactHeaders}
-                    loading={false}
-                    data={contacts}
-                    dataMeta={{}}
-                />
-            </div>
+                    <TableAPI
+                        searchObj={{}}
+                        headers={contactHeaders}
+                        loading={false}
+                        data={contacts}
+                        dataMeta={{}}
+                    />
+                </Col>
+
+                <Col md={6}>
+                    <PageAlert
+                        show={!!contactMethodsError}
+                        className="mt-3 w-100"
+                        variant="warning"
+                        timeout={5000}
+                        dismissible
+                    >
+                        Error: {contactMethodsError}
+                    </PageAlert>
+
+                    <PageAlert
+                        show={contactAddStatus}
+                        className="mt-3 w-100"
+                        variant="success"
+                        timeout={5000}
+                        dismissible
+                    >
+                        Contact successfully added.
+                    </PageAlert>
+
+                    <Form onSubmit={handleSubmit}>
+                        <ContactMethods />
+
+                        <Button typ="submit" label="Add" block />
+                    </Form>
+                </Col>
+            </Row>
         </>
     );
 };
