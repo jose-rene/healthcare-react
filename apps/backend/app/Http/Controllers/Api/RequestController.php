@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request as Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class RequestController extends Controller
 {
@@ -141,18 +142,20 @@ class RequestController extends Controller
         if (!$user->can('assign-clinicians')) {
             throw new AuthorizationException('You are not authoized to assign clinicians.');
         }
-        if (null === ($id = $request->input('therapist_id')) || null === ($therapist = User::find($id))) {
+        if (null === ($id = $httpRequest->input('clinician_id')) || null === ($therapist = User::firstWhere('uuid', $id))) {
             throw new HttpResponseException(response()->json(['errors' => ['therapist_id' => ['Invalid Therapist']]], 422));
         }
-        $params = ['therapist_id', $therapist->id];
+        $request->clinician()->associate($therapist);
+
         // @todo, there may need to be further logic for cancelled cases, etc
         if ($request->status_id === 1) {
             // change from submitted to assigned
-            $params['status_id'] = 2;
+            $request->status_id = 2;
         }
-        $request->update($params);
 
-        return new RequestResource($request);
+        $request->save();
+
+        return response()->json(['status' => 'ok']);
     }
 
     /**
