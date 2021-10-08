@@ -140,7 +140,7 @@ class Request extends Model
 
     public function clinician()
     {
-        return $this->hasOne(Payer::class, 'clinician_id');
+        return $this->belongsTo(User::class, 'clinician_id');
     }
 
     public function hpUser()
