@@ -138,7 +138,7 @@ class RequestController extends Controller
     public function assign(ModelRequest $request, Request $httpRequest)
     {
         $user = auth()->user();
-        if (!$user->can('assign_clinicians')) {
+        if (!$user->can('assign-clinicians')) {
             throw new AuthorizationException('You are not authoized to assign clinicians.');
         }
         if (null === ($id = $request->input('therapist_id')) || null === ($therapist = User::find($id))) {
