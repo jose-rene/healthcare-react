@@ -7,6 +7,7 @@ use App\Http\Requests\Assessment\AssessmentRequest;
 use App\Http\Resources\RequestResource;
 use App\Jobs\RequestSectionSaveJob;
 use App\Models\Request as ModelRequest;
+use App\Models\RequestStatus;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Inspiring;
@@ -70,6 +71,7 @@ class RequestController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
+        // @todo this needs to be updated for other user types
         $baseQuery = $user->healthPlanUser->requests();
 
         $assigned = (clone $baseQuery)->where('request_status_id', ModelRequest::$assigned)->count();
@@ -147,15 +149,19 @@ class RequestController extends Controller
         }
         $request->clinician()->associate($therapist);
 
+        if (null !== ($id = $httpRequest->input('reviewer_id')) && null !== ($reviewer = User::firstWhere('uuid', $id))) {
+            $request->reviewer()->associate($reviewer);
+        }
+
         // @todo, there may need to be further logic for cancelled cases, etc
         if ($request->status_id === 1) {
             // change from submitted to assigned
-            $request->status_id = 2;
+            $request->requestStatus()->associate(RequestStatus::find(2));
         }
 
         $request->save();
 
-        return response()->json(['status' => 'ok']);
+        return response()->json(['status' => 'ok', 'clinician' => ['id' => $therapist->id]]);
     }
 
     /**
