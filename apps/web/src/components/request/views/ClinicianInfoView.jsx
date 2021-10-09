@@ -12,12 +12,15 @@ import ClinicianInfoForm from "../forms/ClinicianInfoForm";
 
 const ClinicianInfoView = ({
     requestId,
-    clinician: { id: clinicianId = null, name: clinicianName = null },
+    clinician,
     openClinicianInfo,
     toggleOpenClinicianInfo,
     refreshRequest,
     requestLoading,
 }) => {
+    const { id: clinicianId = null, name: clinicianName = null } =
+        clinician || {};
+
     const [{ loading, error }, fireSubmit] = useApiCall({
         method: "put",
         url: `/request/${requestId}/assign`,
@@ -41,12 +44,10 @@ const ClinicianInfoView = ({
         }
 
         try {
-            const { clinician: assigned = null } = await fireSubmit({
+            await fireSubmit({
                 params: formData,
             });
-            if (assigned) {
-                setData({ clinician_id: assigned.id });
-            }
+            setData({ clinician_id: formData.clinician_id });
             refreshRequest("clinician");
         } catch (e) {
             console.log("Clinician Request assign error:", e);

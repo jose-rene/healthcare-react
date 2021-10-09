@@ -26,8 +26,8 @@ class CreateRequestsTable extends Migration
             $table->dateTime('member_verified_at')->nullable()->comment('Member information was verified during request entry');
             $table->foreignId('classification_id')->nullable()->comment('The id of the assigned classification');
             $table->foreignId('request_type_id')->nullable()->comment('id of the assigned request type');                         // fk to request types table
-            $table->foreignId('clinician_id')->nullable()->comment('id of the assigned clinician');                               // fk clinical_services_users.id
-            $table->foreignId('reviewer_id')->nullable()->constrained('clinical_users')->comment('id of the assigned reviewer');                                // fk clinical_services_users.id
+            $table->foreignId('clinician_id')->nullable()->constrained('users')->comment('id of the assigned clinician');                               // fk clinical_services_users.id
+            $table->foreignId('reviewer_id')->nullable()->constrained('users')->comment('id of the assigned reviewer');                                // fk clinical_services_users.id
             $table->foreignId('therapy_network_id')->nullable()->comment('id of the therapy network for the assigned clinician'); // fk to therapy networks table
             $table->foreignId('hp_user_id')->nullable();                                                                          // fk health_plan_users.id
             $table->foreignId('questionnaire_id')->nullable();                                                                    // fk questionnaire.id

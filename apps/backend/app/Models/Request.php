@@ -143,6 +143,11 @@ class Request extends Model
         return $this->belongsTo(User::class, 'clinician_id');
     }
 
+    public function reviewer()
+    {
+        return $this->belongsTo(User::class, 'reviewer_id');
+    }
+
     public function hpUser()
     {
         return $this->hasOne(Member::class, 'payer_user_id');
