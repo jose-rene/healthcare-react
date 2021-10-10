@@ -39,6 +39,8 @@ import FormView from "pages/Admin/FormBuilder/show";
 import FormBuilderEdit from "pages/Admin/FormBuilder/edit";
 import FormIndex from "pages/Admin/FormBuilder/Index";
 import AdminUserList from "pages/Admin/UserList";
+import GormGroupEdit from "../pages/Admin/FormBuilder/form_groups/edit";
+import FormWizard from "../pages/FormWizard";
 
 const AppNavigation = () => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -167,6 +169,18 @@ const AppNavigation = () => {
                     path="/admin/forms/:form_slug/edit"
                     middleware={["software_engineer"]}
                     component={FormBuilderEdit}
+                />
+
+                <PrivateRoute
+                    path="/admin/form-groups/:form_group_slug/edit"
+                    middleware={["software_engineer"]}
+                    component={GormGroupEdit}
+                />
+
+                <PrivateRoute
+                    path="/form-wizard/:form_group_slug"
+                    middleware={[]}
+                    component={FormWizard}
                 />
 
                 <PrivateRoute

@@ -20,6 +20,7 @@ class FormResource extends JsonResource
             'name'        => $this->name,
             'description' => $this->description,
             'fields'      => $this->fields,
+            'updated_at'  => $this->updated_at->format('m/d/Y H:i:s'),
 
             // returns the latest answers
             'answers'     => $this->userAnswers()->first()->form_data ?? null,

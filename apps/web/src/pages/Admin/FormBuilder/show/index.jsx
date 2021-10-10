@@ -5,6 +5,7 @@ import "../edit/style.scss";
 import RenderForm from "./RenderForm";
 import useFormBuilder from "../../../../hooks/useFormBuilder";
 import SubmitButton from "../../../../components/elements/SubmitButton";
+import { _GET } from "../../../../helpers/request";
 
 const FormView = ({
     match: {
@@ -15,6 +16,7 @@ const FormView = ({
     const [{ form, defaultAnswers, formLoading, saving }, { fireLoadForm, fireSaveAnswers }] = useFormBuilder({
         formId: form_slug,
     });
+    const [requestId, setRequestId] = useState(-1);
 
     useEffect(() => {
         if (!form_slug) {
@@ -29,6 +31,10 @@ const FormView = ({
                 setFormDataLoaded(true);
             }, 500);
         });
+
+        const getRequestId = _GET("request_id");
+        setRequestId(getRequestId);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -52,14 +58,14 @@ const FormView = ({
     }, [form]);
 
     const handleSubmit = (ff) => {
-        fireSaveAnswers({ ...ff, completed_form: true });
+        fireSaveAnswers({ ...ff, completed_form: true, request_id: requestId });
     };
 
     const handleFormChange = async (ff) => {
         if (!formDataLoaded) {
             return false; // answers are not done loaded don't auto save yet.
         }
-        fireSaveAnswers(ff, { quickSave: true });
+        fireSaveAnswers(ff, { quickSave: true, request_id: requestId });
     };
 
     if (formLoading || !form_slug) {

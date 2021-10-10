@@ -10,6 +10,7 @@ import RequestInfo from "components/elements/RequestInfo";
 import RequestsTable from "components/elements/RequestsTable";
 
 import "styles/home.scss";
+import RequestForms from "../../components/elements/RequestForms";
 
 const Home = () => {
     const { getUser } = useUser();
@@ -32,6 +33,8 @@ const Home = () => {
                         <RequestInfo />
 
                         <RequestsTable />
+
+                        <RequestForms />
                     </Col>
                 </Row>
             </Container>

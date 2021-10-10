@@ -28,6 +28,7 @@ class FormAnswerController extends Controller
         if ($answers_found) {
             abort_if($answers_found->completed_at !== null, 422, 'form-complete');
 
+            // Update the form answer that has been started already
             $answers_found->update($data);
         } else {
             $form->userAnswers()->create($data);

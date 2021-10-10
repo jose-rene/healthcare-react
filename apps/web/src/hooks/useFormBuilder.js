@@ -81,10 +81,11 @@ const useFormBuilder = ({ formId } = {}) => {
         return formLoading && loaded;
     }, [formLoading, loaded]);
 
-    const saveAnswers = (params, { completed_form = false } = {}) => {
+    const saveAnswers = (params, { completed_form = false, request_id = null } = {}) => {
         const newAnswers = {
             form_data: params,
             completed_form,
+            request_id,
         };
 
         fireSaveAnswers({ params: newAnswers });

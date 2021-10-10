@@ -26,7 +26,7 @@ class Form extends Model
         'slug',
         'name',
         'description',
-
+        'type_id',
         'fields',
     ];
 
@@ -52,5 +52,10 @@ class Form extends Model
     public function userAnswers()
     {
         return $this->answers()->userAnswers();
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(FormType::class);
     }
 }
