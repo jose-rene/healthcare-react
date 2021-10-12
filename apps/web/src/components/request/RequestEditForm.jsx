@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from "react";
-
 import { Button, Card, Col, Row } from "react-bootstrap";
+
 import PageAlert from "components/elements/PageAlert";
 import FapIcon from "components/elements/FapIcon";
-import useApiCall from "../../hooks/useApiCall";
+
+import { useUser } from "Context/UserContext";
+
+import useApiCall from "hooks/useApiCall";
 import RequestItemView from "./views/RequestItemView";
 import MemberInfoView from "./views/MemberInfoView";
 import RequestInfoView from "./views/RequestInfoView";
 import RequestDocView from "./views/RequestDocView";
 import DueDateView from "./views/DueDateView";
-import "../../styles/request-progress.scss";
+import ClinicianInfoView from "./views/ClinicianInfoView";
+
+import "styles/request-progress.scss";
 
 const RequestEditForm = ({ data }) => {
+    const { userCan } = useUser();
+
     // destructured section data from the request data
     const [requestData, setRequestData] = useState({});
     const {
         id: requestId = "",
+        clinician = null,
         auth_number = "",
         member: memberData = null,
         codes: requestCodes = [],
@@ -30,6 +38,7 @@ const RequestEditForm = ({ data }) => {
     // section togglers
     const [
         [
+            openClinicianInfo,
             openMember,
             openRequestInfo,
             openRequestItem,
@@ -37,38 +46,45 @@ const RequestEditForm = ({ data }) => {
             openDueDate,
         ],
         setToggler,
-    ] = useState([false, false, false, false, false]);
+    ] = useState([false, false, false, false, false, false]);
+
+    const setClinicianInfo = (open) => {
+        setToggler([open, false, false, false, false, false]);
+    };
+    const toggleOpenClinicianInfo = () => {
+        setClinicianInfo(!openClinicianInfo);
+    };
 
     const setOpenMember = (open) => {
-        setToggler([open, false, false, false, false]);
+        setToggler([false, open, false, false, false, false]);
     };
     const toggleOpenMember = () => {
         setOpenMember(!openMember);
     };
 
     const setOpenRequestInfo = (open) => {
-        setToggler([false, open, false, false, false]);
+        setToggler([false, false, open, false, false, false]);
     };
     const toggleOpenRequestInfo = () => {
         setOpenRequestInfo(!openRequestInfo);
     };
 
     const setOpenRequestItem = (open) => {
-        setToggler([false, false, open, false, false]);
+        setToggler([false, false, false, open, false, false]);
     };
     const toggleOpenRequestItem = () => {
         setOpenRequestItem(!openRequestItem);
     };
 
     const setOpenRequestDoc = (open) => {
-        setToggler([false, false, false, open, false]);
+        setToggler([false, false, false, false, open, false]);
     };
     const toggleOpenRequestDoc = () => {
         setOpenRequestDoc(!openRequestDoc);
     };
 
     const setOpenDueDate = (open) => {
-        setToggler([false, false, false, false, open]);
+        setToggler([false, false, false, false, false, open]);
     };
     const toggleOpenDueDate = () => {
         setOpenDueDate(!openDueDate);
@@ -121,6 +137,9 @@ const RequestEditForm = ({ data }) => {
             if (form && form === "member") {
                 setOpenMember(false);
             }
+            if (form && form === "clinician") {
+                setClinicianInfo(false);
+            }
             setRequestData(result);
         } catch (e) {
             console.log("Request update error:", e);
@@ -171,6 +190,18 @@ const RequestEditForm = ({ data }) => {
                 </Row>
                 <Row className="justify-content-lg-center">
                     <Col xl={10}>
+                        {userCan("assign-clinicians") && (
+                            <ClinicianInfoView
+                                {...{
+                                    requestId,
+                                    clinician,
+                                    openClinicianInfo,
+                                    toggleOpenClinicianInfo,
+                                    refreshRequest,
+                                    requestLoading,
+                                }}
+                            />
+                        )}
                         <MemberInfoView
                             {...{
                                 memberData,

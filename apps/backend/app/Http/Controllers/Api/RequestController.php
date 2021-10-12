@@ -7,6 +7,7 @@ use App\Http\Requests\Assessment\AssessmentRequest;
 use App\Http\Resources\RequestResource;
 use App\Jobs\RequestSectionSaveJob;
 use App\Models\Request as ModelRequest;
+use App\Models\RequestStatus;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Inspiring;
@@ -14,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request as Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class RequestController extends Controller
 {
@@ -55,7 +57,7 @@ class RequestController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return AnonymousResourceCollection
+     * @return RequestResourceCollection
      */
     public function index(Request $request)
     {
@@ -69,7 +71,22 @@ class RequestController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        $baseQuery = $user->healthPlanUser->requests();
+        switch ($user->user_type) {
+            // business admin and engineering can see all requests
+            case 1:
+            case 4:
+                $baseQuery = ModelRequest::get();
+                break;
+            case 2: // healthplan
+                $baseQuery = $user->healthPlanUser->requests();
+                break;
+            case 3: // therapist
+                $baseQuery = $user->clinicalServicesUser->requests();
+                break;
+            default:
+                throw new AuthorizationException('You are not authorized.');
+                break;
+        }
 
         $assigned = (clone $baseQuery)->where('request_status_id', ModelRequest::$assigned)->count();
         $scheduled = (clone $baseQuery)->where('request_status_id', ModelRequest::$scheduled)->count();
@@ -138,21 +155,27 @@ class RequestController extends Controller
     public function assign(ModelRequest $request, Request $httpRequest)
     {
         $user = auth()->user();
-        if (!$user->can('assign_clinicians')) {
+        if (!$user->can('assign-clinicians')) {
             throw new AuthorizationException('You are not authoized to assign clinicians.');
         }
-        if (null === ($id = $request->input('therapist_id')) || null === ($therapist = User::find($id))) {
+        if (null === ($id = $httpRequest->input('clinician_id')) || null === ($therapist = User::firstWhere('uuid', $id))) {
             throw new HttpResponseException(response()->json(['errors' => ['therapist_id' => ['Invalid Therapist']]], 422));
         }
-        $params = ['therapist_id', $therapist->id];
+        $request->clinician()->associate($therapist);
+
+        if (null !== ($id = $httpRequest->input('reviewer_id')) && null !== ($reviewer = User::firstWhere('uuid', $id))) {
+            $request->reviewer()->associate($reviewer);
+        }
+
         // @todo, there may need to be further logic for cancelled cases, etc
         if ($request->status_id === 1) {
             // change from submitted to assigned
-            $params['status_id'] = 2;
+            $request->requestStatus()->associate(RequestStatus::find(2));
         }
-        $request->update($params);
 
-        return new RequestResource($request);
+        $request->save();
+
+        return response()->json(['status' => 'ok', 'clinician' => ['id' => $therapist->id]]);
     }
 
     /**
