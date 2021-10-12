@@ -57,7 +57,7 @@ class RequestController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return AnonymousResourceCollection
+     * @return RequestResourceCollection
      */
     public function index(Request $request)
     {
@@ -71,8 +71,22 @@ class RequestController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        // @todo this needs to be updated for other user types
-        $baseQuery = $user->healthPlanUser->requests();
+        switch ($user->user_type) {
+            // business admin and engineering can see all requests
+            case 1:
+            case 4:
+                $baseQuery = ModelRequest::get();
+                break;
+            case 2: // healthplan
+                $baseQuery = $user->healthPlanUser->requests();
+                break;
+            case 3: // therapist
+                $baseQuery = $user->clinicalServicesUser->requests();
+                break;
+            default:
+                throw new AuthorizationException('You are not authorized.');
+                break;
+        }
 
         $assigned = (clone $baseQuery)->where('request_status_id', ModelRequest::$assigned)->count();
         $scheduled = (clone $baseQuery)->where('request_status_id', ModelRequest::$scheduled)->count();

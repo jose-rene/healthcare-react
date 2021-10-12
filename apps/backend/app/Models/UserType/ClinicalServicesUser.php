@@ -6,6 +6,7 @@ use App\Http\SearchPipeline\Admin\ClinicalUserStatusId;
 use App\Models\ClinicalType;
 use App\Models\ClinicalUserStatus;
 use App\Models\ClinicalUserType;
+use App\Models\Request;
 use App\Models\TherapyNetwork;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -63,12 +64,12 @@ class ClinicalServicesUser extends Model
 
     public function requests()
     {
-        return $this->hasMany(Request::class);
+        return $this->hasMany(Request::class, 'clinician_id', 'user_id');
     }
 
     public function reviewerRequests()
     {
-        return $this->hasMany(Request::class, 'reviewer_id');
+        return $this->hasMany(Request::class, 'reviewer_id', 'user_id');
     }
 
     public function therapyNetwork()
