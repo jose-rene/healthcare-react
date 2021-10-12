@@ -18,7 +18,7 @@ import { fromUtc, formatDate } from "helpers/datetime";
 const RequestsTable = () => {
     const history = useHistory();
 
-    const { getUser } = useUser();
+    const { getUser, userCan } = useUser();
     const { primaryRole, timeZoneName } = getUser();
 
     const [
@@ -47,6 +47,11 @@ const RequestsTable = () => {
     const [headers] = useState([
         { columnMap: "member.name", label: "Name", type: String },
         { columnMap: "auth_number", label: "Auth #", type: String },
+        userCan("assign-clinicians") && {
+            columnMap: "payer.company_name",
+            label: "Payer",
+            type: String,
+        },
         {
             columnMap: "request_status_id",
             formatter: (request_status_id) => {
