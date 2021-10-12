@@ -67,12 +67,14 @@ const TableAPI = ({
                         }
 
                         return (
-                            <td
-                                key={`tr-th-td-${indexTd}`}
-                                className={`${mapTypeToClass(type)}`}
-                            >
-                                {column}
-                            </td>
+                            columnMap && (
+                                <td
+                                    key={`tr-th-td-${indexTd}`}
+                                    className={`${mapTypeToClass(type)}`}
+                                >
+                                    {column}
+                                </td>
+                            )
                         );
                     }
                 )}

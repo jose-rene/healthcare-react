@@ -60,16 +60,18 @@ const TableHeaders = ({
                     }
 
                     return (
-                        <th
-                            key={`table-th-${index}`}
-                            className={`c-pointer ${mapTypeToClass(type)}`}
-                            onClick={() => handleOnChange(columnMap)}
-                        >
-                            {label}{" "}
-                            <span className="float-right ms-1">
-                                {sortArrow(columnMap)}
-                            </span>
-                        </th>
+                        columnMap && (
+                            <th
+                                key={`table-th-${index}`}
+                                className={`c-pointer ${mapTypeToClass(type)}`}
+                                onClick={() => handleOnChange(columnMap)}
+                            >
+                                {label}{" "}
+                                <span className="float-right ms-1">
+                                    {sortArrow(columnMap)}
+                                </span>
+                            </th>
+                        )
                     );
                 })}
             </tr>
