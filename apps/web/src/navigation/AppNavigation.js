@@ -1,15 +1,10 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-
 import { useUser } from "Context/UserContext";
-
 import { ADMIN } from "actions/types";
-
 import PrivateRoute from "route/PrivateRoute";
 import RoleRouteRouter from "route/RoleRoute";
-
 import useApiCall from "hooks/useApiCall";
-
 import RequestEdit from "pages/healthplan/RequestEdit";
 import Account from "pages/Account/Account";
 import Table from "pages/Test/Table";
@@ -39,7 +34,6 @@ import FormView from "pages/Admin/FormBuilder/show";
 import FormBuilderEdit from "pages/Admin/FormBuilder/edit";
 import FormIndex from "pages/Admin/FormBuilder/Index";
 import AdminUserList from "pages/Admin/UserList";
-import GormGroupEdit from "../pages/Admin/FormBuilder/form_groups/edit";
 import FormWizard from "../pages/FormWizard";
 
 const AppNavigation = () => {
@@ -169,12 +163,6 @@ const AppNavigation = () => {
                     path="/admin/forms/:form_slug/edit"
                     middleware={["software_engineer"]}
                     component={FormBuilderEdit}
-                />
-
-                <PrivateRoute
-                    path="/admin/form-groups/:form_group_slug/edit"
-                    middleware={["software_engineer"]}
-                    component={GormGroupEdit}
                 />
 
                 <PrivateRoute

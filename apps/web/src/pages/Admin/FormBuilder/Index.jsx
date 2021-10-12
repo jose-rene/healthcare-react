@@ -31,14 +31,6 @@ const FormIndex = () => {
         method: DELETE,
     });
 
-    const [
-        {
-            loading: formGroupLoading,
-            data: { data: formGroups = [], meta: formGroupsMeta = {} },
-        }, fireLoadFormGroup] = useApiCall({
-        url: "form_group",
-    });
-
     useEffect(() => {
         if (_GET("message") === "edit-bad-form-slug") {
             // TODO :: handle this better
@@ -113,31 +105,6 @@ const FormIndex = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const formGroupHeader = useMemo(() => {
-        return [
-            {
-                label: "Name",
-                columnMap: "name",
-            },
-            {
-                label: "Actions",
-                formatter: (val, { slug }) => {
-                    return (
-                        <div className="actions">
-                            <Link
-                                className="action"
-                                to={`/admin/form-groups/${slug}/edit`}
-                                title="Edit"
-                            >
-                                <Icon icon="edit" size="1x" />
-                            </Link>
-                        </div>
-                    );
-                },
-            },
-        ];
-    }, []);
-
     const [{ searchObj }, { updateSearchObj, redoSearch }] = useSearch({
         searchObj: {
             perPage: 10,
@@ -145,15 +112,6 @@ const FormIndex = () => {
             sortDirection: "asc",
         },
         onSearch: fireGetForms,
-    });
-
-    const [{ searchObj: fgSearchObj }, { updateSearchObj: fgUpdateSearchObj, redoSearch: fgRedoSearch }] = useSearch({
-        searchObj: {
-            perPage: 10,
-            sortColumn: formGroupHeader[1].columnMap,
-            sortDirection: "asc",
-        },
-        onSearch: fireLoadFormGroup,
     });
 
     const handleCreateForm = async () => {
@@ -222,16 +180,6 @@ const FormIndex = () => {
                     data={data}
                     dataMeta={meta}
                     onChange={updateSearchObj}
-                />
-
-                <TableAPI
-                    loading={formGroupLoading}
-                    label="Form Groups"
-                    headers={formGroupHeader}
-                    data={formGroups}
-                    dataMeta={formGroupsMeta}
-                    searchObj={fgSearchObj}
-                    onChange={fgUpdateSearchObj}
                 />
 
                 <ConfirmationModal

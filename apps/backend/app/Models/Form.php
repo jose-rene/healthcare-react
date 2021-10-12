@@ -53,9 +53,4 @@ class Form extends Model
     {
         return $this->answers()->userAnswers();
     }
-
-    public function type()
-    {
-        return $this->belongsTo(FormType::class);
-    }
 }
