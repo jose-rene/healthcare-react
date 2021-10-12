@@ -115,6 +115,9 @@ const RequestsTable = () => {
                                 <FapIcon icon="file" size="1x" title="Report" />
                             </Link>
                         )}
+                        <Link className="px-2" to={`/requests/${request_id}/form-sections`}>
+                            <FapIcon icon="bars" size="1x" title="Report" />
+                        </Link>
                     </>
                 );
             },

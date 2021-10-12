@@ -35,6 +35,8 @@ import FormBuilderEdit from "pages/Admin/FormBuilder/edit";
 import FormIndex from "pages/Admin/FormBuilder/Index";
 import AdminUserList from "pages/Admin/UserList";
 import FormWizard from "../pages/FormWizard";
+import RequestSections from "../pages/RequestSections";
+import RequestSectionsShowForm from "../pages/RequestSections/RequestSectionsShowForm";
 
 const AppNavigation = () => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -117,6 +119,30 @@ const AppNavigation = () => {
                     path="/member/:member_id/request/:request_id/edit"
                     middleware={["hp_user", "hp_manager", "hp_champion"]}
                     component={NewRequestAdd}
+                />
+                <PrivateRoute
+                    path="/requests/:request_id/form-sections/:form_id"
+                    middleware={[
+                        "hp_user",
+                        "hp_manager",
+                        "hp_champion",
+                        "coo",
+                        "client_services_specialist",
+                        "client_services_manager",
+                    ]}
+                    component={RequestSectionsShowForm}
+                />
+                <PrivateRoute
+                    path="/requests/:request_id/form-sections"
+                    middleware={[
+                        "hp_user",
+                        "hp_manager",
+                        "hp_champion",
+                        "coo",
+                        "client_services_specialist",
+                        "client_services_manager",
+                    ]}
+                    component={RequestSections}
                 />
                 <PrivateRoute
                     path="/requests/:id"
