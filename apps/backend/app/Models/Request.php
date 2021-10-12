@@ -176,7 +176,7 @@ class Request extends Model
                 $query->whereIn('payer_id', $payerIds);
                 break;
             case 3: // therapist
-                $query->where('clinician_id', $user->clinicalServicesUser->id);
+                $query->where('clinician_id', $user->id);
                 break;
             default:
                 return null;
