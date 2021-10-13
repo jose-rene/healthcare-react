@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import PageLayout from "../../../../layouts/PageLayout";
 import Form from "components/elements/Form";
 import "../edit/style.scss";
-import RenderForm from "./RenderForm";
 import useFormBuilder from "../../../../hooks/useFormBuilder";
 import SubmitButton from "../../../../components/elements/SubmitButton";
 import { _GET } from "../../../../helpers/request";
+import RenderForm from "../../../../components/FormBuilder/RenderForm";
 
 const FormView = ({
     match: {

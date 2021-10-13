@@ -98,6 +98,11 @@ class Request extends Model
         return $this->hasMany(RequestQuestionnaireSection::class, 'request_id');
     }
 
+    public function requestFormSections()
+    {
+        return $this->hasMany(RequestFormSection::class);
+    }
+
     /**
      * Relationship to members.
      *

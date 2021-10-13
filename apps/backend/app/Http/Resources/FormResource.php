@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Form;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,15 +16,20 @@ class FormResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'slug'        => $this->slug,
-            'name'        => $this->name,
-            'description' => $this->description,
-            'fields'      => $this->fields,
-            'updated_at'  => $this->updated_at->format('m/d/Y H:i:s'),
+        $forms = Form::all();
 
-            // returns the latest answers
-            'answers'     => $this->userAnswers()->first()->form_data ?? null,
-        ];
+        return [
+                'id'          => $this->id,
+                'slug'        => $this->slug,
+                'name'        => $this->name,
+                'description' => $this->description,
+                'fields'      => $this->fields,
+                'updated_at'  => $this->updated_at->format('m/d/Y H:i:s'),
+
+                // optional stuff
+                'answers'     => $this->whenLoaded('formSection', $this->formSection->answer_data),
+
+                'forms' => Form::all(),
+            ] + compact('forms');
     }
 }

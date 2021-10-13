@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { findLastIndex } from "lodash";
 import FormGroup from "components/elements/FormGroup";
-import { useFormContext } from "../../../../Context/FormContext";
+import { useFormContext } from "../../../Context/FormContext";
 
 const RenderForm = ({ formElements }) => {
     const [formElementsState, setFormElementsState] = useState([]);

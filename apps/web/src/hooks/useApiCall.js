@@ -25,7 +25,7 @@ export default ({
     const [loading, setLoading] = useState(false);
 
     const formatParams = (params, _method = method) => ({
-        [_method === GET ? "params" : "data"]: params,
+        [_method === GET ? "params" : "data"]: { ...params, XDEBUG_SESSION_START: "PHPSTORM" },
     });
 
     const [config, setConfig] = useState({

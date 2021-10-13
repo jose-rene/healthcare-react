@@ -18,7 +18,7 @@ const RequestSections = (props) => {
         },
         fireDoSearch,
     ] = useApiCall({
-        url: "/form",
+        url: `/request/${request_id}/form`,
     });
 
     const headers = [

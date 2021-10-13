@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- *
+ * @property Carbon $answer_data
+ * @property Carbon $form_section_id
+ * @property Carbon $request_id
+ * @property Carbon $completed_at
+ * @property Carbon $started_at
  **/
 class RequestFormSection extends Model
 {
@@ -22,15 +27,32 @@ class RequestFormSection extends Model
         'answer_data',
         'form_section_id',
         'request_id',
+        'completed_at',
+        'started_at',
     ];
 
     protected $casts = [
         'answer_data' => 'json',
     ];
 
+    protected $dates = [
+        'completed_at',
+        'started_at',
+    ];
+
     public function formSection()
     {
         return $this->belongsTo(FormSection::class, 'form_section_id');
+    }
+
+    public function getFormAttribute()
+    {
+        return $this->formSection;
+    }
+
+    public function getIsStartedAttribute()
+    {
+        return (bool)$this->started_at;
     }
 
     public function request()

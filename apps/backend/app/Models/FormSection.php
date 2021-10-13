@@ -23,4 +23,9 @@ class FormSection extends Model
         'form_id',
         'url',
     ];
+
+    public function form()
+    {
+        return $this->belongsTo(Form::class);
+    }
 }

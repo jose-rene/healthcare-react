@@ -46,11 +46,15 @@ class Form extends Model
 
     public function answers()
     {
-        return $this->hasMany(FormAnswer::class);
+        return $this
+            ->belongsToMany(Request::class, 'request_form_sections', 'form_section_id');
+//            ->withPivot([
+//                'answer_data',
+//            ]);
     }
 
     public function userAnswers()
     {
-        return $this->answers()->userAnswers();
+        return $this->answers()->answer_data;
     }
 }
