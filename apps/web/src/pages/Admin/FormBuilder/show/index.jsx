@@ -14,7 +14,7 @@ const FormView = ({
 }) => {
     const [formDataLoaded, setFormDataLoaded] = useState(false);
     const [{ form, defaultAnswers, formLoading, saving }, { fireLoadForm, fireSaveAnswers }] = useFormBuilder({
-        formId: form_slug,
+        form_slug,
     });
     const [requestId, setRequestId] = useState(-1);
 
@@ -78,7 +78,7 @@ const FormView = ({
                 <h3>Show</h3>
                 {form.length > 0 && (
                     <Form
-                        onFormChange={handleFormChange}
+                        //onFormChange={handleFormChange}
                         onSubmit={handleSubmit}
                         validation={validation}
                         autocomplete="off"

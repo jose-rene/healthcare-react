@@ -4,14 +4,17 @@ import useApiCall from "./useApiCall";
 import { PUT, POST } from "../config/URLs";
 import CustomFormElements from "../components/FormBuilder/Fields";
 
-const useFormBuilder = ({ formId } = {}) => {
+const useFormBuilder = ({
+    form_slug,
+    request_id,
+} = {}) => {
     const [{ loading: saving, data }, fireSaveForm] = useApiCall({
-        url: `form/${formId}`,
+        url: `form/${form_slug}`,
         method: PUT,
     });
 
     const [{ loading: savingAnswers }, fireSaveAnswers] = useApiCall({
-        url: `form/${formId}/form_answers`,
+        url: `request/${request_id}/form/${form_slug}`,
         method: POST,
     });
 
@@ -22,7 +25,7 @@ const useFormBuilder = ({ formId } = {}) => {
         },
         fireLoadForm,
     ] = useApiCall({
-        url: `form/${formId}`,
+        url: `request/${request_id}/form/${form_slug}`,
     });
 
     const [loaded, setLoaded] = useState(false);
@@ -30,10 +33,10 @@ const useFormBuilder = ({ formId } = {}) => {
     const [form, setForm] = useState([]);
 
     useEffect(() => {
-        if (!formId) {
+        if (!form_slug) {
             throw new Error({
                 code: 403,
-                message: "missing formId in useFormBuilder",
+                message: "missing form_slug in useFormBuilder",
             });
         }
 

@@ -13,7 +13,7 @@ const FormBuilderEdit = ({
     },
 }) => {
     const [{ items, form, formLoaded }, { fireLoadForm }] = useFormBuilder({
-        formId: form_slug,
+        form_slug,
     });
 
     useEffect(() => {

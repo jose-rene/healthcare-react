@@ -121,7 +121,7 @@ const AppNavigation = () => {
                     component={NewRequestAdd}
                 />
                 <PrivateRoute
-                    path="/requests/:request_id/form-sections/:form_id"
+                    path="/requests/:request_id/form-sections/:form_slug"
                     middleware={[
                         "hp_user",
                         "hp_manager",
