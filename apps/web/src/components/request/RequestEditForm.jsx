@@ -24,6 +24,7 @@ const RequestEditForm = ({ data }) => {
     const {
         id: requestId = "",
         clinician = null,
+        reviewer = null,
         auth_number = "",
         member: memberData = null,
         codes: requestCodes = [],
@@ -104,7 +105,6 @@ const RequestEditForm = ({ data }) => {
     const saveRequest = async (formData) => {
         try {
             const result = await fireSubmit({ params: formData });
-            // console.log(result);
             const { type_name: type } = formData;
             // toggle the edit window
             if (type === "diagnosis") {
@@ -195,6 +195,7 @@ const RequestEditForm = ({ data }) => {
                                 {...{
                                     requestId,
                                     clinician,
+                                    reviewer,
                                     openClinicianInfo,
                                     toggleOpenClinicianInfo,
                                     refreshRequest,
