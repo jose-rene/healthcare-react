@@ -39,6 +39,7 @@ class UserListResource extends JsonResource
         return [
             'id'                 => $this->uuid,
             'title'              => $this->title,
+            'user_type_id'       => $this->user_type,
             'user_type'          => $this->user_type_name,
             'name'               => $this->full_name,
             'first_name'         => $this->first_name,
