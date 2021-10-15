@@ -8,13 +8,15 @@ const useFormBuilder = ({
     form_slug,
     request_id,
 } = {}) => {
+    const formAnswerUrl = `request/${request_id}/request_form_section/${form_slug}`;
+
     const [{ loading: saving, data }, fireSaveForm] = useApiCall({
         url: `form/${form_slug}`,
         method: PUT,
     });
 
     const [{ loading: savingAnswers }, fireSaveAnswers] = useApiCall({
-        url: `request/${request_id}/form/${form_slug}`,
+        url: formAnswerUrl,
         method: POST,
     });
 
@@ -85,9 +87,8 @@ const useFormBuilder = ({
     }, [formLoading, loaded]);
 
     const fireLoadForm = async (params) => {
-        //url: `request/${request_id}/form/${form_slug}`,
         const url = request_id ?
-            `request/${request_id}/form/${form_slug}` :
+            formAnswerUrl :
             `form/${form_slug}`;
 
         const response = await apiFireLoadForm({
@@ -95,9 +96,10 @@ const useFormBuilder = ({
             ...params,
         });
 
-        const { answers = {} } = response;
+        const { answer_data = {} } = response;
+        console.log('fireLoadForm', {response, answer_data});
 
-        setFormAnswers(answers);
+        setFormAnswers(answer_data);
 
         return response;
     };
@@ -109,7 +111,7 @@ const useFormBuilder = ({
             request_id,
         };
 
-        fireSaveAnswers({ params: newAnswers });
+        return fireSaveAnswers({ params: newAnswers });
     };
 
     return [

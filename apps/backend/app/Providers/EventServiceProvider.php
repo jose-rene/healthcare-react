@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\FormAnswerSavedEvent;
+use App\Events\RequestFormSectionSavedEvent;
 use App\Events\MemberCreated;
 use App\Events\PayerCreated;
 use App\Events\UserChangingPassword;
@@ -53,7 +53,7 @@ class EventServiceProvider extends ServiceProvider
         UserLoggedIn::class         => [
             UserLoggedInListener::class,
         ],
-        FormAnswerSavedEvent::class => [
+        RequestFormSectionSavedEvent::class => [
         ],
     ];
 

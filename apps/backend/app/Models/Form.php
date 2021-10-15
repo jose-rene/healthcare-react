@@ -12,6 +12,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property int   $id
  * @property array $fields
+ * @property string $slug
+ * @property string $name
+ * @property string $description
+ * @property int $type_id
  */
 class Form extends Model
 {

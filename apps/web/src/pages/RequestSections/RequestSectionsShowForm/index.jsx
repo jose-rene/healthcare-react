@@ -4,6 +4,7 @@ import useFormBuilder from "../../../hooks/useFormBuilder";
 import Form from "../../../components/elements/Form";
 import RenderForm from "../../../components/FormBuilder/RenderForm";
 import SubmitButton from "../../../components/elements/SubmitButton";
+import FormLoadingSpinner from "../../../components/forms/FormLoadingSpinner";
 
 const RequestSectionsShowForm = (props) => {
     const { params } = props.match;
@@ -50,11 +51,15 @@ const RequestSectionsShowForm = (props) => {
 
     const handleSubmit = (formValues) => {
         console.log("handleSubmit", { formValues });
-        fireSaveAnswers({ ...formValues, completed_form: false });
+        fireSaveAnswers({ ...formValues, completed_form: true });
     };
 
     const handleFormChange = (formValues) => {
-        console.log("handleFormChange", { formValues });
+        if(!formDataLoaded){
+            return false;
+        }
+
+        fireSaveAnswers({ ...formValues, completed_form: false });
     };
 
     // TODO :: load form with answers
@@ -63,7 +68,8 @@ const RequestSectionsShowForm = (props) => {
     return (
         <PageLayout>
             <div className="container mt-3">
-                {form.length > 0 && (
+                {formLoading && <FormLoadingSpinner />}
+                {(!formLoading && form.length) > 0 && (
                     <Form
                         onFormChange={handleFormChange}
                         defaultData={defaultAnswers}

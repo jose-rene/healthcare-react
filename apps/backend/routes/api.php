@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Resources\MyUserResource;
+use App\Models\Form;
 use App\Models\Member;
 use Illuminate\Support\Facades\Route;
 
@@ -73,9 +74,19 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('request.document', 'DocumentRequestController')->only('index', 'store', 'update', 'destroy');
     Route::apiResource('form', 'FormController');
     Route::apiResource('request.form', 'RequestFormController');
+
+    Route::get('request/{request}/request_form_section/{request_form_section_slug}', 'RequestFormSectionController@show');
+    Route::post('request/{request}/request_form_section/{request_form_section_slug}', 'RequestFormSectionController@store');
+
+    Route::bind('request_form_section_slug', function($request_form_section_slug){
+        return Form::where('slug', $request_form_section_slug)->firstOrFail();
+    });
+
+    Route::apiResource('request.request_form_section', 'RequestFormSectionController')->only('show', 'update');
     Route::apiResource('form.form_answers', 'FormAnswerController')->only(['store', 'show', 'update']);
     // test fmapi route
     Route::get('/fmtest', 'HomeController@fmtest');
+
 
     /*
      * This section of code is using the bouncer permissions.

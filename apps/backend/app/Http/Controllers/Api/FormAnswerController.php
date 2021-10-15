@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Events\FormAnswerSavedEvent;
+use App\Events\RequestFormSectionSavedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FormAnswerResource;
 use App\Jobs\CheckFormAnswersJob;
@@ -39,7 +39,7 @@ class FormAnswerController extends Controller
         if ($request->get('completed_form', false) === true) {
             $answers = $form->userAnswers()->first();
             dispatch(new CheckFormAnswersJob($answers));
-            FormAnswerSavedEvent::dispatch($answers);
+            RequestFormSectionSavedEvent::dispatch($answers);
         }
 
         return response()->noContent();
@@ -72,7 +72,7 @@ class FormAnswerController extends Controller
         $answers = $form->userAnswers()->first()->updateOrCreate(['form_data' => $request->get('form_data', [])]);
 
         if (!$request->get('quick_save', false)) {
-            FormAnswerSavedEvent::dispatch($answers);
+            RequestFormSectionSavedEvent::dispatch($answers);
         }
 
         return response()->noContent();

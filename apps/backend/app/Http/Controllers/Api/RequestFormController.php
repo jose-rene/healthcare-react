@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Events\FormAnswerSavedEvent;
+use App\Events\RequestFormSectionSavedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FormResource;
 use App\Models\Form;
@@ -66,7 +66,7 @@ class RequestFormController extends Controller
         $answers = [];
 
         if (!request('quick_save')) {
-            FormAnswerSavedEvent::dispatch($answers);
+            RequestFormSectionSavedEvent::dispatch($answers);
         }
 
         return response()->noContent();

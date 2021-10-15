@@ -11,6 +11,9 @@ const RequestSections = (props) => {
     const { params } = props.match;
     const { request_id } = params;
 
+    /**
+     * Load table data
+     */
     const [
         {
             loading,
@@ -31,15 +34,16 @@ const RequestSections = (props) => {
             label: "Progress",
             columnMap: "is_started",
             formatter (is_started, { is_completed = false }) {
-                if (!is_started && !is_completed) {
-                    return <span className="text-danger">Not started</span>;
-                }
+                if(is_started){
+                    if(is_completed){
+                        return <span className="text-success">Completed</span>;
+                    }
 
-                if (!is_completed) {
                     return <span className="text-warning">Started not done</span>;
                 }
 
-                return <span className="text-success">Completed</span>;
+                return <span className="text-danger">Not started</span>;
+
             },
         },
         {

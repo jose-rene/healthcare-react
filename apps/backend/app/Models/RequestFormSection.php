@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $request_id
  * @property Carbon $completed_at
  * @property Carbon $started_at
+ * @property Form $sectionForm
  **/
 class RequestFormSection extends Model
 {
@@ -39,6 +40,11 @@ class RequestFormSection extends Model
         'completed_at',
         'started_at',
     ];
+
+    public function sectionForm()
+    {
+        return $this->belongsTo(Form::class, 'form_section_id');
+    }
 
     public function formSection()
     {

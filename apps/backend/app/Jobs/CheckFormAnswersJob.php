@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\FormAnswer;
+use App\Models\RequestFormSection;
 use Carbon\Carbon;
 use Illuminate\Foundation\Bus\Dispatchable;
 
@@ -10,14 +11,14 @@ class CheckFormAnswersJob
 {
     use Dispatchable;
 
-    public FormAnswer $form_answer;
+    public RequestFormSection $form_answer;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(FormAnswer $form_answer)
+    public function __construct(RequestFormSection $form_answer)
     {
         $this->form_answer = $form_answer;
     }
