@@ -9,10 +9,12 @@ import PageAlert from "components/elements/PageAlert";
 import useApiCall from "hooks/useApiCall";
 import FapIcon from "components/elements/FapIcon";
 import ClinicianInfoForm from "../forms/ClinicianInfoForm";
+import ReviewerInfoForm from "../forms/ReviewerInfoForm";
 
 const ClinicianInfoView = ({
     requestId,
     clinician,
+    reviewer,
     openClinicianInfo,
     toggleOpenClinicianInfo,
     refreshRequest,
@@ -20,6 +22,8 @@ const ClinicianInfoView = ({
 }) => {
     const { id: clinicianId = null, name: clinicianName = null } =
         clinician || {};
+
+    const { id: reviewerId = null, name: reviewerName = null } = reviewer || {};
 
     const [{ loading, error }, fireSubmit] = useApiCall({
         method: "put",
@@ -29,8 +33,8 @@ const ClinicianInfoView = ({
     const [data, setData] = useState({});
 
     useEffect(() => {
-        setData({ clinician_id: clinicianId });
-    }, [clinicianId]);
+        setData({ clinician_id: clinicianId, reviewer_id: reviewerId });
+    }, [clinicianId, reviewerId]);
 
     const validation = {
         clinician_id: {
@@ -47,7 +51,10 @@ const ClinicianInfoView = ({
             await fireSubmit({
                 params: formData,
             });
-            setData({ clinician_id: formData.clinician_id });
+            setData({
+                clinician_id: formData.clinician_id,
+                reviewer_id: formData.reviewer_id,
+            });
             refreshRequest("clinician");
         } catch (e) {
             console.log("Clinician Request assign error:", e);
@@ -97,7 +104,7 @@ const ClinicianInfoView = ({
                                     }),
                                 }}
                             >
-                                <Row>
+                                <Row className="mb-3">
                                     <Col md={6}>
                                         <Form
                                             defaultData={data}
@@ -105,6 +112,8 @@ const ClinicianInfoView = ({
                                             onSubmit={onSubmit}
                                         >
                                             <ClinicianInfoForm />
+
+                                            <ReviewerInfoForm />
 
                                             <Row>
                                                 <Col>
@@ -144,6 +153,29 @@ const ClinicianInfoView = ({
                                             onClick={toggleOpenClinicianInfo}
                                         >
                                             Assign Therapist
+                                            <FapIcon
+                                                icon="angle-double-right"
+                                                size="sm"
+                                                className="ms-1"
+                                            />
+                                        </Button>
+                                    )}
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col className="fw-bold" sm={3}>
+                                    Assigned Reviewer
+                                </Col>
+                                <Col>
+                                    {reviewerId ? (
+                                        <p>{reviewerName}</p>
+                                    ) : (
+                                        <Button
+                                            variant="link"
+                                            className="fst-italic p-0"
+                                            onClick={toggleOpenClinicianInfo}
+                                        >
+                                            Assign Reviewer
                                             <FapIcon
                                                 icon="angle-double-right"
                                                 size="sm"
