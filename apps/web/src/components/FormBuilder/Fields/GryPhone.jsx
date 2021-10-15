@@ -8,7 +8,6 @@ const GryPhone = (props) => {
     };
 
     const { custom_name = "phone" } = allProps;
-    console.log({ custom_name, props });
 
     return (
         <PhoneInput

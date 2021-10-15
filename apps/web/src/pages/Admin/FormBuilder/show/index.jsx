@@ -4,7 +4,6 @@ import Form from "components/elements/Form";
 import "../edit/style.scss";
 import useFormBuilder from "../../../../hooks/useFormBuilder";
 import SubmitButton from "../../../../components/elements/SubmitButton";
-import { _GET } from "../../../../helpers/request";
 import RenderForm from "../../../../components/FormBuilder/RenderForm";
 
 const FormView = ({
@@ -13,10 +12,9 @@ const FormView = ({
     },
 }) => {
     const [formDataLoaded, setFormDataLoaded] = useState(false);
-    const [{ form, defaultAnswers, formLoading, saving }, { fireLoadForm, fireSaveAnswers }] = useFormBuilder({
+    const [{ form, defaultAnswers, formLoading, saving }, { fireLoadForm }] = useFormBuilder({
         form_slug,
     });
-    const [requestId, setRequestId] = useState(-1);
     const [formSaves, setFormSaves] = useState([]);
     const [autoSaveCount, setAutoSaveCount] = useState(0);
 
@@ -35,7 +33,7 @@ const FormView = ({
         if (!form_slug) {
             throw new Error({
                 code: 403,
-                message: "missing/ invalid form name",
+                message: "missing/invalid form name",
             });
         }
 
@@ -48,9 +46,6 @@ const FormView = ({
                 setFormDataLoaded(true);
             }, 500);
         })();
-
-        const getRequestId = _GET("request_id");
-        setRequestId(getRequestId);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

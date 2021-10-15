@@ -7,7 +7,6 @@ import "./style.scss";
 import useFormBuilder from "../../../../hooks/useFormBuilder";
 
 const FormBuilderEdit = (props) => {
-    console.log("<FormBuilderEdit/>", { props });
     const {
         history,
         match: {
@@ -20,7 +19,6 @@ const FormBuilderEdit = (props) => {
     });
 
     useEffect(() => {
-        console.log("<FormBuilderEdit/>.useEffect", { props, form_slug });
         if (!form_slug) {
             console.log("missing form_slug");
         } else {
