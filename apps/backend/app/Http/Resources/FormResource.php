@@ -25,6 +25,8 @@ class FormResource extends JsonResource
             'fields'      => $this->fields,
             'updated_at'  => $this->updated_at->format('m/d/Y H:i:s'),
 
+            'is_started'   => $this->when($this->is_started !== null, $this->is_started),
+            'is_completed' => $this->when($this->is_completed !== null, $this->is_completed),
             // optional stuff
             //                'answers'     => $this->whenLoaded('formSection', $this->formSection->answer_data),
             //                'forms' => Form::all(),

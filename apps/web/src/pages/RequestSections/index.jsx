@@ -28,6 +28,21 @@ const RequestSections = (props) => {
             type: String,
         },
         {
+            label: "Progress",
+            columnMap: "is_started",
+            formatter (is_started, { is_completed = false }) {
+                if (!is_started && !is_completed) {
+                    return <span className="text-danger">Not started</span>;
+                }
+
+                if (!is_completed) {
+                    return <span className="text-warning">Started not done</span>;
+                }
+
+                return <span className="text-success">Completed</span>;
+            },
+        },
+        {
             columnMap: "name",
             label: "Name",
             type: String,

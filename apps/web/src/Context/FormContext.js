@@ -65,6 +65,7 @@ const FormProvider = ({
 
     useEffect(() => {
         setTick(null);
+        console.log("FormContext.setTick");
         setForm(defaultData);
         setTick(0);
     }, [defaultData]);
@@ -214,12 +215,14 @@ const FormProvider = ({
     };
 
     const update = (name, value) => {
+        console.log("FormContext.update");
         const oldForm = { ...form };
         set(oldForm, name, value);
         setForm(() => oldForm);
     };
 
     const objUpdate = (obj) => {
+        console.log("FormContext.objUpdate");
         const oldForm = { ...form };
         Object.keys(obj).forEach((o) => {
             set(oldForm, o, obj[o]);
@@ -228,6 +231,7 @@ const FormProvider = ({
     };
 
     const onChange = ({ target: { name, value, type = "text" } }) => {
+        console.log("FormContext.onChange", { [name]: value, type });
         const oldForm = { ...form };
         if (type === "checkbox") {
             set(oldForm, name, document.getElementById(name).checked);
@@ -238,6 +242,7 @@ const FormProvider = ({
     };
 
     const clear = () => {
+        console.log("FormContext.clear");
         setForm({});
         setValidated(false);
         setValid(false);

@@ -7,19 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\FormResource;
 use App\Models\Form;
 use App\Models\Request as ModelRequest;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 class RequestFormController extends Controller
 {
-    private Request $request;
-
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -29,7 +21,21 @@ class RequestFormController extends Controller
     public function index(ModelRequest $request)
     {
         // TODO :: this controller function should include if the form has been stared for the request.
-        $forms = Form::paginate($this->request->get('perPage', 50));
+        $forms    = Form::paginate(request('perPage', 100));
+        $sections = $request->requestFormSections->keyBy('form_section_id');
+
+        $forms->map(function ($f) use ($sections) {
+            if (isset($sections[$f->id])) {
+                $f->section      = $sections[$f->id];
+                $f->is_started   = (bool)$sections[$f->id]->started_at;
+                $f->is_completed = (bool)$sections[$f->id]->completed_at;
+            } else {
+                $f->is_started   = false;
+                $f->is_completed = false;
+            }
+
+            return $f;
+        });
 
         return FormResource::collection($forms);
     }
@@ -59,7 +65,7 @@ class RequestFormController extends Controller
 
         $answers = [];
 
-        if (!$this->request->get('quick_save')) {
+        if (!request('quick_save')) {
             FormAnswerSavedEvent::dispatch($answers);
         }
 

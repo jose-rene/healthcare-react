@@ -19,16 +19,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pipeline\Pipeline;
 
 /**
- * @property Carbon      created_at
- * @property RequestItem requestItems
- * @property int         id
- * @property Member      member
- * @property Document    documents
- * @property string      uuid
- * @property Activity    activities
- * @property User        therapist
- * @property User        reviewer
- * @property User        admin
+ * @property Carbon             created_at
+ * @property RequestItem        requestItems
+ * @property int                id
+ * @property Member             member
+ * @property Document           documents
+ * @property string             uuid
+ * @property Activity           activities
+ * @property User               therapist
+ * @property User               reviewer
+ * @property User               admin
+ * @property RequestFormSection $requestFormSections
  *
  * @observer App\Observers\RequestObserver
  */

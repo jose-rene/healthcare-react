@@ -23,14 +23,14 @@ const useFormBuilder = ({
             loading: formLoading,
             data: { fields = [], answers: defaultAnswers = {} } = {},
         },
-        fireLoadForm,
+        apiFireLoadForm,
     ] = useApiCall({
-        url: `request/${request_id}/form/${form_slug}`,
     });
 
     const [loaded, setLoaded] = useState(false);
     const [items, setItems] = useState([]);
     const [form, setForm] = useState([]);
+    const [formAnswers, setFormAnswers] = useState({});
 
     useEffect(() => {
         if (!form_slug) {
@@ -84,6 +84,24 @@ const useFormBuilder = ({
         return formLoading && loaded;
     }, [formLoading, loaded]);
 
+    const fireLoadForm = async (params) => {
+        //url: `request/${request_id}/form/${form_slug}`,
+        const url = request_id ?
+            `request/${request_id}/form/${form_slug}` :
+            `form/${form_slug}`;
+
+        const response = await apiFireLoadForm({
+            url,
+            ...params,
+        });
+
+        const { answers = {} } = response;
+
+        setFormAnswers(answers);
+
+        return response;
+    };
+
     const saveAnswers = (params, { completed_form = false, request_id = null } = {}) => {
         const newAnswers = {
             form_data: params,
@@ -97,7 +115,7 @@ const useFormBuilder = ({
     return [
         {
             form,
-            defaultAnswers,
+            defaultAnswers: formAnswers,
             items,
             formLoading,
             formLoaded,
