@@ -38,7 +38,8 @@ import AdminAddClinicians from "pages/Admin/Clinicians/AddClinicians";
 import FormView from "pages/Admin/FormBuilder/show";
 import FormBuilderEdit from "pages/Admin/FormBuilder/edit";
 import FormIndex from "pages/Admin/FormBuilder/Index";
-import AdminUserList from "pages/Admin/UserList";
+import AdminUserList from "pages/Admin/UserList/UserList";
+import AdminUserEdit from "pages/Admin/UserList/UserEdit";
 
 const AppNavigation = () => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -219,9 +220,16 @@ const AppNavigation = () => {
                 />
 
                 <PrivateRoute
+                    exact
                     path="/admin/users"
-                    middleware={["software_engineer"]}
+                    middleware={["create-users"]}
                     component={AdminUserList}
+                />
+
+                <PrivateRoute
+                    path="/admin/users/:id/edit"
+                    middleware={["create-users"]}
+                    component={AdminUserEdit}
                 />
 
                 <PrivateRoute

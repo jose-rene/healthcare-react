@@ -9,6 +9,8 @@ class ClinicalServicesUserRequest extends FormRequest
 {
     public function rules()
     {
+        $emailValidation = empty($this->route('clinicaluser')) ? ['bail', 'required', 'email:rfc', 'unique:users'] : ['bail', 'required', 'email:rfc', 'unique:users,email,' .  $this->route('clinicaluser')->id];
+
         return [
             'clinical_type_id'        => ['bail', 'required', 'exists:clinical_types,id'],
             'clinical_user_status_id' => ['bail', 'required', 'exists:clinical_user_statuses,id'],
@@ -21,7 +23,7 @@ class ClinicalServicesUserRequest extends FormRequest
             'note'                    => ['bail', 'string'],
             'first_name'              => ['bail', 'required', 'min:1'],
             'last_name'               => ['bail', 'required', 'min:1'],
-            'email'                   => ['bail', 'required', 'email:rfc', 'unique:users'],
+            'email'                   => $emailValidation,
             'phone'                   => ['min:10'],
             'primary_role' => ['bail', 'required', function ($attribute, $value, $fail) {
                 if (null === ($role = Bouncer::role()->firstWhere(['name' => $value]))) {
