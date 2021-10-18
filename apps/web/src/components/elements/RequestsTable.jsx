@@ -104,7 +104,7 @@ const RequestsTable = () => {
                             to={
                                 // eslint-disable-next-line no-nested-ternary
                                 isClinician
-                                    ? `/asessment/${request_id}`
+                                    ? `/assessment/${request_id}`
                                     : !request_status_id
                                     ? `/member/${member_id}/request/${request_id}/edit`
                                     : `/requests/${request_id}`

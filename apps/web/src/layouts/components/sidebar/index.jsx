@@ -2,6 +2,8 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 
+import { useUser } from "Context/UserContext";
+
 import SidebarHealthplan from "./SidebarHealthplan";
 import SidebarClinician from "./SidebarClinician";
 import SidebarAdmin from "./SidebarAdmin";
@@ -10,6 +12,7 @@ import FapIcon from "components/elements/FapIcon";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const Sidebar = ({ logOut, primaryRole, abilities, open }) => {
+    const { userCan } = useUser();
     const location = useLocation();
     const page = location.pathname ?? "";
     const textClass = `d-none ${open ? "d-lg-inline" : ""}`;
@@ -24,6 +27,12 @@ const Sidebar = ({ logOut, primaryRole, abilities, open }) => {
                 <FapIcon icon="home" size="lg" className="me-2" />
                 <span className={textClass}>Home</span>
             </Nav.Link>
+            {userCan("create-users") && (
+                <Nav.Link href="/admin/users">
+                    <FapIcon icon="users" size="lg" className="me-2" />
+                    <span className={textClass}>Users</span>
+                </Nav.Link>
+            )}
             <Nav.Link href="/account">
                 <FapIcon icon="user" size="lg" className="me-2" />
                 <span className={textClass}>Account</span>

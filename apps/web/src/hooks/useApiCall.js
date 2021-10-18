@@ -81,7 +81,7 @@ export default ({
 
         if (request_params) {
             _configs = {
-                ...config,
+                ..._configs,
                 ...formatParams(request_params, _configs.method),
             };
             persist_changes && setConfig(_configs);
@@ -89,7 +89,7 @@ export default ({
 
         try {
             const jwtToken = await AsyncStorage.getItem(
-                "@dme.login.access_token",
+                "@dme.login.access_token"
             );
 
             if (jwtToken) {

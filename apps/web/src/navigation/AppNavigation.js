@@ -21,7 +21,6 @@ import Federated from "pages/Federated";
 import ForgotPassword from "pages/ForgotPassword";
 import Login from "pages/Login";
 import Error from "pages/NotFound";
-import Questionnaire from "pages/Questionnaire";
 import SetForgotPassword from "pages/SetForgotPassword";
 import NotificationList from "pages/NotificationList";
 import AdminPayer from "pages/Test/AdminPayer";
@@ -33,7 +32,8 @@ import AdminAddClinicians from "pages/Admin/Clinicians/AddClinicians";
 import FormView from "pages/Admin/FormBuilder/show";
 import FormBuilderEdit from "pages/Admin/FormBuilder/edit";
 import FormIndex from "pages/Admin/FormBuilder/Index";
-import AdminUserList from "pages/Admin/UserList";
+import AdminUserList from "pages/Admin/UserList/UserList";
+import AdminUserEdit from "pages/Admin/UserList/UserEdit";
 import FormWizard from "../pages/FormWizard";
 import RequestSections from "../pages/RequestSections";
 import RequestSectionsShowForm from "../pages/RequestSections/RequestSectionsShowForm";
@@ -247,9 +247,16 @@ const AppNavigation = () => {
                 />
 
                 <PrivateRoute
+                    exact
                     path="/admin/users"
-                    middleware={["software_engineer"]}
+                    middleware={["create-users"]}
                     component={AdminUserList}
+                />
+
+                <PrivateRoute
+                    path="/admin/users/:id/edit"
+                    middleware={["create-users"]}
+                    component={AdminUserEdit}
                 />
 
                 <PrivateRoute
@@ -257,13 +264,7 @@ const AppNavigation = () => {
                     component={NotificationList}
                 />
 
-                <PrivateRoute path="/questionnaire/:id">
-                    <Questionnaire />
-                </PrivateRoute>
-
-                <PrivateRoute path="/assessment/:id">
-                    <Assessment />
-                </PrivateRoute>
+                <PrivateRoute path="/assessment/:id" component={Assessment} />
 
                 {/* ERROR PAGES */}
                 <Route component={Error} />
