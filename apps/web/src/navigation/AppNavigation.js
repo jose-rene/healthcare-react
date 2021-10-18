@@ -26,7 +26,6 @@ import Federated from "pages/Federated";
 import ForgotPassword from "pages/ForgotPassword";
 import Login from "pages/Login";
 import Error from "pages/NotFound";
-import Questionnaire from "pages/Questionnaire";
 import SetForgotPassword from "pages/SetForgotPassword";
 import NotificationList from "pages/NotificationList";
 import AdminPayer from "pages/Test/AdminPayer";
@@ -229,13 +228,7 @@ const AppNavigation = () => {
                     component={NotificationList}
                 />
 
-                <PrivateRoute path="/questionnaire/:id">
-                    <Questionnaire />
-                </PrivateRoute>
-
-                <PrivateRoute path="/assessment/:id">
-                    <Assessment />
-                </PrivateRoute>
+                <PrivateRoute path="/assessment/:id" component={Assessment} />
 
                 {/* ERROR PAGES */}
                 <Route component={Error} />
