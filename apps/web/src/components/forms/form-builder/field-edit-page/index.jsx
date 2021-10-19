@@ -341,7 +341,7 @@ export default class FormElementsEdit extends React.Component {
                 }
 
                 {canHaveSpanSettings &&
-                <div className="form-group">
+                <div className="form-group mt-3">
                     <div className="custom-control custom-checkbox">
                         <label className="custom-control-label" htmlFor="span_width">
                             Span settings, Number from 1 to 12

@@ -4,7 +4,7 @@ import Button from "../inputs/Button";
 import FormElement from "./FormElement";
 import Icon from "./Icon";
 
-const FormGroup = ({ span = 12, elements, addRepeater, removeRepeater }) => {
+const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 12 }) => {
     return (
         <>
             {elements.map(
@@ -15,7 +15,8 @@ const FormGroup = ({ span = 12, elements, addRepeater, removeRepeater }) => {
                     index,
                     label,
                     fields,
-                    props: { customRule, customValidation, span } = {},
+                    span_width: span = wrapperSpan,
+                    props: { customRule, customValidation } = {},
                     ...props
                 }) => {
                     const heading =

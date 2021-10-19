@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Row, Col, Container } from "react-bootstrap";
-// import MultiSelect from "react-select";
 
 import PageLayout from "layouts/PageLayout";
 
@@ -10,6 +10,7 @@ import TableAPI from "components/elements/TableAPI";
 import PageTitle from "components/PageTitle";
 import ContextInput from "components/inputs/ContextInput";
 import ContextSelect from "components/contextInputs/Select";
+import FapIcon from "components/elements/FapIcon";
 
 import useApiCall from "hooks/useApiCall";
 import useSearch from "hooks/useSearch";
@@ -38,30 +39,32 @@ const UserList = () => {
             label: "Actions",
             type: ACTIONS,
             disableSortBy: true,
-            formatter(id, { roles, primary_role }) {
+            formatter(id, { primary_role }) {
+                const isEditable =
+                    primary_role === "hp_user" ||
+                    primary_role === "hp_finance" ||
+                    primary_role === "hp_champion" ||
+                    primary_role === "hp_manager" ||
+                    primary_role === "chief_medical_officer" ||
+                    primary_role === "clinical_national_director" ||
+                    primary_role === "clinical_regional_director" ||
+                    primary_role === "clinical_reviewer" ||
+                    primary_role === "clinical_state_champion" ||
+                    primary_role === "clinical_trainer" ||
+                    primary_role === "field_clinician";
+
                 return (
-                    // <MultiSelect // Need to interact with the backend
-                    //     closeMenuOnSelect={false}
-                    //     value={primary_role}
-                    //     isMulti
-                    //     placeholder=""
-                    //     options={rolesOptions(roles)}
-                    //     onChange={() => console.log("on change?")}
-                    // />
-                    <></>
+                    <>
+                        {isEditable && (
+                            <Link to={`/admin/users/${id}/edit`}>
+                                <FapIcon size="1x" icon="edit" />
+                            </Link>
+                        )}
+                    </>
                 );
             },
         },
     ]);
-
-    // const rolesOptions = (roles) => {
-    //     const arr = [];
-    //     roles.forEach(({ name, title }) => {
-    //         arr.push({ value: name, label: title });
-    //     });
-
-    //     return arr;
-    // };
 
     const handleTableChange = (props) => {
         updateSearchObj(props);
