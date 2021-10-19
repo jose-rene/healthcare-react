@@ -56,7 +56,10 @@ const FormGroup = ({ span = 12, elements, addRepeater, removeRepeater }) => {
                             </Card.Header>
                             <Card.Body>
                                 <Row>
-                                    <FormGroup elements={fields} span={span || 12} />
+                                    <FormGroup
+                                        elements={fields}
+                                        span={span || 12}
+                                    />
                                 </Row>
                             </Card.Body>
                         </Card>

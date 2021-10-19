@@ -4,10 +4,7 @@ import useApiCall from "./useApiCall";
 import { PUT, POST } from "../config/URLs";
 import CustomFormElements from "../components/FormBuilder/Fields";
 
-const useFormBuilder = ({
-    form_slug,
-    request_id,
-} = {}) => {
+const useFormBuilder = ({ form_slug, request_id } = {}) => {
     const formAnswerUrl = `request/${request_id}/request_form_section/${form_slug}`;
 
     const [{ loading: saving, data }, fireSaveForm] = useApiCall({
@@ -26,8 +23,7 @@ const useFormBuilder = ({
             data: { fields = [], answers: defaultAnswers = {} } = {},
         },
         apiFireLoadForm,
-    ] = useApiCall({
-    });
+    ] = useApiCall({});
 
     const [loaded, setLoaded] = useState(false);
     const [items, setItems] = useState([]);
@@ -87,24 +83,34 @@ const useFormBuilder = ({
     }, [formLoading, loaded]);
 
     const fireLoadForm = async (params) => {
-        const url = request_id ?
-            formAnswerUrl :
-            `form/${form_slug}`;
+        const url = request_id ? formAnswerUrl : `form/${form_slug}`;
 
         const response = await apiFireLoadForm({
             url,
             ...params,
         });
 
-        const { answer_data = {} } = response;
-        console.log('fireLoadForm', {response, answer_data});
+        const { answer_data: answers = {}, fields: fieldData = [] } = response;
 
-        setFormAnswers(answer_data);
+        // set the depth of repeater fields if there is answer data
+        fieldData.forEach(({ key, custom_name: name }, i) => {
+            if (key === "GryInputGroupRepeater") {
+                // find the answers
+                if (answers && answers[name] && answers[name].length) {
+                    fieldData[i].answerCount = answers[name].length;
+                }
+            }
+        });
+
+        setFormAnswers(answers);
 
         return response;
     };
 
-    const saveAnswers = (params, { completed_form = false, request_id = null } = {}) => {
+    const saveAnswers = (
+        params,
+        { completed_form = false, request_id = null } = {}
+    ) => {
         const newAnswers = {
             form_data: params,
             completed_form,

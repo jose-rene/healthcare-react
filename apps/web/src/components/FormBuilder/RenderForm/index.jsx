@@ -6,6 +6,7 @@ import { useFormContext } from "../../../Context/FormContext";
 const RenderForm = ({ formElements }) => {
     const [formElementsState, setFormElementsState] = useState([]);
     const [childFields, setChildFields] = useState([]);
+    const [initialized, setInitialized] = useState(false);
     // const [inputContainers, setInputContainers] = useState([]);
 
     const getChildren = (containers) => {
@@ -78,7 +79,7 @@ const RenderForm = ({ formElements }) => {
         setFormElementsState(elements);
     }, [formElements]);
 
-    const addRepeater = (id) => {
+    const addRepeater = (id, qty = 1) => {
         const elements = [...formElementsState];
         // get the index of the last repeated
         const lastIndex = findLastIndex(elements, (item) => {
@@ -88,33 +89,37 @@ const RenderForm = ({ formElements }) => {
         const repeater = elements.find((item) => {
             return item.id === id;
         });
+        const insertRepeaters = [];
         // the new index will be the count of existing repeaters of this id
         const index = elements.filter((item) => item.id === id).length;
-        // rename the child fields
-        const fields = repeater.childItems.map((childId) => {
-            const childElement = childFields.find((child) => {
-                return child.id === childId;
+        // rename each of the child fields to be added, will only me more than one on initial render
+        for (let x = 0; x < qty; x++) {
+            const childIndex = index + x;
+            const fields = repeater.childItems.map((childId) => {
+                const childElement = childFields.find((child) => {
+                    return child.id === childId;
+                });
+                return {
+                    ...childElement,
+                    custom_name: `${repeater.custom_name}[${childIndex}][${childElement.custom_name}]`,
+                    base_name: childElement.custom_name,
+                    parent_name: repeater.custom_name,
+                };
             });
-            return {
-                ...childElement,
-                custom_name: `${repeater.custom_name}[${index}][${childElement.custom_name}]`,
-                base_name: childElement.custom_name,
-                parent_name: repeater.custom_name,
-            };
-        });
-        // construct the repeater element to be added
-        const insertRepeater = {
-            ...repeater,
-            key: `${repeater.key}Child`,
-            index,
-            fields,
-        };
+            // construct the repeater element to be added
+            insertRepeaters.push({
+                ...repeater,
+                key: `${repeater.key}Child`,
+                index: childIndex,
+                fields,
+            });
+        }
         // insert the added element
         const updatedElements = [
             // part of the array before the specified index
             ...elements.slice(0, lastIndex + 1),
             // inserted repeater field
-            ...[insertRepeater],
+            ...insertRepeaters,
             // part of the array after the specified index
             ...elements.slice(lastIndex + 1),
         ];
@@ -192,6 +197,20 @@ const RenderForm = ({ formElements }) => {
         // set state
         setFormElementsState(updatedElements);
     };
+
+    useEffect(() => {
+        if (!formElementsState?.length || initialized) {
+            return;
+        }
+        // check element for multiple answers and add repeaters
+        formElementsState.forEach((item) => {
+            if (item.answerCount && item.answerCount > 1) {
+                addRepeater(item.id, item.answerCount - 1);
+            }
+        });
+        setInitialized(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formElementsState]);
 
     return formElementsState?.length ? (
         <FormGroup
