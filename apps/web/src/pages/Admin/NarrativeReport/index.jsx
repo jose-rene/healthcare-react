@@ -7,9 +7,15 @@ import Textarea from "components/inputs/Textarea";
 import { handlebarsTemplate } from "helpers/string";
 
 const NarrativeReport = () => {
-    const [form, setForm] = useState({});
+    const [form, setForm] = useState({
+        testField: `<p>Welcome <strong>{{first_name}}</strong>.</p>
+<ul>{{#each people}}
+<li>Welcome <span style="background-color: #7e8c8d;">{{name}}</span></li>
+{{/each}}</ul>
+<h2>Ok Thank you {{first_name}}</h2>`,
+    });
     const [answerData, setAnswerData] = useState(
-        "{\"first_name\": \"Zach\", \"people\": [{\"name\": \"zach\"}, {\"name\": \"robo\"}]}");
+        "{\"first_name\": \"test first name\", \"people\": [{\"name\": \"foo\"}, {\"name\": \"bar\"}]}");
 
     const handleFormSubmit = (formValues) => {
         setForm(formValues);
