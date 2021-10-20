@@ -65,7 +65,6 @@ const FormProvider = ({
 
     useEffect(() => {
         setTick(null);
-        console.log("FormContext.setTick");
         setForm(defaultData);
         setTick(0);
     }, [defaultData]);
