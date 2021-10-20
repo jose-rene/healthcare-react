@@ -139,6 +139,32 @@ return [
             'root'   => storage_path('app/csv_files/outbox'),
         ],
 
+        's3-molina' => [
+            'driver'   => 's3',
+            'key'      => env('AWS_ACCESS_KEY_ID'),
+            'secret'   => env('AWS_SECRET_ACCESS_KEY'),
+            'region'   => env('AWS_DEFAULT_REGION'),
+            'bucket'   => env('AWS_SFTP_BUCKET'),
+            'url'      => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+        ],
+
+        'sftp-molina' => [
+            'driver' => 'sftp',
+            'host' => 'molina-sftp.dme-cg.com',
+            'username' => 'molina',
+            // 'password' => 'your-password',
+        
+            // Settings for SSH key based authentication...
+            'privateKey' => env('MOLINA_USER_KEY'),
+            // 'password' => 'encryption-password',
+        
+            // Optional SFTP Settings...
+            // 'port' => 22,
+            // 'root' => '',
+            // 'timeout' => 30,
+        ],
+
     ],
 
     /*
