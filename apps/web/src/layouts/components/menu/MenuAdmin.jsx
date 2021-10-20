@@ -15,6 +15,13 @@ const MenuAdmin = () => {
                 <span>Forms</span>
             </Nav.Link>
             <Nav.Link
+                href="/admin/narrative-report"
+                className="list-group-item border-end-0"
+            >
+                <FapIcon icon="report" className="me-2" fixedWidth />
+                <span>Narrative Editor</span>
+            </Nav.Link>
+            <Nav.Link
                 href="/admin/companies"
                 className="list-group-item border-end-0"
             >

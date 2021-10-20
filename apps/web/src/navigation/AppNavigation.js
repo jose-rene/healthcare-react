@@ -39,6 +39,7 @@ import FormView from "pages/Admin/FormBuilder/show";
 import FormBuilderEdit from "pages/Admin/FormBuilder/edit";
 import FormIndex from "pages/Admin/FormBuilder/Index";
 import AdminUserList from "pages/Admin/UserList";
+import NarrativeReport from "../pages/Admin/NarrativeReport";
 
 const AppNavigation = () => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -173,6 +174,13 @@ const AppNavigation = () => {
                     path="/admin/forms"
                     middleware={["software_engineer"]}
                     component={FormIndex}
+                />
+
+                <PrivateRoute
+                    path="/admin/narrative-report"
+                    middleware={["software_engineer"]}
+                    component={NarrativeReport}
+                    addLayout
                 />
 
                 <PrivateRoute

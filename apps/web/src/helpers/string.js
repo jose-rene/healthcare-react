@@ -1,4 +1,5 @@
-import { template as _template } from 'lodash';
+import { template as _template } from "lodash";
+import Handlebars from "handlebars";
 
 export const slugify = (text) => {
     return text
@@ -16,7 +17,12 @@ export const template = (templateString, object) => {
         const compiled = _template(templateString, { strict: false });
         return compiled(object);
     } catch (e) {
-        const varToDefine = e.message.replace(/\sis not defined/, '');
-        return template(templateString, { ...object, [varToDefine]: '' });
+        const varToDefine = e.message.replace(/\sis not defined/, "");
+        return template(templateString, { ...object, [varToDefine]: "" });
     }
+};
+
+export const handlebarsTemplate = (templateString, object) => {
+    const templateObj = Handlebars.compile(templateString);
+    return templateObj(object);
 };

@@ -8,7 +8,7 @@ import { PUT } from "../config/URLs";
 import useApiCall from "../hooks/useApiCall";
 import useIdleTimeout from "../hooks/useIdleTimeout";
 import PageHeader from "./components/Header";
-import Sidebar from "./components/sidebar/index";
+import Sidebar from "./components/sidebar";
 import Menu from "./components/menu";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */

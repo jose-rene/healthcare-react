@@ -41,6 +41,7 @@ import {
     faUserNurse,
     faUsers,
     faTrashAlt,
+    faNewspaper,
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add(
@@ -85,7 +86,8 @@ library.add(
     faBuilding,
     faUserNurse,
     faUsers,
-    faTrashAlt
+    faTrashAlt,
+    faNewspaper,
 );
 /*
 if (process.env.NODE_ENV === "development") {

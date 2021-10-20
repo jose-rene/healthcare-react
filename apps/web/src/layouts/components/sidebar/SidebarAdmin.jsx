@@ -13,6 +13,10 @@ const SidebarAdmin = ({ open }) => {
                 <FapIcon icon="book" size="lg" className="me-2" />
                 <span className={textClass}>Forms</span>
             </Nav.Link>
+            <Nav.Link href="/admin/narrative-report">
+                <FapIcon icon="newspaper" size="lg" className="me-2" />
+                <span className={textClass}>Narrative Editor</span>
+            </Nav.Link>
 
             <Nav.Link href="/admin/companies">
                 <FapIcon icon="building" size="lg" className="me-2" />

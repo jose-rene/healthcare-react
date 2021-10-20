@@ -3,6 +3,7 @@ import { Redirect, Route } from "react-router-dom";
 import { useUser } from "Context/UserContext";
 import checkMiddleware from "../helpers/user";
 import useAuth from "../hooks/useAuth";
+import PageLayout from "../layouts/PageLayout";
 
 const PrivateRoute = ({
     page: component = false,
@@ -10,6 +11,7 @@ const PrivateRoute = ({
     middleware = [],
     requiredAbility = false,
     location,
+    addLayout = false,
     ...rest
 }) => {
     const [{ permissionCheck }] = useAuth();
@@ -44,6 +46,21 @@ const PrivateRoute = ({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [requiredAbility]);
+
+    const Page = useMemo(() => {
+        if (addLayout) {
+            return (
+                <PageLayout>
+                    <Route {...rest} render={component ? null : children} />
+                </PageLayout>
+            );
+        }
+
+        return (
+            <Route {...rest} render={component ? null : children} />
+        );
+    }, [addLayout]);
+
     // console.log(middleware.length, component);
     if (
         authed &&
@@ -57,9 +74,7 @@ const PrivateRoute = ({
 
     return !authed ? (
         <Redirect to={{ pathname: "/", state: { from: location } }} />
-    ) : (
-        <Route {...rest} render={component ? null : children} />
-    );
+    ) : Page;
 };
 
 export default PrivateRoute;
