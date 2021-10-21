@@ -7,8 +7,6 @@ import { _GET } from "../../helpers/request";
 const Error401 = (params) => {
     const { history } = params;
 
-    console.log({ params });
-
     const tryAgain = () => {
         const redirect = _GET("redirect");
 

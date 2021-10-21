@@ -16,7 +16,7 @@ const PhoneInput = ({ name, placeholder = "(999) 999-9999", ...props }) => {
         });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [name]);
 
     props.mask = placeholder;
 
