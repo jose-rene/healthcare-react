@@ -18,6 +18,7 @@ const ClinicianForm = ({
         last_name,
         email,
         phone_primary: phone,
+        job_title,
     },
     onSubmit,
     updateLoading,
@@ -33,6 +34,7 @@ const ClinicianForm = ({
         last_name,
         email,
         phone,
+        job_title,
     });
 
     // validation
@@ -56,6 +58,9 @@ const ClinicianForm = ({
         },
         primary_role: {
             yupSchema: Yup.string().required("Role is required"),
+        },
+        job_title: {
+            yupSchema: Yup.string().required("Job Title is required"),
         },
         clinical_type_id: {
             yupSchema: Yup.string().required("Type is required"),
@@ -180,6 +185,9 @@ const ClinicianForm = ({
                         label="Role"
                         options={rolesOptions}
                     />
+                </Col>
+                <Col md={6}>
+                    <ContextInput name="job_title" label="Job Title*" />
                 </Col>
                 <Col md={6}>
                     <ContextSelect
