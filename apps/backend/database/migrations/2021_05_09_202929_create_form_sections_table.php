@@ -18,7 +18,7 @@ class CreateFormSectionsTable extends Migration
 
             $table->string('description')->comment('description');
             $table->string('form_id')->comment('id of the parent form');
-            $table->string('url')->comment('associated Cognito form url');
+            $table->string('url')->comment('associated Cognito form url')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

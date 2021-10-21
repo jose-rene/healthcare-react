@@ -1,9 +1,11 @@
 <?php
 
 use Aacotroneo\Saml2\Saml2Auth;
+use App\Http\Controllers\Api\RequestFormSectionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ImageController;
+use App\Models\Form;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +19,12 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('testing', function(){
+    $request = \App\Models\Request::find(2);
+    $form = Form::find(5);
+    return (new RequestFormSectionController())->show($request, $form);
+});
 
 // handle sso login triggering subdomain
 Route::domain(env('DME_SSO_DOMAIN'))->group(function (Router $router) {

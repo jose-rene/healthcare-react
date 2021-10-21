@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { findLastIndex } from "lodash";
 import FormGroup from "components/elements/FormGroup";
-import { useFormContext } from "../../../../Context/FormContext";
+import { useFormContext } from "../../../Context/FormContext";
 
 const RenderForm = ({ formElements }) => {
     const [formElementsState, setFormElementsState] = useState([]);
     const [childFields, setChildFields] = useState([]);
+    const [initialized, setInitialized] = useState(false);
     // const [inputContainers, setInputContainers] = useState([]);
 
     const getChildren = (containers) => {
@@ -15,7 +16,7 @@ const RenderForm = ({ formElements }) => {
         return children.length ? children.flat() : [];
     };
 
-    const { getValue, update: setValue } = useFormContext();
+    const { getValue, update: setValue, setForm } = useFormContext();
 
     // build into groups
     const processGroups = (elements, childIds, subFields) => {
@@ -78,7 +79,22 @@ const RenderForm = ({ formElements }) => {
         setFormElementsState(elements);
     }, [formElements]);
 
-    const addRepeater = (id) => {
+    // updates repeater field in form context
+    const updateFormRepeater = (fieldName, index) => {
+        // the value is an object, get a shallow copy less we mutate state
+        const [...value] = getValue(fieldName);
+        // set the form context state with the removed index
+        if (value && value[index]) {
+            // remove the index in values of the removed index
+            value.splice(index, 1);
+            // set the values in the form context
+            setForm((prevForm) => {
+                return { ...prevForm, [fieldName]: value };
+            });
+        }
+    };
+
+    const addRepeater = (id, qty = 1) => {
         const elements = [...formElementsState];
         // get the index of the last repeated
         const lastIndex = findLastIndex(elements, (item) => {
@@ -88,33 +104,37 @@ const RenderForm = ({ formElements }) => {
         const repeater = elements.find((item) => {
             return item.id === id;
         });
+        const insertRepeaters = [];
         // the new index will be the count of existing repeaters of this id
         const index = elements.filter((item) => item.id === id).length;
-        // rename the child fields
-        const fields = repeater.childItems.map((childId) => {
-            const childElement = childFields.find((child) => {
-                return child.id === childId;
+        // rename each of the child fields to be added, will only me more than one on initial render
+        for (let x = 0; x < qty; x++) {
+            const childIndex = index + x;
+            const fields = repeater.childItems.map((childId) => {
+                const childElement = childFields.find((child) => {
+                    return child.id === childId;
+                });
+                return {
+                    ...childElement,
+                    custom_name: `${repeater.custom_name}[${childIndex}][${childElement.custom_name}]`,
+                    base_name: childElement.custom_name,
+                    parent_name: repeater.custom_name,
+                };
             });
-            return {
-                ...childElement,
-                custom_name: `${repeater.custom_name}[${index}][${childElement.custom_name}]`,
-                base_name: childElement.custom_name,
-                parent_name: repeater.custom_name,
-            };
-        });
-        // construct the repeater element to be added
-        const insertRepeater = {
-            ...repeater,
-            key: `${repeater.key}Child`,
-            index,
-            fields,
-        };
+            // construct the repeater element to be added
+            insertRepeaters.push({
+                ...repeater,
+                key: `${repeater.key}Child`,
+                index: childIndex,
+                fields,
+            });
+        }
         // insert the added element
         const updatedElements = [
             // part of the array before the specified index
             ...elements.slice(0, lastIndex + 1),
             // inserted repeater field
-            ...[insertRepeater],
+            ...insertRepeaters,
             // part of the array after the specified index
             ...elements.slice(lastIndex + 1),
         ];
@@ -150,6 +170,9 @@ const RenderForm = ({ formElements }) => {
             elements.splice(removeIndex, 1);
             // set state
             setFormElementsState(elements);
+            // get the field name to update form context state
+            const fieldName = removedElement.custom_name;
+            updateFormRepeater(fieldName, index);
             return;
         }
         // Instead of re-indexing, set the value of items to the value of the next item and remove the last item
@@ -159,6 +182,7 @@ const RenderForm = ({ formElements }) => {
             elements,
             (item) => item.id === id
         );
+
         // remap fields and rename the child repeaters with their new index
         const updatedElements = elements.map((item, itemIndex) => {
             if (item.id !== id || itemIndex < removeIndex) {
@@ -191,7 +215,25 @@ const RenderForm = ({ formElements }) => {
         updatedElements.splice(lastRepeaterIndex, 1);
         // set state
         setFormElementsState(updatedElements);
+
+        // get the field name to update form context state
+        const fieldName = updatedElements[0].custom_name;
+        updateFormRepeater(fieldName, index);
     };
+
+    useEffect(() => {
+        if (!formElementsState?.length || initialized) {
+            return;
+        }
+        // check element for multiple answers and add repeaters
+        formElementsState.forEach((item) => {
+            if (item.answerCount && item.answerCount > 1) {
+                addRepeater(item.id, item.answerCount - 1);
+            }
+        });
+        setInitialized(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formElementsState]);
 
     return formElementsState?.length ? (
         <FormGroup

@@ -11,9 +11,9 @@ const GryPhone = (props) => {
 
     return (
         <PhoneInput
-            label="phone"
-            name={custom_name}
+            label="Phone"
             {...allProps}
+            name={custom_name}
         />
     );
 };

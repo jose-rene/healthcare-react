@@ -6,14 +6,16 @@ import FormElementsEdit from "components/forms/form-builder/field-edit-page";
 import "./style.scss";
 import useFormBuilder from "../../../../hooks/useFormBuilder";
 
-const FormBuilderEdit = ({
-    history,
-    match: {
-        params: { form_slug },
-    },
-}) => {
+const FormBuilderEdit = (props) => {
+    const {
+        history,
+        match: {
+            params: { form_slug },
+        },
+    } = props;
+
     const [{ items, form, formLoaded }, { fireLoadForm }] = useFormBuilder({
-        formId: form_slug,
+        form_slug,
     });
 
     useEffect(() => {

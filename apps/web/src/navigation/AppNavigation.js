@@ -1,15 +1,10 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-
 import { useUser } from "Context/UserContext";
-
 import { ADMIN } from "actions/types";
-
 import PrivateRoute from "route/PrivateRoute";
 import RoleRouteRouter from "route/RoleRoute";
-
 import useApiCall from "hooks/useApiCall";
-
 import RequestEdit from "pages/healthplan/RequestEdit";
 import Account from "pages/Account/Account";
 import Table from "pages/Test/Table";
@@ -39,6 +34,9 @@ import FormBuilderEdit from "pages/Admin/FormBuilder/edit";
 import FormIndex from "pages/Admin/FormBuilder/Index";
 import AdminUserList from "pages/Admin/UserList/UserList";
 import AdminUserEdit from "pages/Admin/UserList/UserEdit";
+import FormWizard from "../pages/FormWizard";
+import RequestSections from "../pages/RequestSections";
+import RequestSectionsShowForm from "../pages/RequestSections/RequestSectionsShowForm";
 
 const AppNavigation = () => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -123,6 +121,30 @@ const AppNavigation = () => {
                     component={NewRequestAdd}
                 />
                 <PrivateRoute
+                    path="/requests/:request_id/form-sections/:form_slug"
+                    middleware={[
+                        "hp_user",
+                        "hp_manager",
+                        "hp_champion",
+                        "coo",
+                        "client_services_specialist",
+                        "client_services_manager",
+                    ]}
+                    component={RequestSectionsShowForm}
+                />
+                <PrivateRoute
+                    path="/requests/:request_id/form-sections"
+                    middleware={[
+                        "hp_user",
+                        "hp_manager",
+                        "hp_champion",
+                        "coo",
+                        "client_services_specialist",
+                        "client_services_manager",
+                    ]}
+                    component={RequestSections}
+                />
+                <PrivateRoute
                     path="/requests/:id"
                     middleware={[
                         "hp_user",
@@ -167,6 +189,12 @@ const AppNavigation = () => {
                     path="/admin/forms/:form_slug/edit"
                     middleware={["software_engineer"]}
                     component={FormBuilderEdit}
+                />
+
+                <PrivateRoute
+                    path="/form-wizard/:form_group_slug"
+                    middleware={[]}
+                    component={FormWizard}
                 />
 
                 <PrivateRoute

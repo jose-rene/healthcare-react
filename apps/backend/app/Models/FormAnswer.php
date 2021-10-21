@@ -45,6 +45,11 @@ class FormAnswer extends Model
         return $this->belongsTo(Form::class);
     }
 
+    public function form_type()
+    {
+        return $this->form()->type();
+    }
+
     public function scopeUserAnswers($query, $user_id = null)
     {
         if (!$user_id) {
@@ -52,5 +57,10 @@ class FormAnswer extends Model
         }
 
         return $query->where(compact('user_id'))->orderBy('updated_at', 'desc');
+    }
+
+    public function answerable()
+    {
+        return $this->morphTo();
     }
 }
