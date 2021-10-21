@@ -16,7 +16,7 @@ const RenderForm = ({ formElements }) => {
         return children.length ? children.flat() : [];
     };
 
-    const { getValue, update: setValue } = useFormContext();
+    const { getValue, update: setValue, setForm } = useFormContext();
 
     // build into groups
     const processGroups = (elements, childIds, subFields) => {
@@ -78,6 +78,21 @@ const RenderForm = ({ formElements }) => {
         const elements = processGroups(formElements, childIds, fields);
         setFormElementsState(elements);
     }, [formElements]);
+
+    // updates repeater field in form context
+    const updateFormRepeater = (fieldName, index) => {
+        // the value is an object, get a shallow copy less we mutate state
+        const [...value] = getValue(fieldName);
+        // set the form context state with the removed index
+        if (value && value[index]) {
+            // remove the index in values of the removed index
+            value.splice(index, 1);
+            // set the values in the form context
+            setForm((prevForm) => {
+                return { ...prevForm, [fieldName]: value };
+            });
+        }
+    };
 
     const addRepeater = (id, qty = 1) => {
         const elements = [...formElementsState];
@@ -155,6 +170,9 @@ const RenderForm = ({ formElements }) => {
             elements.splice(removeIndex, 1);
             // set state
             setFormElementsState(elements);
+            // get the field name to update form context state
+            const fieldName = removedElement.custom_name;
+            updateFormRepeater(fieldName, index);
             return;
         }
         // Instead of re-indexing, set the value of items to the value of the next item and remove the last item
@@ -164,6 +182,7 @@ const RenderForm = ({ formElements }) => {
             elements,
             (item) => item.id === id
         );
+
         // remap fields and rename the child repeaters with their new index
         const updatedElements = elements.map((item, itemIndex) => {
             if (item.id !== id || itemIndex < removeIndex) {
@@ -196,6 +215,10 @@ const RenderForm = ({ formElements }) => {
         updatedElements.splice(lastRepeaterIndex, 1);
         // set state
         setFormElementsState(updatedElements);
+
+        // get the field name to update form context state
+        const fieldName = updatedElements[0].custom_name;
+        updateFormRepeater(fieldName, index);
     };
 
     useEffect(() => {
