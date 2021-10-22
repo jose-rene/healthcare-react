@@ -1,10 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import * as Yup from "yup";
+
 import { Button } from "components";
 import Form from "components/elements/Form";
 import ContextInput from "components/inputs/ContextInput";
 import ContextSelect from "components/contextInputs/Select";
+import ContextCheckbox from "components/contextInputs/Checkbox";
+
 import useApiCall from "hooks/useApiCall";
 
 const ClinicianForm = ({
@@ -19,6 +22,8 @@ const ClinicianForm = ({
         email,
         phone_primary: phone,
         job_title,
+        is_preferred,
+        is_test,
     },
     onSubmit,
     updateLoading,
@@ -35,6 +40,8 @@ const ClinicianForm = ({
         email,
         phone,
         job_title,
+        is_preferred,
+        is_test,
     });
 
     // validation
@@ -217,6 +224,26 @@ const ClinicianForm = ({
                         options={therapyNetworksOptions}
                     />
                 </Col>
+                <Col md={6}>
+                    <div className="form-check form-check-inline ps-0">
+                        <ContextCheckbox
+                            label="Preferred"
+                            name="is_preferred"
+                            wrapperClass="form-check py-1 px-0"
+                        />
+                    </div>
+
+                    <div className="form-check form-check-inline">
+                        <ContextCheckbox
+                            label="Test User"
+                            name="is_test"
+                            wrapperClass="form-check py-1 px-0"
+                        />
+                    </div>
+                </Col>
+            </Row>
+
+            <Row className="mt-3">
                 <Col md={3}>
                     <Button
                         type="submit"
