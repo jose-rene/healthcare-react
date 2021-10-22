@@ -3,16 +3,19 @@ import SelectWithFilter from "./index";
 import { useFormContext } from "../../../Context/FormContext";
 
 const CTXSelectWithFilter = ({ name, onChange: _onChange = false, ...props }) => {
-    const { form, setForm, getError } = useFormContext();
-    const { [name]: value } = form;
+    const { getValue, getError, update } = useFormContext();
+    const value = getValue(name);
 
     props.name = name;
     props.value = value;
     props.error = getError({ name });
 
     props.onChange = e => {
-        //props.debug && console.log('props.onChange', { e });
-        setForm({ ...form, [name]: e.target.value || '' });
+        const {
+            value: tValue = "",
+        } = e.target;
+
+        update(name, tValue);
 
         _onChange && _onChange(e);
     };

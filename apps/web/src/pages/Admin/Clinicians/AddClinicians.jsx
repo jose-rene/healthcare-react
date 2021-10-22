@@ -39,8 +39,8 @@ const AddClinicians = (props) => {
         primary_role: {
             yupSchema: Yup.string().required("Primary Role is required"),
         },
-        title: {
-            yupSchema: Yup.string().required("Title is required"),
+        job_title: {
+            yupSchema: Yup.string().required("Job Title is required"),
         },
         first_name: {
             yupSchema: Yup.string().required("First Name is required"),
@@ -177,7 +177,7 @@ const AddClinicians = (props) => {
             clinical_user_status_id: editClinicians?.clinical_user_status?.id,
             therapy_network_id: editClinicians?.therapy_network?.id,
             primary_role: editClinicians?.primary_role,
-            title: editClinicians?.title,
+            job_title: editClinicians?.job_title,
             first_name: editClinicians?.first_name,
             last_name: editClinicians?.last_name,
             email: editClinicians?.email,
@@ -216,7 +216,7 @@ const AddClinicians = (props) => {
                 clinical_user_status_id: result?.clinical_user_status?.id,
                 therapy_network_id: result?.therapy_network?.id,
                 primary_role: result?.primary_role,
-                title: result?.title,
+                job_title: result?.job_title,
                 first_name: result?.first_name,
                 last_name: result?.last_name,
                 email: result?.email,
@@ -313,7 +313,7 @@ const AddClinicians = (props) => {
                             />
                         </Col>
                         <Col md={6}>
-                            <ContextInput name="title" label="Title*" />
+                            <ContextInput name="job_title" label="Job Title*" />
                         </Col>
                         <Col md={6}>
                             <ContextInput

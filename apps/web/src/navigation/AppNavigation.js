@@ -1,15 +1,10 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-
 import { useUser } from "Context/UserContext";
-
 import { ADMIN } from "actions/types";
-
 import PrivateRoute from "route/PrivateRoute";
 import RoleRouteRouter from "route/RoleRoute";
-
 import useApiCall from "hooks/useApiCall";
-
 import RequestEdit from "pages/healthplan/RequestEdit";
 import Account from "pages/Account/Account";
 import Table from "pages/Test/Table";
@@ -26,7 +21,6 @@ import Federated from "pages/Federated";
 import ForgotPassword from "pages/ForgotPassword";
 import Login from "pages/Login";
 import Error from "pages/NotFound";
-import Questionnaire from "pages/Questionnaire";
 import SetForgotPassword from "pages/SetForgotPassword";
 import NotificationList from "pages/NotificationList";
 import AdminPayer from "pages/Test/AdminPayer";
@@ -38,7 +32,11 @@ import AdminAddClinicians from "pages/Admin/Clinicians/AddClinicians";
 import FormView from "pages/Admin/FormBuilder/show";
 import FormBuilderEdit from "pages/Admin/FormBuilder/edit";
 import FormIndex from "pages/Admin/FormBuilder/Index";
-import AdminUserList from "pages/Admin/UserList";
+import AdminUserList from "pages/Admin/UserList/UserList";
+import AdminUserEdit from "pages/Admin/UserList/UserEdit";
+import FormWizard from "../pages/FormWizard";
+import RequestSections from "../pages/RequestSections";
+import RequestSectionsShowForm from "../pages/RequestSections/RequestSectionsShowForm";
 import NarrativeReport from "../pages/Admin/NarrativeReport";
 
 const AppNavigation = () => {
@@ -124,6 +122,30 @@ const AppNavigation = () => {
                     component={NewRequestAdd}
                 />
                 <PrivateRoute
+                    path="/requests/:request_id/form-sections/:form_slug"
+                    middleware={[
+                        "hp_user",
+                        "hp_manager",
+                        "hp_champion",
+                        "coo",
+                        "client_services_specialist",
+                        "client_services_manager",
+                    ]}
+                    component={RequestSectionsShowForm}
+                />
+                <PrivateRoute
+                    path="/requests/:request_id/form-sections"
+                    middleware={[
+                        "hp_user",
+                        "hp_manager",
+                        "hp_champion",
+                        "coo",
+                        "client_services_specialist",
+                        "client_services_manager",
+                    ]}
+                    component={RequestSections}
+                />
+                <PrivateRoute
                     path="/requests/:id"
                     middleware={[
                         "hp_user",
@@ -168,6 +190,12 @@ const AppNavigation = () => {
                     path="/admin/forms/:form_slug/edit"
                     middleware={["software_engineer"]}
                     component={FormBuilderEdit}
+                />
+
+                <PrivateRoute
+                    path="/form-wizard/:form_group_slug"
+                    middleware={[]}
+                    component={FormWizard}
                 />
 
                 <PrivateRoute
@@ -227,9 +255,16 @@ const AppNavigation = () => {
                 />
 
                 <PrivateRoute
+                    exact
                     path="/admin/users"
-                    middleware={["software_engineer"]}
+                    middleware={["create-users"]}
                     component={AdminUserList}
+                />
+
+                <PrivateRoute
+                    path="/admin/users/:id/edit"
+                    middleware={["create-users"]}
+                    component={AdminUserEdit}
                 />
 
                 <PrivateRoute
@@ -237,13 +272,7 @@ const AppNavigation = () => {
                     component={NotificationList}
                 />
 
-                <PrivateRoute path="/questionnaire/:id">
-                    <Questionnaire />
-                </PrivateRoute>
-
-                <PrivateRoute path="/assessment/:id">
-                    <Assessment />
-                </PrivateRoute>
+                <PrivateRoute path="/assessment/:id" component={Assessment} />
 
                 {/* ERROR PAGES */}
                 <Route component={Error} />

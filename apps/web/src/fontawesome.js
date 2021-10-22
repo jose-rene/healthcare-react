@@ -41,6 +41,8 @@ import {
     faUserNurse,
     faUsers,
     faTrashAlt,
+    faChevronUp,
+    faChevronDown,
     faNewspaper,
 } from "@fortawesome/pro-light-svg-icons";
 
@@ -87,6 +89,8 @@ library.add(
     faUserNurse,
     faUsers,
     faTrashAlt,
+    faChevronUp,
+    faChevronDown,
     faNewspaper,
 );
 /*

@@ -4,14 +4,16 @@ import useApiCall from "./useApiCall";
 import { PUT, POST } from "../config/URLs";
 import CustomFormElements from "../components/FormBuilder/Fields";
 
-const useFormBuilder = ({ formId } = {}) => {
+const useFormBuilder = ({ form_slug, request_id } = {}) => {
+    const formAnswerUrl = `request/${request_id}/request_form_section/${form_slug}`;
+
     const [{ loading: saving, data }, fireSaveForm] = useApiCall({
-        url: `form/${formId}`,
+        url: `form/${form_slug}`,
         method: PUT,
     });
 
     const [{ loading: savingAnswers }, fireSaveAnswers] = useApiCall({
-        url: `form/${formId}/form_answers`,
+        url: formAnswerUrl,
         method: POST,
     });
 
@@ -20,20 +22,19 @@ const useFormBuilder = ({ formId } = {}) => {
             loading: formLoading,
             data: { fields = [], answers: defaultAnswers = {} } = {},
         },
-        fireLoadForm,
-    ] = useApiCall({
-        url: `form/${formId}`,
-    });
+        apiFireLoadForm,
+    ] = useApiCall({});
 
     const [loaded, setLoaded] = useState(false);
     const [items, setItems] = useState([]);
     const [form, setForm] = useState([]);
+    const [formAnswers, setFormAnswers] = useState({});
 
     useEffect(() => {
-        if (!formId) {
+        if (!form_slug) {
             throw new Error({
                 code: 403,
-                message: "missing formId in useFormBuilder",
+                message: "missing form_slug in useFormBuilder",
             });
         }
 
@@ -81,19 +82,48 @@ const useFormBuilder = ({ formId } = {}) => {
         return formLoading && loaded;
     }, [formLoading, loaded]);
 
-    const saveAnswers = (params, { completed_form = false } = {}) => {
+    const fireLoadForm = async (params) => {
+        const url = request_id ? formAnswerUrl : `form/${form_slug}`;
+
+        const response = await apiFireLoadForm({
+            url,
+            ...params,
+        });
+
+        const { answer_data: answers = {}, fields: fieldData = [] } = response;
+
+        // set the depth of repeater fields if there is answer data
+        fieldData.forEach(({ key, custom_name: name }, i) => {
+            if (key === "GryInputGroupRepeater") {
+                // find the answers
+                if (answers && answers[name] && answers[name].length) {
+                    fieldData[i].answerCount = answers[name].length;
+                }
+            }
+        });
+
+        setFormAnswers(answers);
+
+        return response;
+    };
+
+    const saveAnswers = (
+        params,
+        { completed_form = false, request_id = null } = {}
+    ) => {
         const newAnswers = {
             form_data: params,
             completed_form,
+            request_id,
         };
 
-        fireSaveAnswers({ params: newAnswers });
+        return fireSaveAnswers({ params: newAnswers });
     };
 
     return [
         {
             form,
-            defaultAnswers,
+            defaultAnswers: formAnswers,
             items,
             formLoading,
             formLoaded,

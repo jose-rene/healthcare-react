@@ -27,11 +27,6 @@ const SidebarAdmin = ({ open }) => {
                 <FapIcon icon="user-nurse" size="lg" className="me-2" />
                 <span className={textClass}>Clinicians</span>
             </Nav.Link>
-
-            <Nav.Link href="/admin/users">
-                <FapIcon icon="users" size="lg" className="me-2" />
-                <span className={textClass}>Users</span>
-            </Nav.Link>
         </>
     );
 };

@@ -9,6 +9,7 @@ import { Button } from "components";
 import { POST, DELETE } from "../../../config/URLs";
 import ConfirmationModal from "components/elements/ConfirmationModal";
 import { _GET } from "../../../helpers/request";
+import { ACTIONS } from "../../../helpers/table";
 
 const FormIndex = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -62,7 +63,10 @@ const FormIndex = () => {
             },
             {
                 label: "Actions",
-                formatter: (val, { slug }) => {
+                columnMap: "slug",
+                type: ACTIONS,
+                disableSortBy: true,
+                formatter (slug) {
                     return (
                         <div className="actions">
                             <Link

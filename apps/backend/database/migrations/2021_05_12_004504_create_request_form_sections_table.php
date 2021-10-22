@@ -20,6 +20,9 @@ class CreateRequestFormSectionsTable extends Migration
             $table->foreignId('form_section_id')->comment('id of the related form_section');
             $table->foreignId('request_id')->comment('id of parent request');
 
+            $table->dateTime('completed_at')->nullable();
+            $table->dateTime('started_at')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
         });

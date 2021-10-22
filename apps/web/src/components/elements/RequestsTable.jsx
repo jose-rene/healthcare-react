@@ -104,7 +104,7 @@ const RequestsTable = () => {
                             to={
                                 // eslint-disable-next-line no-nested-ternary
                                 isClinician
-                                    ? `/asessment/${request_id}`
+                                    ? `/assessment/${request_id}`
                                     : !request_status_id
                                     ? `/member/${member_id}/request/${request_id}/edit`
                                     : `/requests/${request_id}`
@@ -120,6 +120,9 @@ const RequestsTable = () => {
                                 <FapIcon icon="file" size="1x" title="Report" />
                             </Link>
                         )}
+                        <Link className="px-2" to={`/requests/${request_id}/form-sections`}>
+                            <FapIcon icon="bars" size="1x" title="Report" />
+                        </Link>
                     </>
                 );
             },

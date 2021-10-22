@@ -6,10 +6,12 @@ use App\Channels\SmsChannel;
 use App\Library\FmDataApi;
 use App\Models\Role;
 use Bouncer;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\ServiceProvider;
 use Route;
+use Str;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -48,6 +50,15 @@ class AppServiceProvider extends ServiceProvider
             $url = rtrim(config('app.frontend_url', 'http://localhost'), '/');
 
             return $url . '/' . ltrim($path, '/');
+        });
+
+        Carbon::macro('human', function ($date) {
+            $stop = 'here';
+            return (new Carbon($date))->diffForHumans();
+        });
+
+        Str::macro('humanDate', function ($date) {
+            return (new Carbon($date))->diffForHumans();
         });
     }
 }

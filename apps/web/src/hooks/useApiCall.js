@@ -25,7 +25,7 @@ export default ({
     const [loading, setLoading] = useState(false);
 
     const formatParams = (params, _method = method) => ({
-        [_method === GET ? "params" : "data"]: params,
+        [_method === GET ? "params" : "data"]: { ...params, XDEBUG_SESSION_START: "PHPSTORM" },
     });
 
     const [config, setConfig] = useState({
@@ -81,7 +81,7 @@ export default ({
 
         if (request_params) {
             _configs = {
-                ...config,
+                ..._configs,
                 ...formatParams(request_params, _configs.method),
             };
             persist_changes && setConfig(_configs);
@@ -89,7 +89,7 @@ export default ({
 
         try {
             const jwtToken = await AsyncStorage.getItem(
-                "@dme.login.access_token",
+                "@dme.login.access_token"
             );
 
             if (jwtToken) {

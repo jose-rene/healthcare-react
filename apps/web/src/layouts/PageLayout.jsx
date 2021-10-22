@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { useUser } from "Context/UserContext";
 import FapIcon from "../components/elements/FapIcon";
 import TimeoutModal from "../components/elements/TimeoutModal";
@@ -12,7 +12,7 @@ import Sidebar from "./components/sidebar";
 import Menu from "./components/menu";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
-const PageLayout = ({ children }) => {
+const PageLayout = ({ loading: childloading = false, children }) => {
     const [{ showTimeoutModal }, { dismissTimeout }] = useIdleTimeout({
         timeout: INACTIVITY_TIMEOUT,
     });
@@ -138,7 +138,8 @@ const PageLayout = ({ children }) => {
                     {...{ logOut, primaryRole, abilities, open }}
                 />
                 <div className="p-3 flex-grow-1" style={{ marginTop: "70px" }}>
-                    {children}
+                    {childloading ? <div className="text-center"><Spinner animation="border" variant="secondary" />
+                    </div> : children}
                 </div>
             </div>
             <TimeoutModal
