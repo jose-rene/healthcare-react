@@ -11,7 +11,10 @@ const RequestSectionsShowForm = (props) => {
     const { request_id, form_slug } = params;
 
     const [formDataLoaded, setFormDataLoaded] = useState(false);
-    const [{ form, defaultAnswers, formLoading, saving }, { fireLoadForm, fireSaveAnswers }] = useFormBuilder({
+    const [
+        { form, defaultAnswers, formLoading, saving },
+        { fireLoadForm, fireSaveAnswers },
+    ] = useFormBuilder({
         form_slug,
         request_id,
     });
@@ -24,10 +27,10 @@ const RequestSectionsShowForm = (props) => {
                 setTimeout(() => {
                     setFormDataLoaded(true);
                 }, 500);
-            } catch (e) {
-
-            }
+            } catch (e) {}
         })();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // maps field validation to validation object
@@ -55,7 +58,7 @@ const RequestSectionsShowForm = (props) => {
     };
 
     const handleFormChange = (formValues) => {
-        if(!formDataLoaded){
+        if (!formDataLoaded) {
             return false;
         }
 

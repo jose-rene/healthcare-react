@@ -32,6 +32,7 @@ const RequestItemForm = ({
         setRequestClassifications(payerProfile.classifications);
     }, [requestData]); */
     // combine request type selects and request detail select into a group
+    // eslint-disable-next-line
     const [requestItemGroups, setRequestItemGroups] = useState([]);
 
     // console.log(requestItemGroups);
