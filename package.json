@@ -15,7 +15,7 @@
         "do:web": "lerna --scope=@dme/web exec yarn",
         "watchman:reset": "watchman watch-del-all",
         "pre-commit:message": "echo '\r\nYou can use this to run scripts pre commit or whatever git hook. You can call \"test\"\r\n' && exit 0",
-        "postinstall": "lerna bootstrap --no-progress --scope=@dme/{web,backend}",
+        "postinstall": "lerna bootstrap --no-progress --scope=@dme/web --scope=@dme/backend",
         "clean": "lerna clean && yarn do:api remove:vendor"
     },
     "pre-commit": [
