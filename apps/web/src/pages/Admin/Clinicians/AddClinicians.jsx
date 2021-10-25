@@ -10,6 +10,7 @@ import Form from "components/elements/Form";
 import ContextInput from "components/inputs/ContextInput";
 import ContextSelect from "components/contextInputs/Select";
 import PhoneInput from "components/inputs/PhoneInput";
+import ContextCheckbox from "components/contextInputs/Checkbox";
 
 import PageAlert from "components/elements/PageAlert";
 
@@ -182,6 +183,8 @@ const AddClinicians = (props) => {
             last_name: editClinicians?.last_name,
             email: editClinicians?.email,
             phone: editClinicians?.phone_primary,
+            is_preferred: editClinicians?.is_preferred,
+            is_test: editClinicians?.is_test,
         });
     }, [editClinicians]);
 
@@ -221,6 +224,8 @@ const AddClinicians = (props) => {
                 last_name: result?.last_name,
                 email: result?.email,
                 phone: result?.phone_primary,
+                is_preferred: result?.is_preferred,
+                is_test: result?.is_test,
             });
             props.history.push(`/admin/clinicians`);
         } catch (e) {
@@ -338,7 +343,26 @@ const AddClinicians = (props) => {
                                 label="Phone"
                             />
                         </Col>
+                        <Col md={6}>
+                            <div className="form-check form-check-inline ps-0">
+                                <ContextCheckbox
+                                    label="Preferred"
+                                    name="is_preferred"
+                                    wrapperClass="form-check py-1 px-0"
+                                />
+                            </div>
 
+                            <div className="form-check form-check-inline">
+                                <ContextCheckbox
+                                    label="Test User"
+                                    name="is_test"
+                                    wrapperClass="form-check py-1 px-0"
+                                />
+                            </div>
+                        </Col>
+                    </Row>
+
+                    <Row className="mt-3">
                         <Col md={3}>
                             <Button
                                 type="submit"
