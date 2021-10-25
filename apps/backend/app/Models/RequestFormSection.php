@@ -41,28 +41,23 @@ class RequestFormSection extends Model
         'started_at',
     ];
 
-    public function sectionForm()
+    public function request()
     {
-        return $this->belongsTo(Form::class, 'form_section_id');
+        return $this->belongsTo(Request::class, 'request_id');
     }
 
-    public function formSection()
+    public function section()
     {
-        return $this->belongsTo(FormSection::class, 'form_section_id');
+        return $this->belongsTo(AssesmentForm::class, 'form_section_id');
     }
 
     public function getFormAttribute()
     {
-        return $this->formSection;
+        return $this->section;
     }
 
     public function getIsStartedAttribute()
     {
         return (bool)$this->started_at;
-    }
-
-    public function request()
-    {
-        return $this->belongsTo(Request::class, 'request_id');
     }
 }

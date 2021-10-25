@@ -15,9 +15,10 @@ class CreateFormSectionsTable extends Migration
     {
         Schema::create('form_sections', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('assessment_id')->nullable()->comment('id of the related assessment');
+            $table->bigInteger('form_id')->nullable()->comment('id of the related form');
 
             $table->string('description')->comment('description');
-            $table->string('form_id')->comment('id of the parent form');
             $table->string('url')->comment('associated Cognito form url')->nullable();
 
             $table->timestamps();

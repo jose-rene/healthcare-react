@@ -58,7 +58,9 @@ const PrivateRoute = ({
     return !authed ? (
         <Redirect to={{ pathname: "/", state: { from: location } }} />
     ) : (
-        <Route {...rest} render={component ? null : children} />
+        <Route {...rest} render={component ?? null}>
+            {children}
+        </Route>
     );
 };
 

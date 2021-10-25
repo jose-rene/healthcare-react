@@ -15,10 +15,11 @@ class CreateAssessmentsTable extends Migration
     {
         Schema::create('assessments', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid')->index();
-            $table->foreignId('user_id');
-            $table->foreignId('questionnaire_id');
-            $table->foreignId('request_id');
+            $table->uuid('uuid');
+
+            $table->string('name')->comment('the name of the assessment');
+            $table->string('description')->comment('description of the assessment');
+
             $table->timestamps();
             $table->softDeletes();
         });

@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Assessment\Assessment;
-use App\Models\Assessment\Questionnaire;
 use App\Models\Request;
 use App\Models\User;
 use App\Models\UserType\HealthPlanUser;
@@ -100,18 +98,8 @@ class RequestTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // seed a test questionnaire
-        Artisan::call('db:seed', [
-            '--class' => 'Database\Seeders\QuestionnaireSeeder',
-        ]);
-        $questionnaire = Questionnaire::all()->first();
 
         $this->request = Request::factory()->create();
         $this->user = User::factory()->create();
-        $this->assessment = new Assessment();
-        $this->assessment->user()->associate($this->user);
-        $this->assessment->request()->associate($this->request);
-        $this->assessment->questionnaire()->associate($questionnaire);
-        $this->assessment->save();
     }
 }

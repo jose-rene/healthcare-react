@@ -48,6 +48,11 @@ class Form extends Model
         return 'slug';
     }
 
+    public function assessments() 
+    {
+        return $this->belongsToMany(Assessment::class, 'assessment_form');
+    }
+
     public function answers()
     {
         return $this
