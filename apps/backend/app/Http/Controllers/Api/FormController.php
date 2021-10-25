@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FormResource;
+use App\Http\Resources\Form\FormListResource;
 use App\Models\Form;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class FormController extends Controller
     {
         $forms = Form::paginate($request->get('perPage', 50));
 
-        return FormResource::collection($forms);
+        return FormListResource::collection($forms);
     }
 
     /**
@@ -59,9 +60,9 @@ class FormController extends Controller
         }
 
         // generate the new form with empty fields or copied fields from another form
-        Form::create(['fields' => $fields] + $request->all());
+        $form = Form::create(['fields' => $fields] + $request->all());
 
-        return response()->noContent();
+        return new FormResource($form);
     }
 
     public function destroy(Form $form)

@@ -94,11 +94,6 @@ class Request extends Model
         return $this->hasMany(RelevantDiagnoses::class)->orderBy('id');
     }
 
-    public function requestQuestionnaireSection()
-    {
-        return $this->hasMany(RequestQuestionnaireSection::class, 'request_id');
-    }
-
     public function requestFormSections()
     {
         return $this->hasMany(RequestFormSection::class);
