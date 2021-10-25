@@ -18,10 +18,7 @@ const useFormBuilder = ({ form_slug, request_id } = {}) => {
     });
 
     const [
-        {
-            loading: formLoading,
-            data: { fields = [], answers: defaultAnswers = {} } = {},
-        },
+        { loading: formLoading, data: { fields = [] } = {} },
         apiFireLoadForm,
     ] = useApiCall({});
 

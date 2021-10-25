@@ -12,6 +12,7 @@ import useApiCall from "hooks/useApiCall";
 const Assessment = (props) => {
     const { id } = useParams();
 
+    /* eslint-disable */
     const [
         {
             loading,
@@ -20,6 +21,7 @@ const Assessment = (props) => {
         },
         fireLoadAssessment,
     ] = useApiCall();
+    /* eslint-enable */
 
     useEffect(() => {
         fireLoadAssessment({

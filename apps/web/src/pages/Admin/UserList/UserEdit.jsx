@@ -8,6 +8,7 @@ import PageTitle from "components/PageTitle";
 
 import PageAlert from "components/elements/PageAlert";
 import ClinicianForm from "components/UserEditForm/ClinicianForm";
+import HealthplanUserForm from "components/UserEditForm/HealthplanUserForm";
 
 import useApiCall from "hooks/useApiCall";
 import useToast from "hooks/useToast";
@@ -42,7 +43,10 @@ const UserEdit = (props) => {
     }, [editUserId]);
 
     const updateUser = async (formValues, context) => {
-        const url = context && context === "clinician" ? `admin/clinicaluser/${editUserId}` : `admin/users/${editUserId}`;
+        const url =
+            context && context === "clinician"
+                ? `admin/clinicaluser/${editUserId}`
+                : `user/${editUserId}`;
         const result = await updateUserRequest({
             params: formValues,
             url,
@@ -75,8 +79,17 @@ const UserEdit = (props) => {
                         ) : null}
                     </Col>
 
+                    {!user_type && <Col md={12}>Loading...</Col>}
+
                     {user_type && user_type === "ClinicalServicesUser" && (
                         <ClinicianForm
+                            editUserData={editUserData}
+                            updateLoading={updateLoading}
+                            onSubmit={updateUser}
+                        />
+                    )}
+                    {user_type && user_type === "HealthPlanUser" && (
+                        <HealthplanUserForm
                             editUserData={editUserData}
                             updateLoading={updateLoading}
                             onSubmit={updateUser}

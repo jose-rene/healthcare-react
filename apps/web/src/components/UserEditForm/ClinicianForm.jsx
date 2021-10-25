@@ -29,7 +29,7 @@ const ClinicianForm = ({
     updateLoading,
 }) => {
     // default data for form
-    const [defaultData, setDefaultData] = useState({
+    const [defaultData] = useState({
         primary_role,
         clinical_type_id: clinical_type?.id ?? "",
         clinical_user_type_id: clinical_user_type?.id ?? "",

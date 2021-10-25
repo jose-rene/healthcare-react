@@ -50,8 +50,11 @@ const AddUser = () => {
         },
         email: {
             yupSchema: Yup.string()
-                .required("Email is required")
-                .email("Please enter a valid email"),
+                .matches(
+                    /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    "Please enter a valid email address"
+                )
+                .required("Email is required"),
         },
         phone: {
             yupSchema: Yup.string().required("Phone is required"),
