@@ -51,7 +51,9 @@ const PrivateRoute = ({
         if (addLayout) {
             return (
                 <PageLayout>
-                    <Route {...rest} render={component ? null : children} />
+                    <Route {...rest} render={component ?? null}>
+                        {children}
+                    </Route>
                 </PageLayout>
             );
         }

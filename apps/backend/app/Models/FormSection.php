@@ -20,9 +20,14 @@ class FormSection extends Model
      */
     protected $fillable = [
         'description',
-        'form_id',
+        'assessment_id',
         'url',
     ];
+
+    public function assessment()
+    {
+        return $this->belongsTo(Assessment::class);
+    }
 
     public function form()
     {

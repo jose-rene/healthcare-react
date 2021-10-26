@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Admin;
 
-use App\Models\Assessment\Assessment;
-use App\Models\Assessment\Questionnaire;
 use App\Models\Request;
 use App\Models\User;
 use App\Models\UserType\HealthPlanUser;
@@ -107,11 +105,6 @@ class RequestControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // seed a test questionnaire
-        Artisan::call('db:seed', [
-            '--class' => 'Database\Seeders\QuestionnaireSeeder',
-        ]);
-        $questionnaire = Questionnaire::all()->first();
 
         Bouncer::allow('admin')->everything();
 
@@ -119,11 +112,5 @@ class RequestControllerTest extends TestCase
         $this->user    = User::factory()->create();
 
         Bouncer::sync($this->user)->roles(['admin']);
-
-        $this->assessment = new Assessment();
-        $this->assessment->user()->associate($this->user);
-        $this->assessment->request()->associate($this->request);
-        $this->assessment->questionnaire()->associate($questionnaire);
-        $this->assessment->save();
     }
 }

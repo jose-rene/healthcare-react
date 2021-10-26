@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Form;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FormResource extends JsonResource
+class FormListResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,7 +20,6 @@ class FormResource extends JsonResource
             'slug'        => $this->slug,
             'name'        => $this->name,
             'description' => $this->description,
-            'fields'      => $this->fields,
             'updated_at'  => $this->updated_at->format('m/d/Y H:i:s'),
         ];
     }

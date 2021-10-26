@@ -43,6 +43,7 @@ import {
     faTrashAlt,
     faChevronUp,
     faChevronDown,
+    faGlasses,
     faNewspaper,
 } from "@fortawesome/pro-light-svg-icons";
 
@@ -91,6 +92,7 @@ library.add(
     faTrashAlt,
     faChevronUp,
     faChevronDown,
+    faGlasses,
     faNewspaper,
 );
 /*
