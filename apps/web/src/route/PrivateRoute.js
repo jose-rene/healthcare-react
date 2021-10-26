@@ -61,7 +61,7 @@ const PrivateRoute = ({
         return (
             <Route {...rest} render={component ? null : children} />
         );
-    }, [addLayout]);
+    }, [addLayout, rest, component, children]);
 
     // console.log(middleware.length, component);
     if (
