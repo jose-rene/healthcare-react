@@ -1,10 +1,15 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+
 import { useUser } from "Context/UserContext";
+
 import { ADMIN } from "actions/types";
+
 import PrivateRoute from "route/PrivateRoute";
 import RoleRouteRouter from "route/RoleRoute";
+
 import useApiCall from "hooks/useApiCall";
+
 import RequestEdit from "pages/healthplan/RequestEdit";
 import Account from "pages/Account/Account";
 import Table from "pages/Test/Table";
@@ -15,7 +20,8 @@ import HpSearchMember from "pages/healthplan/SearchMember";
 import HpTraining from "pages/Training/Training";
 import NewRequestAdd from "pages/newRequestAdd/NewRequestAdd";
 import RequestLookup from "pages/RequestLookup/RequestLookup";
-import Assessment from "pages/Assessment";
+import AssessmentList from "pages/Assessment/AssessmentList";
+import Assessment from "pages/Assessment/Assessment";
 import Error401 from "pages/Errors/401";
 import Federated from "pages/Federated";
 import ForgotPassword from "pages/ForgotPassword";
@@ -34,9 +40,9 @@ import FormBuilderEdit from "pages/Admin/FormBuilder/edit";
 import FormIndex from "pages/Admin/FormBuilder/Index";
 import AdminUserList from "pages/Admin/UserList/UserList";
 import AdminUserEdit from "pages/Admin/UserList/UserEdit";
-import FormWizard from "../pages/FormWizard";
-import RequestSections from "../pages/RequestSections";
-import RequestSectionsShowForm from "../pages/RequestSections/RequestSectionsShowForm";
+import FormWizard from "pages/FormWizard";
+import RequestSections from "pages/RequestSections";
+import RequestSectionsShowForm from "pages/RequestSections/RequestSectionsShowForm";
 
 const AppNavigation = () => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -262,6 +268,12 @@ const AppNavigation = () => {
                 <PrivateRoute
                     path="/notifications"
                     component={NotificationList}
+                />
+
+                <PrivateRoute
+                    page="/admin/assessments"
+                    middleware={["software_engineer"]}
+                    component={AssessmentList}
                 />
 
                 <PrivateRoute path="/assessment/:id" component={Assessment} />
