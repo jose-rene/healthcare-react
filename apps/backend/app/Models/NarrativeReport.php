@@ -7,8 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- *
- **/
+ * @property mixed $narrative_report_template_id
+ * @property mixed $template
+ * @property mixed $object_name
+ * @property mixed $request_id
+ * @property mixed $text
+ */
 class NarrativeReport extends Model
 {
     use HasFactory, SoftDeletes;
