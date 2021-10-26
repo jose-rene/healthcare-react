@@ -55,11 +55,6 @@ const FancyEditor = ({
     ];
 
     useEffect(() => {
-        console.log({ value });
-        console.log({
-            value,
-            editorValue,
-        });
         setEditorValue(value);
     }, [value]);
 
