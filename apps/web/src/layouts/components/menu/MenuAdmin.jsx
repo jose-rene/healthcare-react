@@ -8,6 +8,13 @@ const MenuAdmin = () => {
     return (
         <>
             <Nav.Link
+                href="/admin/assessments"
+                className="list-group-item border-end-0"
+            >
+                <FapIcon icon="glasses" className="me-2" fixedWidth />
+                <span>Assessments</span>
+            </Nav.Link>
+            <Nav.Link
                 href="/admin/forms"
                 className="list-group-item border-end-0"
             >
