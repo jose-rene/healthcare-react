@@ -5,7 +5,7 @@ import { useFormContext } from "../../../Context/FormContext";
 const ContextCheckbox = (props) => {
     const { onChange: propsOnChange, name, value: valueLabel = true } = props;
 
-    const { getValue, getError, update } = useFormContext();
+    const { getValue, getError, update, form } = useFormContext();
     const checked = getValue(name);
 
     const handleOnChange = (e) => {
@@ -16,7 +16,8 @@ const ContextCheckbox = (props) => {
         const {
             target: { checked },
         } = e;
-        update({ [`${name}`]: !!checked });
+
+        update(name, !!checked);
     };
 
     return (

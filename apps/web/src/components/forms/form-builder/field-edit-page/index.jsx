@@ -6,7 +6,7 @@ import { EditorState, convertToRaw, convertFromHTML, ContentState } from "draft-
 import DynamicOptionList from "react-form-builder3/lib/dynamic-option-list";
 import { get } from "react-form-builder3/lib/stores/requests";
 import ID from "react-form-builder3/lib/UUID";
-import { set } from "lodash";
+import { set, range } from "lodash";
 import { Accordion } from "react-bootstrap";
 import { CustomRule, CustomValidation } from "..";
 
@@ -99,14 +99,57 @@ export default class FormElementsEdit extends React.Component {
         }
     }
 
+    renderSpanSettings = () => {
+        const span_width = this.props.element?.span_width || this.props.element.props?.span_width;
+        const count = Math.ceil(12 / span_width);
+        console.log({ span_width, count });
+
+        return (
+            <div className="form-group mt-3">
+                <div className="custom-control">
+                    <label className="custom-control-label" htmlFor="span_width">
+                        Span settings, Number from 1 to 12
+                    </label>
+                    <input
+                        id="span_width"
+                        type="text"
+                        className="form-control"
+                        defaultValue={span_width}
+                        onBlur={this.updateElement.bind(this)}
+                        onChange={this.editElementProp.bind(this, "span_width", "value")}
+                    />
+                </div>
+                <div className="row">
+                    {range(0, count).map(inc => (
+                        <div className="col">
+                            <div className="custom-control">
+                                <label className="custom-control-label" htmlFor="span_width">
+                                    Width
+                                </label>
+                                <input
+                                    id={`span_width-${inc}`}
+                                    type="text"
+                                    className="form-control"
+                                    defaultValue={count}
+                                    onBlur={this.updateElement.bind(this)}
+                                    onChange={this.editElementProp.bind(this, `span_width[${inc}]`, "value")}
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
     render () {
         if (this.state.dirty) {
             this.props.element.dirty = true;
         }
 
-        const this_checked = this.props.element.hasOwnProperty('required') ? this.props.element.required : false;
-        const this_read_only = this.props.element.hasOwnProperty('readOnly') ? this.props.element.readOnly : false;
-        const this_default_today = this.props.element.hasOwnProperty('defaultToday')
+        const this_checked = this.props.element.hasOwnProperty("required") ? this.props.element.required : false;
+        const this_read_only = this.props.element.hasOwnProperty("readOnly") ? this.props.element.readOnly : false;
+        const this_default_today = this.props.element.hasOwnProperty("defaultToday")
             ? this.props.element.defaultToday
             : false;
         const this_show_time_select = this.props.element.hasOwnProperty('showTimeSelect')
@@ -340,19 +383,7 @@ export default class FormElementsEdit extends React.Component {
                 </div>
                 }
 
-                {canHaveSpanSettings &&
-                <div className="form-group mt-3">
-                    <div className="custom-control custom-checkbox">
-                        <label className="custom-control-label" htmlFor="span_width">
-                            Span settings, Number from 1 to 12
-                        </label>
-                        <input id="span_width" type="text" className="form-control"
-                               defaultValue={this.props.element?.span_width || this.props.element.props?.span_width}
-                               onBlur={this.updateElement.bind(this)}
-                               onChange={this.editElementProp.bind(this, "span_width", "value")} />
-                    </div>
-                </div>
-                }
+                {canHaveSpanSettings && this.renderSpanSettings()}
 
                 {this.props.element.hasOwnProperty("step") &&
                 <div className="form-group">
