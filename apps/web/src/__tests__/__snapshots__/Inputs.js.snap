@@ -50,11 +50,13 @@ exports[`Input Components renders Text input correctly 1`] = `
 
 exports[`Input Components renders Textarea input correctly 1`] = `
 <div
-  className="form-group"
+  className="mb-3 form-group form-floating"
 >
-  
   <textarea
     className="form-control  "
   />
+  <label>
+    
+  </label>
 </div>
 `;

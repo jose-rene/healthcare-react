@@ -33,3 +33,22 @@ export const formatDate = (date) => {
 export const formatTime = (date) => {
     return dayjs(date, "HH:mm").format("HH:mm");
 };
+
+export const getTimes = (start_time, length, duration) => {
+    const times = [{ value: "", text: "" }];
+
+    let today = dayjs(
+        `${dayjs().format("YYYYMMDD")}${start_time}`,
+        "YYYYMMDDHH:mm"
+    );
+
+    for (let i = 0; i < length; i++) {
+        times.push({
+            id: i,
+            value: today.format("HH:mm"),
+            title: today.format("LT"),
+        });
+        today = today.add(duration, "minutes");
+    }
+    return times;
+};
