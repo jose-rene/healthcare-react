@@ -24,7 +24,7 @@ const FancyEditor = ({
     const toolbarSections = [
         "undo redo",
         "formatselect",
-        "bold italic backcolor",
+        "bold italic underline backcolor",
         "alignleft aligncenter alignright alignjustify",
         "bullist numlist outdent indent",
         "removeformat",
