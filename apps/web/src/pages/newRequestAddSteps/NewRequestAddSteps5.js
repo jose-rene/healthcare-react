@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import dayjs from "dayjs";
-import InputText from "../../components/inputs/InputText";
-import Select from "../../components/inputs/Select";
-import Textarea from "../../components/inputs/Textarea";
-import Checkbox from "../../components/inputs/Checkbox";
-import Button from "../../components/inputs/Button";
-import PageAlert from "../../components/elements/PageAlert";
-import useApiCall from "../../hooks/useApiCall";
-import { validateFile } from "../../helpers/validate";
+
+import InputText from "components/inputs/InputText";
+import Select from "components/inputs/Select";
+import Textarea from "components/inputs/Textarea";
+import Checkbox from "components/inputs/Checkbox";
+import Button from "components/inputs/Button";
+import PageAlert from "components/elements/PageAlert";
+
+import { validateFile } from "helpers/validate";
+import { getTimes } from "helpers/datetime";
+
+import useApiCall from "hooks/useApiCall";
 
 import "./newRequestAddSteps.css";
 
@@ -115,25 +119,6 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate, dueNa, setDueNa }) => {
         setSelectedFile(fileUploaded);
     };
 
-    const getTimes = () => {
-        const times = [{ value: "", text: "" }];
-        // start at 7AM
-        let today = dayjs(
-            `${dayjs().format("YYYYMMDD")}07:00`,
-            "YYYYMMDDHH:mm"
-        );
-        // half hour increments until 9PM
-        for (let i = 0; i < 29; i++) {
-            times.push({
-                id: i,
-                value: today.format("HH:mm"),
-                title: today.format("LT"),
-            });
-            today = today.add(30, "minutes");
-        }
-        return times;
-    };
-
     return (
         <>
             <div className="container-info">
@@ -171,7 +156,7 @@ const NewRequestAddSteps5 = ({ memberData, handleUpdate, dueNa, setDueNa }) => {
                                 name="due_time"
                                 label="Time"
                                 value={dueDate.time}
-                                options={getTimes()}
+                                options={getTimes("07:00", 29, 30)}
                                 onChange={updateData}
                                 disabled={dueNa}
                             />

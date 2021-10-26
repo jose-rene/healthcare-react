@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Card, Collapse, Row, Col } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 
@@ -8,13 +8,49 @@ import FapIcon from "components/elements/FapIcon";
 
 import ScheduleForm from "../forms/ScheduleForm";
 
+import { getTimes } from "helpers/datetime";
+
 const ScheduleView = ({
     openMember,
     toggleOpenMember,
     scheduledDate,
     error,
 }) => {
-    const onSubmit = () => {};
+    const [defaultData, setDefaultData] = useState({
+        scheduled_date: scheduledDate,
+        start_time: "",
+        end_time: "",
+    });
+
+    const [endTimeOptions, setEndTimeOptions] = useState([
+        { id: "", title: "", val: "" },
+    ]);
+
+    const [startTimeOptions] = useState(getTimes("07:00", 28, 30));
+
+    const getIndexTimes = (selectedTime) => {
+        const selectedOption = startTimeOptions.filter((time) => {
+            return selectedTime === time?.value;
+        });
+
+        return selectedOption[0]?.id;
+    };
+
+    const updateData = (e) => {
+        setDefaultData({
+            ...defaultData,
+            ...{ [e.target.name]: e.target.value },
+        });
+
+        if (e.target.name === "start_time") {
+            const index = getIndexTimes(e.target.value);
+            setEndTimeOptions(
+                getTimes(e.target.value, 28 - index >= 6 ? 6 : 28 - index, 30)
+            );
+        }
+    };
+
+    const onSubmit = (formValues) => {};
 
     return (
         <>
@@ -62,11 +98,17 @@ const ScheduleView = ({
                                 <Row className="mb-3">
                                     <Col md={6}>
                                         <Form
-                                            defaultData={{}}
+                                            defaultData={defaultData}
                                             // validation={validation}
                                             onSubmit={onSubmit}
                                         >
-                                            <ScheduleForm />
+                                            <ScheduleForm
+                                                startTimeOptions={
+                                                    startTimeOptions
+                                                }
+                                                endTimeOptions={endTimeOptions}
+                                                updateData={updateData}
+                                            />
 
                                             <Row>
                                                 <Col>
