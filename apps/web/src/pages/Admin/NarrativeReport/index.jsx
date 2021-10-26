@@ -1,71 +1,90 @@
-import React, { useState, useEffect, useMemo } from "react";
-import FancyEditor from "components/elements/FancyEditor";
-import Form from "components/elements/Form";
-import SubmitButton from "components/elements/SubmitButton";
-import { Row, Col, Card } from "react-bootstrap";
-import Textarea from "components/inputs/Textarea";
-import { handlebarsTemplate } from "helpers/string";
+import React, { useMemo, useState } from "react";
+import { Button } from "../../../components";
+import TableAPI from "../../../components/elements/TableAPI";
+import ConfirmationModal from "../../../components/elements/ConfirmationModal";
+import headers from "./headers";
+import useApiCalls from "./useApiCalls";
 
 const NarrativeReport = () => {
-    const [form, setForm] = useState({
-        testField: `<p>Welcome <strong>{{first_name}}</strong>.</p>
-<ul>{{#each people}}
-<li>Welcome <span style="background-color: #7e8c8d;">{{name}}</span></li>
-{{/each}}</ul>
-<h2>Ok Thank you {{first_name}}</h2>`,
-    });
-    const [answerData, setAnswerData] = useState(
-        "{\"first_name\": \"test first name\", \"people\": [{\"name\": \"foo\"}, {\"name\": \"bar\"}]}");
+    const [showDeleteModal, setShowDeleteModal] = useState(null);
 
-    const handleFormSubmit = (formValues) => {
-        setForm(formValues);
+    const handleDelete = (slug) => {
+        setShowDeleteModal(slug);
     };
 
-    useEffect(() => {
-        try {
-            console.log({ answerData: JSON.parse(answerData) });
-        } catch (e) {}
-    }, [answerData]);
+    const tableHeaders = useMemo(() => {
+        return headers({ handleDelete });
+    }, []);
 
-    const answerObj = useMemo(() => {
-        try {
-            return JSON.parse(answerData);
-        } catch (e) {
-            return {};
+    const {
+        loading,
+        data,
+        meta,
+
+        fireCreateTemplate,
+        creating,
+
+        deleting,
+        fireDeleteTemplate,
+
+        searchObj,
+        updateSearchObj,
+        redoSearch,
+    } = useApiCalls({
+        headers: tableHeaders,
+    });
+
+    const handleDeleteConfirmation = async (onlyClose = false) => {
+        if (!onlyClose) {
+            await fireDeleteTemplate({
+                url: `narrative_report_template/${showDeleteModal}`,
+            });
+            await redoSearch();
         }
-    }, [answerData]);
+
+        setShowDeleteModal(null);
+    };
+
+    const handleCreate = async () => {
+        const name = prompt("Report name: ");
+        if (name) {
+            await fireCreateTemplate({
+                params: {
+                    name,
+                },
+            });
+            await redoSearch();
+        }
+    };
 
     return (
-        <div>
-            FancyEditor Page:
-            <Row>
-                <Col>
-                    <Form defaultData={form} onSubmit={handleFormSubmit}>
-                        <FancyEditor name="testField" />
-                        <hr />
-                        <SubmitButton />
-                    </Form>
-                </Col>
-                <Col>
-                    <Textarea
-                        value={answerData}
-                        onChange={({ target: { value } }) => setAnswerData(value)}
-                        //onBlue={handleAnswerOutput}
-                        label="Answer data"
-                    />
-                    <hr />
-                    <h3>Preview</h3>
-                    {form.testField && (
-                        <Card>
-                            <Card.Body
-                                dangerouslySetInnerHTML={{
-                                    __html: handlebarsTemplate(form.testField, answerObj),
-                                }}
-                            />
-                        </Card>
-                    )}
-                </Col>
-            </Row>
+        <div className="content-box">
+            <div className="float-right mb-3">
+                <Button
+                    loading={creating}
+                    variant="primary"
+                    onClick={handleCreate}
+                    label="Create Narrative Report"
+                />
+            </div>
+
+            <TableAPI
+                loading={loading}
+                label="Forms"
+                headers={tableHeaders}
+                searchObj={searchObj}
+                data={data}
+                dataMeta={meta}
+                onChange={updateSearchObj}
+            />
+
+            <ConfirmationModal
+                handleAction={() => handleDeleteConfirmation()}
+                handleCancel={() => handleDeleteConfirmation(true)}
+                content={"Sure?"}
+                loading={deleting}
+                showModal={!!showDeleteModal}
+            />
         </div>
     );
 };

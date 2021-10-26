@@ -38,6 +38,7 @@ import FormWizard from "../pages/FormWizard";
 import RequestSections from "../pages/RequestSections";
 import RequestSectionsShowForm from "../pages/RequestSections/RequestSectionsShowForm";
 import NarrativeReport from "../pages/Admin/NarrativeReport";
+import EditNarrativeReport from "../pages/Admin/NarrativeReport/Edit";
 
 const AppNavigation = () => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -181,15 +182,15 @@ const AppNavigation = () => {
                 />
 
                 <PrivateRoute
-                    path="/forms/:form_slug/show"
-                    middleware={["software_engineer"]}
-                    component={FormView}
-                />
-
-                <PrivateRoute
                     path="/admin/forms/:form_slug/edit"
                     middleware={["software_engineer"]}
                     component={FormBuilderEdit}
+                />
+
+                <PrivateRoute
+                    path="/forms/:form_slug/show"
+                    middleware={["software_engineer"]}
+                    component={FormView}
                 />
 
                 <PrivateRoute
@@ -202,6 +203,13 @@ const AppNavigation = () => {
                     path="/admin/forms"
                     middleware={["software_engineer"]}
                     component={FormIndex}
+                />
+
+                <PrivateRoute
+                    path="/admin/narrative-report/:slug/edit"
+                    middleware={["software_engineer"]}
+                    component={EditNarrativeReport}
+                    addLayout
                 />
 
                 <PrivateRoute

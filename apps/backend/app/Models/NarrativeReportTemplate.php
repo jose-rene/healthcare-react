@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- *
- **/
+ * @property mixed $id
+ * @property mixed $name
+ * @property mixed $slug
+ * @property mixed $template
+ */
 class NarrativeReportTemplate extends Model
 {
     use HasFactory, SoftDeletes, Sluggable;
@@ -24,4 +27,14 @@ class NarrativeReportTemplate extends Model
         'slug',
         'template',
     ];
+
+    /*
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }
