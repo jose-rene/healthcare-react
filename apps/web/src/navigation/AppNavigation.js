@@ -287,7 +287,7 @@ const AppNavigation = () => {
                 />
 
                 <PrivateRoute
-                    page="/admin/assessments"
+                    path="/admin/assessments"
                     middleware={["software_engineer"]}
                     component={AssessmentList}
                 />

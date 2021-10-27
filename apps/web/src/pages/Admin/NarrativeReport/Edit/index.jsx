@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { Row, Col, Card } from "react-bootstrap";
+
 import FancyEditor from "components/elements/FancyEditor";
 import Form from "components/elements/Form";
 import SubmitButton from "components/elements/SubmitButton";
-import { Row, Col, Card } from "react-bootstrap";
 import Textarea from "components/inputs/Textarea";
+
 import { handlebarsTemplate } from "helpers/string";
-import useApiCall from "../../../../hooks/useApiCall";
-import { PUT } from "../../../../config/URLs";
+
+import useApiCall from "hooks/useApiCall";
+
+import { PUT } from "config/URLs";
 
 const EditNarrativeReport = ({ match }) => {
     const { slug = false } = match.params;
@@ -24,7 +28,7 @@ const EditNarrativeReport = ({ match }) => {
         templateField: ``,
     });
     const [answerData, setAnswerData] = useState(
-        "{\"first_name\": \"test first name\", \"people\": [{\"name\": \"foo\", \"age\": 21}, {\"name\": \"bar\"}]}",
+        '{"first_name": "test first name", "people": [{"name": "foo", "age": 21}, {"name": "bar"}]}'
     );
 
     const handleFormSubmit = (formValues) => {
@@ -38,6 +42,8 @@ const EditNarrativeReport = ({ match }) => {
             const { template = "" } = await fireLoadTemplate().catch(() => {});
             setForm({ templateField: template });
         })();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const answerObj = useMemo(() => {
@@ -55,13 +61,15 @@ const EditNarrativeReport = ({ match }) => {
                     <Form defaultData={form} onSubmit={handleFormSubmit}>
                         <FancyEditor name="templateField" />
                         <hr />
-                        <SubmitButton />
+                        <SubmitButton loading={saving} />
                     </Form>
                 </Col>
                 <Col>
                     <Textarea
                         value={answerData}
-                        onChange={({ target: { value } }) => setAnswerData(value)}
+                        onChange={({ target: { value } }) =>
+                            setAnswerData(value)
+                        }
                         label="Answer data"
                     />
                     <hr />
@@ -70,7 +78,10 @@ const EditNarrativeReport = ({ match }) => {
                         <Card>
                             <Card.Body
                                 dangerouslySetInnerHTML={{
-                                    __html: handlebarsTemplate(form.templateField, answerObj),
+                                    __html: handlebarsTemplate(
+                                        form.templateField,
+                                        answerObj
+                                    ),
                                 }}
                             />
                         </Card>
