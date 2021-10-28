@@ -25,6 +25,7 @@ const ClinicianForm = ({
         is_preferred,
         is_test,
     },
+    label,
     onSubmit,
     updateLoading,
 }) => {
@@ -247,7 +248,7 @@ const ClinicianForm = ({
                 <Col md={3}>
                     <Button
                         type="submit"
-                        label="Update"
+                        label={label}
                         variant="primary"
                         disabled={updateLoading}
                         block

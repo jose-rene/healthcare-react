@@ -17,7 +17,7 @@ import useSearch from "hooks/useSearch";
 
 import { ACTIONS } from "helpers/table";
 
-const UserList = () => {
+const UserList = (props) => {
     const [
         {
             loading,
@@ -97,10 +97,26 @@ const UserList = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const handleNewUser = () => {
+        props.history.push({
+            pathname: "/admin/users/add",
+        });
+    };
+
     return (
         <PageLayout>
             <Container fluid>
-                <PageTitle title="User List" hideBack />
+                <PageTitle
+                    title="User List"
+                    actions={[
+                        {
+                            icon: "plus",
+                            label: "Add",
+                            onClick: handleNewUser,
+                        },
+                    ]}
+                    hideBack
+                />
 
                 <Row>
                     <Col md={12}>
