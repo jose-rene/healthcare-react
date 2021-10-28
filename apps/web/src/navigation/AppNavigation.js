@@ -40,6 +40,7 @@ import FormBuilderEdit from "pages/Admin/FormBuilder/edit";
 import FormIndex from "pages/Admin/FormBuilder/Index";
 import AdminUserList from "pages/Admin/UserList/UserList";
 import AdminUserEdit from "pages/Admin/UserList/UserEdit";
+import AdminUserAdd from "pages/Admin/UserList/UserAdd";
 import FormWizard from "pages/FormWizard";
 import RequestSections from "pages/RequestSections";
 import RequestSectionsShowForm from "pages/RequestSections/RequestSectionsShowForm";
@@ -273,6 +274,12 @@ const AppNavigation = () => {
                     path="/admin/users"
                     middleware={["create-users"]}
                     component={AdminUserList}
+                />
+
+                <PrivateRoute
+                    path="/admin/users/add"
+                    middleware={["create-users"]}
+                    component={AdminUserAdd}
                 />
 
                 <PrivateRoute

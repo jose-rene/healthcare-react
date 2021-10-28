@@ -5,7 +5,6 @@ import { Container, Row, Col } from "react-bootstrap";
 import PageLayout from "layouts/PageLayout";
 
 import PageTitle from "components/PageTitle";
-
 import PageAlert from "components/elements/PageAlert";
 import ClinicianForm from "components/UserEditForm/ClinicianForm";
 import HealthplanUserForm from "components/UserEditForm/HealthplanUserForm";
@@ -84,6 +83,7 @@ const UserEdit = (props) => {
                     {user_type && user_type === "ClinicalServicesUser" && (
                         <ClinicianForm
                             editUserData={editUserData}
+                            label="Update"
                             updateLoading={updateLoading}
                             onSubmit={updateUser}
                         />
@@ -91,6 +91,7 @@ const UserEdit = (props) => {
                     {user_type && user_type === "HealthPlanUser" && (
                         <HealthplanUserForm
                             editUserData={editUserData}
+                            label="Update"
                             updateLoading={updateLoading}
                             onSubmit={updateUser}
                         />
