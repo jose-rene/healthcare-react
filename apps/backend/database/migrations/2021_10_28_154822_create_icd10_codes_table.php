@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHcpcsTable extends Migration
+class CreateIcd10CodesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateHcpcsTable extends Migration
      */
     public function up()
     {
-        Schema::create('hcpcs', function (Blueprint $table) {
+        Schema::create('icd10_codes', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->comment('hcpcs code');
-            $table->string('short_desc')->comment('short description');
-            $table->string('long_desc')->comment('long description');
-            $table->string('action_change')->comment('the most recent change for the record');
+            $table->string('code')->unique()->comment('The icd10 code');
+            $table->string('description')->comment('The description');
 
             $table->timestamps();
             $table->softDeletes();
@@ -32,6 +30,6 @@ class CreateHcpcsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hcpcs');
+        Schema::dropIfExists('icd10_codes');
     }
 }

@@ -139,7 +139,7 @@ class RequestAddTest extends TestCase
          */
         $response = $this->put($route, [
             'type_name' => 'due',
-            'due_at'    => $due_at = $this->faker->dateTimeBetween('now', '+2 weeks'),
+            'due_at'    => $due_at = $this->faker->dateTimeBetween('+1 day', '+2 weeks'),
         ]);
         $response->assertSuccessful();
 

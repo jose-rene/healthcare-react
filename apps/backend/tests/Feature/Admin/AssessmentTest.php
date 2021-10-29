@@ -75,7 +75,7 @@ class AssessmentTest extends TestCase
         // create some assessments
         Assessment::factory()->hasForms(5)->count(5)->create();
         // get index of assessments
-        $response = $this->json('GET', route('api.admin.assessments.store'));
+        $response = $this->json('GET', route('api.admin.assessments.index'));
         $response
             ->assertOk()
             ->assertJsonStructure(['data'])

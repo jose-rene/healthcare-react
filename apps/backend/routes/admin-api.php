@@ -30,6 +30,7 @@ Route::get('clinicaluser/search', 'ClinicalServicesUserController@search')->name
 Route::get('clinicaluser/params', 'ClinicalServicesUserController@params')->name('clinicaluser.params');
 
 Route::apiResource('assessments', 'AssessmentController');
+Route::apiResource('assessment-rules', 'AssessmentRuleController');
 Route::apiResource('clinicaluser', 'ClinicalServicesUserController')->except(['index', 'destroy']);
 Route::apiResource('payer', 'PayerController');
 Route::apiResource('member', 'MemberController');
