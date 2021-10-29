@@ -18,8 +18,9 @@ const HealthplanUserForm = ({
         last_name,
         email,
         phone_primary: phone,
-        abilities,
+        abilities = [],
     },
+    label,
     onSubmit,
     updateLoading,
 }) => {
@@ -179,7 +180,7 @@ const HealthplanUserForm = ({
                 <Col md={3} className="mt-3">
                     <Button
                         type="submit"
-                        label="Update"
+                        label={label}
                         variant="primary"
                         disabled={updateLoading}
                         block

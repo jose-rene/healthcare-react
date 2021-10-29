@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // daily molina run
-        $schedule->command('sftp:transfer')->dailyAt('08:25');
+        $schedule->command('sftp:transfer')->dailyAt('01:13');
 
         // monthly inspector run
         $log = storage_path('logs/inspector.log');
