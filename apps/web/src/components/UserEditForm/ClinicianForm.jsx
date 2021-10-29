@@ -30,20 +30,7 @@ const ClinicianForm = ({
     updateLoading,
 }) => {
     // default data for form
-    const [defaultData] = useState({
-        primary_role,
-        clinical_type_id: clinical_type?.id ?? "",
-        clinical_user_type_id: clinical_user_type?.id ?? "",
-        clinical_user_status_id: clinical_user_status?.id ?? "",
-        therapy_network_id: therapy_network?.id ?? "",
-        first_name,
-        last_name,
-        email,
-        phone,
-        job_title,
-        is_preferred,
-        is_test,
-    });
+    const [defaultData, setDefaultData] = useState(null);
 
     // validation
     const validation = {
@@ -95,6 +82,25 @@ const ClinicianForm = ({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        setDefaultData({
+            primary_role,
+            clinical_type_id: clinical_type?.id ?? "",
+            clinical_user_type_id: clinical_user_type?.id ?? "",
+            clinical_user_status_id: clinical_user_status?.id ?? "",
+            therapy_network_id: therapy_network?.id ?? "",
+            first_name,
+            last_name,
+            email,
+            phone,
+            job_title,
+            is_preferred,
+            is_test,
+        });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [primary_role]);
 
     const typesOptions = useMemo(() => {
         if (!types) return;
