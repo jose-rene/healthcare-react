@@ -7,27 +7,33 @@ import { useFormContext } from "Context/FormContext";
 
 const FormButtons = ({
     submitLabel = "Submit",
-    cancelLabel = "Cancel",
+    cancelLabel = false,
     onCancel = false,
+    loading = false,
 }) => {
     const { clear } = useFormContext();
 
     return (
         <Row>
+            {cancelLabel && (
+                <Col md={6}>
+                    <Button
+                        block
+                        label={cancelLabel}
+                        className="mb-3"
+                        variant="secondary"
+                        onClick={onCancel ? () => onCancel() : clear}
+                    />
+                </Col>
+            )}
             <Col md={6}>
                 <Button
                     block
-                    className="mb-3"
-                    variant="secondary"
-                    onClick={onCancel ? () => onCancel() : clear}
-                >
-                    {cancelLabel}
-                </Button>
-            </Col>
-            <Col md={6}>
-                <Button block variant="primary" type="Submit">
-                    {submitLabel}
-                </Button>
+                    label={submitLabel}
+                    variant="primary"
+                    disabled={loading}
+                    type="submit"
+                />
             </Col>
         </Row>
     );
