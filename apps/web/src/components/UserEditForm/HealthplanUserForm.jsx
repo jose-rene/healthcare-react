@@ -3,12 +3,12 @@ import { Row, Col } from "react-bootstrap";
 import * as Yup from "yup";
 import { get } from "lodash";
 
-import { Button } from "components";
 import Form from "components/elements/Form";
 import ContextInput from "components/inputs/ContextInput";
 import ContextSelect from "components/contextInputs/Select";
 import ContextCheckbox from "components/contextInputs/Checkbox";
 import PhoneInput from "components/inputs/PhoneInput";
+import FormButtons from "components/contextInputs/FormButtons";
 
 const HealthplanUserForm = ({
     editUserData: {
@@ -23,6 +23,8 @@ const HealthplanUserForm = ({
     label,
     onSubmit,
     updateLoading,
+    cancelLabel = false,
+    onCancel = false,
 }) => {
     const [defaultData] = useState({
         primary_role,
@@ -177,13 +179,12 @@ const HealthplanUserForm = ({
             </Row>
 
             <Row>
-                <Col md={3} className="mt-3">
-                    <Button
-                        type="submit"
-                        label={label}
-                        variant="primary"
-                        disabled={updateLoading}
-                        block
+                <Col md={6} className="mt-3">
+                    <FormButtons
+                        submitLabel={label}
+                        cancelLabel={cancelLabel}
+                        loading={updateLoading}
+                        onCancel={onCancel}
                     />
                 </Col>
             </Row>
