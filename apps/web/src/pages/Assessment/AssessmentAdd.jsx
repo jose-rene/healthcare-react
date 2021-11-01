@@ -53,8 +53,8 @@ const AssessmentAdd = (props) => {
             return [];
         }
 
-        return data.map(({ id, name, description }) => {
-            return { id, title: name, val: description };
+        return data.map(({ id, name }) => {
+            return { id, title: name, val: name };
         });
     }, [data]);
 
@@ -66,8 +66,10 @@ const AssessmentAdd = (props) => {
         const { name, description, forms } = formValues;
         let formsParam = [];
 
-        formsParam = forms.map((item) => {
-            return { id: item?.name, position: item?.name };
+        formsParam = forms.map(({value = "", name = ""}) => {
+            // map the name of the item to the id from the form data
+            const selected = data.find((item) => (item.name === value));
+            return { id: selected?.id ?? 0, position: name };
         });
         const result = await postForms({
             params: { name, description, forms: formsParam },
@@ -117,11 +119,7 @@ const AssessmentAdd = (props) => {
                             />
                         </Col>
 
-                        <AssessmentAddForm
-                            formOptions={formOptions}
-                            defaultData={defaultData}
-                            setDefaultData={setDefaultData}
-                        />
+                        <AssessmentAddForm formOptions={formOptions} />
 
                         <Col md={4} className="mt-3">
                             <Button

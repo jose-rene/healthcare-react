@@ -9,7 +9,7 @@ import { useFormContext } from "Context/FormContext";
 
 import FormRow from "./FormRow";
 
-const AssessmentAddForm = ({ formOptions, defaultData, setDefaultData }) => {
+const AssessmentAddForm = ({ formOptions }) => {
     const { update, getValue } = useFormContext();
     const forms = getValue("forms", []);
 
@@ -22,7 +22,7 @@ const AssessmentAddForm = ({ formOptions, defaultData, setDefaultData }) => {
     const handleForm = (e) => {
         setFormValue(e.target.value);
 
-        setDefaultData({ ...defaultData, [e.target.name]: e.target.value });
+        update(e.target.name, e.target.value);
     };
 
     const addNewForm = () => {
