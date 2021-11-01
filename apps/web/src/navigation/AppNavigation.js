@@ -21,6 +21,7 @@ import HpTraining from "pages/Training/Training";
 import NewRequestAdd from "pages/newRequestAdd/NewRequestAdd";
 import RequestLookup from "pages/RequestLookup/RequestLookup";
 import AssessmentList from "pages/Assessment/AssessmentList";
+import AssessmentAdd from "pages/Assessment/AssessmentAdd";
 import Assessment from "pages/Assessment/Assessment";
 import Error401 from "pages/Errors/401";
 import Federated from "pages/Federated";
@@ -297,6 +298,12 @@ const AppNavigation = () => {
                     path="/admin/assessments"
                     middleware={["software_engineer"]}
                     component={AssessmentList}
+                />
+
+                <PrivateRoute
+                    path="/admin/add-assessment"
+                    middleware={["software_engineer"]}
+                    component={AssessmentAdd}
                 />
 
                 <PrivateRoute path="/assessment/:id" component={Assessment} />
