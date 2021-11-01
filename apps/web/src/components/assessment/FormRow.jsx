@@ -11,7 +11,7 @@ const DragHandle = sortableHandle(() => (
 
 const FormRow = sortableElement(({ name, value, onRemove }) => (
     <Row>
-        <Col md={7} className="d-flex align-items-center">
+        <Col md={8} className="d-flex align-items-center">
             <DragHandle />
             <div className="w-100">
                 <Input
@@ -21,9 +21,7 @@ const FormRow = sortableElement(({ name, value, onRemove }) => (
                     disabled
                 />
             </div>
-        </Col>
-        <Col md={2}>
-            <FapIcon icon="times-circle" onClick={onRemove} />
+            <FapIcon icon="times-circle" onClick={onRemove} className="ms-1 mb-3"/>
         </Col>
     </Row>
 ));
