@@ -6,7 +6,7 @@ import { EditorState, convertToRaw, convertFromHTML, ContentState } from "draft-
 import DynamicOptionList from "react-form-builder3/lib/dynamic-option-list";
 import { get } from "react-form-builder3/lib/stores/requests";
 import ID from "react-form-builder3/lib/UUID";
-import { set, range } from "lodash";
+import { set } from "lodash";
 import { Accordion } from "react-bootstrap";
 import { CustomRule, CustomValidation } from "..";
 
@@ -108,7 +108,10 @@ export default class FormElementsEdit extends React.Component {
             <div className="form-group mt-3">
                 <div className="custom-control">
                     <label className="custom-control-label" htmlFor="span_width">
-                        Span settings, Number from 1 to 12
+                        Span settings. For columns use a number from 1 to 12 make sure the sum of the columns is 12. Or
+                        enter the widths of each column. Like if you want 3 columns enter 3,3,3. You can also append the
+                        number with g to use flex grow. For example 1g,100g where the number is a factor of how much
+                        width to use.
                     </label>
                     <input
                         id="span_width"
@@ -118,25 +121,6 @@ export default class FormElementsEdit extends React.Component {
                         onBlur={this.updateElement.bind(this)}
                         onChange={this.editElementProp.bind(this, "span_width", "value")}
                     />
-                </div>
-                <div className="row">
-                    {range(0, count).map(inc => (
-                        <div className="col">
-                            <div className="custom-control">
-                                <label className="custom-control-label" htmlFor="span_width">
-                                    Width
-                                </label>
-                                <input
-                                    id={`span_width-${inc}`}
-                                    type="text"
-                                    className="form-control"
-                                    defaultValue={count}
-                                    onBlur={this.updateElement.bind(this)}
-                                    onChange={this.editElementProp.bind(this, `span_width[${inc}]`, "value")}
-                                />
-                            </div>
-                        </div>
-                    ))}
                 </div>
             </div>
         );

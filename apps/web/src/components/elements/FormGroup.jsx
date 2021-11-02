@@ -3,6 +3,7 @@ import { Card, Col, Row } from "react-bootstrap";
 import Button from "../inputs/Button";
 import FormElement from "./FormElement";
 import Icon from "./Icon";
+import { isString } from "lodash";
 
 const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 12 }) => {
     return (
@@ -18,7 +19,7 @@ const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 
                     span_width: span = wrapperSpan,
                     props: { customRule, customValidation } = {},
                     ...props
-                }) => {
+                }, elementIndex) => {
                     const heading =
                         elementType === "GryInputGroupRepeaterChild"
                             ? `${label} (${index + 1})`
@@ -50,6 +51,28 @@ const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 
                             </Icon>
                         ) : null;
                     // console.log("form group type -> ", elementType);
+
+                    const spanWidth = () => {
+                        if (`${span}`.match(/,/)) {
+                            const spanArr = span.replace(/\s/g).split(",");
+                            const newSpan = spanArr[elementIndex] || "12";
+
+                            if (newSpan.match(/g/)) {
+                                return { style: { flexGrow: newSpan.replace(/g/, "") } };
+                            }
+
+                            return newSpan.match(/(px|%)/) ?
+                                { style: { width: newSpan, flex: 0 } } :
+                                { md: newSpan };
+                        }
+
+                        if (isString(span) || Number.isInteger(span)) {
+                            return span;
+                        }
+
+                        return "12";
+                    };
+
                     return fields ? (
                         <Card className="mb-3">
                             <Card.Header>
@@ -65,7 +88,7 @@ const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 
                             </Card.Body>
                         </Card>
                     ) : (
-                        <Col md={span || 12}>
+                        <Col {...spanWidth()}>
                             <FormElement
                                 elementType={elementType}
                                 id={id}
