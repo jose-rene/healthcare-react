@@ -374,6 +374,34 @@ class PayerControllerTest extends TestCase
         self::assertCount(0, $data);
     }
 
+     /**
+     * @group training
+     * @group document
+     * @group functional
+     */
+    public function testIndexHealthPlans()
+    {
+        Passport::actingAs(
+            $this->user
+        );
+
+        // create some hps for a total of 5
+        Payer::factory()
+            ->hasLobs(5, ['is_tat_enabled' => 1])
+            ->hasAddresses(1, ['is_primary' => true])
+            ->hasEmails(1)
+            ->hasPhones(1)
+            ->count(4)
+            ->create();
+
+        // Make sure I can get training documents by correct type.
+        $response = $this->get(route('api.admin.payer.index', ['category' => 1, 'subcategory' => 1]));
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['data'])
+            ->assertJsonCount(5, 'data');
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -394,9 +422,7 @@ class PayerControllerTest extends TestCase
             ->hasAddresses(1, ['is_primary' => true])
             ->hasEmails(1)
             ->hasPhones(1)
-            ->count(1)
-            ->create()
-            ->first();
+            ->create();
         $this->user = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
         $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create(['payer_id' => $this->payer]));
 

@@ -39,6 +39,7 @@ class UserRequest extends FormRequest
             'can_view_reports'  => ['boolean', 'nullable'],
             'can_create_users'  => ['boolean', 'nullable'],
             'user_type'         => ['bail', 'required_without'], // this is always based on role
+            'payer_id'          => ['bail', 'exists:payers,uuid'],
             'primary_role'      => ['bail', function ($attribute, $value, $fail) {
                 if (null === ($role = Bouncer::role()->firstWhere(['name' => $value]))) {
                     $fail('An invalid role update was selected.');

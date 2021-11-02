@@ -41,7 +41,7 @@ class RequestAssessmentJob
         }
         // check if there are no forms
         if (!$this->assessment->forms || !$this->assessment->forms->count()) {
-            throw new HttpException('The assessment has no forms attached.', 422);
+            throw new HttpException(422, 'The assessment has no forms attached.');
         }
         // create the request form sections from the forms linked to this assessment
         $this->assessment->forms->each(function($form) {

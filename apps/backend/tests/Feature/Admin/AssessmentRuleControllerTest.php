@@ -4,6 +4,7 @@ namespace Tests\Feature\Http\Controllers\Admin;
 
 use App\Models\Assessment;
 use App\Models\AssessmentRule;
+use App\Models\Payer;
 use App\Models\User;
 use Artisan;
 use Bouncer;
@@ -13,7 +14,7 @@ use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 /**
- * Class
+ * Class AssessmentRuleControllerTest
  * @link https://phpunit.readthedocs.io/en/9.5/annotations.html#group
  * @link https://phpunit.readthedocs.io/en/9.5/annotations.html#testwith
  */
@@ -49,6 +50,55 @@ class AssessmentRuleControllerTest extends TestCase{
             ->assertJsonStructure(['id', 'name', 'assessment_id'])
             ->assertJsonPath('name', $params['name'])
             ->assertJsonPath('assessment_id', $params['assessment_id']);
+    }
+
+    /**
+     * Test AssessmentRule with Payer creation.
+     *
+     * @return void
+     */
+    public function testCreatePayerRule()
+    {
+        // get an assessment
+        $assessment = $this->assessments->first();
+        // create a payer
+        $payer = Payer::factory()
+            ->hasLobs(5, ['is_tat_enabled' => 1])
+            ->hasAddresses(1, ['is_primary' => true])
+            ->hasEmails(1)
+            ->hasPhones(1)
+            ->create();
+        // make the request
+        $params = [
+            'name'          => $this->faker->catchPhrase(),
+            'assessment_id' => $assessment->id,
+            'payer_id'      => $payer->id,
+        ];
+        $response = $this->json('POST', route('api.admin.assessment-rules.store'), $params);
+        $response
+            ->assertStatus(201)
+            ->assertJsonStructure(['id', 'name', 'assessment_id', 'payer_id'])
+            ->assertJsonPath('name', $params['name'])
+            ->assertJsonPath('assessment_id', $params['assessment_id'])
+            ->assertJsonPath('payer_id', $params['payer_id']);
+
+        // create a therapy network
+        $network = Payer::factory()
+            ->hasAddresses(1, ['is_primary' => true])
+            ->hasEmails(1)
+            ->hasPhones(1)
+            ->create(['category_id' => 3]);
+        // make the request
+        $params = [
+            'name'          => $this->faker->catchPhrase(),
+            'assessment_id' => $assessment->id,
+            'payer_id'      => $network->id,
+        ];
+        // should fail with invalid payer
+        $response = $this->json('POST', route('api.admin.assessment-rules.store'), $params);
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure(['errors' => ['payer_id']]);
     }
 
     /**
