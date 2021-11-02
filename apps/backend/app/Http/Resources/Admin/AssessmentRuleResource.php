@@ -18,6 +18,7 @@ class AssessmentRuleResource extends JsonResource
             'id'                => $this->id,
             'name'              => $this->name,
             'assessment_id'     => $this->assessment_id,
+            'payer_id'          => $this->payer_id,
             'classification_id' => $this->classification_id,
             'request_type_id'   => $this->request_type_id,
         ];
