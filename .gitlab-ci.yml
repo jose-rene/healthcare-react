@@ -14,6 +14,7 @@ stages:
   - build
   - test
   - deploy
+  - deploy-live
   - dast
 
 # sast / dast jobs
@@ -91,6 +92,32 @@ api:deploy:
   environment:
     name: staging
     url: https://api-stage.dme-cg.com
+
+api:deploy-live:
+  stage: deploy
+  # only for develop branch deploy to staging
+  only:
+    refs:
+      - master
+    changes:
+      - "apps/backend/**/*"
+      - ".gitlab-ci.yml"
+  when: manual
+  script:
+    # gitlab does not correctly parse certificate from textarea input on their ui, so has to be base64 encoded and decoded
+    - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY_64" | base64 -d)
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    # Envoy has been added to the image
+    # - curl -sS https://getcomposer.org/installer | php
+    # - php composer.phar global require laravel/envoy
+    - cd apps/backend
+    - ~/.composer/vendor/bin/envoy run deploy --production=master --commit="$CI_COMMIT_SHA"
+  environment:
+    name: production
+    url: https://api-alpha.dme-cg.com
 
 web:build:
   stage: build
