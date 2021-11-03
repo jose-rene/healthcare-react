@@ -54,8 +54,3 @@
 @task('run_webhook')
     @microsoftTeams('https://dmecg.webhook.office.com/webhookb2/7d7565ab-73bf-4ff0-9623-7fe3c96d8133@58c9d28d-5275-480c-8739-8e2ab8d7d536/IncomingWebhook/dfa288f5355842f8b34a18ce5ec825cf/da4a962c-bc27-48ca-9492-350fce73f654');
 @endtask
-
-# this is useless because it does not run from the deployment, will say bad function call, use task above instead
-#@finished
-#    @microsoftTeams('https://dmecg.webhook.office.com/webhookb2/7d7565ab-73bf-4ff0-9623-7fe3c96d8133@58c9d28d-5275-480c-8739-8e2ab8d7d536/IncomingWebhook/dfa288f5355842f8b34a18ce5ec825cf/da4a962c-bc27-48ca-9492-350fce73f654');
-#@endfinished
