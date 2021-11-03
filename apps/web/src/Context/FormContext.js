@@ -1,7 +1,7 @@
 import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
-import { template } from "../helpers/string";
+import { handlebarsTemplate } from "../helpers/string";
 
 export const REQUIRED = "required";
 
@@ -163,7 +163,7 @@ const FormProvider = ({
 
             // custom rule
             if (customRule.length > 0) {
-                const result = template(customRule, form);
+                const result = handlebarsTemplate(customRule, form);
                 if (result.length > 0) {
                     errorTest = {
                         ...errorTest,
@@ -243,10 +243,25 @@ const FormProvider = ({
         setValid(false);
     };
 
-    const shouldShow = (rule) => {
-        const result = template(`<% if(${rule}){ %>yes<% } %>`, form) || "no";
-        return result === "yes";
-    };
+    const shouldShow = useCallback((rule, { name, rowIndex = 0 }) => {
+        try {
+            // Builds a template that handlebars can evaluate. If the condition is true the
+            // template will return 'yes' otherwise false or nothing.
+            const template = `{{#compare ${rule}}}yes{{/compare}}`.replace(/@index/gi, rowIndex.toString());
+            const result = handlebarsTemplate(template, form);
+            const show = result === "yes";
+
+            // If the field is hidden and the field has a value then set it to empty
+            if (!show && !editing && name && !!form[name]) {
+                update(name, "");
+            }
+
+            return show;
+        } catch (e) {
+        }
+
+        return false;
+    }, [form]);
 
     return (
         <FormContext.Provider

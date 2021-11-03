@@ -5,7 +5,7 @@ import FormElement from "./FormElement";
 import Icon from "./Icon";
 import { isString } from "lodash";
 
-const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 12 }) => {
+const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 12, rowIndex = 0 }) => {
     return (
         <>
             {elements.map(
@@ -81,6 +81,7 @@ const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 
                             <Card.Body>
                                 <Row>
                                     <FormGroup
+                                        rowIndex={elementIndex}
                                         elements={fields}
                                         span={span || 12}
                                     />
@@ -90,6 +91,7 @@ const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 
                     ) : (
                         <Col {...spanWidth()}>
                             <FormElement
+                                rowIndex={rowIndex}
                                 elementType={elementType}
                                 id={id}
                                 custom_name={custom_name}
