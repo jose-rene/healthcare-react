@@ -3,7 +3,7 @@
 @setup
     $repository = 'git@gitlab.com:dmecg/gryphon.git';
     $releases_dir = empty($production) ? '/var/www/stage-api/releases' : '/var/www/alpha-api/releases';
-    $app_dir = empty($production) ? '/var/www/stage-api' : /var/www/alpha-api';
+    $app_dir = empty($production) ? '/var/www/stage-api' : '/var/www/alpha-api';
     $release = date('YmdHis');
     $new_release_dir = $releases_dir .'/'. $release;
     // specify laravel dir for monorepo
