@@ -2,7 +2,7 @@ import React from "react";
 import { useFormContext } from "Context/FormContext";
 import { Input } from "components";
 
-const ContextInput = ({ name, customRule, ...props }) => {
+const ContextInput = ({ name, rowIndex = 0, customRule, ...props }) => {
     const { getValue, onChange, getError, editing, shouldShow, autocomplete } =
         useFormContext();
     const value = getValue(name);
@@ -14,7 +14,7 @@ const ContextInput = ({ name, customRule, ...props }) => {
         props.autocomplete = autocomplete === false ? "off" : autocomplete;
     }
 
-    if (!editing && customRule && !shouldShow(customRule)) {
+    if (!editing && customRule && !shouldShow(customRule, { name, rowIndex })) {
         return null;
     }
 
