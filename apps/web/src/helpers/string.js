@@ -2,10 +2,11 @@ import { template as _template } from "lodash";
 import Handlebars from "handlebars";
 
 Handlebars.registerHelper("compare", function (v1, operator, v2, options) {
-    "use strict";
     const operators = {
+        // eslint-disable-next-line
         "==": v1 == v2,
         "===": v1 === v2,
+        // eslint-disable-next-line
         "!=": v1 != v2,
         "!==": v1 !== v2,
         ">": v1 > v2,
@@ -21,7 +22,7 @@ Handlebars.registerHelper("compare", function (v1, operator, v2, options) {
         }
         return options.inverse(this);
     }
-    return console.error("Error: Expression \"" + operator + "\" not found");
+    return console.error('Error: Expression "' + operator + '" not found');
 });
 
 export const slugify = (text) => {
@@ -46,7 +47,6 @@ export const template = (templateString, object) => {
 };
 
 export const handlebarsTemplate = (templateString, object) => {
-
     const templateObj = Handlebars.compile(templateString);
     return templateObj(object);
 };
