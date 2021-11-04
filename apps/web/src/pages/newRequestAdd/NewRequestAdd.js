@@ -2,11 +2,15 @@ import React, { useEffect, useMemo } from "react";
 import { Alert, Container, Row, Col } from "react-bootstrap";
 import PageTitle from "components/PageTitle";
 import RequestForm from "components/request/RequestForm";
-import FapIcon from "components/elements/FapIcon";
-import PageLayout from "../../layouts/PageLayout";
-import useApiCall from "../../hooks/useApiCall";
-import { POST } from "../../config/URLs";
-import useToast from "../../hooks/useToast";
+import LoadingIcon from "components/elements/LoadingIcon";
+
+import PageLayout from "layouts/PageLayout";
+
+import useApiCall from "hooks/useApiCall";
+import useToast from "hooks/useToast";
+
+import { POST } from "config/URLs";
+
 /* eslint-disable react-hooks/exhaustive-deps */
 
 const NewRequestAdd = ({
@@ -76,8 +80,12 @@ const NewRequestAdd = ({
     const { member = {} } = data;
 
     const [name, dob] = useMemo(() => {
-        const { title = "", last_name = "", first_name = "", dob = "" } =
-            member || {};
+        const {
+            title = "",
+            last_name = "",
+            first_name = "",
+            dob = "",
+        } = member || {};
 
         return [`${title} ${first_name} ${last_name}`, dob];
     }, [member]);
@@ -113,12 +121,7 @@ const NewRequestAdd = ({
                                 {!loading && data?.id ? (
                                     <RequestForm data={data} />
                                 ) : (
-                                    <div className="text-center">
-                                        <FapIcon icon="spinner" size="2x" />
-                                        <span className="fs-3 ms-2 align-middle">
-                                            Loading...
-                                        </span>
-                                    </div>
+                                    <LoadingIcon />
                                 )}
                             </div>
                         </Row>
