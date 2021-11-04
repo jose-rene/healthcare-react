@@ -1,6 +1,29 @@
 import { template as _template } from "lodash";
 import Handlebars from "handlebars";
 
+Handlebars.registerHelper("compare", function (v1, operator, v2, options) {
+    "use strict";
+    const operators = {
+        "==": v1 == v2,
+        "===": v1 === v2,
+        "!=": v1 != v2,
+        "!==": v1 !== v2,
+        ">": v1 > v2,
+        ">=": v1 >= v2,
+        "<": v1 < v2,
+        "<=": v1 <= v2,
+        "||": !!(v1 || v2),
+        "&&": !!(v1 && v2),
+    };
+    if (operators.hasOwnProperty(operator)) {
+        if (operators[operator]) {
+            return options.fn(this);
+        }
+        return options.inverse(this);
+    }
+    return console.error("Error: Expression \"" + operator + "\" not found");
+});
+
 export const slugify = (text) => {
     return text
         .toString()
@@ -23,6 +46,7 @@ export const template = (templateString, object) => {
 };
 
 export const handlebarsTemplate = (templateString, object) => {
+
     const templateObj = Handlebars.compile(templateString);
     return templateObj(object);
 };

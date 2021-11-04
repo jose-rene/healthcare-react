@@ -5,11 +5,13 @@ import GryCheckboxGroup from "./GryCheckboxGroup";
 import GryInputGroup from "./GryInputGroup";
 import GrySelect from "./GrySelect";
 import GryInputGroupRepeater from "./GryInputGroupRepeater";
+import GryCheckbox from "./GryCheckbox";
 
 const CustomFormElements = {
     GryInput,
     GryText,
     GryPhone,
+    GryCheckbox,
     GryCheckboxGroup,
     GryInputGroup,
     GryInputGroupRepeater,

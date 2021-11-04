@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { useFormContext } from "../../../Context/FormContext";
 
@@ -19,7 +19,6 @@ const FancyEditor = ({
     const { getValue, update } = useFormContext();
     const value = getValue(name);
     const [editorValue, setEditorValue] = useState("");
-    const editorRef = useRef(null);
 
     const toolbarSections = [
         "undo redo",
@@ -58,16 +57,14 @@ const FancyEditor = ({
         setEditorValue(value);
     }, [value]);
 
-    const handleOnChange = () => {
-        const newValue = editorRef.current.getContent();
+    const handleOnChange = (newValue) => {
         setEditorValue(newValue);
         update(name, newValue);
     };
 
     return (
         <Editor
-            onInit={(evt, editor) => editorRef.current = editor}
-            onSelectionChange={handleOnChange}
+            onEditorChange={handleOnChange}
             value={editorValue}
             init={{
                 height,

@@ -4,6 +4,7 @@ import { useFormContext } from "../../../Context/FormContext";
 
 const CtxCheckboxGroup = ({
     name,
+    rowIndex = 0,
     children,
     customRule,
     options: _options = [],
@@ -20,7 +21,7 @@ const CtxCheckboxGroup = ({
         }));
     }, [_options]);
 
-    if (!editing && customRule && !shouldShow(customRule)) {
+    if (!editing && customRule && !shouldShow(customRule, { name, rowIndex })) {
         return null;
     }
 
