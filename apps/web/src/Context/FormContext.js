@@ -1,4 +1,11 @@
-import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
+import React, {
+    useContext,
+    useState,
+    useMemo,
+    createContext,
+    useEffect,
+    useCallback,
+} from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
 import { handlebarsTemplate } from "../helpers/string";
@@ -243,25 +250,32 @@ const FormProvider = ({
         setValid(false);
     };
 
-    const shouldShow = useCallback((rule, { name, rowIndex = 0 }) => {
-        try {
-            // Builds a template that handlebars can evaluate. If the condition is true the
-            // template will return 'yes' otherwise false or nothing.
-            const template = `{{#compare ${rule}}}yes{{/compare}}`.replace(/@index/gi, rowIndex.toString());
-            const result = handlebarsTemplate(template, form);
-            const show = result === "yes";
+    const shouldShow = useCallback(
+        (rule, { name, rowIndex = 0 }) => {
+            try {
+                // Builds a template that handlebars can evaluate. If the condition is true the
+                // template will return 'yes' otherwise false or nothing.
+                const template = `{{#compare ${rule}}}yes{{/compare}}`.replace(
+                    /@index/gi,
+                    rowIndex.toString()
+                );
+                const result = handlebarsTemplate(template, form);
+                const show = result === "yes";
 
-            // If the field is hidden and the field has a value then set it to empty
-            if (!show && !editing && name && !!form[name]) {
-                update(name, "");
-            }
+                // If the field is hidden and the field has a value then set it to empty
+                if (!show && !editing && name && !!form[name]) {
+                    update(name, "");
+                }
 
-            return show;
-        } catch (e) {
-        }
+                return show;
+            } catch (e) {}
 
-        return false;
-    }, [form]);
+            return false;
+        },
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [form]
+    );
 
     return (
         <FormContext.Provider
