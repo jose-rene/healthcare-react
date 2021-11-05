@@ -62,7 +62,32 @@ class AssessmentTest extends TestCase
         $response
             ->assertOk()
             ->assertJsonStructure(['id', 'name', 'description', 'sections'])
+            ->assertJsonCount(5, 'sections')
             ->assertJsonPath('sections.0.name', $data['forms'][4]['name']);
+    }
+
+    /**
+     * Test update assessment.
+     *
+     * @return void
+     */
+    public function testAssessmentUpdate()
+    {
+        $assessment = Assessment::factory()->create();
+        // data to update assessment
+        $data = [
+            'name'        => $name = $this->faker->catchPhrase(),
+            'description' => $this->faker->sentence(),
+            'forms'       => collect([Form::factory()->create()])->map(fn($form) => ['id' => $form->id, 'name' => $name . ' pivot', 'position' => 1])->toArray(),
+        ];
+        $response = $this->json('PUT', route('api.admin.assessments.update', ['assessment' => $assessment->uuid]), $data);
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['id', 'name', 'description', 'sections'])
+            ->assertJsonPath('name', $data['name'])
+            ->assertJsonPath('description', $data['description'])
+            ->assertJsonCount(1, 'sections')
+            ->assertJsonPath('sections.0.name', $data['forms'][0]['name']);
     }
 
      /**
@@ -89,7 +114,7 @@ class AssessmentTest extends TestCase
         $data = [
             'name'        => $name = $this->faker->catchPhrase(),
             'description' => $this->faker->sentence(),
-            'forms'    => $this->forms->map(fn($form) => ['id' => $form->id, 'name' => $name . ' pivot', 'position' => abs($form->id - 6)])->toArray(),
+            'forms'       => $this->forms->map(fn($form) => ['id' => $form->id, 'name' => $name . ' pivot', 'position' => abs($form->id - 6)])->toArray(),
         ];
         $response = $this->json('POST', route('api.admin.assessments.store'), $data);
         $response->assertStatus(201)

@@ -14,10 +14,29 @@ const AssessmentAddForm = ({ formOptions }) => {
     const forms = getValue("forms", []);
 
     const [formValue, setFormValue] = useState(null);
+    const [buttonVisible, setButtonVisible] = useState(false);
 
     useEffect(() => {
         formOptions && setFormValue(formOptions[0]?.val);
     }, [formOptions]);
+
+    useEffect(() => {
+        checkButtonVisibility(formValue);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formValue, forms]);
+
+    const checkButtonVisibility = (selectedValue) => {
+        const selected = forms.find(
+            ({ name, value }) => selectedValue === (value ? value : name)
+        );
+
+        if (selected) {
+            setButtonVisible(true);
+        } else {
+            setButtonVisible(false);
+        }
+    };
 
     const handleForm = (e) => {
         setFormValue(e.target.value);
@@ -27,6 +46,8 @@ const AssessmentAddForm = ({ formOptions }) => {
 
     const addNewForm = () => {
         const index = forms.length;
+
+        setButtonVisible(true);
 
         update(`forms.${index}`, {
             name: index,
@@ -69,6 +90,7 @@ const AssessmentAddForm = ({ formOptions }) => {
                 <Button
                     label="Add"
                     variant="primary"
+                    disabled={buttonVisible}
                     block
                     onClick={addNewForm}
                 />

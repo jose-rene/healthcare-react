@@ -305,6 +305,12 @@ const AppNavigation = () => {
                     component={AssessmentAdd}
                 />
 
+                <PrivateRoute
+                    path="/admin/assessment/:id"
+                    middleware={["software_engineer"]}
+                    component={AssessmentAdd}
+                />
+
                 <PrivateRoute path="/assessment/:id" component={Assessment} />
 
                 {/* ERROR PAGES */}

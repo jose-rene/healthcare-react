@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useParams } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import * as Yup from "yup";
 
@@ -16,6 +17,7 @@ import useToast from "hooks/useToast";
 
 const AssessmentAdd = (props) => {
     const { success: successMessage } = useToast();
+    const { id: assessmentId } = useParams();
 
     const [
         {
@@ -30,6 +32,16 @@ const AssessmentAdd = (props) => {
         method: "post",
         url: "/admin/assessments",
     });
+
+    const [{ data: editAssessment }, fireGetAssessment] = useApiCall({
+        url: `/admin/assessments/${assessmentId}`,
+    });
+
+    const [{ loading: editLoading, error: editError }, updateForms] =
+        useApiCall({
+            method: "put",
+            url: `/admin/assessments/${assessmentId}`,
+        });
 
     const validation = {
         name: {
@@ -47,6 +59,21 @@ const AssessmentAdd = (props) => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        fireGetAssessment();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [assessmentId]);
+
+    useEffect(() => {
+        setDefaultData({
+            id: editAssessment?.id,
+            name: editAssessment?.name,
+            description: editAssessment?.description,
+            forms: editAssessment?.sections,
+        });
+    }, [editAssessment]);
 
     const formOptions = useMemo(() => {
         if (!data) {
@@ -66,18 +93,41 @@ const AssessmentAdd = (props) => {
         const { name, description, forms } = formValues;
         let formsParam = [];
 
-        formsParam = forms.map(({value = "", name = ""}) => {
+        formsParam = forms.map(({ value = "", name = "" }, index) => {
             // map the name of the item to the id from the form data
-            const selected = data.find((item) => (item.name === value));
-            return { id: selected?.id ?? 0, position: name };
-        });
-        const result = await postForms({
-            params: { name, description, forms: formsParam },
+            const selected = data.find(
+                (item) => item.name === (assessmentId && !value ? name : value)
+            );
+            return {
+                id: selected?.id ?? 0,
+                position: index,
+            };
         });
 
+        let result;
+
+        if (assessmentId) {
+            result = await updateForms({
+                params: { name, description, forms: formsParam },
+            });
+        } else {
+            result = await postForms({
+                params: { name, description, forms: formsParam },
+            });
+        }
+
         if (result) {
-            setDefaultData(result);
-            successMessage("Form successfully added.");
+            setDefaultData({
+                id: result?.id,
+                name: result?.name,
+                description: result?.description,
+                forms: result?.sections,
+            });
+            successMessage(
+                assessmentId
+                    ? "Form successfully updated."
+                    : "Form successfully added."
+            );
         }
     };
 
@@ -86,7 +136,14 @@ const AssessmentAdd = (props) => {
             <Container fluid>
                 <Row>
                     <Col>
-                        <PageTitle title="New Assessment" onBack={handleBack} />
+                        <PageTitle
+                            title={
+                                assessmentId
+                                    ? "Edit Assessment"
+                                    : "New Assessment"
+                            }
+                            onBack={handleBack}
+                        />
                     </Col>
 
                     <Col md={12}>
@@ -98,6 +155,19 @@ const AssessmentAdd = (props) => {
                                 dismissible
                             >
                                 Error: {error}
+                            </PageAlert>
+                        ) : null}
+                    </Col>
+
+                    <Col md={12}>
+                        {editError ? (
+                            <PageAlert
+                                className="mt-3"
+                                variant="warning"
+                                timeout={5000}
+                                dismissible
+                            >
+                                Error: {editError}
                             </PageAlert>
                         ) : null}
                     </Col>
@@ -126,7 +196,7 @@ const AssessmentAdd = (props) => {
                                 type="submit"
                                 label="Save"
                                 variant="primary"
-                                disabled={loading}
+                                disabled={assessmentId ? editLoading : loading}
                                 block
                             />
                         </Col>
