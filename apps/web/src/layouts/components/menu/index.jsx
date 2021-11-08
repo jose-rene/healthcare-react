@@ -37,13 +37,6 @@ const Menu = ({ logOut, primaryRole, abilities, ...props }) => {
                         <FapIcon icon="home" className="me-2" fixedWidth />
                         <span>Home</span>
                     </Nav.Link>
-                    <Nav.Link
-                        href="/account"
-                        className="list-group-item border-end-0"
-                    >
-                        <FapIcon icon="user" className="me-2" fixedWidth />
-                        <span>Account</span>
-                    </Nav.Link>
 
                     {(primaryRole === "hp_user" ||
                         primaryRole === "hp_finance" ||

@@ -8,6 +8,13 @@ const MenuAdmin = () => {
     return (
         <>
             <Nav.Link
+                href="/admin/users"
+                className="list-group-item border-end-0"
+            >
+                <FapIcon icon="users" className="me-2" fixedWidth />
+                <span>Users</span>
+            </Nav.Link>
+            <Nav.Link
                 href="/admin/assessments"
                 className="list-group-item border-end-0"
             >
@@ -25,7 +32,7 @@ const MenuAdmin = () => {
                 href="/admin/narrative-report"
                 className="list-group-item border-end-0"
             >
-                <FapIcon icon="report" className="me-2" fixedWidth />
+                <FapIcon icon="newspaper" className="me-2" fixedWidth />
                 <span>Narrative Editor</span>
             </Nav.Link>
             <Nav.Link
@@ -41,13 +48,6 @@ const MenuAdmin = () => {
             >
                 <FapIcon icon="user-nurse" className="me-2" fixedWidth />
                 <span>Clinicians</span>
-            </Nav.Link>
-            <Nav.Link
-                href="/admin/users"
-                className="list-group-item border-end-0"
-            >
-                <FapIcon icon="users" className="me-2" fixedWidth />
-                <span>Users</span>
             </Nav.Link>
         </>
     );

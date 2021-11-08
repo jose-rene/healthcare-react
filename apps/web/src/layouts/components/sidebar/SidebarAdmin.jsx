@@ -9,6 +9,10 @@ const SidebarAdmin = ({ open }) => {
 
     return (
         <>
+            <Nav.Link href="/admin/users">
+                <FapIcon icon="users" size="lg" className="me-2" />
+                <span className={textClass}>Users</span>
+            </Nav.Link>
             <Nav.Link href="/admin/assessments">
                 <FapIcon icon="glasses" size="lg" className="me-2" />
                 <span className={textClass}>Assessments</span>
