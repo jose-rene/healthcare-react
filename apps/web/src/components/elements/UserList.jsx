@@ -1,50 +1,52 @@
-import React, { useEffect, useMemo } from "react";
-import useSearch from "../../hooks/useSearch";
-import useApiCall from "../../hooks/useApiCall";
-import "../../styles/RequestList.scss";
+import React, { useEffect, useState } from "react";
+
 import TableAPI from "./TableAPI";
 import UserTopSearch from "./UserTopSearch";
 
+import useSearch from "hooks/useSearch";
+import useApiCall from "hooks/useApiCall";
+
+import { ACTIONS } from "helpers/table";
+
+import "styles/RequestList.scss";
+
 const List = () => {
-    const headers = useMemo(
-        () => [
-            {
-                label: "Title",
-                columnMap: "primary_role_title", // name.title
-                disableSortBy: true,
-            },
-            {
-                label: "First Name",
-                columnMap: "first_name",
-            },
-            {
-                label: "Last Name",
-                columnMap: "last_name",
-            },
-            {
-                label: "Email",
-                columnMap: "email",
-                // disableSortBy: true,
-            },
-            {
-                label: "Phone",
-                columnMap: "phone_primary",
-                disableSortBy: true,
-            },
-            {
-                label: "Job Title",
-                columnMap: "job_title",
-                disableSortBy: true,
-            },
-            {
-                label: "",
-                columnMap: "edit",
-                link: "/healthplan/user",
-                disableSortBy: true,
-            },
-        ],
-        []
-    );
+    const [headers] = useState([
+        {
+            label: "Title",
+            columnMap: "primary_role_title", // name.title
+            disableSortBy: true,
+        },
+        {
+            label: "First Name",
+            columnMap: "first_name",
+        },
+        {
+            label: "Last Name",
+            columnMap: "last_name",
+        },
+        {
+            label: "Email",
+            columnMap: "email",
+        },
+        {
+            label: "Phone",
+            columnMap: "phone_primary",
+            disableSortBy: true,
+        },
+        {
+            label: "Job Title",
+            columnMap: "job_title",
+            disableSortBy: true,
+        },
+        {
+            label: "Actions",
+            columnMap: "edit",
+            disableSortBy: true,
+            link: "/healthplan/user",
+            type: ACTIONS,
+        },
+    ]);
 
     const [{ loading, data: { data = [], meta = {} } = {} }, fireCall] =
         useApiCall({

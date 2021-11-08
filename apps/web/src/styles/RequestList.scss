@@ -1,19 +1,20 @@
 .table {
-    th, td {
-      border-top: none;
-    }
-  
-    th {
-      font-size: 1rem;
-      line-height: 1.2rem;
-      color: #475866;
-      font-weight: normal;
-    }
-  
+    th,
     td {
-      font-size: 1rem;
-      line-height: 1.2rem;
-      color: #475866;
+        border-top: none;
+    }
+
+    th {
+        font-size: 1rem;
+        line-height: 1.2rem;
+        color: #475866;
+        font-weight: normal;
+    }
+
+    td {
+        font-size: 1rem;
+        line-height: 1.2rem;
+        color: #475866;
     }
 }
 
@@ -27,12 +28,12 @@ select.app-input {
     background-position-y: 15px;
 }
 
-  .margin-input {
+.margin-input {
     margin-top: 0;
     margin-bottom: 0;
-  }
+}
 
-  .app-input-filter {
+.app-input-filter {
     width: 100%;
     max-width: 100%;
     height: 33px;
@@ -43,9 +44,9 @@ select.app-input {
     box-shadow: none;
     font-size: 14px;
     line-height: 12px;
-  }
-  
-  select.app-input-filter {
+}
+
+select.app-input-filter {
     -webkit-appearance: none;
     -moz-appearance: none;
     background: transparent;
@@ -55,9 +56,9 @@ select.app-input {
     background-repeat: no-repeat;
     background-position-x: 96%;
     background-position-y: 4px;
-  }
-  
-  .app-input-filter::placeholder {
+}
+
+.app-input-filter::placeholder {
     color: #b8b8b8;
     font-size: 14px;
-  }
+}
