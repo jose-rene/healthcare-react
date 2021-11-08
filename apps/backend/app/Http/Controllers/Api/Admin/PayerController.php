@@ -11,6 +11,7 @@ use App\Http\Requests\Admin\PhoneRequest;
 use App\Http\Resources\AddressResource;
 use App\Http\Resources\EmailContactResource;
 use App\Http\Resources\PayerResource;
+use App\Http\Resources\PayerDetailResource;
 use App\Http\Resources\PhoneContactResource;
 use App\Models\Payer;
 use Exception;
@@ -53,7 +54,7 @@ class PayerController extends Controller
      */
     public function show(Payer $payer)
     {
-        return new PayerResource($payer);
+        return new PayerDetailResource($payer);
     }
 
     /**
@@ -71,7 +72,7 @@ class PayerController extends Controller
             $payer->memberNumberTypes()->sync($data['member_number_types']);
         }
 
-        return new PayerResource($payer);
+        return new PayerDetailResource($payer);
     }
 
     /**

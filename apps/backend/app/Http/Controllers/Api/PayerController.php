@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ImageResource;
 use App\Http\Resources\PayerResource;
+use App\Http\Resources\PayerDetailResource;
 use App\Models\Payer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -72,7 +73,7 @@ class PayerController extends Controller
     {
         abort_if(!($payer = auth()->user()->payer), 406, 'wrong-user_type');
 
-        return new PayerResource($payer);
+        return new PayerDetailResource($payer);
     }
 
     /**
@@ -83,7 +84,7 @@ class PayerController extends Controller
      */
     public function show(Payer $payer)
     {
-        return new PayerResource($payer);
+        return new PayerDetailResource($payer);
     }
 
     public function avatarSave(Request $request, Payer $payer)

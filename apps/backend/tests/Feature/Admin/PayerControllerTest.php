@@ -117,8 +117,19 @@ class PayerControllerTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types'])
-            ->assertJsonCount($payerCount, 'payers.0.payers');
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types']);
+        
+        // the api is not going to nest resources this deep it's not needed, do another query to test hiarchy
+        $data = $response->json();
+        $payer = $data['payers'][0];
+        // dd($payer);
+        // get the child payer
+        $this->withoutExceptionHandling();
+        $response = $this->json('GET', 'v1/payer/' . $payer['id']);
+        // validate response code and structure, and that the child of child payer count is correct
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount($payerCount, 'payers');
     }
 
     /**
