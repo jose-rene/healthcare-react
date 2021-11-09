@@ -1,4 +1,4 @@
-@servers(['web' => '-A -o "StrictHostKeyChecking no" -l deployer ec2-35-163-224-88.us-west-2.compute.amazonaws.com'])
+@servers(['web' => 'deployer@ec2-35-163-224-88.us-west-2.compute.amazonaws.com'])
 
 @setup
     $repository = 'git@gitlab.com:dmecg/gryphon.git';
