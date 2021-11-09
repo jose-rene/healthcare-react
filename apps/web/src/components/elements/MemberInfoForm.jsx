@@ -25,8 +25,8 @@ const MemberInfoForm = ({ payer }) => {
         const plansKey = payer.payers?.length
             ? "payers"
             : payer.siblings?.length
-                ? "siblings"
-                : null;
+            ? "siblings"
+            : null;
         if (!plansKey) {
             return [];
         }
@@ -88,7 +88,6 @@ const MemberInfoForm = ({ payer }) => {
                 <ContextInput
                     hidden
                     name="plan"
-                    label="Plan"
                     value={payer.id || ""}
                     readOnly
                 />

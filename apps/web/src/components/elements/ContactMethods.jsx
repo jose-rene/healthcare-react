@@ -77,7 +77,7 @@ const ContactMethods = () => {
                 ))}
             </Col>
 
-            <Col md={12}>
+            <Col md={10}>
                 <Button
                     className="mb-3"
                     variant="primary"

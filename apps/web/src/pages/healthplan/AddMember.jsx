@@ -155,6 +155,10 @@ const AddMember = (props) => {
         }
     };
 
+    const onCancel = () => {
+        props.history.push("/healthplan/start-request");
+    };
+
     return (
         <PageLayout>
             <Container fluid>
@@ -289,8 +293,12 @@ const AddMember = (props) => {
                                         )}
                                     </Col>
 
-                                    <Col md={12}>
-                                        <FormButtons submitLabel="Create New Request" />
+                                    <Col md={6}>
+                                        <FormButtons
+                                            submitLabel="Create New Request"
+                                            cancelLabel="Cancel"
+                                            onCancel={onCancel}
+                                        />
                                     </Col>
                                 </Form>
                             </>
