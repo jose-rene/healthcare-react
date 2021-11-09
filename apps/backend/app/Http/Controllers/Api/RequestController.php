@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Assessment\AssessmentRequest;
 use App\Http\Resources\RequestResource;
+use App\Http\Resources\RequestDetailResource;
 use App\Jobs\RequestSectionSaveJob;
 use App\Models\Request as ModelRequest;
 use App\Models\RequestStatus;
@@ -143,7 +144,7 @@ class RequestController extends Controller
      */
     public function show(ModelRequest $request)
     {
-        return new RequestResource($request);
+        return new RequestDetailResource($request);
     }
 
     /**
@@ -189,7 +190,7 @@ class RequestController extends Controller
     {
         dispatch(new RequestSectionSaveJob($request, $httpRequest->all()));
 
-        return new RequestResource($request);
+        return new RequestDetailResource($request);
     }
 
     /**
