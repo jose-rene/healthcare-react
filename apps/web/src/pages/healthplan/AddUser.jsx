@@ -43,7 +43,7 @@ const AddUser = (props) => {
                 <BroadcastAlert />
                 <PageTitle title="Add User" onBack={handleBack} />
                 <Row>
-                    <Col lg={6}>
+                    <Col md={12}>
                         {formError ? (
                             <PageAlert
                                 className="mt-3"
