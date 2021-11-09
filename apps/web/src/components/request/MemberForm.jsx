@@ -70,7 +70,7 @@ const MemberForm = ({ payer }) => {
                 </Col>
             </Row>
             <Row>
-                {planOptions.length > 0 ? (
+                {planOptions?.length ? (
                     <Col xl={6}>
                         <ContextSelect
                             name="plan"
@@ -82,7 +82,7 @@ const MemberForm = ({ payer }) => {
                         />
                     </Col>
                 ) : (
-                    <ContextInput hidden name="plan" label="Plan" readOnly />
+                    <ContextInput hidden name="plan" readOnly />
                 )}
                 <Col xl={6}>
                     <ContextSelect
