@@ -23,6 +23,7 @@ import RequestLookup from "pages/RequestLookup/RequestLookup";
 import AssessmentList from "pages/Assessment/AssessmentList";
 import AssessmentAdd from "pages/Assessment/AssessmentAdd";
 import Assessment from "pages/Assessment/Assessment";
+import AssessmentRules from "pages/Admin/AssessmentRules/AssessmentRules";
 import Error401 from "pages/Errors/401";
 import Federated from "pages/Federated";
 import ForgotPassword from "pages/ForgotPassword";
@@ -294,6 +295,7 @@ const AppNavigation = () => {
                 />
 
                 <PrivateRoute
+                    exact
                     path="/admin/assessments"
                     middleware={["software_engineer"]}
                     component={AssessmentList}
@@ -306,9 +308,15 @@ const AppNavigation = () => {
                 />
 
                 <PrivateRoute
-                    path="/admin/assessment/:id"
+                    path="/admin/assessments/:id"
                     middleware={["software_engineer"]}
                     component={AssessmentAdd}
+                />
+
+                <PrivateRoute
+                    path="/admin/assessment/rules"
+                    middleware={["software_engineer"]}
+                    component={AssessmentRules}
                 />
 
                 <PrivateRoute path="/assessment/:id" component={Assessment} />
