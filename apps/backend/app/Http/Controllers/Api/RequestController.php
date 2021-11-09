@@ -79,7 +79,14 @@ class RequestController extends Controller
                 $baseQuery = ModelRequest::get();
                 break;
             case 2: // healthplan
-                $baseQuery = $user->healthPlanUser->requests();
+                $payerIds = [];
+                // add child payers if applicable
+                if (null !== ($childPayers = $user->healthPlanUser->payer->children)) {
+                    $payerIds = $childPayers->pluck('id')->all();
+                }
+                // add the users associated payer
+                array_unshift($payerIds, $user->healthPlanUser->payer_id);
+                $baseQuery = ModelRequest::whereIn('payer_id', $payerIds);
                 break;
             case 3: // therapist
                 $baseQuery = $user->clinicalServicesUser->requests();
