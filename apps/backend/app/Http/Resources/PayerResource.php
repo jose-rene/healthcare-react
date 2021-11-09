@@ -16,8 +16,6 @@ class PayerResource extends JsonResource
      */
     public function toArray($request)
     {
-        // for child company plan (payer) choices
-        $siblings = $this->parent && $this->parent->children ? $this->parent->children : null;
         return [
             'id'                  => $this->uuid,
             'company_name'        => $this->name,
@@ -26,8 +24,7 @@ class PayerResource extends JsonResource
             'has_phi'             => $this->has_phi,
             // 'lines_of_business'   => LobResource::collection($this->lobs),
             // 'payers'              => self::collection($this->children),
-            // 'siblings'            => $siblings ? PayerSiblingResource::collection($siblings) : [],
-            'member_number_types' => PayerMemberNumberResource::collection($this->memberNumberTypes),
+            // 'member_number_types' => PayerMemberNumberResource::collection($this->memberNumberTypes),
             // 'classifications'     => ClassificationResource::collection($this->classifications),
             // 'request_types'       => RequestTypeResource::collection($this->requestTypes->whereNull('parent_id')),
             'address'             => new AddressResource($this->mainAddress),

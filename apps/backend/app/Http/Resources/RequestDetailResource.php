@@ -20,7 +20,7 @@ class RequestDetailResource extends JsonResource
             'clinician'         => $this->clinician ? ['id' => $this->clinician->uuid, 'name' => $this->clinician->full_name] : null,
             'reviewer'          => $this->reviewer ? ['id' => $this->reviewer->uuid, 'name' => $this->reviewer->full_name] : null,
             'status'            => $this->statusName,
-            'member'            => new MemberResource($this->member),
+            'member'            => new MemberDetailResource($this->member),
             'payer'             => new PayerDetailResource($this->payer),
             'member_verified'   => $this->member_verified,
             'request_date'      => $this->requested_at->format('m/d/Y'),
