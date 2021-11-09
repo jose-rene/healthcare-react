@@ -94,7 +94,7 @@ const EditUser = (props) => {
                 <BroadcastAlert />
                 <PageTitle title="Edit User" onBack={handleBack} />
                 <Row>
-                    <Col lg={6}>
+                    <Col md={12}>
                         {formError ? (
                             <PageAlert
                                 className="mt-3"
