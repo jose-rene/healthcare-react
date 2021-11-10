@@ -8,7 +8,7 @@ const PageFooter = () => {
 
     return (
         <div className="d-flex justify-content-center align-items-center my-3 fw-light">
-            <FapIcon icon="copyright" size="0.5x" />
+            <FapIcon icon="copyright" size="1x" />
             <span className="px-2">{now.year()} Periscope</span>
         </div>
     );
