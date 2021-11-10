@@ -1,6 +1,12 @@
 import FapIcon from "components/elements/FapIcon";
 import React from "react";
-import { Container, Navbar, Button, InputGroup, FormControl } from "react-bootstrap";
+import {
+    Container,
+    Navbar,
+    Button,
+    InputGroup,
+    FormControl,
+} from "react-bootstrap";
 import MenuUser from "./menu/MenuUser";
 import TopNavNotifications from "./TopNavNotifications";
 
@@ -37,9 +43,9 @@ const PageHeader = ({
                 </Navbar.Brand>
                 <div
                     className="d-none d-sm-inline"
-                    style={{ paddingLeft: "64px" }}
+                    style={{ paddingLeft: "64px", width: "330px" }}
                 >
-                    <InputGroup className="w-auto">
+                    <InputGroup>
                         <InputGroup.Text
                             id="search-addon"
                             className="bg-white border-end-0"
