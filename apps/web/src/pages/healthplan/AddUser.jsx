@@ -71,6 +71,7 @@ const AddUser = (props) => {
                             cancelLabel="Cancel"
                             updateLoading={loading}
                             onSubmit={onSubmit}
+                            onCancel={handleBack}
                         />
                     </Col>
                 </Row>
