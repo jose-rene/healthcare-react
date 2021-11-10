@@ -7,6 +7,7 @@ import ContextInput from "components/inputs/ContextInput";
 import ContextSelect from "components/contextInputs/Select";
 import ContextCheckbox from "components/contextInputs/Checkbox";
 import PageAlert from "components/elements/PageAlert";
+import ZipCodeInput from "components/inputs/ZipcodeInput";
 
 import { useFormContext } from "Context/FormContext";
 
@@ -153,7 +154,7 @@ const AddressForm = ({ addressTypesOptions, showPrimary = false }) => {
             </Col>
 
             <Col md={8}>
-                <ContextInput name="postal_code" label="Zip*" />
+                <ZipCodeInput />
             </Col>
 
             <Col md={4}>

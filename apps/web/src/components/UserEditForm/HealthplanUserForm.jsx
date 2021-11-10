@@ -32,7 +32,7 @@ const HealthplanUserForm = ({
     cancelLabel = false,
     onCancel = false,
 }) => {
-    const { userCan } = useUser();
+    const { userIs } = useUser();
 
     const [
         {
@@ -107,7 +107,7 @@ const HealthplanUserForm = ({
         });
     }, [data]);
 
-    if (!data.length && userCan("create-users")) return <LoadingIcon />;
+    if (!data.length && userIs("software_engineer")) return <LoadingIcon />;
 
     return (
         <Form
@@ -119,7 +119,7 @@ const HealthplanUserForm = ({
             }}
         >
             <Row>
-                {userCan("create-users") && (
+                {userIs("software_engineer") && (
                     <Col md={6}>
                         <ContextSelect
                             name="payer_id"
@@ -163,6 +163,15 @@ const HealthplanUserForm = ({
                 </Col>
                 <Col md={6}>
                     <ContextInput
+                        label="Job Title"
+                        name="job_title"
+                        placeholder="Enter your Job Title"
+                        required
+                        large
+                    />
+                </Col>
+                <Col md={6}>
+                    <ContextInput
                         label="First Name"
                         name="first_name"
                         placeholder="Enter your First Name"
@@ -175,15 +184,6 @@ const HealthplanUserForm = ({
                         label="Last Name"
                         name="last_name"
                         placeholder="Enter your Last Name"
-                        required
-                        large
-                    />
-                </Col>
-                <Col md={6}>
-                    <ContextInput
-                        label="Job Title"
-                        name="job_title"
-                        placeholder="Enter your Job Title"
                         required
                         large
                     />
