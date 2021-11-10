@@ -23,8 +23,10 @@
 }
 
 .account-img {
-    max-width: 124px;
-    width: 100%;
+    min-width: 124px;
+    min-height: 124px;
+    width: 50%;
+    height: 50%;
     height: auto;
     border-radius: 50%;
     margin-top: 15px;

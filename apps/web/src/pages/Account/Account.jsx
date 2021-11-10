@@ -1,13 +1,20 @@
 import React, { useState } from "react";
-import { Tabs, Tab } from "react-bootstrap";
-import PageLayout from "../../layouts/PageLayout";
+import { Container, Tabs, Tab } from "react-bootstrap";
+
+import PageLayout from "layouts/PageLayout";
+
+import { useUser } from "Context/UserContext";
+
+import BroadcastAlert from "components/elements/BroadcastAlert";
+import PageTitle from "components/PageTitle";
+
 import TabAccount from "./Tabs/TabAccount";
 import TabDocuments from "./Tabs/TabDocuments";
 import TabSecurity from "./Tabs/TabSecurity";
-import "../../styles/account.scss";
-import BroadcastAlert from "components/elements/BroadcastAlert";
-import { useUser } from "Context/UserContext";
-import { _SET_GET, _GET } from "../../helpers/request";
+
+import { _SET_GET, _GET } from "helpers/request";
+
+import "styles/account.scss";
 
 const Account = ({ history }) => {
     const { getUser } = useUser();
@@ -22,25 +29,33 @@ const Account = ({ history }) => {
     return (
         <PageLayout>
             <BroadcastAlert />
-            <div className="content-box">
-                <h1 className="box-title">Your Account</h1>
+            <Container fluid>
+                <PageTitle title="Your Account" hideBack />
 
                 <Tabs onSelect={handleSetActiveTab} activeKey={activeTab}>
-                    <Tab eventKey="account" title="Account Info">
+                    <Tab
+                        eventKey="account"
+                        title="Account Info"
+                        className="mt-4"
+                    >
                         <TabAccount history={history} />
                     </Tab>
 
                     {currentUser.user_type === "ClinicalServicesUser" ? (
-                        <Tab eventKey="documents" title="Documents & Licenses">
+                        <Tab
+                            eventKey="documents"
+                            title="Documents & Licenses"
+                            className="mt-4"
+                        >
                             <TabDocuments />
                         </Tab>
                     ) : null}
 
-                    <Tab eventKey="security" title="Security">
+                    <Tab eventKey="security" title="Security" className="mt-4">
                         <TabSecurity history={history} />
                     </Tab>
                 </Tabs>
-            </div>
+            </Container>
         </PageLayout>
     );
 };
