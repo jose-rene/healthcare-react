@@ -46,8 +46,9 @@ import AdminUserAdd from "pages/Admin/UserList/UserAdd";
 import FormWizard from "pages/FormWizard";
 import RequestSections from "pages/RequestSections";
 import RequestSectionsShowForm from "pages/RequestSections/RequestSectionsShowForm";
-import NarrativeReport from "../pages/Admin/NarrativeReport";
-import EditNarrativeReport from "../pages/Admin/NarrativeReport/Edit";
+import NarrativeReport from "pages/Admin/NarrativeReport";
+import EditNarrativeReport from "pages/Admin/NarrativeReport/Edit";
+import Invoices from "pages/Invoices";
 
 const AppNavigation = () => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -176,6 +177,13 @@ const AppNavigation = () => {
                     middleware={["hp_user", "hp_champion"]}
                     component={HpTraining}
                 />
+
+                <PrivateRoute
+                    path="/invoices"
+                    middleware={["hp_user", "hp_champion"]}
+                    component={Invoices}
+                />
+
                 <PrivateRoute
                     exact
                     path="/admin/test/table"
