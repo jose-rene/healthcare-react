@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
     Button,
     Card,
@@ -13,6 +13,7 @@ import FapIcon from "components/elements/FapIcon";
 import useApiCall from "hooks/useApiCall";
 import PageAlert from "components/elements/PageAlert";
 import LoadingOverlay from "react-loading-overlay";
+import debounce from "lodash/debounce";
 /* eslint-disable react/no-array-index-key */
 
 const RequestInfoForm = ({
@@ -87,6 +88,9 @@ const RequestInfoForm = ({
             callback(options);
         });
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const lookup = useCallback(debounce(lookupCodes, 1300), []);
 
     const handleCodeChange = (selected, action, index) => {
         const [...currentCodes] = codes;
@@ -232,16 +236,14 @@ const RequestInfoForm = ({
                                                     <AsyncSelect
                                                         name={`icd10_lookup_${index}`}
                                                         placeholder="Type in the first few letters of code or description"
-                                                        loadOptions={
-                                                            lookupCodes
-                                                        }
+                                                        loadOptions={lookup}
                                                         isClearable
                                                         value={
                                                             item.code
                                                                 ? {
                                                                       label: item.description,
-                                                                    value: item.code,
-                                                                  }
+                                                                      value: item.code,
+                                                                }
                                                                 : null
                                                         }
                                                         isLoading={loading}
