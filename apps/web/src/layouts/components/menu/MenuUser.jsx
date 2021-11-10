@@ -30,7 +30,7 @@ const MenuUser = ({
                     <img
                         alt="Settings"
                         className="rounded-circle ms-2"
-                        style={{ height: "40px" }}
+                        style={{ height: "40px", width: "40px" }}
                         src={avatar_url || "/images/icons/user.png"}
                     />
                     <FapIcon icon="angle-down" />
