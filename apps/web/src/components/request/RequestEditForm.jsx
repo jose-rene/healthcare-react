@@ -181,7 +181,7 @@ const RequestEditForm = ({ data }) => {
                                     </li>
                                     <li>Therapist {"\n"} Assigned</li>
                                     <li>Appointment {"\n"} Scheduled</li>
-                                    <li> Report {"\n"} Submitted</li>
+                                    <li> In {"\n"} Review</li>
                                     <li>Report {"\n"} Complete</li>
                                 </ul>
                             </Card.Body>

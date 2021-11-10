@@ -59,7 +59,7 @@ const RequestsTable = () => {
                     ({ value }) => value === request_status_id
                 );
 
-                return found?.title || "In Progress";
+                return found?.title || "Partially Entered";
             },
             label: "Status",
             type: String,
