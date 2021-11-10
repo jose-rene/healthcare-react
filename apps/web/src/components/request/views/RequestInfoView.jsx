@@ -5,6 +5,7 @@ import FapIcon from "components/elements/FapIcon";
 import useApiCall from "hooks/useApiCall";
 import PageAlert from "components/elements/PageAlert";
 import LoadingOverlay from "react-loading-overlay";
+import debounce from "lodash/debounce";
 /* eslint-disable react/no-array-index-key */
 
 const RequestInfoView = ({
