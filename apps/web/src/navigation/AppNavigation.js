@@ -111,13 +111,13 @@ const AppNavigation = () => {
                 />
                 <PrivateRoute
                     path="/healthplan/adduser"
-                    middleware={["hp_champion", "create-users"]}
+                    middleware={["hp_champion", "software_engineer"]}
                     component={HpAddUser}
                 />
 
                 <PrivateRoute
                     path="/healthplan/user/:id"
-                    middleware={["hp_champion", "create-users"]}
+                    middleware={["hp_champion", "software_engineer"]}
                     component={HpEditUser}
                 />
                 <PrivateRoute
