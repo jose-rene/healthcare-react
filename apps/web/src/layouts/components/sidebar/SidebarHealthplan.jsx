@@ -17,11 +17,14 @@ const SidebarHealthplan = ({ open }) => {
                 <FapIcon icon="file-invoice" size="lg" className="me-2" />
                 <span className={textClass}>Invoices</span>
             </Nav.Link>
-            <Nav.Link href="/healthplan/training">
+            <Nav.Link href="https://lms.periscope365.com" target="_blank">
                 <FapIcon icon="book-reader" size="lg" className="me-2" />
                 <span className={textClass}>Training</span>
             </Nav.Link>
-            <Nav.Link href="/support">
+            <Nav.Link
+                href="https://periscope365.atlassian.net/servicedesk/customer/portal/2"
+                target="_blank"
+            >
                 <FapIcon icon="question-circle" size="lg" className="me-2" />
                 <span className={textClass}>Tech Support</span>
             </Nav.Link>
