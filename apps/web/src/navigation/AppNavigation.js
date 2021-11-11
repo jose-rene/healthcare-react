@@ -21,7 +21,9 @@ import HpTraining from "pages/Training/Training";
 import NewRequestAdd from "pages/newRequestAdd/NewRequestAdd";
 import RequestLookup from "pages/RequestLookup/RequestLookup";
 import AssessmentList from "pages/Assessment/AssessmentList";
+import AssessmentAdd from "pages/Assessment/AssessmentAdd";
 import Assessment from "pages/Assessment/Assessment";
+import AssessmentRules from "pages/Admin/AssessmentRules/AssessmentRules";
 import Error401 from "pages/Errors/401";
 import Federated from "pages/Federated";
 import ForgotPassword from "pages/ForgotPassword";
@@ -44,8 +46,9 @@ import AdminUserAdd from "pages/Admin/UserList/UserAdd";
 import FormWizard from "pages/FormWizard";
 import RequestSections from "pages/RequestSections";
 import RequestSectionsShowForm from "pages/RequestSections/RequestSectionsShowForm";
-import NarrativeReport from "../pages/Admin/NarrativeReport";
-import EditNarrativeReport from "../pages/Admin/NarrativeReport/Edit";
+import NarrativeReport from "pages/Admin/NarrativeReport";
+import EditNarrativeReport from "pages/Admin/NarrativeReport/Edit";
+import Invoices from "pages/Invoices";
 
 const AppNavigation = () => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -109,16 +112,15 @@ const AppNavigation = () => {
                 />
                 <PrivateRoute
                     path="/healthplan/adduser"
-                    middleware={["hp_champion", "create-users"]}
-                >
-                    <HpAddUser />
-                </PrivateRoute>
+                    middleware={["hp_champion", "software_engineer"]}
+                    component={HpAddUser}
+                />
+
                 <PrivateRoute
                     path="/healthplan/user/:id"
-                    middleware={["hp_champion", "create-users"]}
-                >
-                    <HpEditUser />
-                </PrivateRoute>
+                    middleware={["hp_champion", "software_engineer"]}
+                    component={HpEditUser}
+                />
                 <PrivateRoute
                     path="/member/:member_id/request/add"
                     middleware={["hp_user", "hp_champion"]}
@@ -175,6 +177,13 @@ const AppNavigation = () => {
                     middleware={["hp_user", "hp_champion"]}
                     component={HpTraining}
                 />
+
+                <PrivateRoute
+                    path="/invoices"
+                    middleware={["hp_user", "hp_champion"]}
+                    component={Invoices}
+                />
+
                 <PrivateRoute
                     exact
                     path="/admin/test/table"
@@ -294,9 +303,28 @@ const AppNavigation = () => {
                 />
 
                 <PrivateRoute
+                    exact
                     path="/admin/assessments"
                     middleware={["software_engineer"]}
                     component={AssessmentList}
+                />
+
+                <PrivateRoute
+                    path="/admin/add-assessment"
+                    middleware={["software_engineer"]}
+                    component={AssessmentAdd}
+                />
+
+                <PrivateRoute
+                    path="/admin/assessments/:id"
+                    middleware={["software_engineer"]}
+                    component={AssessmentAdd}
+                />
+
+                <PrivateRoute
+                    path="/admin/assessment/rules"
+                    middleware={["software_engineer"]}
+                    component={AssessmentRules}
                 />
 
                 <PrivateRoute path="/assessment/:id" component={Assessment} />

@@ -59,9 +59,18 @@ class AssessmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AssessmentRequest $request, Assessment $assessment)
     {
-        //
+        $assessment->update($params = $request->validated());
+        // attach the form sections
+        if (!empty($params['forms'])) {
+            // make into an array keyed by id, and remaining fields the data
+            $forms = collect($params['forms'])
+                ->mapWithKeys(fn($form, $id) => [$form['id'] => array_filter($form, fn($key) => $key !== 'id', \ARRAY_FILTER_USE_KEY)])->toArray();
+            $assessment->forms()->sync($forms);
+        }
+
+        return new AssessmentResource($assessment);
     }
 
     /**

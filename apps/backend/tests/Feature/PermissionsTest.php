@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Payer;
 use App\Models\User;
 use Artisan;
 use Bouncer;
@@ -14,6 +15,7 @@ class PermissionsTest extends TestCase
     use RefreshDatabase;
 
     private $user = null;
+    private $payer = null;
     private $bearer_token = null;
 
     /**
@@ -132,6 +134,7 @@ class PermissionsTest extends TestCase
             'email'        => $userToAdd->email,
             'password'     => 'ABC123xyz',
             'primary_role' => 'hp_user',
+            'payer_id'     => $this->payer->uuid,
         ];
     }
 
@@ -146,6 +149,7 @@ class PermissionsTest extends TestCase
             '--class' => 'Database\Seeders\BouncerSeeder',
         ]);
 
+        $this->payer = Payer::factory()->create();
         $this->user = User::factory()->create();
     }
 }

@@ -1,8 +1,9 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 
-import { Button, Input } from "../../index";
+import { Input } from "../../index";
 import Select from "../../inputs/Select";
+import FapIcon from "../FapIcon";
 
 const ContactMethodRow = ({
     // input names
@@ -40,14 +41,11 @@ const ContactMethodRow = ({
             </Col>
 
             {showRemove ? (
-                <Col md={4}>
-                    <Button
-                        block
-                        variant="danger"
-                        label="remove"
-                        icon="cancel"
-                        iconSize="1x"
+                <Col md={2}>
+                    <FapIcon
+                        icon="times-circle"
                         onClick={onRemove}
+                        className="mt-3"
                     />
                 </Col>
             ) : (

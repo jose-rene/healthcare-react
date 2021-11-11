@@ -9,14 +9,13 @@ use App\Http\Resources\MyUserResource;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
 use App\Jobs\PasswordExpireCheckJob;
+use App\Jobs\UserCreationJob;
 use App\Models\User;
 use Bouncer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -173,61 +172,12 @@ class UserController extends Controller
     {
         // the validation is already ran due to the magic of service binding, this is just retrieving the data
         $data = $request->validated();
-        // @todo move user creation to a service
-        // generate a password if not present
-        if (empty($data['password'])) {
-            $data['password'] = Str::random(16);
-        }
-        $user = User::create([
-            'first_name'   => $data['first_name'],
-            'last_name'    => $data['last_name'],
-            'email'        => $data['email'],
-            'password'     => Hash::make($data['password']),
-            'primary_role' => $data['primary_role'],
-            'user_type'    => $request['user_type'], // this is set in passed validation, never passed in request
-        ]);
-        // add the phone number
-        if (!empty($data['phone'])) {
-            $user->phones()->create(['number' => $data['phone'], 'is_primary' => 1, 'phoneable_type' => User::class, 'phoneable_id' => $user->id]);
-        }
+        // user type is set in passed validation, never passed in request
+        $data['user_type'] = $request['user_type'];
+        $userJob = new UserCreationJob($data);
+        dispatch($userJob);
 
-        // send validation email if requested in form
-        if (!empty($data['send_verification'])) {
-            $user->sendEmailVerificationNotification();
-        } else {
-            $user->markEmailAsVerified();
-        }
-
-        // add the primary role
-        $user->assign($data['primary_role']);
-        // sync the user type, creates user type relation if null
-        $userType = $user->syncUserType();
-        // @todo, support passing company id so admins can add health plan users
-        if ('HealthPlanUser' === $user->user_type_name && 'HealthPlanUser' === auth()->user()->user_type_name) {
-            // at this point only a health plan will be adding so get company from hp manager use
-            $payer = auth()->user()->healthplanUser->payer->first();
-            // healthplan specific field
-            if (!empty($data['job_title'])) {
-                $userType->job_title = $data['job_title'];
-            }
-            // set company relationship in user type
-            $userType->payer()->associate($payer);
-            $userType->save();
-            // permissions
-            if (!empty($data['can_view_reports'])) {
-                $user->allow('view-reports');
-            }
-            if (!empty($data['can_view_invoices'])) {
-                $user->allow('view-invoices');
-            }
-            if (!empty($data['can_create_users'])) {
-                $user->allow('create-users');
-            }
-        }
-
-        $user->save();
-
-        return new UserResource($user);
+        return new UserResource($userJob->getUser());
     }
 
     /**

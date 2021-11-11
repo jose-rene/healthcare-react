@@ -26,6 +26,7 @@ class AssessmentRuleRequest extends FormRequest
         return [
             'name'              => ['required', 'min:2'],
             'assessment_id'     => ['required', 'exists:assessments,id'],
+            'payer_id'          => ['exists:payers,id,category_id,1'],
             'classification_id' => ['exists:classifications,id'],
             'request_type_id'   => ['exists:request_types,id'],
             'hcpc_id'           => ['exists:hcpcs,id'],

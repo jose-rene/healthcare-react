@@ -16,22 +16,19 @@ class PayerResource extends JsonResource
      */
     public function toArray($request)
     {
-        // for child company plan (payer) choices
-        $siblings = $this->parent && $this->parent->children ? $this->parent->children : null;
         return [
             'id'                  => $this->uuid,
             'company_name'        => $this->name,
             'abbreviation'        => $this->abbreviation,
             'assessment_label'    => $this->assessment_label,
             'has_phi'             => $this->has_phi,
-            'lines_of_business'   => LobResource::collection($this->lobs),
-            'payers'              => self::collection($this->children),
-            'siblings'            => $siblings ? PayerSiblingResource::collection($siblings) : [],
-            'member_number_types' => PayerMemberNumberResource::collection($this->memberNumberTypes),
-            'classifications'     => ClassificationResource::collection($this->classifications),
+            // 'lines_of_business'   => LobResource::collection($this->lobs),
+            // 'payers'              => self::collection($this->children),
+            // 'member_number_types' => PayerMemberNumberResource::collection($this->memberNumberTypes),
+            // 'classifications'     => ClassificationResource::collection($this->classifications),
             // 'request_types'       => RequestTypeResource::collection($this->requestTypes->whereNull('parent_id')),
             'address'             => new AddressResource($this->mainAddress),
-            'address_list'        => AddressResource::collection($this->addresses),
+            // 'address_list'        => AddressResource::collection($this->addresses),
             'phone'               => new PhoneResource($this->mainPhone),
             'email'               => new EmailResource($this->mainEmail),
             'contacts'            => array_merge(PhoneContactResource::collection($this->phones)->toArray($request), EmailContactResource::collection($this->emails)->toArray($request)),

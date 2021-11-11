@@ -15,6 +15,7 @@ class AssessmentRule extends Model
 
     protected $casts = [
         'assessment_id' => 'integer',
+        'payer_id'      => 'integer',
     ];
 
     /**
@@ -25,6 +26,7 @@ class AssessmentRule extends Model
     protected $fillable = [
         'name',
         'assessment_id',
+        'payer_id',
         'classification_id',
         'request_type_id',
         'hcpc_id',

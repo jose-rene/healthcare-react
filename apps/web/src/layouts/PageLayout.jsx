@@ -8,8 +8,11 @@ import { PUT } from "../config/URLs";
 import useApiCall from "../hooks/useApiCall";
 import useIdleTimeout from "../hooks/useIdleTimeout";
 import PageHeader from "./components/Header";
+import PageFooter from "./components/Footer";
 import Sidebar from "./components/sidebar";
 import Menu from "./components/menu";
+
+import "styles/PageLayout.scss";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const PageLayout = ({ loading: childloading = false, children }) => {
@@ -137,11 +140,17 @@ const PageLayout = ({ loading: childloading = false, children }) => {
                     backdrop
                     {...{ logOut, primaryRole, abilities, open }}
                 />
-                <div className="p-3 flex-grow-1" style={{ marginTop: "70px" }}>
-                    {childloading ? <div className="text-center"><Spinner animation="border" variant="secondary" />
-                    </div> : children}
+                <div className="p-3 flex-grow-1 layuot">
+                    {childloading ? (
+                        <div className="text-center">
+                            <Spinner animation="border" variant="secondary" />
+                        </div>
+                    ) : (
+                        children
+                    )}
                 </div>
             </div>
+            <PageFooter />
             <TimeoutModal
                 show={showTimeoutModal}
                 onHide={dismissTimeout}

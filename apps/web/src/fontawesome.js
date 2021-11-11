@@ -45,6 +45,9 @@ import {
     faChevronDown,
     faGlasses,
     faNewspaper,
+    faGripVertical,
+    faBooks,
+    faCopyright,
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add(
@@ -94,6 +97,9 @@ library.add(
     faChevronDown,
     faGlasses,
     faNewspaper,
+    faGripVertical,
+    faBooks,
+    faCopyright
 );
 /*
 if (process.env.NODE_ENV === "development") {

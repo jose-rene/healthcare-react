@@ -1,7 +1,9 @@
 import React from "react";
-import { Nav } from "react-bootstrap";
+import { Nav, NavDropdown } from "react-bootstrap";
 
 import FapIcon from "components/elements/FapIcon";
+
+import "./sidebar.scss";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const SidebarAdmin = ({ open }) => {
@@ -9,18 +11,48 @@ const SidebarAdmin = ({ open }) => {
 
     return (
         <>
-            <Nav.Link href="/admin/assessments">
-                <FapIcon icon="glasses" size="lg" className="me-2" />
-                <span className={textClass}>Assessments</span>
+            <Nav.Link href="/admin/users">
+                <FapIcon icon="users" size="lg" className="me-2" />
+                <span className={textClass}>Users</span>
             </Nav.Link>
-            <Nav.Link href="/admin/forms">
-                <FapIcon icon="book" size="lg" className="me-2" />
-                <span className={textClass}>Forms</span>
-            </Nav.Link>
-            <Nav.Link href="/admin/narrative-report">
-                <FapIcon icon="newspaper" size="lg" className="me-2" />
-                <span className={textClass}>Narrative Editor</span>
-            </Nav.Link>
+
+            <NavDropdown
+                title={
+                    <>
+                        <FapIcon icon="glasses" size="lg" className="me-2" />
+                        <span className={textClass}>Assessments</span>
+                    </>
+                }
+                data-testid="adminSidebar"
+                id="admin-siebar"
+                align="end"
+            >
+                <NavDropdown.Item className="py-2" href="/admin/assessments">
+                    <FapIcon icon="glasses" size="1x" />
+                    <span className="ms-2">Assessments</span>
+                </NavDropdown.Item>
+
+                <NavDropdown.Item
+                    className="py-2"
+                    href="/admin/assessment/rules"
+                >
+                    <FapIcon icon="books" size="1x" />
+                    <span className="ms-2">Rules</span>
+                </NavDropdown.Item>
+
+                <NavDropdown.Item className="py-2" href="/admin/forms">
+                    <FapIcon icon="book" size="1x" />
+                    <span className="ms-2">Forms</span>
+                </NavDropdown.Item>
+
+                <NavDropdown.Item
+                    className="py-2"
+                    href="/admin/narrative-report"
+                >
+                    <FapIcon icon="newspaper" size="1x" />
+                    <span className="ms-2">Narrative Editor</span>
+                </NavDropdown.Item>
+            </NavDropdown>
 
             <Nav.Link href="/admin/companies">
                 <FapIcon icon="building" size="lg" className="me-2" />

@@ -47,7 +47,8 @@ class UserResource extends JsonResource
 
         // roles and abilities
         $roles = RoleResource::collection($this->roles);
-        $primaryRole = $this->roles()->where(['name' => $this->primary_role])->first();
+        // filter collection instead of another query
+        $primaryRole = $this->roles ? $this->roles->filter(fn($item) => $item['name'] === $this->primary_role)->first() : false;
         $abilities = $this->getAbilities();
 
         return [

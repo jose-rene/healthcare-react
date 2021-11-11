@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\RequestResource;
+use App\Http\Resources\RequestDetailResource;
 use App\Models\Member;
 use App\Models\Request as MemberRequest;
 use Exception;
@@ -44,7 +45,7 @@ class MemberRequestController extends Controller
             'member_address_id'       => $member->addresses->first()->id,
         ]);
 
-        return new RequestResource($memberRequest);
+        return new RequestDetailResource($memberRequest);
     }
 
     /**
@@ -56,7 +57,7 @@ class MemberRequestController extends Controller
      */
     public function show(Member $member, MemberRequest $memberRequest)
     {
-        return new RequestResource($memberRequest);
+        return new RequestDetailResource($memberRequest);
     }
 
     /**
@@ -73,7 +74,7 @@ class MemberRequestController extends Controller
         $memberRequest->auth_number = $request['auth_number'];
         $memberRequest->save();
 
-        return new RequestResource($memberRequest);
+        return new RequestDetailResource($memberRequest);
     }
 
     /**

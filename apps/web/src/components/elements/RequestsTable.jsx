@@ -59,7 +59,7 @@ const RequestsTable = () => {
                     ({ value }) => value === request_status_id
                 );
 
-                return found?.title || "In Progress";
+                return found?.title || "Partially Entered";
             },
             label: "Status",
             type: String,
@@ -113,6 +113,7 @@ const RequestsTable = () => {
                             <FapIcon
                                 size="1x"
                                 icon={!request_status_id ? `edit` : `eye`}
+                                title={!request_status_id ? `Edit` : `View`}
                             />
                         </Link>
                         {!isClinician && (
@@ -120,9 +121,6 @@ const RequestsTable = () => {
                                 <FapIcon icon="file" size="1x" title="Report" />
                             </Link>
                         )}
-                        <Link className="px-2" to={`/requests/${request_id}/form-sections`}>
-                            <FapIcon icon="bars" size="1x" title="Report" />
-                        </Link>
                     </>
                 );
             },

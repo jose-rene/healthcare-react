@@ -117,8 +117,19 @@ class PayerControllerTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(200)
-            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types'])
-            ->assertJsonCount($payerCount, 'payers.0.payers');
+            ->assertJsonStructure(['company_name', 'lines_of_business', 'payers', 'member_number_types']);
+        
+        // the api is not going to nest resources this deep it's not needed, do another query to test hiarchy
+        $data = $response->json();
+        $payer = $data['payers'][0];
+        // dd($payer);
+        // get the child payer
+        $this->withoutExceptionHandling();
+        $response = $this->json('GET', 'v1/payer/' . $payer['id']);
+        // validate response code and structure, and that the child of child payer count is correct
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount($payerCount, 'payers');
     }
 
     /**
@@ -374,6 +385,34 @@ class PayerControllerTest extends TestCase
         self::assertCount(0, $data);
     }
 
+     /**
+     * @group training
+     * @group document
+     * @group functional
+     */
+    public function testIndexHealthPlans()
+    {
+        Passport::actingAs(
+            $this->user
+        );
+
+        // create some hps for a total of 5
+        Payer::factory()
+            ->hasLobs(5, ['is_tat_enabled' => 1])
+            ->hasAddresses(1, ['is_primary' => true])
+            ->hasEmails(1)
+            ->hasPhones(1)
+            ->count(4)
+            ->create();
+
+        // Make sure I can get training documents by correct type.
+        $response = $this->get(route('api.admin.payer.index', ['category' => 1, 'subcategory' => 1]));
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['data'])
+            ->assertJsonCount(5, 'data');
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -394,9 +433,7 @@ class PayerControllerTest extends TestCase
             ->hasAddresses(1, ['is_primary' => true])
             ->hasEmails(1)
             ->hasPhones(1)
-            ->count(1)
-            ->create()
-            ->first();
+            ->create();
         $this->user = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
         $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create(['payer_id' => $this->payer]));
 

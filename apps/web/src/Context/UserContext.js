@@ -86,6 +86,9 @@ function UserProvider({ children }) {
     };
 
     const userIs = (role) => {
+        if (Array.isArray(role)) {
+            return role.includes(state.primaryRole);
+        }
         return role && state.primaryRole === role;
     };
 

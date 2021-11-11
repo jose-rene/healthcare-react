@@ -67,11 +67,13 @@ const TabSecurity = ({ history }) => {
                         </div>
                     </Col>
 
-                    <Col md={{ offset: 3, span: 6 }}>
+                    <Col md={6}>
                         <InputText name="email" label="Email" type="email" />
                     </Col>
 
-                    <Col md={{ offset: 3, span: 6 }}>
+                    <Col md={6} />
+
+                    <Col md={6}>
                         <InputText
                             name="current_password"
                             type="password"
@@ -79,7 +81,9 @@ const TabSecurity = ({ history }) => {
                         />
                     </Col>
 
-                    <Col md={{ offset: 3, span: 6 }}>
+                    <Col md={6} />
+
+                    <Col md={6}>
                         <InputText
                             name="password"
                             type="password"
@@ -87,13 +91,17 @@ const TabSecurity = ({ history }) => {
                         />
                     </Col>
 
-                    <Col md={{ offset: 3, span: 6 }}>
+                    <Col md={6} />
+
+                    <Col md={6}>
                         <InputText
                             name="password_confirmation"
                             type="password"
                             label="Confirm New Password"
                         />
                     </Col>
+
+                    <Col md={6} />
 
                     <Col md={12}>
                         <SubmitButton

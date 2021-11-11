@@ -1,12 +1,13 @@
 import React, { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import { get } from "lodash";
-import { Link } from "react-router-dom";
+
 import { mapTypeToClass } from "../../../helpers/table";
 import Select from "../../inputs/Select";
 import TableHeaders from "./TableHeaders";
 import TablePagination from "./TablePagination";
-import Icon from "../Icon";
+import FapIcon from "../FapIcon";
 
 const TableAPI = ({
     label = "Results",
@@ -57,7 +58,7 @@ const TableAPI = ({
                         if (columnMap === "edit") {
                             column = (
                                 <Link to={`${link}/${d.id}`} title="Edit">
-                                    <Icon icon="edit" size="lg" />
+                                    <FapIcon size="1x" icon="edit" />
                                 </Link>
                             );
                         } else if (formatter) {

@@ -1,8 +1,10 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { NavDropdown } from "react-bootstrap";
-import FapIcon from "../../../components/elements/FapIcon";
-import Select from "../../../components/contextInputs/Select";
-import Form from "../../../components/elements/Form";
+
+import FapIcon from "components/elements/FapIcon";
+import Select from "components/contextInputs/Select";
+import Form from "components/elements/Form";
 
 import "./MenuUser.scss";
 
@@ -15,6 +17,8 @@ const MenuUser = ({
     roles,
     handleRoleSwitch,
 }) => {
+    const history = useHistory();
+
     return (
         <NavDropdown
             data-testid="userinfo"
@@ -26,7 +30,7 @@ const MenuUser = ({
                     <img
                         alt="Settings"
                         className="rounded-circle ms-2"
-                        style={{ height: "40px" }}
+                        style={{ height: "40px", width: "40px" }}
                         src={avatar_url || "/images/icons/user.png"}
                     />
                     <FapIcon icon="angle-down" />
@@ -49,7 +53,7 @@ const MenuUser = ({
                 )}
             </Form>
             <NavDropdown.Item
-                onClick={() => console.log("Manage Account!")}
+                onClick={() => history.push("/account")}
                 className="py-2"
             >
                 <FapIcon icon="user" />

@@ -2,21 +2,28 @@ import React, { useState, useEffect, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import InputText from "components/inputs/ContextInput";
+
+import { useUser } from "Context/UserContext";
+
 import { Button } from "components";
+import ContextInput from "components/inputs/ContextInput";
+import InputText from "components/inputs/InputText";
 import Icon from "components/elements/Icon";
 import PageAlert from "components/elements/PageAlert";
 import ConfirmationModal from "components/elements/ConfirmationModal";
-import { useUser } from "Context/UserContext";
-import { validateImage } from "../../../helpers/validate";
-import useApiCall from "../../../hooks/useApiCall";
-import ContextSelect from "../../../components/contextInputs/Select";
-import Form from "../../../components/elements/Form";
-import SubmitButton from "../../../components/elements/SubmitButton";
-import PhoneInput from "../../../components/inputs/PhoneInput";
-import { PUT, DELETE } from "../../../config/URLs";
-import useToast from "../../../hooks/useToast";
-import MultiCheckbox from "../../../components/inputs/Checkbox/MultiCheckbox";
+import ContextSelect from "components/contextInputs/Select";
+import Form from "components/elements/Form";
+import SubmitButton from "components/elements/SubmitButton";
+import PhoneInput from "components/inputs/PhoneInput";
+import MultiCheckbox from "components/inputs/Checkbox/MultiCheckbox";
+
+import useApiCall from "hooks/useApiCall";
+import useToast from "hooks/useToast";
+
+import { validateImage } from "helpers/validate";
+
+import { PUT, DELETE } from "config/URLs";
+
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 const TabAccount = ({ history }) => {
@@ -228,7 +235,7 @@ const TabAccount = ({ history }) => {
                                         <Col lg={9} className="mt-3">
                                             <Row>
                                                 <Col lg={6}>
-                                                    <InputText
+                                                    <ContextInput
                                                         label="Job Title"
                                                         name="title"
                                                     />
@@ -242,14 +249,14 @@ const TabAccount = ({ history }) => {
                                                 </Col>
 
                                                 <Col lg={6}>
-                                                    <InputText
+                                                    <ContextInput
                                                         label="First Name"
                                                         name="first_name"
                                                     />
                                                 </Col>
 
                                                 <Col lg={6}>
-                                                    <InputText
+                                                    <ContextInput
                                                         label="Last Name"
                                                         name="last_name"
                                                     />

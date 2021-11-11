@@ -105,11 +105,20 @@ class PayerTest extends TestCase
         $this->payer->children()->save($child);
         // get the payer
         $response = $this->json('GET', 'v1/payer/' . $this->payer->uuid);
-        // validate response code and structure
         $response
             ->assertStatus(200)
-            ->assertJsonStructure($this->payerFields)
-            ->assertJsonCount($payerCount, 'payers.0.payers');
+            ->assertJsonStructure($this->payerFields);
+        // the api is not going to nest resources this deep it's not needed, do another query to test hiarchy
+        $data = $response->json();
+        $payer = $data['payers'][0];
+        // dd($payer);
+        // get the child payer
+        $this->withoutExceptionHandling();
+        $response = $this->json('GET', 'v1/payer/' . $payer['id']);
+        // validate response code and structure, and that the child of child payer count is correct
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount($payerCount, 'payers');
     }
 
     /**

@@ -17,7 +17,7 @@ import ClinicianInfoView from "./views/ClinicianInfoView";
 import "styles/request-progress.scss";
 
 const RequestEditForm = ({ data }) => {
-    const { userCan } = useUser();
+    const { userIs } = useUser();
 
     // destructured section data from the request data
     const [requestData, setRequestData] = useState({});
@@ -181,7 +181,7 @@ const RequestEditForm = ({ data }) => {
                                     </li>
                                     <li>Therapist {"\n"} Assigned</li>
                                     <li>Appointment {"\n"} Scheduled</li>
-                                    <li> Report {"\n"} Submitted</li>
+                                    <li> In {"\n"} Review</li>
                                     <li>Report {"\n"} Complete</li>
                                 </ul>
                             </Card.Body>
@@ -190,7 +190,7 @@ const RequestEditForm = ({ data }) => {
                 </Row>
                 <Row className="justify-content-lg-center">
                     <Col xl={10}>
-                        {userCan("assign-clinicians") && (
+                        {userIs("software_engineer") && (
                             <ClinicianInfoView
                                 {...{
                                     requestId,

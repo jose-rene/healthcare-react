@@ -1,5 +1,5 @@
 import React from "react";
-import { Nav } from "react-bootstrap";
+import { Nav, NavDropdown } from "react-bootstrap";
 
 import FapIcon from "components/elements/FapIcon";
 
@@ -8,26 +8,44 @@ const MenuAdmin = () => {
     return (
         <>
             <Nav.Link
-                href="/admin/assessments"
+                href="/admin/users"
                 className="list-group-item border-end-0"
             >
-                <FapIcon icon="glasses" className="me-2" fixedWidth />
-                <span>Assessments</span>
+                <FapIcon icon="users" className="me-2" fixedWidth />
+                <span>Users</span>
             </Nav.Link>
-            <Nav.Link
-                href="/admin/forms"
-                className="list-group-item border-end-0"
+
+            <NavDropdown
+                title={
+                    <>
+                        <FapIcon icon="glasses" className="me-2" fixedWidth />
+                        <span>Assessments</span>
+                    </>
+                }
+                data-testid="adminSidebar"
+                align="end"
             >
-                <FapIcon icon="book" className="me-2" fixedWidth />
-                <span>Forms</span>
-            </Nav.Link>
-            <Nav.Link
-                href="/admin/narrative-report"
-                className="list-group-item border-end-0"
-            >
-                <FapIcon icon="report" className="me-2" fixedWidth />
-                <span>Narrative Editor</span>
-            </Nav.Link>
+                <NavDropdown.Item href="/admin/assessments">
+                    <FapIcon icon="glasses" className="me-2" fixedWidth />
+                    <span>Assessments</span>
+                </NavDropdown.Item>
+
+                <NavDropdown.Item href="/admin/assessments">
+                    <FapIcon icon="books" className="me-2" fixedWidth />
+                    <span>Rules</span>
+                </NavDropdown.Item>
+
+                <NavDropdown.Item href="/admin/forms">
+                    <FapIcon icon="book" className="me-2" fixedWidth />
+                    <span>Forms</span>
+                </NavDropdown.Item>
+
+                <NavDropdown.Item href="/admin/narrative-report">
+                    <FapIcon icon="newspaper" className="me-2" fixedWidth />
+                    <span>Narrative Editor</span>
+                </NavDropdown.Item>
+            </NavDropdown>
+
             <Nav.Link
                 href="/admin/companies"
                 className="list-group-item border-end-0"
@@ -35,19 +53,13 @@ const MenuAdmin = () => {
                 <FapIcon icon="building" className="me-2" fixedWidth />
                 <span>Companies</span>
             </Nav.Link>
+
             <Nav.Link
                 href="/admin/clinicians"
                 className="list-group-item border-end-0"
             >
                 <FapIcon icon="user-nurse" className="me-2" fixedWidth />
                 <span>Clinicians</span>
-            </Nav.Link>
-            <Nav.Link
-                href="/admin/users"
-                className="list-group-item border-end-0"
-            >
-                <FapIcon icon="users" className="me-2" fixedWidth />
-                <span>Users</span>
             </Nav.Link>
         </>
     );

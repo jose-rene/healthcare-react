@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Assessment\AssessmentRequest;
 use App\Http\Resources\RequestResource;
+use App\Http\Resources\RequestDetailResource;
 use App\Jobs\RequestSectionSaveJob;
 use App\Models\Request as ModelRequest;
 use App\Models\RequestStatus;
@@ -78,7 +79,14 @@ class RequestController extends Controller
                 $baseQuery = ModelRequest::get();
                 break;
             case 2: // healthplan
-                $baseQuery = $user->healthPlanUser->requests();
+                $payerIds = [];
+                // add child payers if applicable
+                if (null !== ($childPayers = $user->healthPlanUser->payer->children)) {
+                    $payerIds = $childPayers->pluck('id')->all();
+                }
+                // add the users associated payer
+                array_unshift($payerIds, $user->healthPlanUser->payer_id);
+                $baseQuery = ModelRequest::whereIn('payer_id', $payerIds);
                 break;
             case 3: // therapist
                 $baseQuery = $user->clinicalServicesUser->requests();
@@ -143,7 +151,7 @@ class RequestController extends Controller
      */
     public function show(ModelRequest $request)
     {
-        return new RequestResource($request);
+        return new RequestDetailResource($request);
     }
 
     /**
@@ -189,7 +197,7 @@ class RequestController extends Controller
     {
         dispatch(new RequestSectionSaveJob($request, $httpRequest->all()));
 
-        return new RequestResource($request);
+        return new RequestDetailResource($request);
     }
 
     /**

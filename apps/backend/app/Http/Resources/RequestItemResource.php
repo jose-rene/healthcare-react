@@ -17,7 +17,7 @@ class RequestItemResource extends JsonResource
     public function toArray($request)
     {
         // the parent request types
-        $parents = array_reverse($this->mapParents($this->requestType->ancestors, true));
+        $parents = $this->requestType && $this->requestType->ancestors ? array_reverse($this->mapParents($this->requestType->ancestors, true)) : null;
         // the related classifcation, will be related to the top parent
         $classification = null;
         if (!empty($parents) && null !== ($requestType = RequestType::find($parents[0])) && $requestType->classification) {

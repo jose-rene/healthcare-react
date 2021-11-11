@@ -48,7 +48,7 @@ class PayerPolicy
             if (!$user->payer->payers) {
                 return false;
             }
-            $payerIds = $user->payer->payers->flatten()->pluck('id');
+            $payerIds = $user->payer->payers->flatten()->pluck('id')->toArray();
 
             return in_array($payer->id, $payerIds);
         }

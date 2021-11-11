@@ -40,7 +40,7 @@ const AssessmentList = (props) => {
             formatter(id) {
                 return (
                     <>
-                        <Link to={`/admin/assessment/${id}`}>
+                        <Link to={`/admin/assessments/${id}`}>
                             <FapIcon size="1x" icon="edit" />
                         </Link>
                     </>
