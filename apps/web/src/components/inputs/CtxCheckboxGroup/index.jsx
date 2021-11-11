@@ -8,6 +8,7 @@ const CtxCheckboxGroup = ({
     children,
     customRule,
     options: _options = [],
+    type = "checkbox",
     ...props
 }) => {
     const { getValue, editing, shouldShow, update } = useFormContext();
@@ -34,6 +35,7 @@ const CtxCheckboxGroup = ({
             checked={values}
             name={name}
             options={options}
+            type={type}
             {...props}
             onChange={handleOnChange}
         />

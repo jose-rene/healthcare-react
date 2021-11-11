@@ -1,8 +1,8 @@
 import React from "react";
 
 const ContextRadioInput = (
-    { name, label = "", warpperClass, onChange: propsOnChange },
-    ref
+    { name, label = "", wrapperClass, onChange: propsOnChange, checked = false },
+    ref,
 ) => {
     const handleOnChange = (e) => {
         if (propsOnChange) {
@@ -11,16 +11,18 @@ const ContextRadioInput = (
     };
 
     return (
-        <div className={warpperClass}>
-            <input
-                className="form-check-input m-1 me-2"
-                type="radio"
-                name={name}
-                ref={ref}
-                value={label}
-                onChange={handleOnChange}
-            />
-            <label className="form-check-label" htmlFor={name}>
+        <div className={wrapperClass}>
+            <label className="form-check-label" htmlFor={`${name}-${label}`}>
+                <input
+                    id={`${name}-${label}`}
+                    className="form-check-input m-1 me-2"
+                    type="radio"
+                    name={name}
+                    ref={ref}
+                    value={label}
+                    checked={checked}
+                    onChange={handleOnChange}
+                />
                 {label}
             </label>
         </div>

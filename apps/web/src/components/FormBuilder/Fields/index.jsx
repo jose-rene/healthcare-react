@@ -6,6 +6,7 @@ import GryInputGroup from "./GryInputGroup";
 import GrySelect from "./GrySelect";
 import GryInputGroupRepeater from "./GryInputGroupRepeater";
 import GryCheckbox from "./GryCheckbox";
+import GryRadioGroup from "./GryRadioGroup";
 
 const CustomFormElements = {
     GryInput,
@@ -16,6 +17,7 @@ const CustomFormElements = {
     GryInputGroup,
     GryInputGroupRepeater,
     GrySelect,
+    GryRadioGroup,
 };
 
 export default CustomFormElements;
