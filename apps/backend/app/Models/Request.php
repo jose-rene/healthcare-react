@@ -69,9 +69,9 @@ class Request extends Model
         return $this->morphMany(Document::class, 'documentable');
     }
 
-    public function requestDate()
+    public function requestDates()
     {
-        return $this->hasMany(RequestDate::class, 'request_id');
+        return $this->hasMany(RequestDate::class, 'request_id')->orderBy('id', 'desc');
     }
 
     public function requestStatus()
@@ -208,6 +208,11 @@ class Request extends Model
     public function getRequestedAtAttribute()
     {
         return $this->created_at;
+    }
+
+    public function getCalledDateAttribute()
+    {
+        return $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 1) : null;
     }
 
     public function getStatusNameAttribute()
