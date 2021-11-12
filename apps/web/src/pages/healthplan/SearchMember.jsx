@@ -12,9 +12,11 @@ import PageAlert from "components/elements/PageAlert";
 import TableAPI from "components/elements/TableAPI";
 import Form from "components/elements/Form";
 import Icon from "components/elements/Icon";
+
 import useToast from "hooks/useToast";
 import useApiCall from "hooks/useApiCall";
 import useSearch from "hooks/useSearch";
+
 import { ACTIONS } from "helpers/table";
 
 const SearchMember = (props) => {
@@ -140,7 +142,7 @@ const SearchMember = (props) => {
                     </PageAlert>
                 ) : null}
                 <Row>
-                    <Col xl={8}>
+                    <Col md={12}>
                         <Form
                             autocomplete={false}
                             defaultData={searchObj}
@@ -148,57 +150,55 @@ const SearchMember = (props) => {
                             onSubmit={handleSearch}
                             className="p-0"
                         >
-                            <div className="d-flex w-100">
-                                <div className="pe-2 flex-grow-1">
+                            <Row>
+                                <Col md={3}>
                                     <ContextInput
                                         label="First Name"
                                         name="first_name"
                                         placeholder="First Name"
-                                        required
-                                        large
                                     />
-                                </div>
+                                </Col>
 
-                                <div className="px-2 flex-grow-1">
+                                <Col md={3}>
                                     <ContextInput
                                         label="Last Name"
                                         name="last_name"
                                         placeholder="Last Name"
-                                        required
-                                        large
                                     />
-                                </div>
+                                </Col>
 
-                                <div className="px-2">
+                                <Col md={3}>
                                     <ContextInput
-                                        label="Date of Birth"
                                         name="dob"
+                                        label="Date of Birth*"
                                         type="date"
-                                        required
-                                        large
+                                        style={{ width: "100%" }}
                                     />
-                                </div>
+                                </Col>
 
-                                <div className="px-1">
-                                    <Button
-                                        variant="primary"
-                                        label="Search"
-                                        type="submit"
-                                    />
-                                </div>
-                            </div>
+                                <Col md={3}>
+                                    <div className="d-md-block d-grid">
+                                        <Button
+                                            variant="primary"
+                                            label="Search"
+                                            type="submit"
+                                        />
+                                    </div>
+                                </Col>
+                            </Row>
                         </Form>
                     </Col>
                 </Row>
+
                 <Row>
-                    <Col xl={8}>
+                    <Col md={12}>
                         {!data.length && !searchStatus && (
-                            <div className="text-center">
+                            <div className="text-center mt-3">
                                 Please search to show results
                             </div>
                         )}
                     </Col>
-                    <Col xl={11}>
+                    <Col md={12}>
                         {searchStatus && (
                             <>
                                 <TableAPI
