@@ -60,7 +60,8 @@ Route::middleware('auth:api')->group(function ($router) {
 
     // protected crud routes
     Route::apiResource('questionnaire', 'QuestionnaireController');
-    Route::apiResource('assessment', 'AssessmentController');
+    // @deprecated
+    // Route::apiResource('assessment', 'AssessmentController');
     Route::apiResource('request', 'RequestController');
     Route::apiResource('member', 'MemberController');
     Route::apiResource('payer', 'PayerController')->except(['store', 'update', 'destroy']);
@@ -78,6 +79,8 @@ Route::middleware('auth:api')->group(function ($router) {
 
     Route::get('request/{request}/request_form_section/{request_form_section_slug}', 'RequestFormSectionController@show');
     Route::post('request/{request}/request_form_section/{request_form_section_slug}', 'RequestFormSectionController@store');
+
+    Route::get('assessment/{request}', 'RequestAssessmentController@show')->name('request.assessment.show');
 
     Route::bind('request_form_section_slug', function($request_form_section_slug){
         return Form::where('slug', $request_form_section_slug)->firstOrFail();
