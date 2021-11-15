@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 class RequestDateTypeSeeder extends Seeder
 {
     protected $types = [
+        'Received Date',
         'Called Date',
         'Appointment Date',
     ];

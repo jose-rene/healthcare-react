@@ -79,6 +79,11 @@ class RequestSectionSaveJob
                 $this->dueSection();
                 break;
             case 'submit':
+                // set the received data
+                $request->requestDates()->create([
+                    'request_date_type_id' => 1,
+                    'date'                 => Carbon::now(),
+                ]);
                 // marks the request as received
                 $request->requestStatus()->associate(RequestStatus::find(1))->save();
                 break;
