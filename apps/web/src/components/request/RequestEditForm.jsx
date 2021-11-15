@@ -190,7 +190,10 @@ const RequestEditForm = ({ data }) => {
                 </Row>
                 <Row className="justify-content-lg-center">
                     <Col xl={10}>
-                        {userIs("software_engineer") && (
+                        {userIs([
+                            "software_engineer",
+                            "client_services_specialist",
+                        ]) && (
                             <ClinicianInfoView
                                 {...{
                                     requestId,
