@@ -122,6 +122,7 @@ class BouncerSeeder extends Seeder
                 'name'   => Str::snake($title),
                 'title'  => $title,
             ]);
+            Bouncer::allow($role)->to('schedule-appointments');
         }
     }
 }

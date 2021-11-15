@@ -210,9 +210,15 @@ class Request extends Model
         return $this->created_at;
     }
 
+    public function getReceivedDateAttribute()
+    {
+        $received = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 1) : null;
+        return $received ? $received->date : $this->created_at;
+    }
+
     public function getCalledDateAttribute()
     {
-        return $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 1) : null;
+        return $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 2) : null;
     }
 
     public function getStatusNameAttribute()

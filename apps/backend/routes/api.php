@@ -76,6 +76,7 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('form', 'FormController');
     Route::apiResource('request.form', 'RequestFormController');
     Route::apiResource('narrative_report_template', 'NarrativeReportTemplatesController');
+    Route::apiResource('appointment', 'AppointmentController');
 
     Route::get('request/{request}/request_form_section/{request_form_section_slug}', 'RequestFormSectionController@show');
     Route::post('request/{request}/request_form_section/{request_form_section_slug}', 'RequestFormSectionController@store');
