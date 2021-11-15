@@ -12,6 +12,7 @@ const FormView = ({
     },
 }) => {
     const [formDataLoaded, setFormDataLoaded] = useState(false);
+    const [formTitle, setFormTitle] = useState(null);
     const [{ form, defaultAnswers, formLoading, saving }, { fireLoadForm }] = useFormBuilder({
         form_slug,
     });
@@ -38,7 +39,8 @@ const FormView = ({
         }
 
         (async () => {
-            await fireLoadForm();
+            const { name } = await fireLoadForm();
+            setFormTitle(name);
 
             pushFormSave({ log: "form data loaded" }, "loaded", false);
 
@@ -88,7 +90,8 @@ const FormView = ({
     return (
         <PageLayout>
             <div className="container mt-3">
-                <h3>Show</h3>
+                <h3>Form Demo {formTitle && <>- {formTitle}</>}</h3>
+                <hr />
                 {form.length > 0 && (
                     <Form
                         onFormChange={handleFormChange}
