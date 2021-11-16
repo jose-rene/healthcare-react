@@ -7,6 +7,8 @@ import {
     Row,
     FloatingLabel,
     Form,
+    ListGroup,
+    ListGroupItem,
 } from "react-bootstrap";
 import AsyncSelect from "react-select/async";
 import FapIcon from "components/elements/FapIcon";
@@ -243,7 +245,7 @@ const RequestInfoForm = ({
                                                                 ? {
                                                                       label: item.description,
                                                                       value: item.code,
-                                                                }
+                                                                  }
                                                                 : null
                                                         }
                                                         isLoading={loading}
@@ -315,17 +317,27 @@ const RequestInfoForm = ({
                                 </Col>
                             </Row>
                             <Row className="mb-3">
-                                <Col className="fw-bold" sm={3}>
-                                    Relevant Diagnosis
-                                </Col>
                                 <Col>
                                     {codes?.length && codes[0].code ? (
-                                        <p>
-                                            {codes
-                                                .map((item) => item.description)
-                                                .filter((item) => item)
-                                                .join(", ")}
-                                        </p>
+                                        <ListGroup className="mb-3">
+                                            <ListGroup.Item className="bg-light">
+                                                <h6 className="mb-0">
+                                                    Relevant Diagnosis
+                                                </h6>
+                                            </ListGroup.Item>
+                                            {codes.map(
+                                                (item) =>
+                                                    item.description && (
+                                                        <ListGroupItem
+                                                            key={
+                                                                item.description
+                                                            }
+                                                        >
+                                                            {item.description}
+                                                        </ListGroupItem>
+                                                    )
+                                            )}
+                                        </ListGroup>
                                     ) : (
                                         <Button
                                             variant="link"
