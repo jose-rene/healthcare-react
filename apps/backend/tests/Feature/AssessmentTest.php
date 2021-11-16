@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Request;
 use App\Models\User;
 use App\Models\UserType\HealthPlanUser;
-use Artisan;
 use Database\Seeders\HealthPlanUserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;

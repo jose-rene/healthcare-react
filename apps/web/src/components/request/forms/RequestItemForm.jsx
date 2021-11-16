@@ -440,18 +440,18 @@ const RequestItemForm = ({
                                                         {selectGroup.requestDetails &&
                                                             requestDetailCount >
                                                                 1 && (
-                                                            <FapIcon
-                                                                icon="delete"
-                                                                role="button"
-                                                                className="float-end text-danger mt-1 cursor-pointer"
-                                                                size="1x"
-                                                                onClick={() =>
-                                                                    handleGroupRemove(
-                                                                        groupIndex
-                                                                    )
-                                                                }
+                                                                <FapIcon
+                                                                    icon="delete"
+                                                                    role="button"
+                                                                    className="float-end text-danger mt-1 cursor-pointer"
+                                                                    size="1x"
+                                                                    onClick={() =>
+                                                                        handleGroupRemove(
+                                                                            groupIndex
+                                                                        )
+                                                                    }
                                                                 />
-                                                        )}
+                                                            )}
                                                     </Card.Header>
                                                     <Card.Body>
                                                         {selectGroup.classification && (

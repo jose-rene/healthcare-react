@@ -128,7 +128,12 @@ const AppNavigation = () => {
                 />
                 <PrivateRoute
                     path="/member/:member_id/request/:request_id/edit"
-                    middleware={["hp_user", "hp_manager", "hp_champion"]}
+                    middleware={[
+                        "hp_user",
+                        "hp_manager",
+                        "hp_champion",
+                        "client_services_specialist",
+                    ]}
                     component={NewRequestAdd}
                 />
                 <PrivateRoute

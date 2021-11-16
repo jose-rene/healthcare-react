@@ -1,16 +1,17 @@
-@servers(['web' => 'deployer@ec2-35-163-224-88.us-west-2.compute.amazonaws.com'])
+@servers(['stage' => 'deployer@ip-172-31-60-100.us-west-2.compute.internal', 'alpha' => 'deployer@ip-172-31-57-128.us-west-2.compute.internal'])
 
 @setup
     $repository = 'git@gitlab.com:dmecg/gryphon.git';
     $releases_dir = empty($production) ? '/var/www/stage-api/releases' : '/var/www/alpha-api/releases';
     $app_dir = empty($production) ? '/var/www/stage-api' : '/var/www/alpha-api';
+    $target = empty($production) ? 'stage' : 'alpha';
     $release = date('YmdHis');
     $new_release_dir = $releases_dir .'/'. $release;
     // specify laravel dir for monorepo
     // $laravel_dir = $new_release_dir . '/API'
 @endsetup
 
-@story('deploy')
+@story('deploy', ['on' => $target])
     clone_repository
     run_composer
     update_symlinks
