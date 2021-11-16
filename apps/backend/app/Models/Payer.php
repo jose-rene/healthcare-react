@@ -212,7 +212,7 @@ class Payer extends Model
     /**
      * Will implement the recursive relationship and return the hiarchy of child payers.
      *
-     * @return Illuminate\Database\Eloquent\Collection of App\Questionnaire
+     * @return Illuminate\Database\Eloquent\Collection of App\Payer
      */
     public function payers()
     {

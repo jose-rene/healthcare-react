@@ -95,6 +95,16 @@ class Activity extends Model
         return $this->hasMany(self::class, 'parent_id')->orderBy('id', 'desc');
     }
 
+     /**
+     * Will implement the recursive relationship and return the hiarchy of child activities.
+     *
+     * @return Illuminate\Database\Eloquent\Collection of App\Activity\Activity
+     */
+    public function activities()
+    {
+        return $this->hasMany(self::class, 'parent_id')->with('children');
+    }
+
     /*
      * Get the route key for the model.
      *

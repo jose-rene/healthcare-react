@@ -16,11 +16,11 @@ class ActivityResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'       => $this->uuid,
-            'date'     => Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('m/d/Y'),
-            'message'  => $this->message,
-            'type'     => $this->type,
-            'children' => $this->children->count() ? new ActivityResourceCollection($this->children) : null,
+            'id'         => $this->uuid,
+            'date'       => Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('m/d/Y'),
+            'message'    => $this->message,
+            'type'       => $this->type,
+            'activities' => $this->activities->count() ? self::Collection($this->activities) : null,
         ];
     }
 }

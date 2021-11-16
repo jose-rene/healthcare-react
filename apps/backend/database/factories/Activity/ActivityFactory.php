@@ -26,6 +26,7 @@ class ActivityFactory extends Factory
             'request_id' => function () {
                 return Request::factory();
             },
+            'message'    => $this->faker->sentence,
         ];
     }
 }
