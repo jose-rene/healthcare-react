@@ -20,21 +20,35 @@ class ActivityTest extends TestCase
     protected $user;
 
     /**
-     * Test fetching member.
+     * Test activity index.
+     *
+     * @return void
+     */
+    public function testActivityIndex()
+    {
+        // get the activity
+        $response = $this->json('GET', $route = route('api.activity.index', ['request_id' => $this->request]));
+        // validate response code
+        $response->assertStatus(200);
+        // validate structure
+        $response->assertJsonStructure(['data']);
+
+        // if we don't send a request id and the user doesn't have perms validate empty response
+        $response = $this->json('GET', $route = route('api.activity.index'));
+        // validate response code
+        $response->assertStatus(200);
+        $response->assertExactJson([]);
+    }
+
+    /**
+     * Test fetching activity.
      *
      * @return void
      */
     public function testGetActivity()
     {
-        $this->withoutExceptionHandling();
-        Passport::actingAs(
-            $this->user
-        );
         // get the activity
-        $response = $this->withHeaders([
-            'Accept'           => 'application/json',
-            'X-Requested-With' => 'XMLHttpRequest',
-        ])->json('GET', 'v1/activity/' . $this->activity->uuid);
+        $response = $this->json('GET', 'v1/activity/' . $this->activity->uuid);
         // validate response code
         $response->assertStatus(200);
         // validate structure
@@ -63,5 +77,8 @@ class ActivityTest extends TestCase
             ->create();
 
         $this->user = User::factory()->create();
+        Passport::actingAs(
+            $this->user
+        );
     }
 }

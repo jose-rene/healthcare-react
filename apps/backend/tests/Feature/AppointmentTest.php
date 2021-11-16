@@ -2,8 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Request;
+use App\Models\Activity\Activity;
 use App\Models\Appointment;
+use App\Models\Request;
 use App\Models\User;
 use Artisan;
 use Bouncer;
@@ -51,13 +52,20 @@ class AppointmentTest extends TestCase
         $formData = $this->getFormData();
         $response = $this->json('POST', route('api.appointment.store', $formData));
         // validate response code and structure
-        // dd($response->json());
         $response
             ->assertStatus(201)
             ->assertJsonPath('called_at', Carbon::today()->format('m/d/Y'))
             ->assertJsonPath('is_scheduled', $formData['is_scheduled']);
 
-        $this->request->refresh();
+        // verify called date and appointment date were generated from observer
+        $data = $response->json();
+        $this->assertEquals($data['called_at'], $this->request->called_date->format('m/d/Y'));
+        $this->assertEquals($data['appointment_date'], $this->request->appointment_date->format('m/d/Y'));
+
+        // verify activity was created
+        $activity = Activity::where('request_id', $this->request->id)->orderBy('id', 'desc')->first()->toArray();
+        $this->assertArrayHasKey('json_message', $activity);
+        $this->assertArrayHasKey('appointment_date', $activity['json_message']);
     }
 
     /**
@@ -106,10 +114,10 @@ class AppointmentTest extends TestCase
         Artisan::call('db:seed', [
             '--class' => 'BouncerSeeder',
         ]);
-        $this->request = Request::factory()->create();
-        $this->request->requestDates()->create(['request_date_type_id' => 1, 'date' => Carbon::now()]);
         $this->user = User::factory()->create(['user_type' => 3, 'primary_role' => 'field_clinican']);
         Bouncer::sync($this->user)->roles(['field_clinician']);
+        $this->request = Request::factory()->create(['clinician_id' => $this->user->id]);
+        $this->request->requestDates()->create(['request_date_type_id' => 1, 'date' => Carbon::now()]);
         Passport::actingAs(
             $this->user
         );

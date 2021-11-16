@@ -210,6 +210,12 @@ class Request extends Model
         return $this->created_at;
     }
 
+    public function getAppointmentDateAttribute()
+    {
+        $appt = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 3) : null;
+        return $appt ? $appt->date : null;
+    }
+
     public function getReceivedDateAttribute()
     {
         $received = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 1) : null;
@@ -218,7 +224,8 @@ class Request extends Model
 
     public function getCalledDateAttribute()
     {
-        return $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 2) : null;
+        $called = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 2) : null;
+        return $called ? $called->date : null;
     }
 
     public function getStatusNameAttribute()

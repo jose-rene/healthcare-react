@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\RequestFormSectionSavedEvent;
+use App\Events\ActivityCreated;
 use App\Events\MemberCreated;
 use App\Events\PayerCreated;
 use App\Events\UserChangingPassword;
@@ -10,12 +11,15 @@ use App\Events\UserLoggedIn;
 use App\Listeners\ChangeResetPasswordFalse;
 use App\Listeners\DatabaseRefreshedListener;
 use App\Listeners\IsFormComplete;
+use App\Listeners\ActivityCreatedListener;
 use App\Listeners\MemberCreatedListener;
 use App\Listeners\PayerCreatedListener;
 use App\Listeners\TrackDatabaseChangeListener;
 use App\Listeners\TrackPasswordResets;
 use App\Listeners\UserLoggedInListener;
+use App\Models\Appointment;
 use App\Models\Request;
+use App\Observers\AppointmentObserver;
 use App\Observers\RequestObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -44,6 +48,9 @@ class EventServiceProvider extends ServiceProvider
         DatabaseRefreshed::class    => [
             DatabaseRefreshedListener::class,
         ],
+        ActivityCreated::class      => [
+            ActivityCreatedListener::class,
+        ],
         MemberCreated::class        => [
             MemberCreatedListener::class,
         ],
@@ -66,6 +73,7 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
+        Appointment::observe(AppointmentObserver::class);
         Request::observe(RequestObserver::class);
     }
 }

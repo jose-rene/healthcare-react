@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Activity\Activity;
 use App\Models\Appointment;
 
 class AppointmentObserver
@@ -21,6 +22,7 @@ class AppointmentObserver
      */
     public function created(Appointment $appointment)
     {
+        // create request dates
         $appointment->request->requestDates()->create([
             'request_date_type_id' => 2,
             'date'                 => $appointment->called_at,
@@ -32,6 +34,18 @@ class AppointmentObserver
                 'date'                 => $appointment->appointment_date,
             ]);
         }
+
+        // create activity and indirectly the notification
+        $apptDate = $appointment->appointment_date ? $appointment->appointment_date->format('d/m/Y') : 'n/a';
+        $callDate = $appointment->called_at->format('m/d/Y'); 
+        Activity::create([
+            'request_id'   => $appointment->request->id,
+            'notify_admin' => 1,
+            'user_id'      => $appointment->request->clinician_id,
+            'priority'     => true,
+            'json_message' => ['appointment_date' => $apptDate, 'called_date' => $callDate],
+            'message'      => sprintf('Member called %s, appointment scheduled %s.', $callDate, $apptDate),
+        ]);
     }
 
     /**

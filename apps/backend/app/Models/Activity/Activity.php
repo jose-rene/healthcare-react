@@ -2,6 +2,7 @@
 
 namespace App\Models\Activity;
 
+use App\Events\ActivityCreated;
 use App\Models\Request;
 use App\Models\User;
 use App\Traits\Uuidable;
@@ -48,6 +49,10 @@ class Activity extends Model
         'notify_reviewer'   => 'boolean',
         'notify_therapist'  => 'boolean',
         'json_message'      => 'json',
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => ActivityCreated::class,
     ];
 
     /**
@@ -103,8 +108,7 @@ class Activity extends Model
     /*
      * Implement onCreated from observable trait, send notifications.
      *
-     * @todo This just returns the activity creator user, should use business logic to return actual recipients.
-     * Should also check user notification_prefs to make sure there are notification prefs set.
+     * @todo Should check user notification_prefs to make sure there are notification prefs set.
      *
      * @return array of App/Models/User
      */
@@ -113,24 +117,18 @@ class Activity extends Model
         $users = [];
 
         if ($this->notify_admin) {
-            // TODO :: get admin
-            $users[] = $this->request->admin;
+            $users[] = User::where('primary_role', 'client_services_specialist')->get();
         }
 
         if ($this->notify_reviewer) {
-            // TODO :: get reviewer user
             $users[] = $this->request->reviewer;
         }
 
         if ($this->notify_therapist) {
-            // TODO :: get therapist
-            $users[] = $this->request->therapist;
+            $users[] = $this->request->clinician;
         }
 
-        // TODO :: DEV remove and collect dynamically
-        $users[] = $this->user;
-
-        return $users;
+        return collect($users)->push($this->user)->unique()->values()->all();
     }
 
     public function activityReason()

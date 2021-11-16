@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ActivityResource;
 use App\Models\Activity\Activity;
+use App\Models\Request as modelRequest;
 use Illuminate\Http\Request;
 
 class ActivityController extends Controller
@@ -12,11 +13,25 @@ class ActivityController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user = auth()->user();
+        if (!$request['request_id']) {
+            if (!$user->can('view-all-requests')) {
+                return response()->json([]);
+            }
+            $data = Activity::orderBy('id', 'desc')->paginate($request->get('perPage', 50));
+            return ActivityResource::collection($data);
+        }
+        if (null === ($modelRequest = modelRequest::firstWhere('uuid', $request['request_id']))) {
+            return response()->json([]);
+        }
+        $data = Activity::orderBy('id', 'desc')->paginate($request->get('perPage', 50));
+
+        return ActivityResource::collection($data);
     }
 
     /**
