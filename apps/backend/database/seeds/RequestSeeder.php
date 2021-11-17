@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Activity\Activity;
 use App\Models\Member;
 use App\Models\Payer;
 use App\Models\Request;
@@ -95,5 +96,10 @@ class RequestSeeder extends Seeder
 
         // update status to received
         $request->requestStatus()->associate(RequestStatus::find(1))->save();
+
+        // give it some activities
+        $request->activities()->saveMany(Activity::factory()->forUser()->count(3)->create());
+        // give the first one a child activity
+        $request->activities->first()->children()->save(Activity::factory()->forUser()->create());
     }
 }

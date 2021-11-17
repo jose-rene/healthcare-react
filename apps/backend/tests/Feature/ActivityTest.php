@@ -52,12 +52,14 @@ class ActivityTest extends TestCase
         // validate response code
         $response->assertStatus(200);
         // validate structure
-        // dd($response->getContent());
-        $response->assertJsonStructure(['id', 'message', 'type', 'children']);
+        // dd($response->json());
+        $response->assertJsonStructure(['id', 'message', 'type', 'activities']);
         // validate data
-        $data = json_decode($response->getContent(), true);
-        // id is the uuid
-        $this->assertEquals($data['id'], $this->activity->uuid);
+        $response
+            ->assertOk()
+            ->assertJsonPath('id', $this->activity->uuid)
+            ->assertJsonCount(3, 'activities')
+            ->assertJsonCount(2, 'activities.0.activities');
     }
 
     protected function setUp(): void
@@ -76,6 +78,8 @@ class ActivityTest extends TestCase
             ->has(Activity::factory()->forUser()->count(3), 'children')
             ->create();
 
+        // children of children, make 2 each
+        $this->activity->children->each(fn($item) => $item->children()->saveMany(Activity::factory()->forUser()->count(2)->create()));
         $this->user = User::factory()->create();
         Passport::actingAs(
             $this->user
