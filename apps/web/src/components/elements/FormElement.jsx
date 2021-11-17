@@ -10,6 +10,10 @@ const FormElement = ({ elementType, id, custom_name, label, customRule, customVa
         //    return <ContextInput {...props} />
         default:
             try {
+                if (data.type == "custom") {
+                    delete data.type;
+                }
+
                 return element({ elementType, id, custom_name, label, customRule, customValidation, data });
             } catch (e) {
                 console.log(`fail.${elementType}`, { e });

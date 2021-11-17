@@ -6,7 +6,7 @@ const Checkbox = (
         name,
         label = "",
         inline = false,
-        type = "text",
+        type = "checkbox",
         autocomplete = false,
         className = false,
         classNameAppend = "",
@@ -25,7 +25,7 @@ const Checkbox = (
             {labelLeft === false && label &&
             <Form.Label htmlFor={name} className="pe-2">{label}</Form.Label>}
             <input
-                type="checkbox"
+                type={type}
                 id={name}
                 name={name}
                 autoComplete={autocomplete || name}

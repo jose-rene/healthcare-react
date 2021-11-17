@@ -255,10 +255,7 @@ const FormProvider = ({
             try {
                 // Builds a template that handlebars can evaluate. If the condition is true the
                 // template will return 'yes' otherwise false or nothing.
-                const template = `{{#compare ${rule}}}yes{{/compare}}`.replace(
-                    /@index/gi,
-                    rowIndex.toString()
-                );
+                const template = `{{#compare ${rule}}}yes{{/compare}}`.replace(/@index/gi, rowIndex.toString());
                 const result = handlebarsTemplate(template, form);
                 const show = result === "yes";
 

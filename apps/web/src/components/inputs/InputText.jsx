@@ -106,6 +106,10 @@ const InputText = forwardRef((props, ref) => {
     if (type === "email") {
         // For email input types we need to use a pattern
         input_attributes.type = "email";
+    } else if (type === "textarea") {
+        input_attributes.as = "textarea";
+        input_attributes.style = { height: "unset" };
+        input_attributes.rows = "5";
     }
 
     const typeMap = {

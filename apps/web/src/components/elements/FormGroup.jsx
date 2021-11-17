@@ -4,8 +4,11 @@ import Button from "../inputs/Button";
 import FormElement from "./FormElement";
 import Icon from "./Icon";
 import { isString } from "lodash";
+import { useFormContext } from "../../Context/FormContext";
 
 const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 12, rowIndex = 0 }) => {
+    const { shouldShow, editing } = useFormContext();
+
     return (
         <>
             {elements.map(
@@ -20,36 +23,51 @@ const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 
                     props: { customRule, customValidation } = {},
                     ...props
                 }, elementIndex) => {
+
                     const heading =
                         elementType === "GryInputGroupRepeaterChild"
                             ? `${label} (${index + 1})`
                             : label;
-                    const addBtn =
-                        fields && elementType === "GryInputGroupRepeater" ? (
-                            <Button
-                                onClick={() => {
-                                    addRepeater(id);
-                                }}
-                                className="ms-2 btn-success btn-sm"
-                                icon="plus"
-                                iconSize="1x"
-                            >
-                                Add
-                            </Button>
-                        ) : null;
-                    const removeBtn =
-                        elementType === "GryInputGroupRepeaterChild" ? (
-                            <Icon
-                                onClick={() => {
-                                    removeRepeater(id, index);
-                                }}
-                                className="float-right"
-                                icon="delete"
-                                style={{ cursor: "pointer", color: "#ff0000" }}
-                            >
-                                Delete
-                            </Icon>
-                        ) : null;
+
+                    const headerAttributes = () => {
+                        const addBtn =
+                            fields && elementType === "GryInputGroupRepeater" ? (
+                                <Button
+                                    onClick={() => {
+                                        addRepeater(id);
+                                    }}
+                                    className="ms-2 btn-success btn-sm"
+                                    icon="plus"
+                                    iconSize="1x"
+                                >
+                                    Add
+                                </Button>
+                            ) : null;
+
+                        const removeBtn =
+                            elementType === "GryInputGroupRepeaterChild" ? (
+                                <Icon
+                                    onClick={() => {
+                                        removeRepeater(id, index);
+                                    }}
+                                    className="float-right"
+                                    icon="delete"
+                                    style={{ cursor: "pointer", color: "#ff0000" }}
+                                >
+                                    Delete
+                                </Icon>
+                            ) : null;
+
+                        if (!addBtn && !removeBtn) {
+                            return null;
+                        }
+
+                        return (
+                            <>
+                                {addBtn} {removeBtn}
+                            </>
+                        );
+                    };
                     // console.log("form group type -> ", elementType);
 
                     const spanWidth = () => {
@@ -73,12 +91,16 @@ const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 
                         return "12";
                     };
 
+                    if (!editing && customRule && !shouldShow(customRule, { custom_name, elementIndex })) {
+                        return null;
+                    }
+
                     return fields ? (
-                        <Card className="mb-3">
-                            <Card.Header>
-                                {heading} {addBtn} {removeBtn}
-                            </Card.Header>
-                            <Card.Body>
+                        <Card className="mb-0 border-0" style={{ background: "unset" }}>
+                            <Card.Body class="p-0">
+                                <h3>
+                                    {heading} {headerAttributes}
+                                </h3>
                                 <Row>
                                     <FormGroup
                                         rowIndex={elementIndex}

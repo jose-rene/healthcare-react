@@ -5,13 +5,8 @@ import { useFormContext } from "../../../Context/FormContext";
 const ContextCheckbox = (props) => {
     const { onChange: propsOnChange, name, value: valueLabel = true } = props;
 
-    const { getValue, getError, update, shouldShow, editing } = useFormContext();
+    const { getValue, getError, update } = useFormContext();
     const checked = getValue(name);
-
-    const {
-        rowIndex,
-        customRule,
-    } = props;
 
     const handleOnChange = (e) => {
         if (propsOnChange) {
@@ -24,10 +19,6 @@ const ContextCheckbox = (props) => {
 
         update(name, !!checked);
     };
-
-    if (!editing && customRule && !shouldShow(customRule, { name, rowIndex })) {
-        return null;
-    }
 
     return (
         <Checkbox
