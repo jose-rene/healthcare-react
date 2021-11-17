@@ -1,5 +1,6 @@
 import GryInput from "./GryInput";
 import GryText from "./GryText";
+import GryTextarea from "./GryTextarea";
 import GryPhone from "./GryPhone";
 import GryCheckboxGroup from "./GryCheckboxGroup";
 import GryInputGroup from "./GryInputGroup";
@@ -11,6 +12,7 @@ import GryRadioGroup from "./GryRadioGroup";
 const CustomFormElements = {
     GryInput,
     GryText,
+    GryTextarea,
     GryPhone,
     GryCheckbox,
     GryCheckboxGroup,
