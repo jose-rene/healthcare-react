@@ -41,6 +41,7 @@ const FormBuilderEdit = (props) => {
                 {!formLoaded && (
                     <Form editing>
                         <ReactFormBuilder
+                            hideGrip={true}
                             edit
                             data={form}
                             toolbarItems={items}

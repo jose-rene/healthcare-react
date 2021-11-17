@@ -1,4 +1,3 @@
-import { template as _template } from "lodash";
 import Handlebars from "handlebars";
 
 Handlebars.registerHelper("compare", function (v1, operator, v2, options) {
@@ -37,13 +36,9 @@ export const slugify = (text) => {
 };
 
 export const template = (templateString, object) => {
-    try {
-        const compiled = _template(templateString, { strict: false });
-        return compiled(object);
-    } catch (e) {
-        const varToDefine = e.message.replace(/\sis not defined/, "");
-        return template(templateString, { ...object, [varToDefine]: "" });
-    }
+
+    const templateObj = Handlebars.compile(templateString);
+    return templateObj(object);
 };
 
 export const handlebarsTemplate = (templateString, object) => {

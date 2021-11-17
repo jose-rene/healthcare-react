@@ -1,15 +1,18 @@
-import React from 'react';
+import React from "react";
 import { useFormContext } from "../../../Context/FormContext";
 import { template } from "../../../helpers/string";
 
-const GryText = ({ customRule, data: { label: __html } = {} }) => {
+const GryText = (props) => {
+    const { label: defaultLabel = "" } = props.data || {};
+    const { customRule, label: __html = defaultLabel } = props;
     const { form, editing, shouldShow } = useFormContext();
 
     if (!editing && customRule && !shouldShow(customRule)) {
         return null;
     }
 
-    const outputTemplate = template(__html, form);
+    const label = __html || defaultLabel;
+    const outputTemplate = template(label, form);
 
     return (
         <div dangerouslySetInnerHTML={{ __html: outputTemplate }} />

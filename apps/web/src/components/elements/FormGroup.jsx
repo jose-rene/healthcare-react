@@ -96,11 +96,11 @@ const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 
                     }
 
                     return fields ? (
-                        <Card className="mb-3">
-                            <Card.Header>
-                                {heading} {headerAttributes}
-                            </Card.Header>
-                            <Card.Body>
+                        <Card className="mb-0 border-0" style={{ background: "unset" }}>
+                            <Card.Body class="p-0">
+                                <h3>
+                                    {heading} {headerAttributes}
+                                </h3>
                                 <Row>
                                     <FormGroup
                                         rowIndex={elementIndex}

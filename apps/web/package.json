@@ -45,7 +45,7 @@
         "react-bootstrap": "^2.0.0-beta.4",
         "react-dom": "^16.13.1",
         "react-dropzone": "^11.3.4",
-        "react-form-builder3": "^5.1.2",
+        "react-form-builder3": "5.2.7",
         "react-hook-form": "^6.7.2",
         "react-icons": "^3.11.0",
         "react-idle-timer": "^4.5.1",
