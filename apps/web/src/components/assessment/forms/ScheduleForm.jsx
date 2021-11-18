@@ -6,7 +6,12 @@ import ContextRadioInput from "components/inputs/ContextRadioInput";
 import ContextSelect from "components/contextInputs/Select";
 import Textarea from "components/inputs/Textarea";
 
-const ScheduleForm = ({ startTimeOptions, endTimeOptions, updateData }) => {
+const ScheduleForm = ({
+    reasonOptions,
+    startTimeOptions,
+    endTimeOptions,
+    updateData,
+}) => {
     const [status, setStatus] = useState(null);
 
     const onChange = (e) => {
@@ -48,7 +53,7 @@ const ScheduleForm = ({ startTimeOptions, endTimeOptions, updateData }) => {
                             <ContextSelect
                                 name="reason"
                                 label="Reason:"
-                                options={[{ id: "", title: "", val: "" }]}
+                                options={reasonOptions}
                             />
                         </Col>
                     </Row>
