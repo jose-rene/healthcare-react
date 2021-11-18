@@ -15,6 +15,7 @@ const ScheduleView = ({
     toggleOpenMember,
     scheduledDate,
     error,
+    reasonOptions,
 }) => {
     const [defaultData, setDefaultData] = useState({
         scheduled_date: scheduledDate,
@@ -103,6 +104,7 @@ const ScheduleView = ({
                                             onSubmit={onSubmit}
                                         >
                                             <ScheduleForm
+                                                reasonOptions={reasonOptions}
                                                 startTimeOptions={
                                                     startTimeOptions
                                                 }

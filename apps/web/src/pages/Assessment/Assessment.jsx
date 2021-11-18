@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { Row, Col, Container, Alert } from "react-bootstrap";
 
@@ -12,16 +12,12 @@ import useApiCall from "hooks/useApiCall";
 const Assessment = (props) => {
     const { id } = useParams();
 
-    /* eslint-disable */
     const [
         {
-            loading,
-            data: { questionnaire, answers },
-            error,
+            data: { appt_reasons, member },
         },
         fireLoadAssessment,
     ] = useApiCall();
-    /* eslint-enable */
 
     useEffect(() => {
         fireLoadAssessment({
@@ -30,6 +26,19 @@ const Assessment = (props) => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
+
+    const reasonOptions = useMemo(() => {
+        if (!appt_reasons) {
+            return [];
+        }
+
+        const result = [{ id: "", title: "", val: "" }];
+        appt_reasons.forEach((reason) => {
+            result.push({ id: reason, title: reason, val: reason });
+        });
+
+        return result;
+    }, [appt_reasons]);
 
     const handleBack = () => {
         props.history.push("/");
@@ -49,24 +58,29 @@ const Assessment = (props) => {
                         <Alert variant="success" className="px-4 py-3">
                             <div className="d-flex align-items-center w-100">
                                 <div>
-                                    <h5 className="mb-0">Alexander King</h5>
+                                    <h5 className="mb-0">{member?.name}</h5>
                                     <h5 className="mb-0">
-                                        311 Hope St Mountain View, CA 94040
+                                        {member?.address?.address_1}{" "}
+                                        {member?.address?.city}
+                                        {member && ","} {member?.address?.state}{" "}
+                                        {member?.address?.postal_code}
                                     </h5>
-                                    <h5 className="mb-0">555-555-5555</h5>
+                                    <h5 className="mb-0">
+                                        {member?.phone?.number}
+                                    </h5>
                                 </div>
                                 <div className="ms-auto">
                                     <p className="fs-7 mb-2 text-muted">
                                         Date of Birth
                                     </p>
-                                    <h6 className="mb-0">10/06/1939</h6>
+                                    <h6 className="mb-0">{member?.dob}</h6>
                                 </div>
                             </div>
                         </Alert>
                     </Col>
                 </Row>
 
-                <AssessmentEditForm />
+                <AssessmentEditForm reasonOptions={reasonOptions} />
             </Container>
         </PageLayout>
     );

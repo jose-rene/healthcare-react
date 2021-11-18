@@ -3,7 +3,7 @@ import { Card, Col, Row } from "react-bootstrap";
 
 import ScheduleView from "./views/ScheduleView";
 
-const AssessmentEditForm = () => {
+const AssessmentEditForm = ({ reasonOptions }) => {
     const [[openMember], setToggler] = useState([false]);
 
     const setOpenMember = (open) => {
@@ -38,7 +38,9 @@ const AssessmentEditForm = () => {
 
             <Row className="justify-content-lg-center">
                 <Col xl={10}>
-                    <ScheduleView {...{ openMember, toggleOpenMember }} />
+                    <ScheduleView
+                        {...{ openMember, toggleOpenMember, reasonOptions }}
+                    />
                 </Col>
             </Row>
         </>
