@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Request as modelRequest;
 use App\Http\Requests\AppointmentRequest;
+use App\Http\Requests\RescheduleRequest;
 use App\Http\Resources\AppointmentResource;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -31,15 +32,25 @@ class AppointmentController extends Controller
      */
     public function store(AppointmentRequest $request)
     {
+        $appointment = $this->createAppointment($request->validated());
+
+        return new AppointmentResource($appointment);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  App\Requests\RescheduleRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function reschedule(RescheduleRequest $request)
+    {
         $data = $request->validated();
-        // get the request
-        $request = modelRequest::firstWhere('uuid', $data['request_id']);
-        if ($request->received_date->gt(Carbon::createFromFormat('Y-m-d',$data['called_at']))) {
-            throw new HttpResponseException(response()->json(['errors' => ['called_at' => ['The called date must be on or after the received date.']]], 422));
+        // if not explicitly cancelled it's a reschedule
+        if (empty($data['is_cancelled'])) {
+            $data['is_reschedule'] = true;
         }
-        $data['request_id'] = $request->id;
-        $data['clinician_id'] = auth()->user()->id;
-        $appointment = Appointment::create($data);
+        $appointment = $this->createAppointment($data);
 
         return new AppointmentResource($appointment);
     }
@@ -51,17 +62,6 @@ class AppointmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Appointment $appointment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Appointment  $appointment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Appointment $appointment)
     {
         //
     }
@@ -87,5 +87,18 @@ class AppointmentController extends Controller
     public function destroy(Appointment $appointment)
     {
         //
+    }
+
+    protected function createAppointment($data)
+    {
+        // get the request
+        $modelRequest = modelRequest::firstWhere('uuid', $data['request_id']);
+        if ($modelRequest->received_date->gt(Carbon::createFromFormat('Y-m-d',$data['called_at']))) {
+            throw new HttpResponseException(response()->json(['errors' => ['called_at' => ['The called date must be on or after the received date.']]], 422));
+        }
+        $data['request_id'] = $modelRequest->id;
+        $data['clinician_id'] = auth()->user()->id;
+        
+        return Appointment::create($data);
     }
 }
