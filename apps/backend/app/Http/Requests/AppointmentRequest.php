@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Bouncer;
 
 class AppointmentRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ class AppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->can('schedule-appointments');
+        return auth()->user()->isA('field_clinician') || auth()->user()->can('schedule-appointments');
     }
 
     /**

@@ -22,7 +22,11 @@ const GryRadioGroup = (props) => {
         return <p>Missing custom_name</p>;
     }
 
-    if (!editing && customRule && !shouldShow(customRule, { custom_name, rowIndex })) {
+    if (
+        !editing &&
+        customRule &&
+        !shouldShow(customRule, { custom_name, rowIndex })
+    ) {
         return null;
     }
 
@@ -30,16 +34,15 @@ const GryRadioGroup = (props) => {
 
     return (
         <>
-            {options.map(radio =>
-                (
-                    <ContextRadioInput
-                        {...{ ...rest, name: custom_name }}
-                        label={radio.text}
-                        value={radio.value}
-                        onChange={onChange}
-                        checked={value == radio.value}
-                    />
-                ))}
+            {options.map((radio) => (
+                <ContextRadioInput
+                    {...{ ...rest, name: custom_name }}
+                    label={radio.text}
+                    value={radio.value}
+                    onChange={onChange}
+                    checked={value === radio.value}
+                />
+            ))}
         </>
     );
 };
@@ -48,9 +51,7 @@ GryRadioGroup.register = {
     icon: "fas fa-radio-square",
     name: "Radio Group",
     label: "Group of radios",
-    options: [
-        { value: "welcome", text: "welcome" },
-    ],
+    options: [{ value: "welcome", text: "welcome" }],
     props: {
         custom_name: "radio-group",
         customValidation: ``,

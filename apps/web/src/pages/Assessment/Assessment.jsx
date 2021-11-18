@@ -12,12 +12,7 @@ import useApiCall from "hooks/useApiCall";
 const Assessment = (props) => {
     const { id } = useParams();
 
-    const [
-        {
-            data: { appt_reasons, member },
-        },
-        fireLoadAssessment,
-    ] = useApiCall();
+    const [{ data }, fireLoadAssessment] = useApiCall();
 
     useEffect(() => {
         fireLoadAssessment({
@@ -28,6 +23,7 @@ const Assessment = (props) => {
     }, [id]);
 
     const reasonOptions = useMemo(() => {
+        const { appt_reasons } = data;
         if (!appt_reasons) {
             return [];
         }
@@ -38,7 +34,7 @@ const Assessment = (props) => {
         });
 
         return result;
-    }, [appt_reasons]);
+    }, [data]);
 
     const handleBack = () => {
         props.history.push("/");
@@ -58,29 +54,34 @@ const Assessment = (props) => {
                         <Alert variant="success" className="px-4 py-3">
                             <div className="d-flex align-items-center w-100">
                                 <div>
-                                    <h5 className="mb-0">{member?.name}</h5>
                                     <h5 className="mb-0">
-                                        {member?.address?.address_1}{" "}
-                                        {member?.address?.city}
-                                        {member && ","} {member?.address?.state}{" "}
-                                        {member?.address?.postal_code}
+                                        {data?.member?.name}
                                     </h5>
                                     <h5 className="mb-0">
-                                        {member?.phone?.number}
+                                        {data?.member?.address?.address_1}{" "}
+                                        {data?.member?.address?.city}
+                                        {data?.member && ","}{" "}
+                                        {data?.member?.address?.state}{" "}
+                                        {data?.member?.address?.postal_code}
+                                    </h5>
+                                    <h5 className="mb-0">
+                                        {data?.member?.phone?.number}
                                     </h5>
                                 </div>
                                 <div className="ms-auto">
                                     <p className="fs-7 mb-2 text-muted">
                                         Date of Birth
                                     </p>
-                                    <h6 className="mb-0">{member?.dob}</h6>
+                                    <h6 className="mb-0">
+                                        {data?.member?.dob}
+                                    </h6>
                                 </div>
                             </div>
                         </Alert>
                     </Col>
                 </Row>
 
-                <AssessmentEditForm reasonOptions={reasonOptions} />
+                <AssessmentEditForm reasonOptions={reasonOptions} data={data} />
             </Container>
         </PageLayout>
     );

@@ -1,8 +1,14 @@
 import React from "react";
 
 const ContextRadioInput = (
-    { name, label = "", wrapperClass, onChange: propsOnChange, checked = false },
-    ref,
+    {
+        name,
+        label = "",
+        wrapperClass,
+        onChange: propsOnChange,
+        checked = false,
+    },
+    ref
 ) => {
     const handleOnChange = (e) => {
         if (propsOnChange) {
