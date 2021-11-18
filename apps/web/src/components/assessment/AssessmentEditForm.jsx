@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 
 import ScheduleView from "./views/ScheduleView";
 
-const AssessmentEditForm = ({ reasonOptions }) => {
+const AssessmentEditForm = ({ reasonOptions, data }) => {
+    const [assessmentData, setAssessmentData] = useState({});
     const [[openMember], setToggler] = useState([false]);
+
+    useEffect(() => {
+        if (data) {
+            setAssessmentData(data);
+        }
+    }, [data]);
 
     const setOpenMember = (open) => {
         setToggler([open]);
@@ -39,7 +46,13 @@ const AssessmentEditForm = ({ reasonOptions }) => {
             <Row className="justify-content-lg-center">
                 <Col xl={10}>
                     <ScheduleView
-                        {...{ openMember, toggleOpenMember, reasonOptions }}
+                        {...{
+                            openMember,
+                            toggleOpenMember,
+                            assessmentData,
+                            setAssessmentData,
+                            reasonOptions,
+                        }}
                     />
                 </Col>
             </Row>

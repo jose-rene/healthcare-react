@@ -1,21 +1,48 @@
 import React, { useState } from "react";
 import { Row, Col } from "react-bootstrap";
 
+import { useFormContext } from "Context/FormContext";
+
 import ContextInput from "components/inputs/ContextInput";
 import ContextRadioInput from "components/inputs/ContextRadioInput";
 import ContextSelect from "components/contextInputs/Select";
 import Textarea from "components/inputs/Textarea";
 
-const ScheduleForm = ({
-    reasonOptions,
-    startTimeOptions,
-    endTimeOptions,
-    updateData,
-}) => {
-    const [status, setStatus] = useState(null);
+import { getTimes } from "helpers/datetime";
+
+const ScheduleForm = ({ reasonOptions }) => {
+    const { update, getValue } = useFormContext();
+
+    const [startTimeOptions] = useState(getTimes("07:00", 28, 30));
+    const [endTimeOptions, setEndTimeOptions] = useState([
+        { id: "", title: "", val: "" },
+    ]);
 
     const onChange = (e) => {
-        setStatus(e.target.value);
+        update(e.target.name, e.target.value);
+    };
+
+    const getIndexTimes = (selectedTime) => {
+        const selectedOption = startTimeOptions.filter((time) => {
+            return selectedTime === time?.value;
+        });
+
+        return selectedOption[0]?.id;
+    };
+
+    const updateData = (e) => {
+        update(e.target.name, e.target.value);
+
+        if (e.target.name === "start_time") {
+            const index = getIndexTimes(e.target.value);
+            let calcTimes = getTimes(
+                e.target.value,
+                28 - index >= 6 ? 7 : 28 - index + 1,
+                30
+            );
+            calcTimes.splice(1, 1);
+            setEndTimeOptions(calcTimes);
+        }
     };
 
     return (
@@ -23,7 +50,7 @@ const ScheduleForm = ({
             <Row>
                 <Col>
                     <ContextInput
-                        name="scheduled_date"
+                        name="called_at"
                         label="Date called"
                         type="date"
                     />
@@ -34,19 +61,21 @@ const ScheduleForm = ({
                 <Col md={2}>
                     <ContextRadioInput
                         label="Yes"
-                        name="status"
+                        name="is_scheduled"
+                        checked={getValue("is_scheduled") === "Yes"}
                         onChange={onChange}
                     />
                 </Col>
                 <Col md={2}>
                     <ContextRadioInput
                         label="No"
-                        name="status"
+                        name="is_scheduled"
+                        checked={getValue("is_scheduled") === "No"}
                         onChange={onChange}
                     />
                 </Col>
             </Row>
-            {status === "No" && (
+            {getValue("is_scheduled") === "No" && (
                 <>
                     <Row>
                         <Col>
@@ -64,18 +93,19 @@ const ScheduleForm = ({
                                 name="comments"
                                 type="textarea"
                                 rows={5}
+                                onChange={onChange}
                             />
                         </Col>
                     </Row>
                 </>
             )}
 
-            {status === "Yes" && (
+            {getValue("is_scheduled") === "Yes" && (
                 <>
                     <Row>
                         <Col>
                             <ContextInput
-                                name="appt_date"
+                                name="appointment_date"
                                 label="Appt Date"
                                 type="date"
                             />
@@ -107,6 +137,7 @@ const ScheduleForm = ({
                                 name="comments"
                                 type="textarea"
                                 rows={5}
+                                onChange={onChange}
                             />
                         </Col>
                     </Row>

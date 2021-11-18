@@ -64,6 +64,11 @@ class Request extends Model
         return $this->hasMany(Assessment::class)->orderBy('id', 'desc');
     }
 
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'request_id')->orderBy('id', 'desc');
+    }
+
     public function documents()
     {
         return $this->morphMany(Document::class, 'documentable');

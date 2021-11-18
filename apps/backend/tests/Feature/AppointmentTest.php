@@ -95,6 +95,32 @@ class AppointmentTest extends TestCase
         Event::assertDispatched("eloquent.created: App\Models\Appointment");
     }
 
+    /**
+     * Test appointment relation to request.
+     *
+     * @return void
+     */
+    public function testRequestAppointment()
+    {
+        $formData = $this->getFormData();
+        $response = $this->json('POST', route('api.appointment.store', $formData));
+        // validate response code and structure
+        $response->assertStatus(201);
+        $appointment = Appointment::find($response->json()['id']);
+        $this->assertEquals($appointment->request->uuid, $this->request->uuid);
+
+        // verify the appointment is set for the request
+        $response = $this->json('GET', route('api.request.assessment.show', ['request' => $this->request->uuid]));
+        // validate response code and structure
+        $response
+            ->assertOk()
+            ->assertJsonStructure([
+                'appointment_date',
+                'appointments',
+            ])
+            ->assertJsonCount(1, 'appointments');
+    }
+
     protected function getFormData()
     {
         return [
