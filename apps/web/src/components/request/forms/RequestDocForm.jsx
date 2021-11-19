@@ -10,10 +10,13 @@ import {
     ListGroupItem,
     ListGroup,
 } from "react-bootstrap";
-import FapIcon from "components/elements/FapIcon";
-import useApiCall from "hooks/useApiCall";
-import PageAlert from "components/elements/PageAlert";
 import LoadingOverlay from "react-loading-overlay";
+
+import FapIcon from "components/elements/FapIcon";
+import PageAlert from "components/elements/PageAlert";
+import Textarea from "components/inputs/Textarea";
+
+import useApiCall from "hooks/useApiCall";
 
 /* eslint-disable react/no-array-index-key */
 
@@ -100,6 +103,8 @@ const RequestDocForm = ({
         // refresh the request
         refreshRequest("doc");
     };
+
+    const submitReason = () => {};
     // console.log("docs -> ", documents);
     return (
         <>
@@ -191,6 +196,25 @@ const RequestDocForm = ({
                                                 Click to select files
                                             </p>
                                         </div>
+                                        {!documents.length &&
+                                            !uploadFiles.length && (
+                                                <>
+                                                    <Textarea
+                                                        label="Special Instructions"
+                                                        name="comments"
+                                                        type="textarea"
+                                                        rows={5}
+                                                        // onChange={onChange}
+                                                    />
+                                                    <Button
+                                                        onClick={() => {
+                                                            submitReason();
+                                                        }}
+                                                    >
+                                                        Submit
+                                                    </Button>
+                                                </>
+                                            )}
                                         {uploadFiles.length > 0 && (
                                             <>
                                                 <ListGroup>

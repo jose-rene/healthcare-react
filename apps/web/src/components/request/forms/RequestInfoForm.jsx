@@ -193,11 +193,11 @@ const RequestInfoForm = ({
                                             <Col md="12" className="mb-3">
                                                 <FloatingLabel
                                                     controlId="auth_number"
-                                                    label="Unique Assessment ID"
+                                                    label="Assessment ID"
                                                 >
                                                     <Form.Control
                                                         type="text"
-                                                        placeholder="Unique Assessment ID"
+                                                        placeholder="Assessment ID"
                                                         autoComplete="off"
                                                         value={data.auth_number}
                                                         onChange={(e) =>
@@ -297,7 +297,7 @@ const RequestInfoForm = ({
                         <div>
                             <Row className="mb-3">
                                 <Col className="fw-bold" sm={3}>
-                                    Unique Assessment ID
+                                    Assessment ID
                                 </Col>
                                 <Col>
                                     {auth_number || (
