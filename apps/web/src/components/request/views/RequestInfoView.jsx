@@ -253,7 +253,7 @@ const RequestInfoView = ({
                         <div>
                             <Row className="mb-3">
                                 <Col className="fw-bold" sm={3}>
-                                    Unique Assessment ID
+                                    Assessment ID
                                 </Col>
                                 <Col>
                                     {auth_number || (

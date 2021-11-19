@@ -9,9 +9,11 @@ import {
     Row,
 } from "react-bootstrap";
 import Select2 from "react-select";
+import LoadingOverlay from "react-loading-overlay";
+
 import FapIcon from "components/elements/FapIcon";
 import PageAlert from "components/elements/PageAlert";
-import LoadingOverlay from "react-loading-overlay";
+import Textarea from "components/inputs/Textarea";
 /* eslint-disable react/no-array-index-key */
 
 const RequestItemForm = ({
@@ -48,11 +50,13 @@ const RequestItemForm = ({
     const updateRequestDetails = (groups) => {
         setRequestItemGroups(groups);
         const requestDetails = [];
+        const comments = [];
         groups.forEach((item) => {
             if (item?.requestDetails?.value) {
                 requestDetails.push(
                     item.requestDetails.value.map((val) => val.value)
                 );
+                comments.push(item.comments ?? "");
             }
         });
         if (data.request_type_details !== requestDetails) {
@@ -61,6 +65,7 @@ const RequestItemForm = ({
                 return {
                     ...prevData,
                     request_type_details: requestDetails,
+                    comments,
                 };
             });
         }
@@ -95,6 +100,7 @@ const RequestItemForm = ({
                     }, */
                 ],
                 requestDetails: null,
+                comments: "",
             },
         ]);
     };
@@ -132,6 +138,7 @@ const RequestItemForm = ({
                         },
                         typeSelects: [],
                         requestDetails: null,
+                        comments: "",
                     };
                     // build the menus for each request type from the parent chain;
                     item.request_type_parents.forEach((typeId, i) => {
@@ -204,6 +211,7 @@ const RequestItemForm = ({
                 },
                 typeSelects: [],
                 requestDetails: null,
+                comments: "",
             };
             // set this index to this updated group
             currentGroups[groupIndex] = clearedGroup;
@@ -227,6 +235,7 @@ const RequestItemForm = ({
                     },
                 ],
                 requestDetails: null,
+                comments: "",
             };
             // set this index to this updated group
             currentGroups[groupIndex] = updatedGroup;
@@ -326,6 +335,11 @@ const RequestItemForm = ({
             [0: {...prevItems[0],
             value: selected,}]
         ])); */
+    };
+    const handleComments = (e, index) => {
+        const currentGroups = [...requestItemGroups];
+        currentGroups[index].comments = e.target.value;
+        updateRequestDetails(currentGroups);
     };
     const handleGroupRemove = (index) => {
         if (requestItemGroups.length < 2) {
@@ -582,6 +596,23 @@ const RequestItemForm = ({
                                                                         )
                                                                     }
                                                                 />
+
+                                                                <div className="mb-2 mt-4">
+                                                                    <Textarea
+                                                                        label="Comments"
+                                                                        name="comments"
+                                                                        type="textarea"
+                                                                        rows={5}
+                                                                        onChange={(
+                                                                            e
+                                                                        ) =>
+                                                                            handleComments(
+                                                                                e,
+                                                                                groupIndex
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                </div>
                                                             </>
                                                         )}
                                                     </Card.Body>
