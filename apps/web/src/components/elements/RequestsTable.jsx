@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { Col, Row } from "react-bootstrap";
+import { Col, Row, ButtonGroup, ToggleButton } from "react-bootstrap";
 
 import { useUser } from "Context/UserContext";
 
@@ -42,6 +42,11 @@ const RequestsTable = () => {
         { id: "on_hold", value: 7, title: "On Hold" },
         { id: "cancelled", value: 8, title: "Cancelled" },
         { id: "reopened", value: 9, title: "Reopened" },
+    ]);
+
+    const [filterOptions] = useState([
+        { name: "All", value: "1" },
+        { name: "My Stuff", value: "2" },
     ]);
 
     const [headers] = useState([
@@ -133,6 +138,7 @@ const RequestsTable = () => {
                 sortColumn: headers[0].columnMap,
                 sortDirection: "asc",
                 perPage: 10,
+                filter: "1",
             },
         }
     );
@@ -168,6 +174,29 @@ const RequestsTable = () => {
                         <h3>Requests for you</h3>
 
                         <div className="d-flex mt-3">
+                            <ButtonGroup className="mx-3">
+                                {filterOptions.map((filter, idx) => (
+                                    <ToggleButton
+                                        key={idx}
+                                        id={`filter-${idx}`}
+                                        type="radio"
+                                        className={`mb-3 d-flex align-items-center shadow-none ${
+                                            searchObj.filter !== filter.value
+                                                ? "bg-white"
+                                                : ""
+                                        }`}
+                                        variant="secondary"
+                                        name="filter"
+                                        value={filter.value}
+                                        checked={
+                                            searchObj.filter === filter.value
+                                        }
+                                        onChange={formUpdateSearchObj}
+                                    >
+                                        {filter.name}
+                                    </ToggleButton>
+                                ))}
+                            </ButtonGroup>
                             <ContextSelect
                                 label="Status"
                                 name="request_status_id"
