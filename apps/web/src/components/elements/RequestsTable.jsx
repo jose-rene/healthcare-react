@@ -45,8 +45,8 @@ const RequestsTable = () => {
     ]);
 
     const [filterOptions] = useState([
-        { name: "All", value: "1" },
-        { name: "My Stuff", value: "2" },
+        { name: "All", value: "0" },
+        { name: "My Stuff", value: "1" },
     ]);
 
     const [headers] = useState([
@@ -138,7 +138,7 @@ const RequestsTable = () => {
                 sortColumn: headers[0].columnMap,
                 sortDirection: "asc",
                 perPage: 10,
-                filter: "1",
+                filter: "0",
             },
         }
     );

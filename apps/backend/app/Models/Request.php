@@ -189,6 +189,11 @@ class Request extends Model
                 break;
         }
 
+        // my stuff
+        if (request()->has('filter') && request()->get('filter')) {
+            $query->where('payer_user_id', $user->id);
+        }
+
         return app(Pipeline::class)
             ->send($query)
             ->through([
