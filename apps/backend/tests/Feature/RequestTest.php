@@ -25,14 +25,8 @@ class RequestTest extends TestCase
      */
     public function testRouteById()
     {
-        Passport::actingAs(
-            $this->user
-        );
         // get the request by id, should fail
-        $response = $this->withHeaders([
-            'Accept'           => 'application/json',
-            'X-Requested-With' => 'XMLHttpRequest',
-        ])->json('GET', 'v1/request/' . $this->request->id);
+        $response = $this->json('GET', 'v1/request/' . $this->request->id);
         // validate response code
         $response
             ->assertStatus(404)
@@ -46,14 +40,8 @@ class RequestTest extends TestCase
      */
     public function testRouteByUuid()
     {
-        Passport::actingAs(
-            $this->user
-        );
         // get the request by uuid
-        $response = $this->withHeaders([
-            'Accept'           => 'application/json',
-            'X-Requested-With' => 'XMLHttpRequest',
-        ])->json('GET', 'v1/request/' . $this->request->uuid);
+        $response = $this->json('GET', 'v1/request/' . $this->request->uuid);
         // dd($response->json());
         // validate response code
         $response->assertStatus(200)
@@ -79,9 +67,6 @@ class RequestTest extends TestCase
         $hp   = HealthPlanUser::first();
         $user = $hp->payer->users()->first();
 
-        // login
-        Passport::actingAs($user);
-
         // get the request summary for user
         $response = $this->get('v1/request/summary');
         // validate response code and structure
@@ -95,11 +80,37 @@ class RequestTest extends TestCase
             ]); // this health plan user only has one new request
     }
 
+    /**
+     * Test search.
+     *
+     * @return void
+     */
+    public function testRequestFilter()
+    {
+        // get the request by id, should fail
+        $response = $this->json('GET', route('api.request.index'));
+        // validate response code
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'data');
+
+        // add the my stuff filter, should get no results since this user is not the user for the requeest
+        $response = $this->json('GET', route('api.request.index', ['filter' => '1']));
+        // validate response code
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount(0, 'data');
+
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->request = Request::factory()->create();
         $this->user = User::factory()->create();
+        Passport::actingAs(
+            $this->user
+        );
     }
 }
