@@ -86,6 +86,16 @@ class Activity extends Model
     }
 
     /**
+     * Relationship to activity parent.
+     *
+     * @return Activity
+     */
+    public function parent()
+    {
+        return $this->hasOne(self::class, 'id', 'parent_id');
+    }
+
+    /**
      * Returns child activities.
      *
      * @return Illuminate\Database\Eloquent\Collection of App\Model\Activity\Activity

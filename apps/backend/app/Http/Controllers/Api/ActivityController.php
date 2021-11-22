@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ActivityRequest;
 use App\Http\Resources\ActivityResource;
 use App\Models\Activity\Activity;
 use App\Models\Request as modelRequest;
@@ -35,24 +36,19 @@ class ActivityController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\ActivityRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ActivityRequest $request)
     {
-        //
+        $user = auth()->user();
+        $data = $request->validated();
+        $data['user_id'] = $user->id;
+        $activity = Activity::create($data);
+
+        return new ActivityResource($activity);
     }
 
     /**
@@ -64,17 +60,6 @@ class ActivityController extends Controller
     public function show(Activity $activity)
     {
         return new ActivityResource($activity);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Activity  $activity
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Activity $activity)
-    {
-        //
     }
 
     /**
