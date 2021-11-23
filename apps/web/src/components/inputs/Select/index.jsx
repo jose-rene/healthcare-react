@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Form, FloatingLabel } from "react-bootstrap";
 
-const Select = (
+const BaseSelect = (
     {
         name,
+        value,
         label = "",
         inlineLabel = false,
         options = [],
@@ -18,10 +19,13 @@ const Select = (
         valueKey = "val",
         addEmpty = false,
         emptyLabel = "Select an option",
+        onChange,
         ...otherProps
     },
     ref,
 ) => {
+    const id = name;
+
     const { [name]: { message = false } = {} } = errors;
     const hasError = !!message;
     const selectOptions = options.map(({ id, [valueKey]: optionValue, [labelKey]: optionLabel, ...otherProps }) => (
@@ -30,30 +34,51 @@ const Select = (
         </option>
     ));
 
+    const _wrapperClass = useMemo(() => {
+        let label = `mb-3 form-floating ${
+            wrapperClass ? "wrapperClass" : "form-group"
+        }`;
+
+        if (inlineLabel) {
+            label += " d-flex";
+        }
+
+        return label;
+    }, [wrapperClass, inlineLabel]);
+
+    const selectClass = useMemo(() => {
+        return `${inlineLabel ? "col " : ""}${
+            className || `${hasError ? "is-invalid" : ""} ${classNameAppend}`
+        }`;
+    }, [inlineLabel, className, hasError, classNameAppend]);
+
     return (
-        <FloatingLabel controlId={name} label={label} hasValidation>
-            <Form.Select
-                id={name}
-                name={name}
-                aria-label={label}
-                isInvalid={hasError}
-                ref={ref}
-                {...otherProps}
-            >
-                {addEmpty && <option>{emptyLabel}</option>}
-                {selectOptions}
-            </Form.Select>
+        <div className={_wrapperClass}>
+            <FloatingLabel id={id} label={label}>
+                <Form.Select
+                    className={selectClass}
+                    id={name}
+                    name={name}
+                    ref={ref}
+                    value={value}
+                    onChange={onChange}
+                >
+                    {selectOptions}
+                </Form.Select>
+            </FloatingLabel>
             {helpText && (
                 <Form.Text className="text-muted form-text">
                     {helpText}
                 </Form.Text>
             )}
-            <Form.Control.Feedback type="invalid">
-                {message}
-            </Form.Control.Feedback>
-        </FloatingLabel>
+            {hasError && (
+                <Form.Text className="invalid-feedback d-block">
+                    {message}
+                </Form.Text>
+            )}
+        </div>
     );
 };
-Select.displayName = "Select";
+BaseSelect.displayName = "Select";
 
-export default React.forwardRef(Select);
+export default React.forwardRef(BaseSelect);

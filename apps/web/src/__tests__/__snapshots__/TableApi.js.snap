@@ -2,31 +2,29 @@
 
 exports[`<TableAPI /> renders pagination with a select 1`] = `
 <div
-  className="form-floating"
-  hasValidation={true}
+  className="mb-3 form-floating form-group d-flex"
 >
-  <select
-    aria-label="Page"
-    className="form-select"
+  <div
+    className="form-floating"
     id="page"
-    name="page"
-    onChange={[Function]}
-    value={1}
   >
-    <option
+    <select
+      className="col   form-select"
+      id="page"
+      name="page"
+      onChange={[Function]}
       value={1}
     >
-      1
-    </option>
-  </select>
-  <div
-    className="invalid-feedback"
-  />
-  <label
-    htmlFor="page"
-  >
-    Page
-  </label>
+      <option
+        value={1}
+      >
+        1
+      </option>
+    </select>
+    <label>
+      Page
+    </label>
+  </div>
 </div>
 `;
 

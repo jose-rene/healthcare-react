@@ -52,6 +52,7 @@ const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 
                                     }}
                                     className="float-right"
                                     icon="delete"
+                                    size="1x"
                                     style={{ cursor: "pointer", color: "#ff0000" }}
                                 >
                                     Delete
@@ -91,7 +92,8 @@ const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 
                         return "12";
                     };
 
-                    if (!editing && customRule && !shouldShow(customRule, { custom_name, elementIndex })) {
+                    if (!editing && customRule &&
+                        !shouldShow(customRule, { name: custom_name, elementIndex: rowIndex })) {
                         return null;
                     }
 
@@ -99,11 +101,11 @@ const FormGroup = ({ elements, addRepeater, removeRepeater, span: wrapperSpan = 
                         <Card className="mb-0 border-0" style={{ background: "unset" }}>
                             <Card.Body class="p-0">
                                 <h3>
-                                    {heading} {headerAttributes}
+                                    {heading} {headerAttributes()}
                                 </h3>
                                 <Row>
                                     <FormGroup
-                                        rowIndex={elementIndex}
+                                        rowIndex={index}
                                         elements={fields}
                                         span={span || 12}
                                     />

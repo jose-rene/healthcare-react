@@ -3,7 +3,7 @@ import ContextRadioInput from "../../inputs/ContextRadioInput";
 import { useFormContext } from "../../../Context/FormContext";
 
 const GryRadioGroup = (props) => {
-    const { onChange, getValue, editing, shouldShow } = useFormContext();
+    const { onChange, getValue } = useFormContext();
 
     const allProps = {
         ...(props.data ?? {}),
@@ -11,10 +11,12 @@ const GryRadioGroup = (props) => {
     };
 
     const {
+        label = null,
         custom_name,
         options = [],
         rowIndex = 0,
         customRule,
+        inline = false,
         ...rest
     } = allProps;
 
@@ -22,28 +24,25 @@ const GryRadioGroup = (props) => {
         return <p>Missing custom_name</p>;
     }
 
-    if (
-        !editing &&
-        customRule &&
-        !shouldShow(customRule, { custom_name, rowIndex })
-    ) {
-        return null;
-    }
-
     const value = getValue(custom_name);
 
     return (
-        <>
-            {options.map((radio) => (
-                <ContextRadioInput
-                    {...{ ...rest, name: custom_name }}
-                    label={radio.text}
-                    value={radio.value}
-                    onChange={onChange}
-                    checked={value === radio.value}
-                />
-            ))}
-        </>
+        <div className="clearfix">
+            <label htmlFor={`_${custom_name}`} className={inline ? "float-start" : ""}>{label}</label>
+            <div id={`_${custom_name}`} className={inline ? "float-start ps-3" : ""}>
+                {options.map((radio) =>
+                    (
+                        <ContextRadioInput
+                            {...{ ...rest, name: custom_name }}
+                            inline={inline}
+                            label={radio.text}
+                            value={radio.value}
+                            onChange={onChange}
+                            checked={value === radio.value}
+                        />
+                    ))}
+            </div>
+        </div>
     );
 };
 
@@ -56,6 +55,7 @@ GryRadioGroup.register = {
         custom_name: "radio-group",
         customValidation: ``,
         customRules: ``,
+        inline: false,
     },
 };
 

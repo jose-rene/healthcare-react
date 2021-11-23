@@ -132,6 +132,7 @@ export default class FormElementsEdit extends React.Component {
         }
 
         const this_checked = this.props.element.hasOwnProperty("required") ? this.props.element.required : false;
+        const this_inline = this.props.element.hasOwnProperty("inline") ? this.props.element.inline : false;
         const this_read_only = this.props.element.hasOwnProperty("readOnly") ? this.props.element.readOnly : false;
         const this_default_today = this.props.element.hasOwnProperty("defaultToday")
             ? this.props.element.defaultToday
@@ -441,16 +442,26 @@ export default class FormElementsEdit extends React.Component {
                     <TextAreaAutosize type="text" className="form-control" id="questionDescription"
                                       defaultValue={this.props.element.description}
                                       onBlur={this.updateElement.bind(this)}
-                                      onChange={this.editElementProp.bind(this, 'description', 'value')} />
+                                      onChange={this.editElementProp.bind(this, "description", "value")} />
                 </div>
                 }
+                {
+                    this.props.element.hasOwnProperty("inline") &&
+                    <div className="custom-control custom-checkbox">
+                        <input id="is-inline" className="custom-control-input" type="checkbox" checked={this_inline}
+                               value={true} onChange={this.editElementProp.bind(this, "inline", "checked")} />
+                        <label className="custom-control-label" htmlFor="is-inline">
+                            Inline
+                        </label>
+                    </div>
+                }
                 {this.props.showCorrectColumn && this.props.element.canHaveAnswer &&
-                !this.props.element.hasOwnProperty('options') &&
+                !this.props.element.hasOwnProperty("options") &&
                 <div className="form-group">
                     <label className="control-label" htmlFor="correctAnswer">Correct Answer</label>
                     <input id="correctAnswer" type="text" className="form-control"
                            defaultValue={this.props.element.correct} onBlur={this.updateElement.bind(this)}
-                           onChange={this.editElementProp.bind(this, 'correct', 'value')} />
+                           onChange={this.editElementProp.bind(this, "correct", "value")} />
                 </div>
                 }
                 {this.props.element.canPopulateFromApi && this.props.element.hasOwnProperty('options') &&

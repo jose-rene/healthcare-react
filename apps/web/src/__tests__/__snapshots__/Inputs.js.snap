@@ -14,19 +14,18 @@ exports[`Input Components renders Checkbox input correctly 1`] = `
 
 exports[`Input Components renders Select input correctly 1`] = `
 <div
-  className="form-floating"
-  hasValidation={true}
+  className="mb-3 form-floating form-group"
 >
-  <select
-    aria-label=""
-    className="form-select"
-  />
   <div
-    className="invalid-feedback"
-  />
-  <label>
-    
-  </label>
+    className="form-floating"
+  >
+    <select
+      className="  form-select"
+    />
+    <label>
+      
+    </label>
+  </div>
 </div>
 `;
 

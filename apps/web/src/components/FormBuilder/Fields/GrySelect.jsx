@@ -1,5 +1,5 @@
 import React from "react";
-import CTXSelectWithFilter from "../../elements/SelectWithFilter/CTXSelectWithFilter";
+import Select from "../../contextInputs/Select";
 
 const GrySelect = (props) => {
     const allProps = {
@@ -15,7 +15,7 @@ const GrySelect = (props) => {
 
     return (
         <div className="mb-3">
-            <CTXSelectWithFilter
+            <Select
                 {...{ ...rest, name: custom_name }}
             />
         </div>
