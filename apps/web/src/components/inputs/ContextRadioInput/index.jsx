@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 const ContextRadioInput = (
     {
@@ -7,6 +7,7 @@ const ContextRadioInput = (
         wrapperClass,
         onChange: propsOnChange,
         checked = false,
+        inline = false,
     },
     ref
 ) => {
@@ -16,21 +17,25 @@ const ContextRadioInput = (
         }
     };
 
+    const classAppend = useMemo(() => {
+        return inline ? " form-check-inline" : "";
+    }, [inline]);
+
     return (
-        <div className={wrapperClass}>
+        <div className={`${wrapperClass}${classAppend}`}>
             <label className="form-check-label" htmlFor={`${name}-${label}`}>
-                <input
-                    id={`${name}-${label}`}
-                    className="form-check-input m-1 me-2"
-                    type="radio"
-                    name={name}
-                    ref={ref}
-                    value={label}
-                    checked={checked}
-                    onChange={handleOnChange}
-                />
                 {label}
             </label>
+            <input
+                id={`${name}-${label}`}
+                className="form-check-input m-1 me-2"
+                type="radio"
+                name={name}
+                ref={ref}
+                value={label}
+                checked={checked}
+                onChange={handleOnChange}
+            />
         </div>
     );
 };

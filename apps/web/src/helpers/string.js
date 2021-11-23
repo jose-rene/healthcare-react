@@ -43,6 +43,10 @@ export const template = (templateString, object) => {
 
 export const handlebarsTemplate = (templateString, object) => {
 
-    const templateObj = Handlebars.compile(templateString);
-    return templateObj(object);
+    try {
+        const templateObj = Handlebars.compile(templateString);
+        return templateObj(object);
+    } catch (e) {
+        return e.toString();
+    }
 };

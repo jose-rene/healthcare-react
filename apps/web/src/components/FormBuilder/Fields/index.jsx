@@ -8,10 +8,12 @@ import GrySelect from "./GrySelect";
 import GryInputGroupRepeater from "./GryInputGroupRepeater";
 import GryCheckbox from "./GryCheckbox";
 import GryRadioGroup from "./GryRadioGroup";
+import GryRowSpace from "./GryRowSpace";
 
 const CustomFormElements = {
     GryInput,
     GryText,
+    GryRowSpace,
     GryTextarea,
     GryPhone,
     GryCheckbox,

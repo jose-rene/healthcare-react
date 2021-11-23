@@ -27,7 +27,8 @@
         "pre-commit": "^1.2.2"
     },
     "dependencies": {
-        "lerna": "^3.22.1"
+        "lerna": "^3.22.1",
+        "react-form-builder3": "5.2.8"
     },
     "engines": {
         "node": "^10.21.0||^12.21.0||^14.5.0",

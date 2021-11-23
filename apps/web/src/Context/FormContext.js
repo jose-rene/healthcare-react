@@ -1,11 +1,4 @@
-import React, {
-    useContext,
-    useState,
-    useMemo,
-    createContext,
-    useEffect,
-    useCallback,
-} from "react";
+import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
 import { handlebarsTemplate } from "../helpers/string";
@@ -251,7 +244,7 @@ const FormProvider = ({
     };
 
     const shouldShow = useCallback(
-        (rule, { name, rowIndex = 0 }) => {
+        (rule, { name, elementIndex: rowIndex = 0 }) => {
             try {
                 // Builds a template that handlebars can evaluate. If the condition is true the
                 // template will return 'yes' otherwise false or nothing.

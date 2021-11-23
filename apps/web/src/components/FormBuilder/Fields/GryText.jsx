@@ -4,12 +4,8 @@ import { template } from "../../../helpers/string";
 
 const GryText = (props) => {
     const { label: defaultLabel = "" } = props.data || {};
-    const { customRule, label: __html = defaultLabel } = props;
-    const { form, editing, shouldShow } = useFormContext();
-
-    if (!editing && customRule && !shouldShow(customRule)) {
-        return null;
-    }
+    const { label: __html = defaultLabel } = props;
+    const { form } = useFormContext();
 
     const label = __html || defaultLabel;
     const outputTemplate = template(label, form);
