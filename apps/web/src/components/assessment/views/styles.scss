@@ -1,0 +1,8 @@
+.expander {
+    width: 30px;
+    cursor: pointer;
+}
+
+.content {
+    width: calc(100% - 30px);
+}

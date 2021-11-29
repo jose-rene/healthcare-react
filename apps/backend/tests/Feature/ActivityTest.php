@@ -32,13 +32,16 @@ class ActivityTest extends TestCase
         // validate response code
         $response->assertStatus(200);
         // validate structure
-        $response->assertJsonStructure(['data']);
+        $response
+            ->assertJsonStructure(['data'])
+            ->assertJsonCount($this->request->activities->count(), 'data');
 
         // if we don't send a request id and the user doesn't have perms validate empty response
         $response = $this->json('GET', $route = route('api.activity.index'));
         // validate response code
-        $response->assertStatus(200);
-        $response->assertExactJson([]);
+        $response
+            ->assertStatus(200)
+            ->assertExactJson([]);
     }
 
     /**

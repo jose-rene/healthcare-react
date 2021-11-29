@@ -14,7 +14,6 @@ const GryRadioGroup = (props) => {
         label = null,
         custom_name,
         options = [],
-        rowIndex = 0,
         customRule,
         inline = false,
         ...rest
@@ -28,19 +27,26 @@ const GryRadioGroup = (props) => {
 
     return (
         <div className="clearfix">
-            <label htmlFor={`_${custom_name}`} className={inline ? "float-start" : ""}>{label}</label>
-            <div id={`_${custom_name}`} className={inline ? "float-start ps-3" : ""}>
-                {options.map((radio) =>
-                    (
-                        <ContextRadioInput
-                            {...{ ...rest, name: custom_name }}
-                            inline={inline}
-                            label={radio.text}
-                            value={radio.value}
-                            onChange={onChange}
-                            checked={value === radio.value}
-                        />
-                    ))}
+            <label
+                htmlFor={`_${custom_name}`}
+                className={inline ? "float-start" : ""}
+            >
+                {label}
+            </label>
+            <div
+                id={`_${custom_name}`}
+                className={inline ? "float-start ps-3" : ""}
+            >
+                {options.map((radio) => (
+                    <ContextRadioInput
+                        {...{ ...rest, name: custom_name }}
+                        inline={inline}
+                        label={radio.text}
+                        value={radio.value}
+                        onChange={onChange}
+                        checked={value === radio.value}
+                    />
+                ))}
             </div>
         </div>
     );

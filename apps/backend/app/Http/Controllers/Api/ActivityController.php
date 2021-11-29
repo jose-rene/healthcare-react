@@ -30,7 +30,7 @@ class ActivityController extends Controller
         if (null === ($modelRequest = modelRequest::firstWhere('uuid', $request['request_id']))) {
             return response()->json([]);
         }
-        $data = Activity::orderBy('id', 'desc')->paginate($request->get('perPage', 50));
+        $data = $modelRequest->activities()->paginate($request->get('perPage', 50));
 
         return ActivityResource::collection($data);
     }

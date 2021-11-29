@@ -47,10 +47,13 @@ const ScheduleView = ({
         };
 
         try {
-            const {called_at: called_date = null, appointment_date = null} = await fireSubmit({ params: submitionValue });
-            setAssessmentData((prevData) => (
-                {...prevData, called_date, appointment_date}
-            ));
+            const { called_at: called_date = null, appointment_date = null } =
+                await fireSubmit({ params: submitionValue });
+            setAssessmentData((prevData) => ({
+                ...prevData,
+                called_date,
+                appointment_date,
+            }));
             toggleOpenMember();
         } catch (e) {
             console.log(`Appointment create error:`, e);
@@ -151,11 +154,10 @@ const ScheduleView = ({
                                 <Col>
                                     {data?.called_date ? (
                                         <>
+                                            <p>{data?.called_date}</p>
                                             <p>
-                                                {data?.called_date}
-                                            </p>
-                                            <p>
-                                                {data?.appointment_date || "n/a"}
+                                                {data?.appointment_date ||
+                                                    "n/a"}
                                             </p>
                                         </>
                                     ) : (

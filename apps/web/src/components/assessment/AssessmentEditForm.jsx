@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 
 import ScheduleView from "./views/ScheduleView";
+import ActivityView from "./views/ActivityView";
 
 const AssessmentEditForm = ({ reasonOptions, data }) => {
     const [assessmentData, setAssessmentData] = useState({});
-    const [[openMember], setToggler] = useState([false]);
+    const [[openMember, openActivity], setToggler] = useState([false, false]);
 
     useEffect(() => {
         if (data) {
@@ -14,10 +15,16 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     }, [data]);
 
     const setOpenMember = (open) => {
-        setToggler([open]);
+        setToggler([open, false]);
     };
     const toggleOpenMember = () => {
         setOpenMember(!openMember);
+    };
+    const setOpenActivity = (open) => {
+        setToggler([false, open]);
+    };
+    const toggleOpenActivity = () => {
+        setOpenActivity(!openActivity);
     };
 
     return (
@@ -52,6 +59,14 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                             assessmentData,
                             setAssessmentData,
                             reasonOptions,
+                        }}
+                    />
+                </Col>
+                <Col xl={10}>
+                    <ActivityView
+                        {...{
+                            openActivity,
+                            toggleOpenActivity,
                         }}
                     />
                 </Col>
