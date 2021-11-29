@@ -40,6 +40,7 @@ class RequestAssessmentResource extends JsonResource
             'request_items'     => RequestItemResource::collection($this->requestItems),
             'activities'        => ActivityResource::collection($this->activities),
             'documents'         => DocumentResource::collection($this->documents),
+            'media'             => MediaResource::collection($this->media),
             'appt_reasons'      => [
                 'Willing to schedule outside of turnaround time',
                 'Member can\'t/won\'t schedule',

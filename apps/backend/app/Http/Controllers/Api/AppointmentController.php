@@ -93,8 +93,11 @@ class AppointmentController extends Controller
     {
         // get the request
         $modelRequest = modelRequest::firstWhere('uuid', $data['request_id']);
-        if ($modelRequest->received_date->gt(Carbon::createFromFormat('Y-m-d',$data['called_at']))) {
+        if (!empty($data['called_at']) && $modelRequest->received_date->gt(Carbon::createFromFormat('Y-m-d', $data['called_at']))) {
             throw new HttpResponseException(response()->json(['errors' => ['called_at' => ['The called date must be on or after the received date.']]], 422));
+        }
+        if (empty($data['is_scheduled'])) {
+            $data['appointment_date'] = null;
         }
         $data['request_id'] = $modelRequest->id;
         $data['clinician_id'] = auth()->user()->id;

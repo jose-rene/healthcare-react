@@ -136,9 +136,9 @@ class AppointmentTest extends TestCase
     public function testAppointmentCancel()
     {
         $formData = [
-            'request_id'       => $this->request->uuid,
-            'called_at'        => Carbon::today()->format('Y-m-d'),
-            'reason'           => $this->faker->sentence,
+            'request_id'   => $this->request->uuid,
+            'initiated_by' => 'Member',
+            'reason'       => $this->faker->sentence,
         ];
         $response = $this->json('POST', route('api.appointment.reschedule', $formData));
         // reschedule or cancel is required
@@ -150,7 +150,6 @@ class AppointmentTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(201)
-            ->assertJsonPath('called_at', Carbon::today()->format('m/d/Y'))
             ->assertJsonPath('is_cancelled', $formData['is_cancelled']);
     }
 
@@ -163,6 +162,7 @@ class AppointmentTest extends TestCase
     {
         $formData = $this->getFormData();
         $formData['is_cancelled'] = false;
+        $formData['initiated_by'] = 'Member';
 
         $response = $this->json('POST', route('api.appointment.reschedule', $formData));
         // reason is required
@@ -174,14 +174,12 @@ class AppointmentTest extends TestCase
         // validate response code and structure
         $response
             ->assertStatus(201)
-            ->assertJsonPath('called_at', Carbon::today()->format('m/d/Y'))
             ->assertJsonPath('is_cancelled', false)
             ->assertJsonPath('is_reschedule', true)
             ->assertJsonPath('reason', $formData['reason']);
 
-        // verify called date and appointment date were generated from observer
+        // verify appointment date was generated from observer
         $data = $response->json();
-        $this->assertEquals($data['called_at'], $this->request->called_date->format('m/d/Y'));
         $this->assertEquals($data['appointment_date'], $this->request->appointment_date->format('m/d/Y'));
 
         // verify activity was created

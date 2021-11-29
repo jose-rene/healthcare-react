@@ -30,8 +30,8 @@ class AppointmentRequest extends FormRequest
             'called_at'        => ['bail', 'required', 'date_format:Y-m-d'],
             'is_scheduled'     => ['bail', 'required', 'boolean'],
             'appointment_date' => ['bail', 'required_if:is_scheduled,1', 'date_format:Y-m-d'],
-            'start_time'       => ['bail', 'required_with:appointment_date'],
-            'end_time'         => ['bail', 'required_with:appointment_date'],
+            'start_time'       => ['bail', 'required_if:is_scheduled,1'],
+            'end_time'         => ['bail', 'required_if:is_scheduled,1'],
             'reason'           => ['required_if:is_scheduled,0'],
             'comments'         => ['bail', 'min:2'],
         ];

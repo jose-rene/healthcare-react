@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FileRequest;
 use App\Http\Resources\DocumentResource;
+use App\Http\Resources\MediaResource;
 use App\Models\Document;
 use App\Models\Request;
 use Illuminate\Http\Request as httpRequest;
@@ -23,7 +24,7 @@ class DocumentRequestController extends Controller
 
         $document->file = $httpRequest->file('file');
 
-        return new DocumentResource($document);
+        return $document->is_media ? new MediaResource($document) : new DocumentResource($document);
     }
 
     public function show(httpRequest $request, Document $document)

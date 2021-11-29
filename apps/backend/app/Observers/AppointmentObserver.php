@@ -23,10 +23,12 @@ class AppointmentObserver
     public function created(Appointment $appointment)
     {
         // create request dates
-        $appointment->request->requestDates()->create([
-            'request_date_type_id' => 2,
-            'date'                 => $appointment->called_at,
-        ]);
+        if ($appointment->called_at) {
+            $appointment->request->requestDates()->create([
+                'request_date_type_id' => 2,
+                'date'                 => $appointment->called_at,
+            ]);
+        }
 
         if ($appointment->appointment_date) {
             $appointment->request->requestDates()->create([
@@ -37,14 +39,22 @@ class AppointmentObserver
 
         // create activity and indirectly the notification
         $apptDate = $appointment->appointment_date ? $appointment->appointment_date->format('d/m/Y') : 'n/a';
-        $callDate = $appointment->called_at->format('m/d/Y'); 
+        $callDate = $appointment->called_at ? $appointment->called_at->format('m/d/Y') : 'n/a';
+        // set the activity message
+        $message = sprintf('Member called %s, appointment scheduled %s.', $callDate, $apptDate);
+        if ($appointment->is_cancelled) {
+            $message = sprintf('Appointment cancelled: %s', $appointment->reason);
+        }
+        elseif ($appointment->is_reschedule) {
+            $message = sprintf('Appointment re-scheduled %s.', $callDate, $apptDate);
+        }
         Activity::create([
             'request_id'   => $appointment->request->id,
             'notify_admin' => 1,
             'user_id'      => $appointment->request->clinician_id,
             'priority'     => true,
             'json_message' => ['appointment_date' => $apptDate, 'called_date' => $callDate],
-            'message'      => sprintf('Member called %s, appointment scheduled %s.', $callDate, $apptDate),
+            'message'      => $message,
         ]);
     }
 

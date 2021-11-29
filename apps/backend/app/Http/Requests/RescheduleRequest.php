@@ -26,11 +26,13 @@ class RescheduleRequest extends FormRequest
     {
         return [
             'request_id'       => ['bail', 'required', 'exists:requests,uuid'],
-            'called_at'        => ['bail', 'required', 'date_format:Y-m-d'],
+            // 'called_at'        => ['bail', 'required', 'date_format:Y-m-d'],
             'is_cancelled'     => ['bail', 'required', 'boolean'],
-            'appointment_date' => ['date_format:Y-m-d'],
-            'start_time'       => ['bail', 'required_with:appointment_date'],
-            'end_time'         => ['bail', 'required_with:appointment_date'],
+            'initiated_by'     => ['bail', 'required'],
+            'is_scheduled'     => ['bail', 'required_if:is_cancelled,0', 'boolean'],
+            'appointment_date' => ['bail', 'required_if:is_scheduled,1', 'date_format:Y-m-d'],
+            'start_time'       => ['bail', 'required_if:is_scheduled,1'],
+            'end_time'         => ['bail', 'required_if:is_scheduled,1'],
             'reason'           => ['bail', 'required'],
         ];
     }

@@ -38,6 +38,7 @@ class RequestDetailResource extends JsonResource
             'request_items'     => RequestItemResource::collection($this->requestItems),
             'activities'        => ActivityResource::collection($this->activities),
             'documents'         => DocumentResource::collection($this->documents),
+            'media'             => MediaResource::collection($this->media),
         ];
     }
 }
