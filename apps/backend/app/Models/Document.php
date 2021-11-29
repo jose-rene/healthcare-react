@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Events\DocumentCreated;
 use App\Traits\Uuidable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Tags\HasTags;
 use Storage;
 
 /**
@@ -18,11 +20,11 @@ use Storage;
  * @property string  mime_type
  * @property mixed   file
  * @property string  fileName
- * @property boolean fieExists
+ * @property boolean fileExists
  */
 class Document extends Model
 {
-    use HasFactory, SoftDeletes, Uuidable;
+    use HasFactory, HasTags, SoftDeletes, Uuidable;
 
     protected $fillable = [
         'request_item_id',
@@ -32,6 +34,18 @@ class Document extends Model
         'mime_type',
         'request_id',
         'object_name',
+        'position',
+        'description',
+        'exif_data',
+    ];
+
+    protected $casts = [
+        'position'         => 'integer',
+        'document_type_id' => 'integer',
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => DocumentCreated::class,
     ];
 
     protected $appends = ['url'];
@@ -53,15 +67,43 @@ class Document extends Model
 
     public function setFileAttribute($fileContents)
     {
-        return Storage::disk(config('filesystems.defaultDocument'))->putFileAs('', $fileContents, $this->uuid);
+        return Storage::disk(config('filesystems.defaultDocument'))->putFileAs('', $fileContents, $this->fileName);
     }
 
     public function getUrlAttribute()
     {
         return route('document.request', [
-            'document' => $this->uuid,
+            'document' => $this->fileName,
             'name'     => $this->name,
         ]);
+    }
+
+    public function getThumbnailNameAttribute()
+    {
+        return $this->uuid . '-tn';
+    }
+
+    public function getThumbnailExistsAttribute()
+    {
+        return Storage::disk(config('filesystems.defaultDocument'))->exists($this->thumbnailName);
+    }
+
+    public function getThumbnailAttribute()
+    {
+        return Storage::disk(config('filesystems.defaultDocument'))->get($this->thumbnailName);
+    }
+
+    public function setThumbnailAttribute($fileContents)
+    {
+        return Storage::disk(config('filesystems.defaultDocument'))->putFileAs('', $fileContents, $this->thumbnailName);
+    }
+
+    public function getThumbnailUrlAttribute()
+    {
+        return  $this->thumbnail_exists ? route('document.request', [
+            'document' => $this->thumbnailName,
+            'name'     => $this->name,
+        ]) : null;
     }
 
     public function documentable()
@@ -82,6 +124,11 @@ class Document extends Model
     public function request()
     {
         return $this->belongsTo(Request::class);
+    }
+
+    public function getIsMediaAttribute()
+    {
+        return $this->document_type_id === 2;
     }
 
     /*

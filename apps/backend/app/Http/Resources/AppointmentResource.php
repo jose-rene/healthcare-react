@@ -16,7 +16,7 @@ class AppointmentResource extends JsonResource
     {
         return [
             'id'               => $this->id,
-            'called_at'        => $this->called_at->format('m/d/Y'),
+            'called_at'        => $this->called_at ? $this->called_at->format('m/d/Y') : null,
             'is_scheduled'     => $this->is_scheduled,
             'is_cancelled'     => $this->is_cancelled,
             'is_reschedule'    => $this->is_reschedule,

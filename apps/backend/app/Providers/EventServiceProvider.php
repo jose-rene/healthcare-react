@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\RequestFormSectionSavedEvent;
 use App\Events\ActivityCreated;
+use App\Events\DocumentCreated;
 use App\Events\MemberCreated;
 use App\Events\PayerCreated;
 use App\Events\UserChangingPassword;
@@ -12,6 +13,7 @@ use App\Listeners\ChangeResetPasswordFalse;
 use App\Listeners\DatabaseRefreshedListener;
 use App\Listeners\IsFormComplete;
 use App\Listeners\ActivityCreatedListener;
+use App\Listeners\DocumentCreatedListener;
 use App\Listeners\MemberCreatedListener;
 use App\Listeners\PayerCreatedListener;
 use App\Listeners\TrackDatabaseChangeListener;
@@ -50,6 +52,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ActivityCreated::class      => [
             ActivityCreatedListener::class,
+        ],
+        DocumentCreated::class      => [
+            DocumentCreatedListener::class,
         ],
         MemberCreated::class        => [
             MemberCreatedListener::class,

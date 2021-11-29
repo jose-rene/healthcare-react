@@ -24,10 +24,13 @@ class FileRequest extends FormRequest
     public function rules()
     {
         return [
-            'document_type_id' => ['required'],
-            'name'             => ['required'],
+            'document_type_id' => ['required', 'exists:document_types,id'],
+            'name'             => ['required', 'min:2'],
             'mime_type'        => ['required'],
             'file'             => ['required', 'file'],
+            'position'         => ['required_if:document_type_id,2'], // media
+            'description'      => ['min:2'],
+            'tag'              => ['min:2'],
         ];
     }
 }

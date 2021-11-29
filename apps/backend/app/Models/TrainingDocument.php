@@ -66,7 +66,7 @@ class TrainingDocument extends Model
 
     public function documentType()
     {
-        return $this->hasOne(DocumentType::class, 'document_type');
+        return $this->belongsTo(TrainingDocumentType::class);
     }
 
     public function payer()
