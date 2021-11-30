@@ -9,6 +9,7 @@ import PageAlert from "components/elements/PageAlert";
 import FapIcon from "components/elements/FapIcon";
 
 import ScheduleForm from "../forms/ScheduleForm";
+import RescheduleForm from "../forms/RescheduleForm";
 
 import useApiCall from "hooks/useApiCall";
 
@@ -19,12 +20,21 @@ const ScheduleView = ({
     setAssessmentData,
     error,
     reasonOptions,
+    refreshAssessment,
 }) => {
     const { id } = useParams();
 
     const [{ loading, error: formError }, fireSubmit] = useApiCall({
         method: "post",
         url: "/appointment",
+    });
+
+    const [
+        { loading: rescheduleLoading, error: rescheduleFormError },
+        fireRescheduleSubmit,
+    ] = useApiCall({
+        method: "post",
+        url: "/appointment/reschedule",
     });
 
     const [defaultData] = useState({
@@ -37,8 +47,18 @@ const ScheduleView = ({
         comments: "",
     });
 
+    const [defaultRescheduleData] = useState({
+        appointment_date: "",
+        start_time: "",
+        end_time: "",
+        is_cancelled: false,
+        initiated_by: "",
+        is_scheduled: false,
+        reason: "",
+    });
+
     const onSubmit = async (formValues) => {
-        const submitionValue = {
+        const submissionValue = {
             ...formValues,
             ...{
                 request_id: id,
@@ -48,7 +68,7 @@ const ScheduleView = ({
 
         try {
             const { called_at: called_date = null, appointment_date = null } =
-                await fireSubmit({ params: submitionValue });
+                await fireSubmit({ params: submissionValue });
             setAssessmentData((prevData) => ({
                 ...prevData,
                 called_date,
@@ -57,6 +77,28 @@ const ScheduleView = ({
             toggleOpenMember();
         } catch (e) {
             console.log(`Appointment create error:`, e);
+        }
+    };
+
+    const handleReschedule = async (formValues) => {
+        const submissionValue = {
+            ...formValues,
+            ...{
+                request_id: id,
+                is_cancelled:
+                    formValues.is_cancelled === "Re-Schedule" ? false : true,
+                is_scheduled: formValues.is_scheduled === "Yes" ? true : false,
+            },
+        };
+
+        try {
+            const { called_at: called_date = null, appointment_date = null } =
+                await fireRescheduleSubmit({ params: submissionValue });
+            refreshAssessment().then(() => {
+                toggleOpenMember();
+            });
+        } catch (e) {
+            console.log(`Appointment re-create error:`, e);
         }
     };
 
@@ -74,7 +116,9 @@ const ScheduleView = ({
                                     variant="link"
                                     onClick={toggleOpenMember}
                                 >
-                                    {data?.called_date ? `change` : `schedule`}
+                                    {data?.called_date && data?.appointment_date
+                                        ? `change`
+                                        : `schedule`}
                                 </Button>
                             )}
                         </div>
@@ -83,42 +127,34 @@ const ScheduleView = ({
                 <Card.Body>
                     <Collapse in={openMember}>
                         <div>
-                            {error && (
-                                <PageAlert
-                                    variant="warning"
-                                    dismissible
-                                    timeout={6000}
-                                >
-                                    {error}
-                                </PageAlert>
-                            )}
-                            {formError && (
-                                <PageAlert
-                                    variant="warning"
-                                    dismissible
-                                    timeout={6000}
-                                >
-                                    {formError}
-                                </PageAlert>
-                            )}
-                            <LoadingOverlay
-                                active={loading}
-                                spinner
-                                text="Processing..."
-                                styles={{
-                                    overlay: (base) => ({
-                                        ...base,
-                                        borderRadius: "12px",
-                                    }),
-                                }}
-                            >
-                                <Row className="mb-3">
-                                    <Col md={6}>
-                                        <Form
-                                            defaultData={defaultData}
-                                            onSubmit={onSubmit}
+                            {data?.called_date && data?.appointment_date ? (
+                                <div>
+                                    {rescheduleFormError && (
+                                        <PageAlert
+                                            variant="warning"
+                                            dismissible
+                                            timeout={6000}
                                         >
-                                            <ScheduleForm
+                                            {rescheduleFormError}
+                                        </PageAlert>
+                                    )}
+
+                                    <LoadingOverlay
+                                        active={rescheduleLoading}
+                                        spinner
+                                        text="Processing..."
+                                        styles={{
+                                            overlay: (base) => ({
+                                                ...base,
+                                                borderRadius: "12px",
+                                            }),
+                                        }}
+                                    >
+                                        <Form
+                                            defaultData={defaultRescheduleData}
+                                            onSubmit={handleReschedule}
+                                        >
+                                            <RescheduleForm
                                                 reasonOptions={reasonOptions}
                                             />
 
@@ -139,9 +175,73 @@ const ScheduleView = ({
                                                 </Col>
                                             </Row>
                                         </Form>
-                                    </Col>
-                                </Row>
-                            </LoadingOverlay>
+                                    </LoadingOverlay>
+                                </div>
+                            ) : (
+                                <div>
+                                    {error && (
+                                        <PageAlert
+                                            variant="warning"
+                                            dismissible
+                                            timeout={6000}
+                                        >
+                                            {error}
+                                        </PageAlert>
+                                    )}
+                                    {formError && (
+                                        <PageAlert
+                                            variant="warning"
+                                            dismissible
+                                            timeout={6000}
+                                        >
+                                            {formError}
+                                        </PageAlert>
+                                    )}
+                                    <LoadingOverlay
+                                        active={loading}
+                                        spinner
+                                        text="Processing..."
+                                        styles={{
+                                            overlay: (base) => ({
+                                                ...base,
+                                                borderRadius: "12px",
+                                            }),
+                                        }}
+                                    >
+                                        <Row className="mb-3">
+                                            <Col md={6}>
+                                                <Form
+                                                    defaultData={defaultData}
+                                                    onSubmit={onSubmit}
+                                                >
+                                                    <ScheduleForm
+                                                        reasonOptions={
+                                                            reasonOptions
+                                                        }
+                                                    />
+
+                                                    <Row>
+                                                        <Col>
+                                                            <Button
+                                                                variant="secondary"
+                                                                onClick={
+                                                                    toggleOpenMember
+                                                                }
+                                                                className="me-3"
+                                                            >
+                                                                Cancel
+                                                            </Button>
+                                                            <Button type="submit">
+                                                                Submit
+                                                            </Button>
+                                                        </Col>
+                                                    </Row>
+                                                </Form>
+                                            </Col>
+                                        </Row>
+                                    </LoadingOverlay>
+                                </div>
+                            )}
                         </div>
                     </Collapse>
                     <Collapse in={!openMember}>
@@ -166,7 +266,7 @@ const ScheduleView = ({
                                             className="fst-italic p-0"
                                             onClick={toggleOpenMember}
                                         >
-                                            Schedule Appointment
+                                            . Schedule Appointment
                                             <FapIcon
                                                 icon="angle-double-right"
                                                 size="sm"
