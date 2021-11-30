@@ -50,9 +50,7 @@ class AppointmentTest extends TestCase
     public function testAppointmentValidation()
     {
         $formData = $this->getFormData();
-        unset($formData['appointment_date']);
-        // data before yesterday, should fail
-        $formData['called_at']  = Carbon::yesterday()->format('Y-m-d');
+        $formData['appointment_date'] = '';
         $response = $this->json('POST', route('api.appointment.store', $formData));
         // validate response code and structure
         $response
@@ -61,11 +59,34 @@ class AppointmentTest extends TestCase
                 'errors' => ['appointment_date'],
             ]);
         
+        // validation for reschedule
+        $formData['is_cancelled'] = 0;
+        $formData['initiated_by'] = 'Member';
+        $formData['reason'] = $this->faker->sentence;
+        $response = $this->json('POST', route('api.appointment.reschedule', $formData));
+        // validate response code and structure
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure([
+                'errors' => ['appointment_date'],
+            ]);
+
+        // time validation
         $formData = $this->getFormData();
-        unset($formData['end_time']);
-        // data before yesterday, should fail
-        $formData['called_at']  = Carbon::yesterday()->format('Y-m-d');
+        $formData['end_time'] = '';
         $response = $this->json('POST', route('api.appointment.store', $formData));
+        // validate response code and structure
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure([
+                'errors' => ['end_time'],
+            ]);
+
+        // time validation for reschedule
+        $formData['is_cancelled'] = 0;
+        $formData['initiated_by'] = 'Member';
+        $formData['reason'] = $this->faker->sentence;
+        $response = $this->json('POST', route('api.appointment.reschedule', $formData));
         // validate response code and structure
         $response
             ->assertStatus(422)
