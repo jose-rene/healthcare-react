@@ -92,8 +92,7 @@ const ScheduleView = ({
         };
 
         try {
-            const { called_at: called_date = null, appointment_date = null } =
-                await fireRescheduleSubmit({ params: submissionValue });
+            await fireRescheduleSubmit({ params: submissionValue });
             refreshAssessment().then(() => {
                 toggleOpenMember();
             });

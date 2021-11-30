@@ -29,14 +29,17 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
         setOpenActivity(!openActivity);
     };
 
-    const [{ refreshLoading }, fireRefreshAssessment] = useApiCall();
+    const [{ loading: refreshLoading }, fireRefreshAssessment] = useApiCall();
 
     const refreshAssessment = async () => {
-        const refreshData = await fireRefreshAssessment(
-            { url: `/assessment/${data.id}` }
-        );
-        setAssessmentData(refreshData);
-    }
+        const refreshData = await fireRefreshAssessment({
+            url: `/assessment/${data.id}`,
+        });
+
+        if (refreshLoading) {
+            setAssessmentData(refreshData);
+        }
+    };
 
     return (
         <>
