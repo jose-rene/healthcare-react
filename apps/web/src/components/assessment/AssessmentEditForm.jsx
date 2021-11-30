@@ -4,6 +4,8 @@ import { Card, Col, Row } from "react-bootstrap";
 import ScheduleView from "./views/ScheduleView";
 import ActivityView from "./views/ActivityView";
 
+import useApiCall from "hooks/useApiCall";
+
 const AssessmentEditForm = ({ reasonOptions, data }) => {
     const [assessmentData, setAssessmentData] = useState({});
     const [[openMember, openActivity], setToggler] = useState([false, false]);
@@ -26,6 +28,15 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     const toggleOpenActivity = () => {
         setOpenActivity(!openActivity);
     };
+
+    const [{ refreshLoading }, fireRefreshAssessment] = useApiCall();
+
+    const refreshAssessment = async () => {
+        const refreshData = await fireRefreshAssessment(
+            { url: `/assessment/${data.id}` }
+        );
+        setAssessmentData(refreshData);
+    }
 
     return (
         <>
@@ -59,6 +70,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                             assessmentData,
                             setAssessmentData,
                             reasonOptions,
+                            refreshAssessment,
                         }}
                     />
                 </Col>

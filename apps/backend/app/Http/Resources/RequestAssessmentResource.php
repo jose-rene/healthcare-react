@@ -32,7 +32,7 @@ class RequestAssessmentResource extends JsonResource
             'received_date'     => $this->received_date->format('m/d/Y'),
             'called_date'       => $this->called_date ? $this->called_date->format('m/d/Y') : null,
             'appointment_date'  => $this->appointment_date ? $this->appointment_date->format('m/d/Y') : null,
-            'appointments'      => $this->appointments ? AppointmentResource::collection($this->appointments) : null,
+            'appointment'       => $this->appointments ? new AppointmentResource($this->appointments->first()) : null,
             'due_at'            => $this->due_at ? $this->due_at->format('m/d/Y H:i:s') : '',
             'due_at_na'         => $this->due_at_na,
             'request_type_name' => $this->requestType->name ?? '',

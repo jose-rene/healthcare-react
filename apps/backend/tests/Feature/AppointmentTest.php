@@ -208,9 +208,11 @@ class AppointmentTest extends TestCase
             ->assertOk()
             ->assertJsonStructure([
                 'appointment_date',
-                'appointments',
+                'appointment',
             ])
-            ->assertJsonCount(1, 'appointments');
+            ->assertJsonPath('appointment.appointment_date', Carbon::tomorrow()->format('m/d/Y'))
+            ->assertJsonPath('appointment.start_time', $formData['start_time'])
+            ->assertJsonPath('appointment.end_time', $formData['end_time']);
     }
 
     protected function getFormData()
