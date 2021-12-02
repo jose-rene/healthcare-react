@@ -15,10 +15,13 @@ class ActivityResource extends JsonResource
      */
     public function toArray($request)
     {
+        $dateTime = Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at);
+
         return [
             'id'         => $this->uuid,
             'parent_id'  => $this->parent ? $this->parent->uuid : null,
-            'date'       => Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('m/d/Y'),
+            'date'       => $dateTime->format('m/d/Y'),
+            'datetime'   => $dateTime->format('m/d/Y H:i:s'),
             'priority'   => $this->priority,
             'message'    => $this->message,
             'type'       => $this->type,

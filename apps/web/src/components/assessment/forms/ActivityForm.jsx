@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from "react";
+
+import { useUser } from "Context/UserContext";
+
+import FapIcon from "components/elements/FapIcon";
+
+import { fromUtcTime, fromUtcDate } from "helpers/datetime";
+
 import Item from "./TreeItem";
 
 export default (props) => {
     const [items, setItems] = useState();
+
+    const { getUser } = useUser();
+    const { timeZoneName } = getUser();
 
     useEffect(() => {
         setItems(props.items);
@@ -22,8 +32,21 @@ export default (props) => {
               )
             : (item) => (
                   <div className="content">
-                      <h5>{item.date}</h5>
-                      <p>{item.message}</p>
+                      <time className="cbp_tmtime">
+                          <span className="large">
+                              {fromUtcTime(item.datetime, timeZoneName)}
+                          </span>{" "}
+                          <span>
+                              {fromUtcDate(item.datetime, "MM/DD/YYYY")}
+                          </span>
+                      </time>
+                      <div className="cbp_tmicon">
+                          <FapIcon icon="briefcase" size="1x" />
+                      </div>
+                      <div className="cbp_tmlabel">
+                          {" "}
+                          <span>{item.message}</span>{" "}
+                      </div>
                   </div>
               );
 

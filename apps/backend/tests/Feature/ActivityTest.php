@@ -61,6 +61,16 @@ class ActivityTest extends TestCase
         // validate data
         $response
             ->assertOk()
+            ->assertJsonStructure([
+                'id',
+                'parent_id',
+                'date',
+                'datetime',
+                'priority',
+                'message',
+                'type',
+                'activities', 
+            ])
             ->assertJsonPath('id', $this->activity->uuid)
             ->assertJsonCount(3, 'activities')
             ->assertJsonCount(2, 'activities.0.activities');

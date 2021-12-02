@@ -50,6 +50,7 @@ import {
     faCopyright,
     faFolderPlus,
     faFolderMinus,
+    faBriefcase,
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add(
@@ -103,7 +104,8 @@ library.add(
     faBooks,
     faCopyright,
     faFolderPlus,
-    faFolderMinus
+    faFolderMinus,
+    faBriefcase
 );
 /*
 if (process.env.NODE_ENV === "development") {
