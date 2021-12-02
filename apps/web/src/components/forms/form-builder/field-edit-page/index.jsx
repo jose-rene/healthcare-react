@@ -7,8 +7,10 @@ import DynamicOptionList from "react-form-builder3/lib/dynamic-option-list";
 import { get } from "react-form-builder3/lib/stores/requests";
 import ID from "react-form-builder3/lib/UUID";
 import { set } from "lodash";
-import { Accordion } from "react-bootstrap";
+import { Accordion, Card } from "react-bootstrap";
 import { CustomRule, CustomValidation } from "..";
+import Textarea from "../../../inputs/Textarea";
+import { Button } from "../../../index";
 
 const toolbar = {
     options: ["inline", "list", "textAlign", "fontSize", "link", "history"],
@@ -97,6 +99,29 @@ export default class FormElementsEdit extends React.Component {
                 });
             });
         }
+    }
+
+    addStringOptions () {
+        const stringOptions = document.getElementById("string_options").value;
+        const arrOptions = stringOptions.split("\n");
+
+        this.props.element.options = [];
+        const { options } = this.props.element;
+
+        arrOptions.forEach(x => {
+            // eslint-disable-next-line no-param-reassign
+            options.push({
+                key: ID.uuid(),
+                text: x,
+                value: x,
+            });
+        });
+
+        const this_element = this.state.element;
+        this.setState({
+            element: this_element,
+            dirty: true,
+        });
     }
 
     renderSpanSettings = () => {
@@ -479,7 +504,23 @@ export default class FormElementsEdit extends React.Component {
                 </div>
                 }
 
-                {this.props.element.hasOwnProperty('options') && (
+                {this.props.element.hasOwnProperty("options") && (
+                    <>
+                        <Card className="p-3 my-3">
+                            <Textarea
+                                label="Options here will replace the options below"
+                                name="string_options"
+                                id="string_options"
+                                initialValue={this.props.element.options ? this.props.element.options.map(o => o.text)
+                                    .join("\n") : ""}
+                                rows={8}
+                            />
+                            <Button onClick={this.addStringOptions.bind(this)}>Replace Options</Button>
+                        </Card>
+                    </>
+                )}
+
+                {this.props.element.hasOwnProperty("options") && (
                     <DynamicOptionList
                         showCorrectColumn={this.props.showCorrectColumn}
                         canHaveOptionCorrect={canHaveOptionCorrect}
