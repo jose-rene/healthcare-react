@@ -36,13 +36,11 @@ export const slugify = (text) => {
 };
 
 export const template = (templateString, object) => {
-
     const templateObj = Handlebars.compile(templateString);
     return templateObj(object);
 };
 
 export const handlebarsTemplate = (templateString, object) => {
-
     try {
         const templateObj = Handlebars.compile(templateString);
         return templateObj(object);
@@ -61,8 +59,10 @@ export const jsEval = (condition, data) => {
     try {
         //const template = handlebarsTemplate(condition, data);
         const template = condition.replace(/~/g, "data.");
+
+        /* eslint no-eval: 0 */
         return eval(template);
-    } catch (e) { }
+    } catch (e) {}
 
     return false;
 };
