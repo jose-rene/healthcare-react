@@ -16,6 +16,9 @@ const GrySelect = (props) => {
     return (
         <div className="mb-3">
             <Select
+                labelKey="text"
+                valueKey="value"
+
                 {...{ ...rest, name: custom_name }}
             />
         </div>

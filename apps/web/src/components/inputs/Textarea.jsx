@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, createRef } from "react";
 import { Form, FloatingLabel } from "react-bootstrap";
 
 const Textarea = (
@@ -16,6 +16,14 @@ const Textarea = (
 ) => {
     const { [name]: { message = false } = {} } = errors;
     const hasError = !!message;
+    const _ref = ref || createRef();
+
+    useEffect(() => {
+        if (otherProps.initialValue) {
+            console.log("ref", { _ref });
+            _ref.current.value = otherProps.initialValue;
+        }
+    }, []);
 
     return (
         <FloatingLabel label={label} className="mb-3 form-group">
@@ -29,7 +37,7 @@ const Textarea = (
                         hasError ? " is-invalid" : ""
                     } ${classNameAppend}`
                 }
-                ref={ref}
+                ref={_ref}
                 {...otherProps}
             />
             {helpText && (

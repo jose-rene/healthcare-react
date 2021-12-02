@@ -50,3 +50,19 @@ export const handlebarsTemplate = (templateString, object) => {
         return e.toString();
     }
 };
+
+/**
+ *
+ * @param condition
+ * @param data -  this is required even though its not used here. The eval method could pull in one of those values
+ * @returns {any}
+ */
+export const jsEval = (condition, data) => {
+    try {
+        //const template = handlebarsTemplate(condition, data);
+        const template = condition.replace(/~/g, "data.");
+        return eval(template);
+    } catch (e) { }
+
+    return false;
+};

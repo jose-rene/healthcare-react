@@ -1,7 +1,7 @@
 import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
-import { handlebarsTemplate } from "../helpers/string";
+import { handlebarsTemplate, jsEval } from "../helpers/string";
 
 export const REQUIRED = "required";
 
@@ -246,13 +246,11 @@ const FormProvider = ({
     const shouldShow = useCallback(
         (rule, { name, elementIndex: rowIndex = 0 }) => {
             try {
-                // Builds a template that handlebars can evaluate. If the condition is true the
-                // template will return 'yes' otherwise false or nothing.
-                const template = `{{#compare ${rule}}}yes{{/compare}}`.replace(/@index/gi, rowIndex.toString());
-                const result = handlebarsTemplate(template, form);
-                const show = result === "yes";
+                const template = rule
+                    .replace(/\.?@index\.?/gi, "[" + rowIndex.toString() + "].");
 
-                // If the field is hidden and the field has a value then set it to empty
+                const show = jsEval(template, form);
+
                 if (!show && !editing && name && !!form[name]) {
                     update(name, "");
                 }
