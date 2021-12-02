@@ -10,7 +10,7 @@ export default function Item({
     expanderClosed,
 }) {
     const subTree = items.map((item) => (
-        <div key={item.id} className="d-flex flex-wrap" style={style}>
+        <div key={item.id} className="d-flex flex-wrap w-100" style={style}>
             <span onClick={() => toggleOpen(item)} className="expander">
                 {item.activities
                     ? item.$open
@@ -23,7 +23,7 @@ export default function Item({
             {item.activities && item.$open && (
                 <Item
                     {...{
-                        style: { ...style, marginLeft: "20px" },
+                        style: { ...style, marginLeft: "50px" },
                         items: item.activities,
                         toggleOpen,
                         labelSlot,

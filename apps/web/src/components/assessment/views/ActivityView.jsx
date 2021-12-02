@@ -37,7 +37,7 @@ const ActivityView = ({ openActivity, toggleOpenActivity }) => {
                                     variant="link"
                                     onClick={toggleOpenActivity}
                                 >
-                                    show
+                                    add activity
                                 </Button>
                             )}
                         </div>

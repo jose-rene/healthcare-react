@@ -19,11 +19,14 @@ export const fromUtc = (date, tz = "") => {
         .format("ddd MM/DD/YYYY h:mm A")}${tz ? ` ${tz}` : ""}`;
 };
 
-export const fromUtcDate = (date) => {
-    return dayjs.utc(date, "MM/DD/YYYY hh:mm:ss").local().format("YYYY-MM-DD");
+export const fromUtcDate = (date, formatType = "YYYY-MM-DD") => {
+    return dayjs.utc(date, "MM/DD/YYYY hh:mm:ss").local().format(formatType);
 };
-export const fromUtcTime = (date) => {
-    return dayjs.utc(date, "MM/DD/YYYY hh:mm:ss").local().format("HH:mm");
+export const fromUtcTime = (date, tz = "") => {
+    return `${dayjs
+        .utc(date, "MM/DD/YYYY hh:mm:ss")
+        .local()
+        .format("hh:mm A")}${tz ? ` ${tz}` : ""}`;
 };
 
 export const formatDate = (date) => {
