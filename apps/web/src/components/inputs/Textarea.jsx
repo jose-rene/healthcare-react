@@ -23,6 +23,8 @@ const Textarea = (
             console.log("ref", { _ref });
             _ref.current.value = otherProps.initialValue;
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
