@@ -2,9 +2,13 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Form;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin Form
+ */
 class FormResource extends JsonResource
 {
     /**
@@ -15,6 +19,12 @@ class FormResource extends JsonResource
      */
     public function toArray($request)
     {
+        $revisions = $this->revisionHistory()
+            ->where('key', 'fields')
+            ->select('id', 'created_at')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return [
             'id'          => $this->id,
             'slug'        => $this->slug,
@@ -22,6 +32,7 @@ class FormResource extends JsonResource
             'description' => $this->description,
             'fields'      => $this->fields,
             'updated_at'  => $this->updated_at->format('m/d/Y H:i:s'),
+            'revisions'   => $revisions,
         ];
     }
 }

@@ -26,6 +26,7 @@ const useFormBuilder = ({ form_slug, request_id } = {}) => {
     const [items, setItems] = useState([]);
     const [form, setForm] = useState([]);
     const [formAnswers, setFormAnswers] = useState({});
+    const [formRevisions, setFormRevisions] = useState([]);
 
     useEffect(() => {
         if (!form_slug) {
@@ -87,10 +88,10 @@ const useFormBuilder = ({ form_slug, request_id } = {}) => {
             ...params,
         });
 
-        const { answer_data: answers = {}, fields: fieldData = [] } = response;
+        const { answer_data: answers = {}, fields: fieldData = [], revisions = [] } = response;
 
         // set the depth of repeater fields if there is answer data
-        fieldData.forEach(({ key, custom_name: name }, i) => {
+        (fieldData ?? []).forEach(({ key, custom_name: name }, i) => {
             if (key === "GryInputGroupRepeater") {
                 // find the answers
                 if (answers && answers[name] && answers[name].length) {
@@ -100,6 +101,7 @@ const useFormBuilder = ({ form_slug, request_id } = {}) => {
         });
 
         setFormAnswers(answers);
+        setFormRevisions(revisions);
 
         return response;
     };
@@ -127,6 +129,7 @@ const useFormBuilder = ({ form_slug, request_id } = {}) => {
             loaded,
             saving: saving || savingAnswers,
             savedData: data,
+            formRevisions,
         },
         { setForm, fireLoadForm, fireSaveAnswers: saveAnswers },
     ];

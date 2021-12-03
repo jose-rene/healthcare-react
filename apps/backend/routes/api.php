@@ -78,14 +78,19 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('narrative_report_template', 'NarrativeReportTemplatesController');
     Route::apiResource('appointment', 'AppointmentController');
 
+    Route::put('/form/{form}/snapshot', 'FormController@snapshot');
+    Route::put('/form/{form}/rollback', 'FormController@rollback');
+
     Route::post('appointment/reschedule', 'AppointmentController@reschedule')->name('appointment.reschedule');
 
-    Route::get('request/{request}/request_form_section/{request_form_section_slug}', 'RequestFormSectionController@show');
-    Route::post('request/{request}/request_form_section/{request_form_section_slug}', 'RequestFormSectionController@store');
+    Route::get('request/{request}/request_form_section/{request_form_section_slug}',
+        'RequestFormSectionController@show');
+    Route::post('request/{request}/request_form_section/{request_form_section_slug}',
+        'RequestFormSectionController@store');
 
     Route::get('assessment/{request}', 'RequestAssessmentController@show')->name('request.assessment.show');
 
-    Route::bind('request_form_section_slug', function($request_form_section_slug){
+    Route::bind('request_form_section_slug', function ($request_form_section_slug) {
         return Form::where('slug', $request_form_section_slug)->firstOrFail();
     });
 

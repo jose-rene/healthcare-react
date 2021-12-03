@@ -6,6 +6,7 @@ use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
  *
@@ -19,7 +20,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Form extends Model
 {
-    use HasFactory, SoftDeletes, Sluggable;
+    use HasFactory, SoftDeletes, Sluggable, RevisionableTrait;
+
+    protected $revisionEnabled = false;
+    protected $revisionCleanup = true; //Remove old revisions (works only when used with $historyLimit)
+    protected $historyLimit = 500;     //Maintain a maximum of 500 changes at any point of time, while cleaning up old revisions.
 
     /**
      * The attributes that are mass assignable.
@@ -48,7 +53,7 @@ class Form extends Model
         return 'slug';
     }
 
-    public function assessments() 
+    public function assessments()
     {
         return $this->belongsToMany(Assessment::class, 'assessment_form');
     }
