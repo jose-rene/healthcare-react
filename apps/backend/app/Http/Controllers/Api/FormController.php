@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\FormResource;
 use App\Http\Resources\Form\FormListResource;
+use App\Http\Resources\FormResource;
 use App\Models\Form;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Venturecraft\Revisionable\Revision;
 
 class FormController extends Controller
 {
@@ -42,6 +43,41 @@ class FormController extends Controller
         $form->update(compact('fields'));
 
         return response()->noContent();
+    }
+
+    public function snapshot(Form $form)
+    {
+        // I had to build this out manually, I tried to trigger a revision save
+        // on a field, but I could not see a way to do it, so I manually generate
+        // the record here
+        // FIXME :: try to use the revision package to generate this
+        $revision_history = new Revision();
+
+        $revision_history->key               = 'fields';
+        $revision_history->revisionable_type = Form::class;
+        $revision_history->revisionable_id   = $form->id;
+        $revision_history->user_id           = auth()->id();
+        $revision_history->old_value         = json_encode($form->fields);
+        $revision_history->new_value         = '[]';
+
+        $revision_history->save();
+
+        return response()->noContent();
+    }
+
+    public function rollback(Form $form)
+    {
+        $revision_id = request('revision_id');
+        throw_if(!$revision_id, 'invalid-revision_id');
+
+        $revision = $form->revisionHistory()
+            ->where('id', $revision_id)
+            ->where('key', 'fields')
+            ->firstOrFail();
+
+        $form->update(['fields' => json_decode($revision->old_value)]);
+
+        return new FormResource($form);
     }
 
     public function store(Request $request)
