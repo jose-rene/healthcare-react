@@ -4,11 +4,17 @@ import { Card, Col, Row } from "react-bootstrap";
 import ScheduleView from "./views/ScheduleView";
 import ActivityView from "./views/ActivityView";
 
+import MemberInfoView from "components/request/views/MemberInfoView";
+
 import useApiCall from "hooks/useApiCall";
 
 const AssessmentEditForm = ({ reasonOptions, data }) => {
     const [assessmentData, setAssessmentData] = useState({});
-    const [[openMember, openActivity], setToggler] = useState([false, false]);
+    const [[openSchedule, openMember, openActivity], setToggler] = useState([
+        false,
+        false,
+        false,
+    ]);
 
     useEffect(() => {
         if (data) {
@@ -16,14 +22,20 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
         }
     }, [data]);
 
+    const setOpenSchedule = (open) => {
+        setToggler([open, false, false]);
+    };
+    const toggleOpenSchedule = () => {
+        setOpenSchedule(!openSchedule);
+    };
     const setOpenMember = (open) => {
-        setToggler([open, false]);
+        setToggler([false, open, false]);
     };
     const toggleOpenMember = () => {
         setOpenMember(!openMember);
     };
     const setOpenActivity = (open) => {
-        setToggler([false, open]);
+        setToggler([false, false, open]);
     };
     const toggleOpenActivity = () => {
         setOpenActivity(!openActivity);
@@ -31,14 +43,16 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
 
     const [{ loading: refreshLoading }, fireRefreshAssessment] = useApiCall();
 
-    const refreshAssessment = async () => {
+    const refreshAssessment = async (form = false) => {
         const refreshData = await fireRefreshAssessment({
             url: `/assessment/${data.id}`,
         });
 
-        if (refreshLoading) {
-            setAssessmentData(refreshData);
+        if (form && form === "member") {
+            setOpenMember(false);
         }
+
+        setAssessmentData(refreshData);
     };
 
     return (
@@ -68,14 +82,28 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                 <Col xl={10}>
                     <ScheduleView
                         {...{
-                            openMember,
-                            toggleOpenMember,
+                            openSchedule,
+                            toggleOpenSchedule,
                             assessmentData,
                             setAssessmentData,
                             reasonOptions,
                             refreshAssessment,
                         }}
                     />
+                </Col>
+                <Col xl={10}>
+                    {assessmentData?.id && (
+                        <MemberInfoView
+                            {...{
+                                memberData: assessmentData?.member,
+                                openMember,
+                                toggleOpenMember,
+                                refreshRequest: refreshAssessment,
+                                requestLoading: refreshLoading,
+                                assessmentForm: true,
+                            }}
+                        />
+                    )}
                 </Col>
                 <Col xl={10}>
                     <ActivityView

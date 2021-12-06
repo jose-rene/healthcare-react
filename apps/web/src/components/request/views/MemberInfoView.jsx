@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Collapse, Row } from "react-bootstrap";
-import Form from "components/elements/Form";
-import * as Yup from "yup";
-import useApiCall from "hooks/useApiCall";
 import LoadingOverlay from "react-loading-overlay";
+import * as Yup from "yup";
+
+import Form from "components/elements/Form";
+
+import useApiCall from "hooks/useApiCall";
+
+import { formatDate } from "helpers/datetime";
+
 import MemberForm from "../MemberForm";
 
 const MemberInfoView = ({
@@ -12,6 +17,7 @@ const MemberInfoView = ({
     toggleOpenMember,
     refreshRequest,
     requestLoading,
+    assessmentForm = false,
 }) => {
     const {
         // eslint-disable-next-line react/prop-types
@@ -21,20 +27,31 @@ const MemberInfoView = ({
         lob,
         member_number,
         id: memberId,
+        dob,
+        gender,
+        language_id,
     } = memberData;
 
-    const [defaultData, setDefaultData] = useState({
-        address_1,
-        address_2,
-        city,
-        county,
-        state,
-        postal_code,
-        phone: phone_number,
-        member_number,
-        line_of_business: lob?.id ?? "",
-        plan: payer?.id ?? "",
-    });
+    const [defaultData, setDefaultData] = useState({});
+
+    useEffect(() => {
+        setDefaultData({
+            address_1,
+            address_2,
+            city,
+            county,
+            state,
+            postal_code,
+            phone: phone_number,
+            member_number,
+            line_of_business: lob?.id ?? "",
+            plan: payer?.id ?? "",
+            dob: formatDate(dob),
+            gender,
+            language_id: language_id ?? 6, // 6 is english
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [memberData]);
 
     const validation = {
         phone: {
@@ -59,6 +76,15 @@ const MemberInfoView = ({
         postal_code: {
             yupSchema: Yup.string().required("Postal Code is required"),
         },
+        dob: {
+            yupSchema: Yup.string().required("Date of Birth is required"),
+        },
+        gender: {
+            yupSchema: Yup.string().required("Gender is required"),
+        },
+        language_id: {
+            yupSchema: Yup.string().required("Language is required"),
+        },
     };
 
     // api call to update request
@@ -68,9 +94,9 @@ const MemberInfoView = ({
     });
 
     const handleSave = async (formData) => {
-        // the api call will set loading, rerending page, context form will re-render with defaultData, has to be set here
-        setDefaultData((...prevData) => ({ ...prevData, ...formData }));
+        // the api call will set loading, rerending page, context form will re-render with defaultData
         // check if address is updated
+        // @note it checks this on the backend, this can probably be removed
         const { address } = memberData;
         const addressKeys = Object.keys(address);
         let dirty = false;
@@ -95,7 +121,7 @@ const MemberInfoView = ({
     };
     return (
         <>
-            <Card className="border-1 border-top-0 border-end-0 border-start-0 bg-light">
+            <Card className="border-1 border-top-0 border-end-0 border-start-0 bg-light mb-3">
                 <Card.Header className="bg-light border-0 ps-2">
                     <div className="d-flex">
                         <div>
@@ -134,7 +160,10 @@ const MemberInfoView = ({
                                             onSubmit={handleSave}
                                             defaultData={defaultData}
                                         >
-                                            <MemberForm payer={payer} />
+                                            <MemberForm
+                                                payer={payer}
+                                                assessmentForm={assessmentForm}
+                                            />
                                             <Row>
                                                 <Col>
                                                     <Button

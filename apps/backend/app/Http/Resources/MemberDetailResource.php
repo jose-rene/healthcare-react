@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -30,11 +29,12 @@ class MemberDetailResource extends JsonResource
             'member_number' => $this->member_number,
             'payer'         => $this->payer ? new PayerDetailResource($this->payer) : null,
             'lob'           => $this->lob ? new LobResource($this->lob) : null,
-            'dob'           => Carbon::parse($this->dob)->format('m/d/Y'),
+            'dob'           => $this->dob->format('m/d/Y'),
             'address'       => new AddressResource($address),
             'phone'         => new PhoneResource($this->mainPhone),
             'email'         => new EmailResource($this->mainEmail),
-            'language'      => optional($this->language)->name ?? 'en',
+            'language'      => $this->language ? $this->language->name : 'English',
+            'language_id'   => $this->language_id,
         ];
     }
 }

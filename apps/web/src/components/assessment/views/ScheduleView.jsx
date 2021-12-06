@@ -14,8 +14,8 @@ import RescheduleForm from "../forms/RescheduleForm";
 import useApiCall from "hooks/useApiCall";
 
 const ScheduleView = ({
-    openMember,
-    toggleOpenMember,
+    openSchedule,
+    toggleOpenSchedule,
     assessmentData: data,
     setAssessmentData,
     error,
@@ -74,7 +74,7 @@ const ScheduleView = ({
                 called_date,
                 appointment_date,
             }));
-            toggleOpenMember();
+            toggleOpenSchedule();
         } catch (e) {
             console.log(`Appointment create error:`, e);
         }
@@ -94,7 +94,7 @@ const ScheduleView = ({
         try {
             await fireRescheduleSubmit({ params: submissionValue });
             refreshAssessment().then(() => {
-                toggleOpenMember();
+                toggleOpenSchedule();
             });
         } catch (e) {
             console.log(`Appointment re-create error:`, e);
@@ -110,10 +110,10 @@ const ScheduleView = ({
                             <h5 className="ms-2">Schedule Member</h5>
                         </div>
                         <div className="ms-auto">
-                            {!openMember && (
+                            {!openSchedule && (
                                 <Button
                                     variant="link"
-                                    onClick={toggleOpenMember}
+                                    onClick={toggleOpenSchedule}
                                 >
                                     {data?.called_date && data?.appointment_date
                                         ? `change`
@@ -124,7 +124,7 @@ const ScheduleView = ({
                     </div>
                 </Card.Header>
                 <Card.Body>
-                    <Collapse in={openMember}>
+                    <Collapse in={openSchedule}>
                         <div>
                             {data?.called_date && data?.appointment_date ? (
                                 <div>
@@ -162,7 +162,7 @@ const ScheduleView = ({
                                                     <Button
                                                         variant="secondary"
                                                         onClick={
-                                                            toggleOpenMember
+                                                            toggleOpenSchedule
                                                         }
                                                         className="me-3"
                                                     >
@@ -224,7 +224,7 @@ const ScheduleView = ({
                                                             <Button
                                                                 variant="secondary"
                                                                 onClick={
-                                                                    toggleOpenMember
+                                                                    toggleOpenSchedule
                                                                 }
                                                                 className="me-3"
                                                             >
@@ -243,7 +243,7 @@ const ScheduleView = ({
                             )}
                         </div>
                     </Collapse>
-                    <Collapse in={!openMember}>
+                    <Collapse in={!openSchedule}>
                         <div>
                             <Row className="mb-3">
                                 <Col className="fw-bold" sm={3}>
@@ -263,7 +263,7 @@ const ScheduleView = ({
                                         <Button
                                             variant="link"
                                             className="fst-italic p-0"
-                                            onClick={toggleOpenMember}
+                                            onClick={toggleOpenSchedule}
                                         >
                                             . Schedule Appointment
                                             <FapIcon

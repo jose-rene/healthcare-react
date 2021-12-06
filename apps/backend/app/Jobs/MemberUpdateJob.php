@@ -13,6 +13,7 @@ class MemberUpdateJob
 
     protected $data;
     protected $member;
+    protected $isRunHistory = false;
 
     /**
      * Create a new job instance.
@@ -49,30 +50,50 @@ class MemberUpdateJob
         if (isset($this->data['member_number'])) {
             $this->updateMemberNumber();
         }
+        // change other stuff
+        if (isset($this->data['language_id']) || isset($this->data['dob']) || isset($this->data['gender'])) {
+            $this->updateMemberData();
+        }
+
+        // if any record changes require adding member history
+        if ($this->isRunHistory) {
+            dispatch(new MemberPayerHistoryAddJob($this->member));
+        }
+
     }
 
     protected function updateAddress()
     {
-        // get primary address and set to non-primary
-        $this->member->addresses
-            ->filter(fn ($address) => $address->is_primary)
-            ->each(fn ($address)   => $address->update(['is_primary' => 0]));
-        // add new primary address
-        $this->member->addresses()->create([
+        $address = [
             'address_1'   => $this->data['address_1'],
             'address_2'   => $this->data['address_2'] ?? '',
             'city'        => $this->data['city'],
             'state'       => $this->data['state'],
             'county'      => $this->data['county'],
             'postal_code' => $this->data['postal_code'],
-            'is_primary'  => 1,
-        ]);
+            'is_primary'  => true,
+        ];
+        // see if the current address has the same values
+        $check = array_intersect_assoc($this->member->address->toArray(), $address);
+        if ($check == $address) {
+            return; // the address was not updated
+        }
+        // get primary address and set to non-primary
+        $this->member->addresses
+            ->filter(fn ($address) => $address->is_primary)
+            ->each(fn ($address)   => $address->update(['is_primary' => false]));
+        // add new primary address
+        $this->member->addresses()->create($address);
         // refresh relationship
         $this->member->load('addresses');
     }
 
     protected function updatePhone()
     {
+        // do not update if the same
+        if ($this->member->mainPhone && $this->data['phone'] === $this->member->mainPhone->number) {
+            return;
+        }
         // get primary phone and set to non-primary
         $this->member->phones
             ->filter(fn ($phone) => $phone->is_primary)
@@ -95,20 +116,37 @@ class MemberUpdateJob
             'payer_id' => Payer::firstWhere('uuid', $this->data['plan'])->id,
         ]);
         // create a new member history record
-        dispatch(new MemberPayerHistoryAddJob($this->member));
+        $this->isRunHistory = true;
     }
 
     protected function updateLob()
     {
         $this->member->update(['lob_id' => $this->data['line_of_business']]);
         // create a new member history record
-        dispatch(new MemberPayerHistoryAddJob($this->member));
+        $this->isRunHistory = true;
     }
 
     protected function updateMemberNumber()
     {
         $this->member->update(['member_number' => $this->data['member_number']]);
         // create a new member history record
-        dispatch(new MemberPayerHistoryAddJob($this->member));
+        $this->isRunHistory = true;
+    }
+
+    protected function updateMemberData()
+    {
+        foreach (['language_id', 'dob', 'gender'] as $field) {
+            if (isset($this->data[$field]) && $this->data[$field] != $this->member->{$field}) {
+                if ('dob' === $field && $this->member->dob->format('Y-m-d') === $this->data['dob']) {
+                    continue;
+                }
+
+                $updated[$field] = $this->data[$field];
+            }
+        }
+
+        if (!empty($updated)) {
+            $this->member->update($updated);
+        }
     }
 }

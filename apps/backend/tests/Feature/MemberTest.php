@@ -245,9 +245,40 @@ class MemberTest extends TestCase
             'postal_code' => $this->faker->postcode,
         ];
         $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
+
         $response
             ->assertStatus(200)
             ->assertJsonPath('address.address_1', $formData['address_1']);
+
+        // adds the address
+        $this->assertCount(2, $this->member->addresses);
+    }
+
+    /**
+     * Test member update with same address.
+     *
+     * @return void
+     */
+    public function testMemberUpdateSameAddress()
+    {
+        // test update address with the same address 
+        $formData = [
+            'address_1'   => $this->member->address->address_1,
+            'address_2'   => $this->member->address->address_2,
+            'city'        => $this->member->address->city,
+            'county'      => $this->member->address->county,
+            'state'       => $this->member->address->state,
+            'postal_code' => $this->member->address->postal_code,
+            'phone'       => $this->faker->phoneNumber, // extraneous to the address data
+        ];
+        $historyCount  = $this->member->history->count();
+        $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('address.address_1', $formData['address_1']);
+        
+        // does not duplicate the current address
+        $this->assertCount(1, $this->member->addresses);
     }
 
     /**
@@ -265,6 +296,52 @@ class MemberTest extends TestCase
         $response
             ->assertStatus(200)
             ->assertJsonPath('phone.number', $formData['phone']);
+
+        // phone was added
+        $this->assertCount(2, $this->member->phones);
+    }
+
+     /**
+     * Test member update same phone.
+     *
+     * @return void
+     */
+    public function testMemberUpdateSamePhone()
+    {
+        // test update same phone
+        $formData = [
+            'phone' => $this->member->mainPhone->number,
+        ];
+        $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('phone.number', $formData['phone']);
+
+        // phone was not added
+        $this->assertCount(1, $this->member->phones);
+    }
+
+    /**
+     * Test member update data.
+     *
+     * @return void
+     */
+    public function testMemberUpdateData()
+    {
+        // test update new language, gender and dob
+        $formData = [
+            'phone'       => $this->member->mainPhone->number,
+            'language_id' => 15,
+            'gender'      => 'Male' === $this->member->gender ? $this->member->gender : 'Female',
+            'dob'         => $this->faker->date,
+        ];
+
+        $response = $this->put('/v1/member/' . $this->member->uuid, $formData);
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('language_id', $formData['language_id'])
+            ->assertJsonPath('gender', $formData['gender'])
+            ->assertJsonPath('dob', Carbon::parse($formData['dob'])->format('m/d/Y'));
     }
 
     /**
@@ -363,7 +440,7 @@ class MemberTest extends TestCase
             'member_number'      => $member->member_number,
             'member_number_type' => $member->member_number_type,
             'line_of_business'   => $this->payer->lobs()->first()->id,
-            'language'           => $member->language,
+            'language_id'        => 6,
             'address_1'          => $address->address_1,
             'address_2'          => '',
             'city'               => $address->city,
@@ -382,6 +459,9 @@ class MemberTest extends TestCase
         // seed the Bouncer roles
         Artisan::call('db:seed', [
             '--class' => 'Database\Seeders\BouncerSeeder',
+        ]);
+        Artisan::call('db:seed', [
+            '--class' => 'Database\Seeders\LanguageSeeder',
         ]);
         $this->member = Member::factory()
             ->hasPhones(1)
