@@ -21,6 +21,7 @@ const ScheduleView = ({
     error,
     reasonOptions,
     refreshAssessment,
+    refreshLoading,
 }) => {
     const { id } = useParams();
 
@@ -93,9 +94,7 @@ const ScheduleView = ({
 
         try {
             await fireRescheduleSubmit({ params: submissionValue });
-            refreshAssessment().then(() => {
-                toggleOpenSchedule();
-            });
+            refreshAssessment("schedule");
         } catch (e) {
             console.log(`Appointment re-create error:`, e);
         }
@@ -139,7 +138,7 @@ const ScheduleView = ({
                                     )}
 
                                     <LoadingOverlay
-                                        active={rescheduleLoading}
+                                        active={rescheduleLoading || refreshLoading}
                                         spinner
                                         text="Processing..."
                                         styles={{
@@ -197,7 +196,7 @@ const ScheduleView = ({
                                         </PageAlert>
                                     )}
                                     <LoadingOverlay
-                                        active={loading}
+                                        active={loading || refreshLoading}
                                         spinner
                                         text="Processing..."
                                         styles={{

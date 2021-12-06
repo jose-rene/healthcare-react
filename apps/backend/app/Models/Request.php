@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Str;
 
 /**
  * @property Carbon             created_at
@@ -225,12 +226,6 @@ class Request extends Model
         return $this->created_at;
     }
 
-    public function getAppointmentDateAttribute()
-    {
-        $appt = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 3) : null;
-        return $appt ? $appt->date : null;
-    }
-
     public function getReceivedDateAttribute()
     {
         $received = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 1) : null;
@@ -243,6 +238,24 @@ class Request extends Model
         return $called ? $called->date : null;
     }
 
+    public function getAppointmentDateAttribute()
+    {
+        $appt = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 3) : null;
+        return $appt ? $appt->date : null;
+    }
+
+    public function getCancelledDateAttribute()
+    {
+        $date = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 4) : null;
+        return $date ? $date->date : null;
+    }
+
+    public function getOnHoldDateAttribute()
+    {
+        $date = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 5) : null;
+        return $date ? $date->date : null;
+    }
+
     public function getStatusNameAttribute()
     {
         return $this->requestStatus ? $this->requestStatus->name : 'In Progress';
@@ -251,5 +264,15 @@ class Request extends Model
     public function getMemberVerifiedAttribute()
     {
         return (bool) $this->member_verified_at;
+    }
+
+    public function setStatusAttribute($statusName)
+    {
+        $status = Str::snake($statusName);
+        if (!$statusId = self::${$status}) {
+            throw new \RuntimeException(sprintf('Invalid Request Status: %s', $statusName));
+        }
+
+        $this->request_status_id = $statusId;
     }
 }

@@ -10,18 +10,7 @@ import useApiCall from "hooks/useApiCall";
 
 import "./styles.scss";
 
-const ActivityView = ({ openActivity, toggleOpenActivity }) => {
-    const { id } = useParams();
-
-    const [{ data }, getActivities] = useApiCall({
-        url: "/activity",
-    });
-
-    useEffect(() => {
-        getActivities({ params: { request_id: id } });
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+const ActivityView = ({ openActivity, toggleOpenActivity, activities}) => {
 
     return (
         <>
@@ -46,7 +35,7 @@ const ActivityView = ({ openActivity, toggleOpenActivity }) => {
                 <Card.Body>
                     <Collapse in={openActivity}>
                         <ActivityForm
-                            items={data?.data}
+                            items={activities}
                             expanderOpen={
                                 <FapIcon icon="folder-minus" size="1x" />
                             }

@@ -172,10 +172,17 @@ class AppointmentTest extends TestCase
         $response
             ->assertStatus(201)
             ->assertJsonPath('is_cancelled', $formData['is_cancelled']);
+
+        $this->request->refresh();
+        // there should be a cancelled date
+        $this->assertNotNull($this->request->on_hold_date);
+        // request should be placed on hold
+        $this->assertEquals($this->request->request_status_id, Request::$on_hold);
+        $this->assertEquals($this->request->statusName, 'On Hold');
     }
 
     /**
-     * Test cancelling an appointment.
+     * Test rescheduling an appointment.
      *
      * @return void
      */
@@ -233,7 +240,8 @@ class AppointmentTest extends TestCase
             ])
             ->assertJsonPath('appointment.appointment_date', Carbon::tomorrow()->format('m/d/Y'))
             ->assertJsonPath('appointment.start_time', $formData['start_time'])
-            ->assertJsonPath('appointment.end_time', $formData['end_time']);
+            ->assertJsonPath('appointment.end_time', $formData['end_time'])
+            ->assertJsonPath('status', 'Scheduled');
     }
 
     protected function getFormData()

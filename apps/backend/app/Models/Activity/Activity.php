@@ -112,7 +112,7 @@ class Activity extends Model
      */
     public function activities()
     {
-        return $this->hasMany(self::class, 'parent_id')->with('children');
+        return $this->hasMany(self::class, 'parent_id')->with('children')->orderBy('id', 'desc');
     }
 
     /*

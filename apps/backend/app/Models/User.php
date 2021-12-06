@@ -102,7 +102,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'inactive_at'            => 'datetime',
         'notification_prefs'     => 'json',
         'reset_password'         => 'boolean',
-        'alert_threshold_number' => 'int',
+        'alert_threshold_number' => 'integer',
+        'user_type'              => 'integer',
         'is_2fa'                 => 'boolean',
     ];
 

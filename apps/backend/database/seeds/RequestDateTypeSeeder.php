@@ -12,6 +12,8 @@ class RequestDateTypeSeeder extends Seeder
         'Received Date',
         'Called Date',
         'Appointment Date',
+        'Cancelled Date',
+        'On Hold Date',
     ];
 
     /**

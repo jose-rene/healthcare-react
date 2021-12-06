@@ -17,16 +17,7 @@ class RequestObserver
      */
     public function created(Request $request)
     {
-        $request->activities()->create([
-            'parent_id'         => null,
-            'user_id'           => auth()->id() ?? '1',
-            'message'           => 'request.started',
-            'priority'          => 0,
-            'notify_admin'      => false,
-            'notify_healthplan' => false,
-            'notify_reviewer'   => false,
-            'notify_therapist'  => false,
-        ]);
+        // does not currently need a notification
     }
 
     /**
@@ -36,41 +27,34 @@ class RequestObserver
      */
     public function updated(Request $request)
     {
-        $json_message = [];
-
-        if ($request->wasChanged(['request_status_id'])) {
-            $json_message = [
-                'old' => [
-                    'Status Name' => $request->getOriginal('status_name'),
-                ],
-                'new' => [
-                    'Status Name' => $request->status_name,
-                ],
-            ];
+        $user = auth()->user();
+        // alert is only necessary if the request has been received and a hp user changes it
+        if (!$request->request_status_id || !$user || 2 !== $user->user_type) {
+            return;
         }
 
-        if (!empty($json_message)) {
-            /** @var Activity $activity */
-            $activity = $request->activities()->create([
-                'parent_id'         => null,
-                'user_id'           => auth()->id() ?? '1', // TODO :: DEV :: remove ?? 1
-                'message'           => 'request.updated',
-                'json_message'      => $json_message,
-                'priority'          => 0,
-                'notify_admin'      => false,
-                'notify_healthplan' => false,
-                'notify_reviewer'   => false,
-                'notify_therapist'  => false,
-            ]);
+        /** @var Activity $activity */
+        $activity = $request->activities()->create([
+            'parent_id'         => null,
+            'user_id'           => $user->id,
+            'message'           => sprintf('Request updated by %s', $user->full_name),
+            'json_message'      => ['user' => $user->full_name],
+            'priority'          => 1,
+            'notify_admin'      => true,
+            'notify_healthplan' => false,
+            'notify_reviewer'   => false,
+            'notify_therapist'  => false,
+        ]);
 
-            $activityType = ActivityType::firstOrCreate([
-                'name'          => 'request.updated',
-                'permission'    => 'TBD',
-                'privacy_level' => 2,
-            ]);
-            $activity->activityType()->associate($activityType);
+        // @todo, this will be a preset activity type
+        $activityType = ActivityType::firstOrCreate([
+            'name'          => 'request.updated',
+            'permission'    => 'TBD',
+            'privacy_level' => 2,
+        ]);
+        $activity->activityType()->associate($activityType);
 
-            Notification::send($activity->getNotificationUsers(), new RequestUpdatedNotification($activity));
-        }
+        // @todo move this will be moved to activity created event
+        // Notification::send($activity->getNotificationUsers(), new RequestUpdatedNotification($activity));
     }
 }
