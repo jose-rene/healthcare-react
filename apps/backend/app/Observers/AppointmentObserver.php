@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Activity\Activity;
 use App\Models\Appointment;
+use App\Models\Request;
 
 class AppointmentObserver
 {
@@ -35,10 +36,25 @@ class AppointmentObserver
                 'request_date_type_id' => 3,
                 'date'                 => $appointment->appointment_date,
             ]);
+            // update status to scheduled
+            $appointment->request->status = 'Scheduled';
+            $appointment->request->save();
+        }
+
+        if ($appointment->is_cancelled) {
+            $appointment->request->requestDates()->create([
+                'request_date_type_id' => 5,
+                'date'                 => $appointment->created_at,
+            ]);
+            // put the request on hold
+            $appointment->request->status = 'On Hold';
+            $appointment->request->save();
         }
 
         // create activity and indirectly the notification
-        $apptDate = $appointment->appointment_date ? $appointment->appointment_date->format('d/m/Y') : 'n/a';
+        $apptDate = $appointment->appointment_date
+            ? sprintf('%s %s - %s', $appointment->appointment_date->format('m/d/Y'), $appointment->start_time, $appointment->end_time)
+            : 'n/a';
         $callDate = $appointment->called_at ? $appointment->called_at->format('m/d/Y') : 'n/a';
         // set the activity message
         $message = sprintf('Member called %s, appointment scheduled %s.', $callDate, $apptDate);
@@ -46,7 +62,7 @@ class AppointmentObserver
             $message = sprintf('Appointment cancelled: %s', $appointment->reason);
         }
         elseif ($appointment->is_reschedule) {
-            $message = sprintf('Appointment re-scheduled %s.', $callDate, $apptDate);
+            $message = sprintf('Appointment re-scheduled %s.', $apptDate);
         }
         Activity::create([
             'request_id'   => $appointment->request->id,

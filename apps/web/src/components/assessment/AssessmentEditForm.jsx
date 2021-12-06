@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 
+import MemberInfoView from "components/request/views/MemberInfoView";
+import useApiCall from "hooks/useApiCall";
 import ScheduleView from "./views/ScheduleView";
 import ActivityView from "./views/ActivityView";
-
-import MemberInfoView from "components/request/views/MemberInfoView";
-
-import useApiCall from "hooks/useApiCall";
 
 const AssessmentEditForm = ({ reasonOptions, data }) => {
     const [assessmentData, setAssessmentData] = useState({});
@@ -48,12 +46,22 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
             url: `/assessment/${data.id}`,
         });
 
-        if (form && form === "member") {
-            setOpenMember(false);
+        if (form) {
+            // eslint-disable-next-line default-case
+            switch (form) {
+                case "member":
+                    setOpenMember(false);
+                    break;
+                case "schedule":
+                    setOpenSchedule(false);
+                    break;
+            }
         }
 
         setAssessmentData(refreshData);
     };
+
+    const { activities = [] } = assessmentData;
 
     return (
         <>
@@ -88,6 +96,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                             setAssessmentData,
                             reasonOptions,
                             refreshAssessment,
+                            refreshLoading,
                         }}
                     />
                 </Col>
@@ -110,6 +119,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                         {...{
                             openActivity,
                             toggleOpenActivity,
+                            activities,
                         }}
                     />
                 </Col>

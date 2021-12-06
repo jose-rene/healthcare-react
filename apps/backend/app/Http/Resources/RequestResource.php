@@ -20,6 +20,7 @@ class RequestResource extends JsonResource
             'clinician'         => $this->clinician ? ['id' => $this->clinician->uuid, 'name' => $this->clinician->full_name] : null,
             'reviewer'          => $this->reviewer ? ['id' => $this->reviewer->uuid, 'name' => $this->reviewer->full_name] : null,
             'status'            => $this->statusName,
+            'status_id'         => (int) $this->request_status_id,
             'member'            => new MemberResource($this->member),
             'payer'             => new PayerResource($this->payer),
             'member_verified'   => $this->member_verified,

@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MemberSeeder::class);
         $this->call(LanguageSeeder::class);
         $this->call(RequestTypeSeeder::class);
+        $this->call(RequestDateTypeSeeder::class);
         // clinical services user relation seeders
         $this->call(ClinicalUserRelatedSeeder::class);
     }

@@ -176,9 +176,9 @@ class RequestController extends Controller
         }
 
         // @todo, there may need to be further logic for cancelled cases, etc
-        if ($request->status_id === 1) {
-            // change from submitted to assigned
-            $request->requestStatus()->associate(RequestStatus::find(2));
+        if ($request->statusName === 'Received') {
+            // change from received to assigned
+            $request->status = 'Assigned';
         }
 
         $request->save();
