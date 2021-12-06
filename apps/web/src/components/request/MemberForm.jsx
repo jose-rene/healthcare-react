@@ -1,13 +1,15 @@
 /* eslint-disable no-nested-ternary */
 import React, { useMemo, useState } from "react";
 import { Col, Row } from "react-bootstrap";
+
 import { useFormContext } from "Context/FormContext";
+
 import AddressForm from "components/elements/AddressForm";
 import PhoneInput from "components/inputs/PhoneInput";
 import ContextSelect from "components/contextInputs/Select";
 import ContextInput from "components/inputs/ContextInput";
 
-const MemberForm = ({ payer }) => {
+const MemberForm = ({ payer, assessmentForm = false }) => {
     const [plan, setPlan] = useState(null);
     const { update: setValue } = useFormContext();
 
@@ -16,8 +18,8 @@ const MemberForm = ({ payer }) => {
         const plansKey = payer.payers?.length
             ? "payers"
             : payer.siblings?.length
-                ? "siblings"
-                : null;
+            ? "siblings"
+            : null;
         if (!plansKey) {
             return [];
         }
@@ -50,6 +52,16 @@ const MemberForm = ({ payer }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [plan]);
 
+    const languageOptions = useMemo(() => {
+        if (!payer?.languages?.length) {
+            return [];
+        }
+
+        return payer.languages.map(({ id, name }) => {
+            return { id, title: name, val: id };
+        });
+    }, [payer]);
+
     // handle plan change
     const updatePlan = (e) => {
         const newPlan = planOptions.find((item) => item.id === e.target.value);
@@ -62,36 +74,77 @@ const MemberForm = ({ payer }) => {
         <>
             <AddressForm />
             <Row>
-                <Col md={6}>
+                <Col xl={6}>
                     <PhoneInput name="phone" label="Phone" />
                 </Col>
-                <Col md={6}>
-                    <ContextInput name="member_number" label="Member ID" />
+
+                <Col xl={6}>
+                    {!assessmentForm ? (
+                        <ContextInput name="member_number" label="Member ID" />
+                    ) : (
+                        <ContextInput
+                            name="dob"
+                            label="Date of Birth*"
+                            type="date"
+                            style={{ width: "100%" }}
+                        />
+                    )}
                 </Col>
             </Row>
-            <Row>
-                {planOptions?.length ? (
+            {!assessmentForm ? (
+                <Row>
+                    {planOptions?.length ? (
+                        <Col xl={6}>
+                            <ContextSelect
+                                name="plan"
+                                label="Plan"
+                                options={planOptions}
+                                required
+                                large
+                                onChange={updatePlan}
+                            />
+                        </Col>
+                    ) : (
+                        <ContextInput hidden name="plan" readOnly />
+                    )}
                     <Col xl={6}>
                         <ContextSelect
-                            name="plan"
-                            label="Plan"
-                            options={planOptions}
-                            required
-                            large
-                            onChange={updatePlan}
+                            name="line_of_business"
+                            label="Line of Business"
+                            options={lobOptions}
                         />
                     </Col>
-                ) : (
-                    <ContextInput hidden name="plan" readOnly />
-                )}
-                <Col xl={6}>
-                    <ContextSelect
-                        name="line_of_business"
-                        label="Line of Business"
-                        options={lobOptions}
-                    />
-                </Col>
-            </Row>
+                </Row>
+            ) : (
+                <Row>
+                    <Col xl={6}>
+                        <ContextSelect
+                            name="gender"
+                            label="Gender*"
+                            options={[
+                                {
+                                    id: "male",
+                                    title: "Male",
+                                    val: "male",
+                                },
+                                {
+                                    id: "female",
+                                    title: "Female",
+                                    val: "female",
+                                },
+                            ]}
+                        />
+                    </Col>
+
+                    <Col xl={6}>
+                        <ContextSelect
+                            name="language_id"
+                            label="Language*"
+                            options={languageOptions}
+                        />
+                    </Col>
+                </Row>
+            )}
         </>
     );
 };

@@ -1,14 +1,19 @@
 import React, { useEffect } from "react";
-import PageLayout from "../../../../layouts/PageLayout";
-import Form from "components/elements/Form";
 import { ReactFormBuilder } from "react-form-builder3";
-import FormElementsEdit from "components/forms/form-builder/field-edit-page";
-import "./style.scss";
-import useFormBuilder from "../../../../hooks/useFormBuilder";
-import ButtonWithDropdown from "../../../../components/elements/ButtonWithDropdown";
-import useApiCall from "../../../../hooks/useApiCall";
-import { PUT } from "../../../../config/URLs";
 import { Row, Col } from "react-bootstrap";
+
+import PageLayout from "layouts/PageLayout";
+
+import Form from "components/elements/Form";
+import FormElementsEdit from "components/forms/form-builder/field-edit-page";
+import ButtonWithDropdown from "components/elements/ButtonWithDropdown";
+
+import useApiCall from "hooks/useApiCall";
+import useFormBuilder from "hooks/useFormBuilder";
+
+import { PUT } from "config/URLs";
+
+import "./style.scss";
 
 const FormBuilderEdit = (props) => {
     const {
@@ -18,9 +23,10 @@ const FormBuilderEdit = (props) => {
         },
     } = props;
 
-    const [{ items, form, formLoaded, formRevisions }, { fireLoadForm }] = useFormBuilder({
-        form_slug,
-    });
+    const [{ items, form, formLoaded, formRevisions }, { fireLoadForm }] =
+        useFormBuilder({
+            form_slug,
+        });
 
     const [{ loading: tagging }, fireTagForm] = useApiCall({
         url: `form/${form_slug}/snapshot`,
@@ -35,7 +41,7 @@ const FormBuilderEdit = (props) => {
     const handleTavVersionClicked = async (attrs) => {
         const { button, buttonProps } = attrs;
 
-        if (button == "option") {
+        if (button === "option") {
             await fireRollbackForm({
                 params: {
                     revision_id: buttonProps.id,
@@ -77,7 +83,7 @@ const FormBuilderEdit = (props) => {
                             className="float-left"
                             label="Tag version"
                             disabled={tagging || rollingBack}
-                            options={formRevisions.map(fR => ({
+                            options={formRevisions.map((fR) => ({
                                 text: fR.created_at,
                                 ...fR,
                             }))}

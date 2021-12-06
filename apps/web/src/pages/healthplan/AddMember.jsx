@@ -119,7 +119,7 @@ const AddMember = (props) => {
             first_name,
             last_name,
             dob,
-            language: "6", // 6 is English
+            language_id: 6, // 6 is English
             plan: "",
             member_number_type: "",
             line_of_business: "",
@@ -260,7 +260,7 @@ const AddMember = (props) => {
 
                                     <Col md={6}>
                                         <ContextSelect
-                                            name="language"
+                                            name="language_id"
                                             label="Language*"
                                             options={languageOptions}
                                         />

@@ -55,7 +55,7 @@ class MemberController extends Controller
             'member_number_type' => $data['member_number_type'],
             'payer_id'           => Payer::firstWhere('uuid', $data['plan'])->id,
             'lob_id'             => $data['line_of_business'],
-            'language'           => $data['language'],
+            'language_other'     => $data['language_other'] ?? null,
         ]);
         // contacts
         $member->addContacts($data['contacts']);

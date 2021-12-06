@@ -27,7 +27,7 @@ class Member extends Model
     protected $fillable = [
         'payer_id',
         'lob_id',
-        'language_id',
+        'language_other',
         'language_id',
         'member_number',
         'line_of_business',
@@ -44,7 +44,10 @@ class Member extends Model
         'created' => MemberCreated::class,
     ];
 
-    protected $casts = ['is_test' => 'boolean'];
+    protected $casts = [
+        'is_test' => 'boolean',
+        'dob'     => 'date',
+    ];
 
     /**
      * Relationship to requests.
@@ -72,14 +75,14 @@ class Member extends Model
 
     public function getAddressAttribute()
     {
-        return $this->addresses()->firstOrCreate([
+        return $this->addresses()->where('is_primary', true)->firstOr(fn() => ($this->addresses()->create([
             'is_primary'  => true,
             'address_1'   => '',
             'city'        => '',
             'county'      => '',
             'state'       => '',
             'postal_code' => '',
-        ]);
+        ])));
     }
 
     /**

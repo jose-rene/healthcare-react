@@ -34,7 +34,7 @@ class MemberFactory extends Factory
             'payer_id'           => $payer->id,
             'lob_id'             => $payer->lobs->first(),
             'member_number_type' => 'Member ID',
-            'language'           => 'Pig Latin',
+            'language_other'     => 'Pig Latin',
             'gender'             => $gender,
             'name_title'         => $title,
             'first_name'         => $genderType ? $this->faker->firstNameFemale : $this->faker->firstNameMale,
