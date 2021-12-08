@@ -179,8 +179,25 @@ const RequestEditForm = ({ data }) => {
                                     <li className="active">
                                         Request {"\n"} Submitted
                                     </li>
-                                    <li>Therapist {"\n"} Assigned</li>
-                                    <li>Appointment {"\n"} Scheduled</li>
+                                    <li
+                                        className={
+                                            status === "Assigned" ||
+                                            status === "Scheduled"
+                                                ? "active"
+                                                : ""
+                                        }
+                                    >
+                                        Therapist {"\n"} Assigned
+                                    </li>
+                                    <li
+                                        className={
+                                            status === "Scheduled"
+                                                ? "active"
+                                                : ""
+                                        }
+                                    >
+                                        Appointment {"\n"} Scheduled
+                                    </li>
                                     <li> In {"\n"} Review</li>
                                     <li>Report {"\n"} Complete</li>
                                 </ul>

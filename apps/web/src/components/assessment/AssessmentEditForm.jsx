@@ -77,7 +77,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
         setAssessmentData(refreshData);
     };
 
-    const { activities = [] } = assessmentData;
+    const { activities = [], status = "" } = assessmentData;
 
     return (
         <>
@@ -92,7 +92,13 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                 <li className="active">
                                     Ready to {"\n"} Schedule
                                 </li>
-                                <li>Appointment {"\n"} Scheduled</li>
+                                <li
+                                    className={
+                                        status === "Scheduled" ? "active" : ""
+                                    }
+                                >
+                                    Appointment {"\n"} Scheduled
+                                </li>
                                 <li>Appointment {"\n"} Completed</li>
                                 <li> Member {"\n"} Assessed</li>
                                 <li>Report {"\n"} Complete</li>

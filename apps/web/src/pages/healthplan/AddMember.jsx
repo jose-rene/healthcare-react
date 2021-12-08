@@ -13,12 +13,12 @@ import AddressForm from "components/elements/AddressForm";
 import FormButtons from "components/contextInputs/FormButtons";
 import ContactMethods from "components/elements/ContactMethods";
 import PageTitle from "components/PageTitle";
+import FapIcon from "components/elements/FapIcon";
+import MemberInfoForm from "components/elements/MemberInfoForm";
 
 import useApiCall from "hooks/useApiCall";
 
 import titles from "config/Titles.json";
-import FapIcon from "components/elements/FapIcon";
-import MemberInfoForm from "components/elements/MemberInfoForm";
 
 const AddMember = (props) => {
     const {
@@ -68,7 +68,7 @@ const AddMember = (props) => {
         gender: {
             yupSchema: Yup.string().required("Gender is required"),
         },
-        language: {
+        language_id: {
             yupSchema: Yup.string().required("Language is required"),
         },
         address_1: {
