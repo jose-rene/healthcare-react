@@ -9,16 +9,7 @@ import {
 } from "react-bootstrap";
 /* eslint-disable react/no-array-index-key */
 
-const RequestItemForm = ({
-    requestItems,
-    payerProfile,
-    openRequestItem,
-    toggleOpenRequestItem,
-    saveRequest,
-    requestLoading,
-    updateError,
-    disabled,
-}) => {
+const RequestItemForm = ({ requestItems, payerProfile, openRequestItem }) => {
     const [data, setData] = useState({
         type_name: "request-items",
         request_type_details: [],

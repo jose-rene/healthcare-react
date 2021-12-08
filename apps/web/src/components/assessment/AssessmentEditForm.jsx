@@ -5,16 +5,18 @@ import { isEmpty } from "lodash";
 import MemberInfoView from "components/request/views/MemberInfoView";
 import LoadingIcon from "components/elements/LoadingIcon";
 
+import useApiCall from "hooks/useApiCall";
 import ScheduleView from "./views/ScheduleView";
 import ActivityView from "./views/ActivityView";
 import MediaView from "./views/MediaView";
+import ConsiderationView from "./views/ConsiderationView";
 
-import useApiCall from "hooks/useApiCall";
 
 const AssessmentEditForm = ({ reasonOptions, data }) => {
     const [assessmentData, setAssessmentData] = useState({});
-    const [[openSchedule, openMember, openActivity, openMedia], setToggler] =
-        useState([false, false, false, false]);
+    const [
+        [openSchedule, openMember, openActivity, openMedia, openConsideration],
+        setToggler] = useState([false, false, false, false, false]);
 
     useEffect(() => {
         if (data) {
@@ -23,28 +25,34 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     }, [data]);
 
     const setOpenSchedule = (open) => {
-        setToggler([open, false, false, false]);
+        setToggler([open, false, false, false, false]);
     };
     const toggleOpenSchedule = () => {
         setOpenSchedule(!openSchedule);
     };
     const setOpenMember = (open) => {
-        setToggler([false, open, false, false]);
+        setToggler([false, open, false, false, false]);
     };
     const toggleOpenMember = () => {
         setOpenMember(!openMember);
     };
     const setOpenActivity = (open) => {
-        setToggler([false, false, open, false]);
+        setToggler([false, false, open, false, false]);
     };
     const toggleOpenActivity = () => {
         setOpenActivity(!openActivity);
     };
     const setOpenMedia = (open) => {
-        setToggler([false, false, false, open]);
+        setToggler([false, false, false, open, false]);
     };
     const toggleOpenMedia = () => {
         setOpenMedia(!openMedia);
+    };
+    const setOpenConsideration = (open) => {
+        setToggler([false, false, false, false, open]);
+    };
+    const toggleOpenConsideration = () => {
+        setOpenConsideration(!openConsideration);
     };
 
     const [{ loading: refreshLoading }, fireRefreshAssessment] = useApiCall();
@@ -63,21 +71,26 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                 case "schedule":
                     setOpenSchedule(false);
                     break;
+                case "media":
+                    setOpenMedia(false);
+                    break;
+                case "consideration":
+                    setOpenConsideration(false);
+                    break;
             }
-        }
-
-        if (form && form === "media") {
-            setOpenMedia(false);
-        }
-
-        if (refreshLoading || refreshData) {
-            setAssessmentData(refreshData);
         }
 
         setAssessmentData(refreshData);
     };
 
-    const { activities = [], status = "" } = assessmentData;
+    const {
+        activities = [],
+        status = "",
+        member: { payer: { classifications } } = {
+            payer: { classifications: [] },
+        },
+        request_items: requestItems = [],
+    } = assessmentData;
 
     return (
         <>
@@ -157,6 +170,18 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     openMedia,
                                     toggleOpenMedia,
                                     assessmentData,
+                                    refreshAssessment,
+                                    refreshLoading,
+                                }}
+                            />
+                        </Col>
+                        <Col xl={10}>
+                            <ConsiderationView
+                                {...{
+                                    openConsideration,
+                                    toggleOpenConsideration,
+                                    classifications,
+                                    requestItems,
                                     refreshAssessment,
                                     refreshLoading,
                                 }}

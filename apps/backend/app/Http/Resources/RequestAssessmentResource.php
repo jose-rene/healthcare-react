@@ -29,7 +29,7 @@ class RequestAssessmentResource extends JsonResource
             'called_date'       => $this->called_date ? $this->called_date->format('m/d/Y') : null,
             'auth_number'       => $this->auth_number,
             'request_status_id' => $this->request_status_id,
-            'request_type_id'   => $this->request_type_id,
+            'request_items'     => RequestItemResource::collection($this->requestItems),
             'created_at'        => $this->created_at->format('m/d/Y'),
             'received_date'     => $this->received_date->format('m/d/Y'),
             'called_date'       => $this->called_date ? $this->called_date->format('m/d/Y') : null,
