@@ -98,8 +98,8 @@ class RequestSeeder extends Seeder
         $request->requestStatus()->associate(RequestStatus::find(1))->save();
 
         // give it some activities
-        $request->activities()->saveMany(Activity::factory()->forUser()->count(3)->create());
+        $request->activities()->saveMany(Activity::factory(['request_id' => $request->id])->forUser()->count(3)->create());
         // give the first one a child activity
-        $request->activities->first()->children()->save(Activity::factory()->forUser()->create());
+        $request->activities->first()->children()->save(Activity::factory(['request_id' => $request->id])->forUser()->create());
     }
 }
