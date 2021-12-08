@@ -42,6 +42,10 @@ Route::middleware(['api'])->group(function ($router) {
     $router->get('document/{document}/name/{name}', [DocumentController::class, 'show'])->name('document.request');
 });
 
+Route::middleware(['api'])->group(function ($router) {
+    $router->get('document/{document}/tn/{tn}', [DocumentController::class, 'thumbnail'])->name('document.thumbnail');
+});
+
 Route::get('/image/{image}/request/{name}', [ImageController::class, 'show'])->name('image.show');
 Route::get('/image/{user}/profile/{user_name}',
     [ImageController::class, 'profileImageShow'])->name('profile.image.show');

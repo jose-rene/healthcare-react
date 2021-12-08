@@ -4,10 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\Request;
 use App\Models\User;
-use App\Models\UserType\HealthPlanUser;
-use Database\Seeders\HealthPlanUserSeeder;
+use Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
+use Spatie\Tags\Tag;
 use Tests\TestCase;
 
 class AssessmentTest extends TestCase
@@ -32,12 +32,18 @@ class AssessmentTest extends TestCase
                 'member',
                 'documents',
                 'appt_reasons',
-            ]);
+                'media_tags',
+            ])
+            ->assertJsonCount(Tag::getWithType('media')->count(), 'media_tags');
     }
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        Artisan::call('db:seed', [
+            '--class' => 'Database\Seeders\MediaTagSeeder',
+        ]);
 
         $this->request = Request::factory()->create();
         $this->user = User::factory()->create(['user_type' => 3, 'primary_role' => 'field_clinican']);

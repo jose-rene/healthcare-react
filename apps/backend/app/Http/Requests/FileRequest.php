@@ -29,7 +29,7 @@ class FileRequest extends FormRequest
             'mime_type'        => ['required'],
             'file'             => ['required', 'file'],
             'position'         => ['required_if:document_type_id,2'], // media
-            'description'      => ['min:2'],
+            'comments'         => ['min:2'],
             'tag'              => ['min:2'],
         ];
     }

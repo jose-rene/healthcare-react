@@ -138,7 +138,7 @@ const MemberForm = ({ payer, assessmentForm = false }) => {
 
                     <Col xl={6}>
                         <ContextSelect
-                            name="language_id"
+                            name="language"
                             label="Language*"
                             options={languageOptions}
                         />

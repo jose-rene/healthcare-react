@@ -159,7 +159,7 @@ class RequestDocumentTest extends TestCase
             'mime_type'        => 'image/png',
             'position'         => 1,
             'file'             => $imageFile,
-            'description'      => 'This is a description.',
+            'comments'         => 'This is a description.',
             'tag'              => 'Kitchen Entry',
         ]);
         $response->assertSuccessful();
@@ -173,8 +173,8 @@ class RequestDocumentTest extends TestCase
         $thumbnail = Image::make($document->thumbnail);
         $this->assertEquals(env('THUMBNAIL_SIZE', 300), $thumbnail->width());
 
-        // Make sure I can request the file
-        $response = $this->get($document->url);
+        // Make sure I can request the thumbnail
+        $response = $this->get($document->thumbnail_url);
         $response
             ->assertOk()
             ->assertHeader('Content-Type', $document->mime_type);
@@ -184,11 +184,11 @@ class RequestDocumentTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonStructure(['media' => [0 => ['mime_type', 'position', 'url', 'thumbnail', 'description', 'tags']]])
+            ->assertJsonStructure(['media' => [0 => ['mime_type', 'position', 'url', 'thumbnail', 'comments', 'tags']]])
             ->assertJsonPath('media.0.mime_type', 'image/png')
             ->assertJsonPath('media.0.position', $params['position'])
             ->assertJsonPath('media.0.name', $params['name'])
-            ->assertJsonPath('media.0.description', $params['description'])
+            ->assertJsonPath('media.0.comments', $params['comments'])
             ->assertJsonPath('media.0.tags.0', $params['tag']);
     }
 

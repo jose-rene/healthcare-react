@@ -15,4 +15,14 @@ class DocumentController extends Controller
             ->header('Content-Type', $document->mime_type ?? 'png')
             ->setCache(['no_cache' => true]);
     }
+
+    public function thumbnail(Document $document, $tn)
+    {
+        abort_if(!$document->thumbnailExists, 404, 'file "' . $tn . '" not found');
+
+        return response()
+            ->make($document->thumbnail)
+            ->header('Content-Type', $document->mime_type ?? 'png')
+            ->setCache(['no_cache' => true]);
+    }
 }

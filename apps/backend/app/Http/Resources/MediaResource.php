@@ -22,7 +22,7 @@ class MediaResource extends JsonResource
             'position'    => $this->position,
             'url'         => $this->url,
             'thumbnail'   => $this->thumbnail_url,
-            'description' => $this->description ?? '',
+            'comments'    => $this->comments ?? '',
             'tags'        => $this->tags ? $this->tags->map(fn($tag) => $tag->name) : null,
         ];
     }

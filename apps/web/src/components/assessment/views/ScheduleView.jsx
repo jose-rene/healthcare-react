@@ -138,7 +138,9 @@ const ScheduleView = ({
                                     )}
 
                                     <LoadingOverlay
-                                        active={rescheduleLoading || refreshLoading}
+                                        active={
+                                            rescheduleLoading || refreshLoading
+                                        }
                                         spinner
                                         text="Processing..."
                                         styles={{
