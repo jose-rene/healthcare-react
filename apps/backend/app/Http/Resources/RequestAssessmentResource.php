@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Spatie\Tags\Tag;
 
 class RequestAssessmentResource extends JsonResource
 {
@@ -54,6 +55,7 @@ class RequestAssessmentResource extends JsonResource
                 'Can\'t leave message',
                 'Other',
             ],
+            'media_tags'         => Tag::getWithType('media')->map(fn($item) => $item['name']),
         ];
     }
 }

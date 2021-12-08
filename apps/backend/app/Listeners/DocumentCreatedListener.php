@@ -52,11 +52,11 @@ class DocumentCreatedListener
             $exif = null;
         }
 
-        // create the thumbnail
-        $image->resize(env('THUMBNAIL_SIZE', 300), null, function ($constraint) {
-            $constraint->aspectRatio(); // constrain aspect ratio (auto height)
+        // create the thumbnail, use fit instead of resize
+        $image->fit($size = env('THUMBNAIL_SIZE', 300), $size, function ($constraint) {
+            // $constraint->aspectRatio(); // constrain aspect ratio (auto height), not needed for fit
             $constraint->upsize(); // prevent upsizing
-        })->save($path = request()->file('file')->path() . '-tn');
+        }, 'top')->save($path = request()->file('file')->path() . '-tn');
         // save to storage
         $event->document->thumbnail = $path;
 

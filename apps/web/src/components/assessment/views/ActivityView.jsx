@@ -1,17 +1,13 @@
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React from "react";
 import { Button, Card, Collapse } from "react-bootstrap";
 
 import ActivityForm from "../forms/ActivityForm";
 
 import FapIcon from "components/elements/FapIcon";
 
-import useApiCall from "hooks/useApiCall";
-
 import "./styles.scss";
 
-const ActivityView = ({ openActivity, toggleOpenActivity, activities}) => {
-
+const ActivityView = ({ openActivity, toggleOpenActivity, activities }) => {
     return (
         <>
             <Card className="border-1 border-top-0 border-end-0 border-start-0 bg-light mb-3">

@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
+import { isEmpty } from "lodash";
 
 import MemberInfoView from "components/request/views/MemberInfoView";
-import useApiCall from "hooks/useApiCall";
+import LoadingIcon from "components/elements/LoadingIcon";
+
 import ScheduleView from "./views/ScheduleView";
 import ActivityView from "./views/ActivityView";
+import MediaView from "./views/MediaView";
+
+import useApiCall from "hooks/useApiCall";
 
 const AssessmentEditForm = ({ reasonOptions, data }) => {
     const [assessmentData, setAssessmentData] = useState({});
-    const [[openSchedule, openMember, openActivity], setToggler] = useState([
-        false,
-        false,
-        false,
-    ]);
+    const [[openSchedule, openMember, openActivity, openMedia], setToggler] =
+        useState([false, false, false, false]);
 
     useEffect(() => {
         if (data) {
@@ -21,22 +23,28 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     }, [data]);
 
     const setOpenSchedule = (open) => {
-        setToggler([open, false, false]);
+        setToggler([open, false, false, false]);
     };
     const toggleOpenSchedule = () => {
         setOpenSchedule(!openSchedule);
     };
     const setOpenMember = (open) => {
-        setToggler([false, open, false]);
+        setToggler([false, open, false, false]);
     };
     const toggleOpenMember = () => {
         setOpenMember(!openMember);
     };
     const setOpenActivity = (open) => {
-        setToggler([false, false, open]);
+        setToggler([false, false, open, false]);
     };
     const toggleOpenActivity = () => {
         setOpenActivity(!openActivity);
+    };
+    const setOpenMedia = (open) => {
+        setToggler([false, false, false, open]);
+    };
+    const toggleOpenMedia = () => {
+        setOpenMedia(!openMedia);
     };
 
     const [{ loading: refreshLoading }, fireRefreshAssessment] = useApiCall();
@@ -56,6 +64,14 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                     setOpenSchedule(false);
                     break;
             }
+        }
+
+        if (form && form === "media") {
+            setOpenMedia(false);
+        }
+
+        if (refreshLoading || refreshData) {
+            setAssessmentData(refreshData);
         }
 
         setAssessmentData(refreshData);
@@ -87,42 +103,61 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
             </Row>
 
             <Row className="justify-content-lg-center">
-                <Col xl={10}>
-                    <ScheduleView
-                        {...{
-                            openSchedule,
-                            toggleOpenSchedule,
-                            assessmentData,
-                            setAssessmentData,
-                            reasonOptions,
-                            refreshAssessment,
-                            refreshLoading,
-                        }}
-                    />
-                </Col>
-                <Col xl={10}>
-                    {assessmentData?.id && (
-                        <MemberInfoView
-                            {...{
-                                memberData: assessmentData?.member,
-                                openMember,
-                                toggleOpenMember,
-                                refreshRequest: refreshAssessment,
-                                requestLoading: refreshLoading,
-                                assessmentForm: true,
-                            }}
-                        />
-                    )}
-                </Col>
-                <Col xl={10}>
-                    <ActivityView
-                        {...{
-                            openActivity,
-                            toggleOpenActivity,
-                            activities,
-                        }}
-                    />
-                </Col>
+                {isEmpty(assessmentData) ? (
+                    <Col xl={10}>
+                        <LoadingIcon />
+                    </Col>
+                ) : (
+                    <>
+                        <Col xl={10}>
+                            <ScheduleView
+                                {...{
+                                    openSchedule,
+                                    toggleOpenSchedule,
+                                    assessmentData,
+                                    setAssessmentData,
+                                    reasonOptions,
+                                    refreshAssessment,
+                                    refreshLoading,
+                                }}
+                            />
+                        </Col>
+                        <Col xl={10}>
+                            {assessmentData?.id && (
+                                <MemberInfoView
+                                    {...{
+                                        memberData: assessmentData?.member,
+                                        openMember,
+                                        toggleOpenMember,
+                                        refreshRequest: refreshAssessment,
+                                        requestLoading: refreshLoading,
+                                        assessmentForm: true,
+                                    }}
+                                />
+                            )}
+                        </Col>
+                        <Col xl={10}>
+                            <ActivityView
+                                {...{
+                                    openActivity,
+                                    toggleOpenActivity,
+                                    activities,
+                                }}
+                            />
+                        </Col>
+                        <Col xl={10}>
+                            <MediaView
+                                {...{
+                                    openMedia,
+                                    toggleOpenMedia,
+                                    assessmentData,
+                                    refreshAssessment,
+                                    refreshLoading,
+                                }}
+                            />
+                        </Col>
+                    </>
+                )}
             </Row>
         </>
     );

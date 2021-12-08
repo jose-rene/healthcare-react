@@ -35,7 +35,7 @@ class Document extends Model
         'request_id',
         'object_name',
         'position',
-        'description',
+        'comments',
         'exif_data',
     ];
 
@@ -100,9 +100,9 @@ class Document extends Model
 
     public function getThumbnailUrlAttribute()
     {
-        return  $this->thumbnail_exists ? route('document.request', [
-            'document' => $this->thumbnailName,
-            'name'     => $this->name,
+        return  $this->thumbnail_exists ? route('document.thumbnail', [
+            'document' => $this->fileName,
+            'tn'     => $this->name,
         ]) : null;
     }
 
