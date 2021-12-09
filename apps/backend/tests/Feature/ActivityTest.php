@@ -92,6 +92,13 @@ class ActivityTest extends TestCase
             ->assertJsonStructure(['id', 'message', 'type', 'activities'])
             ->assertJsonPath('message', $formData['message'])
             ->assertJsonPath('priority', $formData['priority']);
+
+        $activity = $response->json();
+
+        // verify activity exists for request
+        $response = $this->json('GET', route('api.request.show', $this->request));
+        $activityIds = collect($response->json()['activities'])->map(fn($item) => $item['id'])->toArray();
+        $this->assertContains($activity['id'], $activityIds);
     }
 
     /**
