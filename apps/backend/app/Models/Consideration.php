@@ -22,15 +22,21 @@ class Consideration extends Model
         'hcpcs',
         'request_item_id',
         'request_type_id',
+        'is_default',
+        'summary',
     ];
 
-    public function item()
+    protected $casts = [
+        'is_default' => 'boolean',
+    ];
+
+    public function requestItem()
     {
-        return $this->hasOne(RequestItem::class, 'request_item_id');
+        return $this->belongsTo(RequestItem::class, 'request_item_id');
     }
 
-    public function type()
+    public function requestType()
     {
-        return $this->hasOne(RequestType::class, 'request_type_id');
+        return $this->belongsTo(RequestType::class, 'request_type_id');
     }
 }

@@ -23,8 +23,10 @@ class RequestItemResource extends JsonResource
         if (!empty($parents) && null !== ($requestType = RequestType::find($parents[0])) && $requestType->classification) {
             $classification = $requestType->classification;
         }
+
         return [
             'id'                   => $this->uuid,
+            'considerations'       => ConsiderationResource::collection($this->defaultConsiderations),
             'vendor_price'         => $this->vendor_price,
             'name'                 => $this->name,
             'request_type_id'      => $this->request_type_id,

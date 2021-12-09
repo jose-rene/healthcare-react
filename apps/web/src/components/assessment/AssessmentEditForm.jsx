@@ -48,11 +48,14 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     const toggleOpenMedia = () => {
         setOpenMedia(!openMedia);
     };
-    const setOpenConsideration = (open) => {
-        setToggler([false, false, false, false, open]);
-    };
-    const toggleOpenConsideration = () => {
-        setOpenConsideration(!openConsideration);
+    const toggleOpenConsideration = (open = null) => {
+        setToggler([
+            false,
+            false,
+            false,
+            false,
+            open === null ? !openConsideration : !!open,
+        ]);
     };
 
     const [{ loading: refreshLoading }, fireRefreshAssessment] = useApiCall();
@@ -75,7 +78,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                     setOpenMedia(false);
                     break;
                 case "consideration":
-                    setOpenConsideration(false);
+                    toggleOpenConsideration(false);
                     break;
             }
         }

@@ -43,6 +43,11 @@ class RequestItem extends Model
         return $this->belongsToMany(RequestTypeDetail::class, 'request_item_details');
     }
 
+    public function considerations()
+    {
+        return $this->hasMany(Consideration::class);
+    }
+
     public function outcome()
     {
         return $this->belongsTo(RequestOutcome::class);
@@ -56,6 +61,19 @@ class RequestItem extends Model
     public function itemDetails()
     {
         return $this->belongsTo(RequestItemDetail::class, 'request_item_id');
+    }
+
+    public function getDefaultConsiderationsAttribute()
+    {
+        if (!$this->considerations()->count()) {
+            $consideration = $this->considerations()->create([
+                'request_item_id' => $this->id,
+                'request_type_id' => $this->request_type_id,
+                'is_default'      => true,
+            ]);
+        }
+        
+        return $this->considerations;
     }
 
     /*
