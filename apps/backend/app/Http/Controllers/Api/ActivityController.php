@@ -45,6 +45,9 @@ class ActivityController extends Controller
     {
         $user = auth()->user();
         $data = $request->validated();
+        // get request from uuid
+        $modelRequest = modelRequest::firstWhere('uuid', $data['request_id']);
+        $data['request_id'] = $modelRequest->id;
         $data['user_id'] = $user->id;
         $activity = Activity::create($data);
 

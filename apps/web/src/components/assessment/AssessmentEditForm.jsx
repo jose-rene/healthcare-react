@@ -71,6 +71,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                 case "schedule":
                     setOpenSchedule(false);
                     break;
+<<<<<<< HEAD
                 case "media":
                     setOpenMedia(false);
                     break;
@@ -80,6 +81,21 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
             }
         }
 
+=======
+                case "activity":
+                    setOpenActivity(false);
+                    break;
+                case "media":
+                    setOpenMedia(false);
+                    break;
+            }
+        }
+
+        if (refreshLoading || refreshData) {
+            setAssessmentData(refreshData);
+        }
+
+>>>>>>> develop
         setAssessmentData(refreshData);
     };
 
@@ -161,6 +177,8 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     openActivity,
                                     toggleOpenActivity,
                                     activities,
+                                    refreshAssessment,
+                                    refreshLoading,
                                 }}
                             />
                         </Col>
