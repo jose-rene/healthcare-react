@@ -17,12 +17,9 @@ class RequestItemResource extends JsonResource
     public function toArray($request)
     {
         // the parent request types
-        $parents = $this->requestType && $this->requestType->ancestors ? array_reverse($this->mapParents($this->requestType->ancestors, true)) : null;
+        $parents = $this->requestType ? $this->requestType->allParents : null;
         // the related classifcation, will be related to the top parent
-        $classification = null;
-        if (!empty($parents) && null !== ($requestType = RequestType::find($parents[0])) && $requestType->classification) {
-            $classification = $requestType->classification;
-        }
+        $classification = $this->requestType ? $this->requestType->topClassification : null;
 
         return [
             'id'                   => $this->uuid,
@@ -36,28 +33,5 @@ class RequestItemResource extends JsonResource
             'classification_name'  => $classification ? $classification->name : "",
             // ->pluck('name', 'id'),
         ];
-    }
-
-    /**
-     * Recursively creates an array of parent ids.
-     *
-     * @param mixed $requestType
-     * @return array
-     */
-    protected function mapParents($requestType, $reset = false)
-    {
-        static $parents = [];
-        if (true === $reset) {
-            $parents = [];
-        }
-        if (!$requestType) {
-            return $parents;
-        }
-        $parents[] = $requestType['id'];
-        if ($requestType['parent']) {
-            return $this->mapParents($requestType['parent']);
-        }
-
-        return $parents;
     }
 }
