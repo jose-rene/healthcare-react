@@ -1,6 +1,10 @@
 import { get } from "lodash";
 import React, { useEffect, useState } from "react";
-import useApiCall from "../../hooks/useApiCall";
+
+import { useFormContext } from "Context/FormContext";
+
+import useApiCall from "hooks/useApiCall";
+
 import Icon from "../elements/Icon";
 
 /**
@@ -18,8 +22,6 @@ import Icon from "../elements/Icon";
  * @constructor
  */
 const PasswordRequirements = ({
-    password = "",
-    password_confirmation = "",
     primaryValid = () => {},
     secondaryChecking = () => {},
     secondaryValid = () => {},
@@ -27,6 +29,11 @@ const PasswordRequirements = ({
     token = undefined,
     email = undefined,
 }) => {
+    const { getValue } = useFormContext();
+
+    const password = getValue("password");
+    const password_confirmation = getValue("password_confirmation");
+
     const [triggered, setTriggered] = useState(false);
     const [{ loading: secondaryLoading }, fireSecondaryCheck] = useApiCall({
         url: "password/history/check",
@@ -65,8 +72,7 @@ const PasswordRequirements = ({
             label: "Cannot use the last 6 passwords",
         },
         {
-            label:
-                "Must not include three or more contiguous characters of your account name or full name.",
+            label: "Must not include three or more contiguous characters of your account name or full name.",
         },
     ];
 
