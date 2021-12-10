@@ -1,15 +1,20 @@
 import qs from "query-string";
 import React, { useRef, useState } from "react";
-import { Alert } from "react-bootstrap";
-import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
-import Icon from "components/elements/Icon";
-import { Button } from "components";
-import InputText from "components/inputs/InputText";
-import PasswordRequirements from "components/user/PasswordRequirements";
+import { Alert } from "react-bootstrap";
+import * as Yup from "yup";
+
 import { useUser } from "Context/UserContext";
-import { BASE_URL, POST, PUT } from "../config/URLs";
-import useApiCall from "../hooks/useApiCall";
+
+import { Button } from "components";
+import Form from "components/elements/Form";
+import FapIcon from "components/elements/FapIcon";
+import PasswordForm from "components/user/PasswordForm";
+import PasswordRequirements from "components/user/PasswordRequirements";
+
+import useApiCall from "hooks/useApiCall";
+
+import { BASE_URL, POST, PUT } from "config/URLs";
 
 const SetForgotPassword = ({ location: { search: params = "" } }) => {
     const [passwordChangeError, setPasswordChangeError] = useState(null);
@@ -21,14 +26,14 @@ const SetForgotPassword = ({ location: { search: params = "" } }) => {
         token,
         redirect = "/?action=password-updated",
     } = qs.parse(params);
-    const { register, handleSubmit, errors, watch, getValues } = useForm();
     const [goodPassword, setGoodPassword] = useState(false);
     const [passwordChecking, setPasswordChecking] = useState(false);
+    const [defaultData] = useState({
+        password: "",
+        password_confirmation: "",
+    });
 
     const password = useRef({});
-    password.current = watch("password", "");
-    const password_confirmation = useRef({});
-    password_confirmation.current = watch("password_confirmation", "");
 
     const [{ loading = false }, forgotPassword] = useApiCall({
         baseURL: BASE_URL,
@@ -39,6 +44,24 @@ const SetForgotPassword = ({ location: { search: params = "" } }) => {
     const [{ authedLoading = false }, authedForgotPassword] = useApiCall({
         url: "user/password",
         method: PUT,
+    });
+
+    const [validation] = useState({
+        password: {
+            yupSchema: Yup.string()
+                .required("Password is required")
+                .min(8, "Password must be at least 8 characters")
+                .max(64, "Password must be less than 65 characters"),
+        },
+        password_confirmation: {
+            yupSchema: Yup.string().test(
+                "password_confirmation",
+                "The passwords do not match",
+                function (value) {
+                    return value === password.current;
+                }
+            ),
+        },
     });
 
     const handleUpdatePassword = async (formParams) => {
@@ -81,46 +104,17 @@ const SetForgotPassword = ({ location: { search: params = "" } }) => {
                 Password & Security {email}
             </h1>
 
-            <form onSubmit={handleSubmit(handleUpdatePassword)}>
+            <Form
+                defaultData={defaultData}
+                validation={validation}
+                onSubmit={handleUpdatePassword}
+            >
                 <div className="row">
-                    <div className="col-md-6">
-                        <InputText
-                            disabled={passwordChecking}
-                            label="Password"
-                            name="password"
-                            type="password"
-                            placeholder="Enter your new password"
-                            errors={errors}
-                            style={{ height: "56px" }}
-                            ref={register({
-                                required: "Password is required",
-                                minLength: {
-                                    value: 8,
-                                    message:
-                                        "Password must be at least 8 characters",
-                                },
-                                maxLength: {
-                                    value: 64,
-                                    message:
-                                        "Password must be less than 65 characters",
-                                },
-                            })}
-                        />
-                        <InputText
-                            disabled={passwordChecking}
-                            label="Password Confirmation"
-                            name="password_confirmation"
-                            type="password"
-                            placeholder="Enter your new password again"
-                            errors={errors}
-                            style={{ height: "56px" }}
-                            ref={register({
-                                validate: (value) =>
-                                    value === password.current ||
-                                    "The passwords do not match",
-                            })}
-                        />
-                    </div>
+                    <PasswordForm
+                        passwordChecking={passwordChecking}
+                        password={password}
+                    />
+
                     <div className="col-md-6 ps-5">
                         <PasswordRequirements
                             secondaryValid={setGoodPassword}
@@ -128,10 +122,6 @@ const SetForgotPassword = ({ location: { search: params = "" } }) => {
                             secondaryRules
                             token={token}
                             email={email}
-                            {...getValues([
-                                "password",
-                                "password_confirmation",
-                            ])}
                         />
                     </div>
                 </div>
@@ -157,14 +147,15 @@ const SetForgotPassword = ({ location: { search: params = "" } }) => {
                             {authedLoading ||
                                 loading ||
                                 (passwordChecking && (
-                                    <Icon className="align-middle fa-spin ml-3">
-                                        spinner
-                                    </Icon>
+                                    <FapIcon
+                                        icon="spinner"
+                                        className="align-middle fa-spin ml-3"
+                                    />
                                 ))}
                         </Button>
                     </div>
                 </div>
-            </form>
+            </Form>
         </div>
     );
 };
