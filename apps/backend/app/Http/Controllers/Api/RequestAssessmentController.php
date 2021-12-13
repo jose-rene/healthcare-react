@@ -19,4 +19,21 @@ class RequestAssessmentController extends Controller
     {
         return new RequestAssessmentResource($request);
     }
+
+    /**
+     * Order the media positions.
+     *
+     * @param Request $request
+     * @return RequestResource
+     */
+    public function media(ModelRequest $request, Request $httpRequest)
+    {
+        $params = $httpRequest->collect()->each(function($item) use ($request) {
+            if (null !== ($document = $request->documents()->firstWhere('uuid', $item['id']))) {
+                $document->update(['position' => $item['position']]);
+            }
+        });
+
+        return response()->json(['message' => 'ok']);
+    }
 }

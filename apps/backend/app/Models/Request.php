@@ -72,12 +72,17 @@ class Request extends Model
 
     public function documents()
     {
+        return $this->morphMany(Document::class, 'documentable');
+    }
+
+    public function requestDocuments()
+    {
         return $this->morphMany(Document::class, 'documentable')->where('document_type_id', 1);
     }
 
     public function media()
     {
-        return $this->morphMany(Document::class, 'documentable')->where('document_type_id', 2);
+        return $this->morphMany(Document::class, 'documentable')->where('document_type_id', 2)->orderBy('position', 'asc');
     }
 
     public function requestDates()

@@ -10,6 +10,7 @@ import FapIcon from "components/elements/FapIcon";
 
 const MediaForm = ({
     mediaTags,
+    medias,
     fileSubmit,
     refreshAssessment,
     toggleOpenMedia,
@@ -49,7 +50,7 @@ const MediaForm = ({
         update(e.target.name, e.target.value);
     };
 
-    const handleFile = (selectedFile) => {
+    const handleFile = (selectedFile, position) => {
         const formData = new FormData();
 
         formData.append("file", selectedFile);
@@ -58,7 +59,7 @@ const MediaForm = ({
         formData.append("mime_type", "image/png");
         formData.append("comments", getValue("comments") || "");
         formData.append("tag", getValue("tag") || "");
-        formData.append("position", 1);
+        formData.append("position", position);
 
         return fileSubmit({ params: formData });
     };
@@ -69,8 +70,11 @@ const MediaForm = ({
     };
 
     const doFileUpload = async () => {
-        const promises = uploadFiles.map(async (item) => {
-            const result = await handleFile(item);
+        const lastPosition =
+            medias?.length > 0 ? medias[medias.length - 1].position : 1;
+
+        const promises = uploadFiles.map(async (item, index) => {
+            const result = await handleFile(item, lastPosition + index + 1);
             return result;
         });
         await Promise.all(promises);

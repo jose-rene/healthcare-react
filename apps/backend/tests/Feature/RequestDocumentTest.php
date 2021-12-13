@@ -236,6 +236,58 @@ class RequestDocumentTest extends TestCase
         $this->assertStringStartsWith('text/plain', $data['media'][0]['mime_type']);
     }
 
+    public function testDestroyDocument()
+    {
+        $this->withoutExceptionHandling();
+        Storage::fake('document');
+        $imageFile = UploadedFile::fake()->image('image.png');
+        $request = Request::first();
+
+        // upload media
+        $response = $this->post(route('api.request.document.store', $request), $params = [
+            'document_type_id' => '2', // media
+            'name'             => 'image.png',
+            'mime_type'        => 'image/png',
+            'position'         => 1,
+            'file'             => $imageFile,
+            'comments'         => 'This is a description.',
+            'tag'              => 'Kitchen Entry',
+        ]);
+        $response->assertSuccessful();
+
+        // delete the document
+        $documentId = $response->json()['id'];
+        $response = $this->delete(route('api.request.document.destroy', ['request' => $request->uuid, 'document' => $documentId]));
+        $response->assertOk();
+    }
+
+    public function testOrderMedia()
+    {
+        $this->withoutExceptionHandling();
+        Storage::fake('document');
+        $imageFile = UploadedFile::fake()->image('image.png');
+        $request = Request::first();
+
+        // upload media
+        $response = $this->post(route('api.request.document.store', $request), $params = [
+            'document_type_id' => '2', // media
+            'name'             => 'image.png',
+            'mime_type'        => 'image/png',
+            'position'         => 1,
+            'file'             => $imageFile,
+            'comments'         => 'This is a description.',
+            'tag'              => 'Kitchen Entry',
+        ]);
+        $response->assertSuccessful();
+
+        // reorder the document
+        $documentId = $response->json()['id'];
+        $response = $this->put(route('api.request.assessment.media', ['request' => $request->uuid]), [['id' => $documentId, 'position' => 0]]);
+        $response->assertOk();
+
+        // verify position was updated
+        $this->assertEquals(Document::firstWhere('uuid', $documentId)->position, 0);
+    }
     /**
      * Before running these tests install passport to make sure the tokens exists.
      */
