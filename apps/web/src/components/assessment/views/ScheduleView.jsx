@@ -109,7 +109,7 @@ const ScheduleView = ({
                             <h5 className="ms-2">Schedule Member</h5>
                         </div>
                         <div className="ms-auto">
-                            {!openSchedule && (
+                            {!openSchedule && data?.status !== "On Hold" && (
                                 <Button
                                     variant="link"
                                     onClick={toggleOpenSchedule}
@@ -255,9 +255,17 @@ const ScheduleView = ({
                                     {data?.called_date ? (
                                         <>
                                             <p>{data?.called_date}</p>
-                                            <p>
-                                                {data?.appointment_date ||
-                                                    "n/a"}
+                                            <p
+                                                className={
+                                                    data?.status === "On Hold"
+                                                        ? "text-danger"
+                                                        : ""
+                                                }
+                                            >
+                                                {data?.status === "On Hold"
+                                                    ? data?.status
+                                                    : data?.appointment_date ||
+                                                      "n/a"}
                                             </p>
                                         </>
                                     ) : (
