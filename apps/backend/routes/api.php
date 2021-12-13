@@ -89,6 +89,7 @@ Route::middleware('auth:api')->group(function ($router) {
         'RequestFormSectionController@store');
 
     Route::get('assessment/{request}', 'RequestAssessmentController@show')->name('request.assessment.show');
+    Route::put('assessment/{request}/media', 'RequestAssessmentController@media')->name('request.assessment.media');
 
     Route::bind('request_form_section_slug', function ($request_form_section_slug) {
         return Form::where('slug', $request_form_section_slug)->firstOrFail();
