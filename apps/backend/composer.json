@@ -31,6 +31,7 @@
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/flysystem-sftp": "~1.0",
         "nicolaslopezj/searchable": "^1.13",
+        "orangehill/iseed": "^3.0",
         "pragmarx/google2fa-laravel": "^1.4",
         "silber/bouncer": "v1.0.0-rc.10",
         "spatie/laravel-tags": "^4.2",
