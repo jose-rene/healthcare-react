@@ -142,7 +142,7 @@ class Request extends Model
      */
     public function activities()
     {
-        return $this->hasMany(Activity::class)->orderBy('id', 'desc');
+        return $this->hasMany(Activity::class)->whereNull('parent_id')->orderBy('id', 'desc');
     }
 
     /**
