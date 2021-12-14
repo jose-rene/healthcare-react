@@ -2,20 +2,21 @@
 
 namespace App\Providers;
 
-use App\Events\RequestFormSectionSavedEvent;
 use App\Events\ActivityCreated;
 use App\Events\DocumentCreated;
 use App\Events\MemberCreated;
 use App\Events\PayerCreated;
+use App\Events\RequestFormSectionSavedEvent;
+use App\Events\RequestStatusChangedEvent;
 use App\Events\UserChangingPassword;
 use App\Events\UserLoggedIn;
+use App\Listeners\ActivityCreatedListener;
 use App\Listeners\ChangeResetPasswordFalse;
 use App\Listeners\DatabaseRefreshedListener;
-use App\Listeners\IsFormComplete;
-use App\Listeners\ActivityCreatedListener;
 use App\Listeners\DocumentCreatedListener;
 use App\Listeners\MemberCreatedListener;
 use App\Listeners\PayerCreatedListener;
+use App\Listeners\RequestChangedListener;
 use App\Listeners\TrackDatabaseChangeListener;
 use App\Listeners\TrackPasswordResets;
 use App\Listeners\UserLoggedInListener;
@@ -47,25 +48,28 @@ class EventServiceProvider extends ServiceProvider
         MigrationsEnded::class      => [
             TrackDatabaseChangeListener::class,
         ],
-        DatabaseRefreshed::class    => [
+        DatabaseRefreshed::class            => [
             DatabaseRefreshedListener::class,
         ],
-        ActivityCreated::class      => [
+        ActivityCreated::class              => [
             ActivityCreatedListener::class,
         ],
-        DocumentCreated::class      => [
+        DocumentCreated::class              => [
             DocumentCreatedListener::class,
         ],
-        MemberCreated::class        => [
+        MemberCreated::class                => [
             MemberCreatedListener::class,
         ],
-        PayerCreated::class         => [
+        PayerCreated::class                 => [
             PayerCreatedListener::class,
         ],
-        UserLoggedIn::class         => [
+        UserLoggedIn::class                 => [
             UserLoggedInListener::class,
         ],
         RequestFormSectionSavedEvent::class => [
+        ],
+        RequestStatusChangedEvent::class    => [
+            RequestChangedListener::class,
         ],
     ];
 

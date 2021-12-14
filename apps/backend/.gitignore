@@ -11,3 +11,7 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 /_ide_helper.php
+
+public/font_lister_pdflib.upr
+
+font_lister_pdflib.upr

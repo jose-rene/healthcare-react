@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DocumentRequest;
 use App\Http\Requests\FileRequest;
 use App\Http\Resources\DocumentResource;
+use App\Http\Resources\RequestDetailResource;
+use App\Interfaces\ReportBuilder;
 use App\Models\Document;
+use App\Models\NarrativeReportTemplate;
+use App\Models\Request as ModelRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -74,5 +77,25 @@ class DocumentController extends Controller
         $document->delete();
 
         return response()->json(['message' => 'ok']);
+    }
+
+    public function generatePDF(
+        NarrativeReportTemplate $narrative_report_template,
+        ModelRequest $request,
+        ReportBuilder $reportBuilder
+    ) {
+        // Use the resource to generate request data for this sample
+        $request_data = new RequestDetailResource($request);
+        $template     = $narrative_report_template->template;
+        $filename     = 'some-pdf-file.pdf';
+
+        $report_html = $reportBuilder->buildHtml($template, $request_data);
+        $pdf         = $reportBuilder->htmlToPDF($report_html);
+
+        // stream the pdf to the browser
+        return response()->make($pdf, 200, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => "inline; filename=\"{$filename}\"",
+        ]);
     }
 }

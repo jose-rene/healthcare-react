@@ -1,7 +1,7 @@
 import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
-import { handlebarsTemplate, jsEval } from "../helpers/string";
+import { jsEval } from "../helpers/string";
 
 export const REQUIRED = "required";
 
@@ -162,8 +162,8 @@ const FormProvider = ({
             }
 
             // custom rule
-            if (customRule.length > 0) {
-                const result = handlebarsTemplate(customRule, form);
+            if (!errorTest[fieldName] && customRule.length > 0) {
+                const result = jsEval(customRule, form);
                 if (result.length > 0) {
                     errorTest = {
                         ...errorTest,
