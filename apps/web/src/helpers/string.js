@@ -52,13 +52,18 @@ export const handlebarsTemplate = (templateString, object) => {
 /**
  *
  * @param condition
- * @param data -  this is required even though its not used here. The eval method could pull in one of those values
+ * @param form -  this is required even though it's not used here. The eval method could pull in one of those values
  * @returns {any}
  */
-export const jsEval = (condition, data) => {
+export const jsEval = (condition, form) => {
     try {
         //const template = handlebarsTemplate(condition, data);
-        const template = condition.replace(/~/g, "data.");
+        const template = condition
+            // make sure the template is looking at form
+            .replace(/~/g, "form.")
+            // catch undefined errors here. Should be ok to globally
+            // use the optional operator
+            .replace(/\./g, "?.");
 
         /* eslint no-eval: 0 */
         return eval(template);
