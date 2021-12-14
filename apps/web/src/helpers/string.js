@@ -67,7 +67,9 @@ export const jsEval = (condition, form) => {
 
         /* eslint no-eval: 0 */
         return eval(template);
-    } catch (e) {}
+    } catch (e) {
+        console.log("jsEval", { e, condition, data });
+    }
 
     return false;
 };

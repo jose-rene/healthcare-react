@@ -4,6 +4,7 @@
         "apps/aws/pkgs/*",
         "apps/aws/projects/**"
     ],
+    "useWorkspaces": true,
     "npmClient": "yarn",
     "version": "0.0.1"
 }

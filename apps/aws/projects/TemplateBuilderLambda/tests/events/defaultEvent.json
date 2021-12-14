@@ -1,0 +1,16 @@
+{
+    "data": {
+        "first_name": "tester_firstname",
+        "people": [
+            {
+                "name": "first person",
+                "age": "10"
+            },
+            {
+                "name": "2nd person",
+                "age": "20"
+            }
+        ]
+    },
+    "template": "<p>HEY, {{first_name}}!!</p>\n<p>{{#with people}}</p>\n<p>{{0.name}} age - {{0.age}}</p>\n<p>{{/with}}</p>"
+}

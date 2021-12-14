@@ -5,6 +5,7 @@ import Form from "../../../components/elements/Form";
 import RenderForm from "../../../components/FormBuilder/RenderForm";
 import SubmitButton from "../../../components/elements/SubmitButton";
 import FormLoadingSpinner from "../../../components/forms/FormLoadingSpinner";
+import * as Yup from "yup";
 
 const RequestSectionsShowForm = (props) => {
     const { params } = props.match;
@@ -37,16 +38,18 @@ const RequestSectionsShowForm = (props) => {
     const validation = useMemo(() => {
         const returnCustomValidation = {};
 
-        form.forEach(({ custom_name, props }) => {
-            const { customValidation } = props || {};
+        form.forEach(({ custom_name = false, props }) => {
+            const { customValidation, required, label = "This field" } = props || {};
+
+            if (required) {
+                returnCustomValidation[custom_name]["yupSchema"] = Yup.string().required(`${label} is required`);
+            }
 
             if (!customValidation) {
                 return true;
             }
 
-            returnCustomValidation[custom_name] = {
-                customRule: customValidation,
-            };
+            returnCustomValidation[custom_name]["customRule"] = customValidation;
         });
 
         return returnCustomValidation;

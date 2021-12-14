@@ -154,11 +154,11 @@ return [
             'host' => 'molina-sftp.dme-cg.com',
             'username' => 'molina',
             // 'password' => 'your-password',
-        
+
             // Settings for SSH key based authentication...
             'privateKey' => env('MOLINA_USER_KEY'),
             // 'password' => 'encryption-password',
-        
+
             // Optional SFTP Settings...
             // 'port' => 22,
             // 'root' => '',
@@ -178,8 +178,18 @@ return [
     |
     */
 
-    'links' => [
+    'links'      => [
         public_path('storage') => storage_path('app/public'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Font files
+    |--------------------------------------------------------------------------
+    |
+    | These file files are used by the PDFlib lib
+    |
+    */
+    'fonts_path' => resource_path('fonts'),
 
 ];

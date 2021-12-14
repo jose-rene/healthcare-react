@@ -24,7 +24,7 @@ const FancyEditor = ({
         "undo redo",
         "formatselect",
         "bold italic underline backcolor",
-        "alignleft aligncenter alignright alignjustify",
+        "alignleft aligncenter alignright alignjustify table",
         "bullist numlist outdent indent",
         "removeformat",
         "help",

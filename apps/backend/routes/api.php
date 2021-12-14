@@ -78,6 +78,9 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('narrative_report_template', 'NarrativeReportTemplatesController');
     Route::apiResource('appointment', 'AppointmentController');
 
+
+    Route::apiResource('request.narrative_report_template', 'RequestNarrativeReportTemplateController')->only('show');
+
     Route::put('/form/{form}/snapshot', 'FormController@snapshot');
     Route::put('/form/{form}/rollback', 'FormController@rollback');
 

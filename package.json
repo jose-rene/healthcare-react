@@ -6,25 +6,13 @@
     "scripts": {
         "start": "pm2 start ecosystem.config.js",
         "stop": "pm2 delete ecosystem.config.js",
-        "test": "lerna run --parallel test --stream",
-        "full:upgrade": "yarn upgrade; lerna exec -- yarn upgrade && yarn test",
         "docker:build": "docker build -t registry.gitlab.com/$npm_package_organization/$npm_package_name .",
         "docker:push": "docker push registry.gitlab.com/$npm_package_organization/$npm_package_name",
-        "do:api": "lerna --scope=@dme/backend exec yarn",
-        "do:mobile": "lerna --scope=@dme/mobile exec yarn",
-        "do:web": "lerna --scope=@dme/web exec yarn",
-        "watchman:reset": "watchman watch-del-all",
-        "pre-commit:message": "echo '\r\nYou can use this to run scripts pre commit or whatever git hook. You can call \"test\"\r\n' && exit 0",
-        "postinstall": "lerna bootstrap --no-progress --scope=@dme/web --scope=@dme/backend",
-        "clean": "lerna clean && yarn do:api remove:vendor"
+        "watchman:reset": "watchman watch-del-all"
     },
-    "pre-commit": [
-        "test"
-    ],
     "devDependencies": {
         "dotenv": "^8.2.0",
-        "pm2": "^4.4.0",
-        "pre-commit": "^1.2.2"
+        "pm2": "^4.4.0"
     },
     "dependencies": {
         "lerna": "^3.22.1",
@@ -33,5 +21,9 @@
     "engines": {
         "node": "^10.21.0||^12.21.0||^14.5.0",
         "yarn": "^1.22.0"
-    }
+    },
+    "workspaces": [
+        "apps/aws/pkgs/*",
+        "apps/aws/projects/**"
+    ]
 }

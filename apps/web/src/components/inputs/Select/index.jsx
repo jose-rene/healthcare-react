@@ -7,7 +7,7 @@ const BaseSelect = (
         value,
         label = "",
         inlineLabel = false,
-        options = [],
+        options: _options = [],
         autocomplete = false,
         className = false,
         classNameAppend = "",
@@ -28,11 +28,27 @@ const BaseSelect = (
 
     const { [name]: { message = false } = {} } = errors;
     const hasError = !!message;
-    const selectOptions = options.map(({ id, [valueKey]: optionValue, [labelKey]: optionLabel, ...otherProps }) => (
-        <option key={id} value={optionValue} {...otherProps}>
-            {optionLabel}
-        </option>
-    ));
+
+    const selectOptions = useMemo(() => {
+        let _selectOptions = [];
+
+        if (addEmpty) {
+            _selectOptions = [
+                { [labelKey]: emptyLabel, value: null },
+                ..._options,
+            ];
+        } else {
+            _selectOptions = [
+                ..._options,
+            ];
+        }
+
+        return _selectOptions.map(({ id, [valueKey]: optionValue, [labelKey]: optionLabel, ...otherProps }) => (
+            <option key={id} value={optionValue} {...otherProps}>
+                {optionLabel}
+            </option>
+        ));
+    }, [_options]);
 
     const _wrapperClass = useMemo(() => {
         let label = `mb-3 form-floating ${
