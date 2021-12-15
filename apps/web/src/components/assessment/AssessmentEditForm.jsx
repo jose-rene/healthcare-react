@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, Row } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import { isEmpty } from "lodash";
 
 import MemberInfoView from "components/request/views/MemberInfoView";
@@ -9,8 +9,7 @@ import useApiCall from "hooks/useApiCall";
 import ScheduleView from "./views/ScheduleView";
 import ActivityView from "./views/ActivityView";
 import MediaView from "./views/MediaView";
-
-import ShowFormSection from "./ShowFormSection";
+import AssessmentView from "./views/AssessmentView";
 
 const AssessmentEditForm = ({ reasonOptions, data }) => {
     const [assessmentData, setAssessmentData] = useState({});
@@ -80,7 +79,10 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
         activities = [],
         status = "",
         id: requestId = "",
-        assessment_form: { forms } = [],
+        assessment_form: { forms = [], name: assessmentName = "" } = {
+            forms: [],
+            name: "",
+        },
     } = assessmentData;
 
     return (
@@ -170,19 +172,18 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                         </Col>
                         {forms && forms.length ? (
                             <Col xl={10}>
-                                <>
-                                    <h6>Assessment</h6>
-                                    {forms.map(({ slug, name }) => (
-                                        <ShowFormSection
-                                            key={slug}
-                                            requestId={requestId}
-                                            formSlug={slug}
-                                            name={name}
-                                        />
-                                    ))}
-                                </>
+                                <AssessmentView
+                                    {...{
+                                        forms,
+                                        assessmentName,
+                                        requestId,
+                                    }}
+                                />
                             </Col>
                         ) : null}
+                        <Col xl={10}>
+                            <Button className="mt-3">Submit</Button>
+                        </Col>
                     </>
                 )}
             </Row>

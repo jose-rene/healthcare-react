@@ -64,21 +64,18 @@ const ShowFormSection = ({ requestId, formSlug, name }) => {
     // TODO :: render form using form show component
 
     return (
-        <div className="container mt-3">
+        <div className="container">
             {formLoading && <FormLoadingSpinner />}
             {(!formLoading && form.length) > 0 && (
-                <>
-                    <h6 className="mb-0">{name}</h6>
-                    <Form
-                        onFormChange={handleFormChange}
-                        defaultData={defaultAnswers}
-                        validation={validation}
-                        autocomplete="off"
-                        onSubmit={handleSubmit}
-                    >
-                        <RenderForm formElements={form} />
-                    </Form>
-                </>
+                <Form
+                    onFormChange={handleFormChange}
+                    defaultData={defaultAnswers}
+                    validation={validation}
+                    autocomplete="off"
+                    onSubmit={handleSubmit}
+                >
+                    <RenderForm formElements={form} />
+                </Form>
             )}
         </div>
     );
