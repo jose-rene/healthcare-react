@@ -280,4 +280,16 @@ class Request extends Model
 
         $this->request_status_id = $statusId;
     }
+
+    public function getDefaultAssessmentAttribute()
+    {
+        // @todo use assessment rules to determine the default assessment
+        /*if (null !== $this->assessments && 0 !== $this->assessments.count()) {
+            return $this->assessments->first();
+        }*/
+        // this won't pass the correct instance
+        $standardAssessment = Assessment::where('name', 'Standard Assessment');
+        // this can be attached to assessments to support multiple assessments per request
+        return $standardAssessment;
+    }
 }

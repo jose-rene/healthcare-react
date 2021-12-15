@@ -86,17 +86,14 @@ Route::middleware('auth:api')->group(function ($router) {
 
     Route::post('appointment/reschedule', 'AppointmentController@reschedule')->name('appointment.reschedule');
 
-    Route::get('request/{request}/request_form_section/{request_form_section_slug}',
+    Route::get('request/{request}/request_form_section/{form}',
         'RequestFormSectionController@show');
-    Route::post('request/{request}/request_form_section/{request_form_section_slug}',
-        'RequestFormSectionController@store');
+    Route::put('request/{request}/request_form_section/{form}',
+        'RequestFormSectionController@update');
 
     Route::get('assessment/{request}', 'RequestAssessmentController@show')->name('request.assessment.show');
     Route::put('assessment/{request}/media', 'RequestAssessmentController@media')->name('request.assessment.media');
-
-    Route::bind('request_form_section_slug', function ($request_form_section_slug) {
-        return Form::where('slug', $request_form_section_slug)->firstOrFail();
-    });
+    Route::get('assessment/{request}/section/{form}', 'RequestAssessmentController@section')->name('request.assessment.section');
 
     Route::apiResource('request.request_form_section', 'RequestFormSectionController')->only('show', 'update');
     Route::apiResource('form.form_answers', 'FormAnswerController')->only(['store', 'show', 'update']);

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, Row } from "react-bootstrap";
+import { Card, Col, FormSelect, Row } from "react-bootstrap";
 import { isEmpty } from "lodash";
 
 import MemberInfoView from "components/request/views/MemberInfoView";
 import LoadingIcon from "components/elements/LoadingIcon";
 
+import useApiCall from "hooks/useApiCall";
+import { faThunderstormSun } from "@fortawesome/pro-regular-svg-icons";
 import ScheduleView from "./views/ScheduleView";
 import ActivityView from "./views/ActivityView";
 import MediaView from "./views/MediaView";
 
-import useApiCall from "hooks/useApiCall";
+import ShowFormSection from "./ShowFormSection";
 
 const AssessmentEditForm = ({ reasonOptions, data }) => {
     const [assessmentData, setAssessmentData] = useState({});
@@ -72,14 +74,17 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
             }
         }
 
-        if (refreshLoading || refreshData) {
-            setAssessmentData(refreshData);
-        }
-
         setAssessmentData(refreshData);
     };
 
-    const { activities = [], status = "" } = assessmentData;
+    const {
+        activities = [],
+        status = "",
+        id: requestId = "",
+        assessment_form: { forms } = [],
+    } = assessmentData;
+
+    console.log(forms);
 
     return (
         <>
@@ -166,6 +171,21 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                 }}
                             />
                         </Col>
+                        {forms && forms.length && (
+                            <Col xl={10}>
+                                <>
+                                    <h6>Assessment</h6>
+                                    {forms.map(({ slug, name }) => (
+                                        <ShowFormSection
+                                            key={slug}
+                                            requestId={requestId}
+                                            formSlug={slug}
+                                            name={name}
+                                        />
+                                    ))}
+                                </>
+                            </Col>
+                        )}
                     </>
                 )}
             </Row>

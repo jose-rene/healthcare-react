@@ -14,7 +14,7 @@ const useFormBuilder = ({ form_slug, request_id } = {}) => {
 
     const [{ loading: savingAnswers }, fireSaveAnswers] = useApiCall({
         url: formAnswerUrl,
-        method: POST,
+        method: PUT,
     });
 
     const [
