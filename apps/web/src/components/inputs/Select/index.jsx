@@ -22,7 +22,7 @@ const BaseSelect = (
         onChange,
         ...otherProps
     },
-    ref,
+    ref
 ) => {
     const id = name;
 
@@ -38,16 +38,23 @@ const BaseSelect = (
                 ..._options,
             ];
         } else {
-            _selectOptions = [
-                ..._options,
-            ];
+            _selectOptions = [..._options];
         }
 
-        return _selectOptions.map(({ id, [valueKey]: optionValue, [labelKey]: optionLabel, ...otherProps }) => (
-            <option key={id} value={optionValue} {...otherProps}>
-                {optionLabel}
-            </option>
-        ));
+        return _selectOptions.map(
+            ({
+                id,
+                [valueKey]: optionValue,
+                [labelKey]: optionLabel,
+                ...otherProps
+            }) => (
+                <option key={id} value={optionValue} {...otherProps}>
+                    {optionLabel}
+                </option>
+            )
+        );
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [_options]);
 
     const _wrapperClass = useMemo(() => {

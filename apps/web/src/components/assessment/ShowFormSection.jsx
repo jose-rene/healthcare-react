@@ -5,10 +5,9 @@ import RenderForm from "../FormBuilder/RenderForm";
 import FormLoadingSpinner from "../forms/FormLoadingSpinner";
 
 const ShowFormSection = ({ requestId, formSlug, name }) => {
-
     const [formDataLoaded, setFormDataLoaded] = useState(false);
     const [
-        { form, defaultAnswers, formLoading, saving },
+        { form, defaultAnswers, formLoading },
         { fireLoadForm, fireSaveAnswers },
     ] = useFormBuilder({
         form_slug: formSlug,
@@ -78,7 +77,6 @@ const ShowFormSection = ({ requestId, formSlug, name }) => {
                         onSubmit={handleSubmit}
                     >
                         <RenderForm formElements={form} />
-
                     </Form>
                 </>
             )}
