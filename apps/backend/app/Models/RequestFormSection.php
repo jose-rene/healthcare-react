@@ -48,7 +48,7 @@ class RequestFormSection extends Model
 
     public function section()
     {
-        return $this->belongsTo(AssesmentForm::class, 'form_section_id');
+        return $this->belongsTo(Form::class, 'form_section_id');
     }
 
     public function getFormAttribute()

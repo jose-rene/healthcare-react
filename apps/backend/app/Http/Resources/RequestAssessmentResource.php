@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Assessment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Spatie\Tags\Tag;
@@ -16,8 +17,11 @@ class RequestAssessmentResource extends JsonResource
      */
     public function toArray($request)
     {
+        $assessment = Assessment::firstWhere('name', 'Standard Assessment');
+
         return [
             'id'                => $this->uuid,
+            'assessment_form'   => $assessment ? new AssessmentFormResource($assessment) : ['name' => 'N/A', 'forms' => []],
             'clinician'         => $this->clinician ? ['id' => $this->clinician->uuid, 'name' => $this->clinician->full_name] : null,
             'reviewer'          => $this->reviewer ? ['id' => $this->reviewer->uuid, 'name' => $this->reviewer->full_name] : null,
             'status'            => $this->statusName,

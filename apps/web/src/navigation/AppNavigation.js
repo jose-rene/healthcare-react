@@ -140,9 +140,7 @@ const AppNavigation = () => {
                 <PrivateRoute
                     path="/requests/:request_id/form-sections/:form_slug"
                     middleware={[
-                        "hp_user",
-                        "hp_manager",
-                        "hp_champion",
+                        "field_clinician",
                         "coo",
                         "client_services_specialist",
                         "client_services_manager",
@@ -152,9 +150,7 @@ const AppNavigation = () => {
                 <PrivateRoute
                     path="/requests/:request_id/form-sections"
                     middleware={[
-                        "hp_user",
-                        "hp_manager",
-                        "hp_champion",
+                        "field_clinician",
                         "coo",
                         "client_services_specialist",
                         "client_services_manager",
