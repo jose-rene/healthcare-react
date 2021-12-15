@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, FormSelect, Row } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import { isEmpty } from "lodash";
 
 import MemberInfoView from "components/request/views/MemberInfoView";
 import LoadingIcon from "components/elements/LoadingIcon";
 
 import useApiCall from "hooks/useApiCall";
-import { faThunderstormSun } from "@fortawesome/pro-regular-svg-icons";
 import ScheduleView from "./views/ScheduleView";
 import ActivityView from "./views/ActivityView";
 import MediaView from "./views/MediaView";

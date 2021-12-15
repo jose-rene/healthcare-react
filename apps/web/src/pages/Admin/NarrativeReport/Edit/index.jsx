@@ -28,7 +28,12 @@ const EditNarrativeReport = ({ match }) => {
         method: PUT,
     });
 
-    const [{ data: { data: reports = [] }, loading: loadingReports }, fireLoadReports] = useApiCall({
+    const [
+        {
+            data: { data: reports = [] },
+        },
+        fireLoadReports,
+    ] = useApiCall({
         url: `request`,
     });
 
@@ -100,9 +105,12 @@ const EditNarrativeReport = ({ match }) => {
                         value={selectedReport}
                         labelKey="label"
                         valueKey="value"
-                        options={reports.map(r => ({
+                        options={reports.map((r) => ({
                             value: r.id,
-                            label: `Member Name: ${get(r, "member.name")} Request Date: ${r.request_date}`,
+                            label: `Member Name: ${get(
+                                r,
+                                "member.name"
+                            )} Request Date: ${r.request_date}`,
                         }))}
                     />
                     <Textarea
@@ -122,7 +130,7 @@ const EditNarrativeReport = ({ match }) => {
                                 dangerouslySetInnerHTML={{
                                     __html: handlebarsTemplate(
                                         form.templateField,
-                                        answerObj,
+                                        answerObj
                                     ),
                                 }}
                             />
