@@ -10,7 +10,7 @@ import {
     ListGroupItem,
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
-import { sortableContainer } from "react-sortable-hoc";
+import { SortableContainer } from "react-sortable-hoc";
 import { arrayMoveImmutable } from "array-move";
 
 import Form from "components/elements/Form";
@@ -26,7 +26,7 @@ import MediaFormRow from "../forms/MediaFormRow";
 const MediaView = ({
     openMedia,
     toggleOpenMedia,
-    assessmentData: {media, media_tags},
+    assessmentData: { media, media_tags },
     refreshAssessment,
     refreshLoading,
 }) => {
@@ -83,6 +83,7 @@ const MediaView = ({
     };
 
     const onSortEnd = async ({ oldIndex, newIndex }) => {
+        if (oldIndex === newIndex) return;
         // resort array
         const newList = arrayMoveImmutable(mediaList, oldIndex, newIndex);
         // adjust positions
@@ -98,8 +99,19 @@ const MediaView = ({
         fileUpdate({ params });
     };
 
-    const SortableContainer = sortableContainer(({ children }) => {
-        return <ul className="p-0">{children}</ul>;
+    const SortableList = SortableContainer(({ items }) => {
+        return (
+            <Row>
+                {items.map((item, index) => (
+                    <MediaFormRow
+                        key={`form-row-${index}`}
+                        index={index}
+                        item={item}
+                        removeMedia={handleDeleteMediaModal}
+                    />
+                ))}
+            </Row>
+        );
     });
 
     const handleDeleteMediaModal = (id = false) => {
@@ -129,7 +141,9 @@ const MediaView = ({
                                     variant="link"
                                     onClick={toggleOpenMedia}
                                 >
-                                    upload media
+                                    {!mediaList.length
+                                        ? "upload media"
+                                        : "edit media"}
                                 </Button>
                             )}
                         </div>
@@ -191,23 +205,12 @@ const MediaView = ({
                                                 <h6 className="mb-3">
                                                     Attached Media
                                                 </h6>
-                                                <SortableContainer
+                                                <SortableList
+                                                    items={mediaList}
+                                                    axis="xy"
+                                                    distance="1"
                                                     onSortEnd={onSortEnd}
-                                                    useDragHandle
-                                                >
-                                                    {mediaList.map(
-                                                        (item, index) => (
-                                                            <MediaFormRow
-                                                                key={`form-row-${index}`}
-                                                                index={index}
-                                                                item={item}
-                                                                removeMedia={
-                                                                    handleDeleteMediaModal
-                                                                }
-                                                            />
-                                                        )
-                                                    )}
-                                                </SortableContainer>
+                                                />
                                             </>
                                         )}
                                     </Col>

@@ -83,8 +83,6 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
         assessment_form: { forms } = [],
     } = assessmentData;
 
-    console.log(forms);
-
     return (
         <>
             <Row className="justify-content-lg-center">
@@ -170,7 +168,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                 }}
                             />
                         </Col>
-                        {forms && forms.length && (
+                        {forms && forms.length ? (
                             <Col xl={10}>
                                 <>
                                     <h6>Assessment</h6>
@@ -184,7 +182,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     ))}
                                 </>
                             </Col>
-                        )}
+                        ) : null}
                     </>
                 )}
             </Row>
