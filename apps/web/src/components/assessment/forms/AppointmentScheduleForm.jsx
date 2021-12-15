@@ -51,7 +51,7 @@ const AppointmentScheduleForm = ({
                         Are you setting the new date now?
                     </Col>
                 ) : (
-                    <Col md={8}>Was an appointment scheduled?</Col>
+                    <Col md={5}>Was an appointment scheduled?</Col>
                 )}
                 <Col className="d-flex" md={4}>
                     <div className="mx-2">

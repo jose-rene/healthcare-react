@@ -17,7 +17,6 @@ const ScheduleView = ({
     openSchedule,
     toggleOpenSchedule,
     assessmentData: data,
-    setAssessmentData,
     error,
     reasonOptions,
     refreshAssessment,
@@ -68,8 +67,7 @@ const ScheduleView = ({
         };
 
         try {
-            const { called_at: called_date = null, appointment_date = null } =
-                await fireSubmit({ params: submissionValue });
+            await fireSubmit({ params: submissionValue });
             refreshAssessment("schedule");
         } catch (e) {
             console.log(`Appointment create error:`, e);
