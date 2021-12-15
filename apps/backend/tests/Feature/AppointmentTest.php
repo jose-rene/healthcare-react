@@ -232,16 +232,20 @@ class AppointmentTest extends TestCase
         // verify the appointment is set for the request
         $response = $this->json('GET', route('api.request.assessment.show', ['request' => $this->request->uuid]));
         // validate response code and structure
+        // dd($response->json());
+        $apptDate = Carbon::tomorrow();
         $response
             ->assertOk()
             ->assertJsonStructure([
                 'appointment_date',
                 'appointment',
             ])
-            ->assertJsonPath('appointment.appointment_date', Carbon::tomorrow()->format('m/d/Y'))
+            ->assertJsonPath('appointment.appointment_date', $apptDate->format('m/d/Y'))
             ->assertJsonPath('appointment.start_time', $formData['start_time'])
             ->assertJsonPath('appointment.end_time', $formData['end_time'])
-            ->assertJsonPath('status', 'Scheduled');
+            ->assertJsonPath('status', 'Scheduled')
+            ->assertJsonPath('appt_window.start', $apptDate->format('Y-m-d') . ' ' . $formData['start_time'])
+            ->assertJsonPath('appt_window.end', $apptDate->format('Y-m-d') . ' ' . $formData['end_time']);
     }
 
     protected function getFormData()
