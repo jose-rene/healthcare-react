@@ -88,9 +88,11 @@ class RequestSeeder extends Seeder
             ->requestItems()
             ->sync($requestItem);
         // sync a random details from the request type details of the associated request type for the request item
-        $request->requestItems->first()->requestTypeDetails()->sync(
-            $details->slice(rand(0, $details->count() - 1), 1)->first()->toArray()
-        );
+        if ($details) {
+            $request->requestItems->first()->requestTypeDetails()->sync(
+                $details->slice(rand(0, $details->count() - 1), 1)->first()->toArray()
+            );
+        }
         // add the received date
         $request->requestDates()->create(['request_date_type_id' => 1, 'date' => Carbon::now()]);
 

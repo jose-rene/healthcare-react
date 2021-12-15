@@ -261,6 +261,22 @@ class Request extends Model
         return $date ? $date->date : null;
     }
 
+    public function getAppointmentWindowAttribute()
+    {
+        if (null === $this->appointments || 0 === $this->appointments->count()) {
+            return null;
+        }
+        $appt = $this->appointments->first();
+        if (!$appt['start_time']) {
+            return null;
+        }
+
+        return [
+            'start' => $appt['appointment_date']->format('Y-m-d') . ' ' . $appt['start_time'],
+            'end' => $appt['appointment_date']->format('Y-m-d') . ' ' . $appt['end_time'],
+        ];
+    }
+
     public function getStatusNameAttribute()
     {
         return $this->requestStatus ? $this->requestStatus->name : 'In Progress';

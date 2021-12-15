@@ -38,6 +38,7 @@ class RequestAssessmentResource extends JsonResource
             'received_date'     => $this->received_date->format('m/d/Y'),
             'called_date'       => $this->called_date ? $this->called_date->format('m/d/Y') : null,
             'appointment_date'  => $this->appointment_date ? $this->appointment_date->format('m/d/Y') : null,
+            'appt_window'       => $this->appointment_window,
             'cancelled_date'    => $this->cancelled_date ? $this->cancelled_date->format('m/d/Y') : null,
             'on_hold_date'      => $this->on_hold_date ? $this->on_hold_date->format('m/d/Y') : null,
             'appointment'       => $this->appointments ? new AppointmentResource($this->appointments->first()) : null,
