@@ -35,7 +35,9 @@ class RequestSearchTest extends TestCase
         ];
 
         // get the first member sorted by last name
-        $lastName = Request::all()->map(fn($item) => $item['member']['last_name'])->sort()->first();
+        $requestData = Request::all()->map(fn($item) => ['last_name' => $item['member']['last_name'], 'id' => $item['uuid']])
+            ->sort()
+            ->first();
         // search requests
         $response = $this->get(route('api.request.index', $search));
 
@@ -44,7 +46,8 @@ class RequestSearchTest extends TestCase
             ->assertStatus(200)
             ->assertJsonStructure(['data', 'meta'])
             ->assertJsonPath('meta.total', 5)
-            ->assertJsonPath('data.0.member.last_name', $lastName);
+            ->assertJsonPath('data.0.id', $requestData['id'])
+            ->assertJsonPath('data.0.member.last_name', $requestData['last_name']);
     }
 
     /**
@@ -62,7 +65,7 @@ class RequestSearchTest extends TestCase
         ];
 
         // get the first payer sorted by name
-        $companyName = Request::all()->map(fn($item) => $item['payer']['name'])->sort()->first();
+        $requestData = Request::all()->map(fn($item) => ['company_name' => $item['payer']['name'], 'id' => $item['uuid']])->sort()->first();
         // search requests
         $response = $this->get(route('api.request.index', $search));
 
@@ -71,7 +74,9 @@ class RequestSearchTest extends TestCase
             ->assertStatus(200)
             ->assertJsonStructure(['data', 'meta'])
             ->assertJsonPath('meta.total', 5)
-            ->assertJsonPath('data.0.payer.company_name', $companyName);
+            ->assertJsonPath('meta.total', 5)
+            ->assertJsonPath('data.0.id', $requestData['id'])
+            ->assertJsonPath('data.0.payer.company_name', $requestData['company_name']);
     }
 
     /**
@@ -84,6 +89,7 @@ class RequestSearchTest extends TestCase
         $search = [
             'perPage'           => 50,
             'request_status_id' => 1,
+            'sortColumn'        => '',
             'sortDirection'     => 'asc', // api should override to desc with no sort column
         ];
 
