@@ -31,6 +31,7 @@ class Sort extends BaseSearchPipeline
 
                     return $builder
                         ->join('members', 'requests.member_id', '=', 'members.id')
+                        ->select('requests.*')
                         ->orderBy("members.{$column}", $sortDirection);
                 break;
 
@@ -39,6 +40,7 @@ class Sort extends BaseSearchPipeline
 
                     return $builder
                         ->join('payers', 'requests.payer_id', '=', 'payers.id')
+                        ->select('requests.*')
                         ->orderBy("payers.{$column}", $sortDirection);
                 break;
 
