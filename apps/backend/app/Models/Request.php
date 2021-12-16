@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Http\SearchPipeline\AuthNumber;
 use App\Http\SearchPipeline\Dates;
 use App\Http\SearchPipeline\RequestStatusId;
+use App\Http\SearchPipeline\Sort;
 use App\Http\SearchPipeline\TherapyNetworkId;
 use App\Models\Activity\Activity;
 use App\Models\Assessment\Assessment;
@@ -212,6 +213,7 @@ class Request extends Model
                 AuthNumber::class,
                 Dates::class,
                 TherapyNetworkId::class,
+                Sort::class,
             ])
             ->thenReturn();
     }
@@ -273,7 +275,7 @@ class Request extends Model
 
         return [
             'start' => $appt['appointment_date']->format('Y-m-d') . ' ' . $appt['start_time'],
-            'end' => $appt['appointment_date']->format('Y-m-d') . ' ' . $appt['end_time'],
+            'end'   => $appt['appointment_date']->format('Y-m-d') . ' ' . $appt['end_time'],
         ];
     }
 

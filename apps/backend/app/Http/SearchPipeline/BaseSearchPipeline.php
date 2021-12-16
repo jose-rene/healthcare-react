@@ -37,6 +37,17 @@ abstract class BaseSearchPipeline
             return $param;
         }
 
+        if ('sort' === $camel) {
+            // default to id and desc if no sort params, show the latest data first
+            if (null === ($param = request('sortColumn')) || empty($param)) {
+                request()->merge(['sortDirection' => 'desc']);
+
+                return 'id';
+            }
+
+            return $param;
+        }
+
         return null;
     }
 
