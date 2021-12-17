@@ -19,6 +19,8 @@ class Appointment extends Model
         'is_cancelled'     => 'boolean',
         'called_at'        => 'date',
         'appointment_date' => 'date',
+        'start_time'       => 'datetime',
+        'end_time'         => 'datetime',
     ];
 
     /**
