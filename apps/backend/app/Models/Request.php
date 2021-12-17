@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Http\SearchPipeline\AuthNumber;
 use App\Http\SearchPipeline\Dates;
 use App\Http\SearchPipeline\RequestStatusId;
+use App\Http\SearchPipeline\Sort;
 use App\Http\SearchPipeline\TherapyNetworkId;
 use App\Models\Activity\Activity;
 use App\Models\Assessment\Assessment;
@@ -72,12 +73,17 @@ class Request extends Model
 
     public function documents()
     {
+        return $this->morphMany(Document::class, 'documentable');
+    }
+
+    public function requestDocuments()
+    {
         return $this->morphMany(Document::class, 'documentable')->where('document_type_id', 1);
     }
 
     public function media()
     {
-        return $this->morphMany(Document::class, 'documentable')->where('document_type_id', 2);
+        return $this->morphMany(Document::class, 'documentable')->where('document_type_id', 2)->orderBy('position', 'asc');
     }
 
     public function requestDates()
@@ -137,7 +143,7 @@ class Request extends Model
      */
     public function activities()
     {
-        return $this->hasMany(Activity::class)->orderBy('id', 'desc');
+        return $this->hasMany(Activity::class)->whereNull('parent_id')->orderBy('id', 'desc');
     }
 
     /**
@@ -207,6 +213,7 @@ class Request extends Model
                 AuthNumber::class,
                 Dates::class,
                 TherapyNetworkId::class,
+                Sort::class,
             ])
             ->thenReturn();
     }
@@ -256,6 +263,22 @@ class Request extends Model
         return $date ? $date->date : null;
     }
 
+    public function getAppointmentWindowAttribute()
+    {
+        if (null === $this->appointments || 0 === $this->appointments->count()) {
+            return null;
+        }
+        $appt = $this->appointments->first();
+        if (!$appt['start_time']) {
+            return null;
+        }
+
+        return [
+            'start' => $appt['start_time']->format('m/d/Y H:i:s'),
+            'end'   => $appt['end_time']->format('m/d/Y H:i:s'),
+        ];
+    }
+
     public function getStatusNameAttribute()
     {
         return $this->requestStatus ? $this->requestStatus->name : 'In Progress';
@@ -274,5 +297,17 @@ class Request extends Model
         }
 
         $this->request_status_id = $statusId;
+    }
+
+    public function getDefaultAssessmentAttribute()
+    {
+        // @todo use assessment rules to determine the default assessment
+        /*if (null !== $this->assessments && 0 !== $this->assessments.count()) {
+            return $this->assessments->first();
+        }*/
+        // this won't pass the correct instance
+        $standardAssessment = Assessment::where('name', 'Standard Assessment');
+        // this can be attached to assessments to support multiple assessments per request
+        return $standardAssessment;
     }
 }

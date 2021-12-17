@@ -49,6 +49,7 @@ import RequestSectionsShowForm from "pages/RequestSections/RequestSectionsShowFo
 import NarrativeReport from "pages/Admin/NarrativeReport";
 import EditNarrativeReport from "pages/Admin/NarrativeReport/Edit";
 import Invoices from "pages/Invoices";
+import NarrativeReportPreview from "../pages/NarrativeReport/Preview";
 
 const AppNavigation = () => {
     const [{ loading }, fireInitializeUser] = useApiCall({
@@ -139,9 +140,7 @@ const AppNavigation = () => {
                 <PrivateRoute
                     path="/requests/:request_id/form-sections/:form_slug"
                     middleware={[
-                        "hp_user",
-                        "hp_manager",
-                        "hp_champion",
+                        "field_clinician",
                         "coo",
                         "client_services_specialist",
                         "client_services_manager",
@@ -151,9 +150,7 @@ const AppNavigation = () => {
                 <PrivateRoute
                     path="/requests/:request_id/form-sections"
                     middleware={[
-                        "hp_user",
-                        "hp_manager",
-                        "hp_champion",
+                        "field_clinician",
                         "coo",
                         "client_services_specialist",
                         "client_services_manager",
@@ -206,6 +203,12 @@ const AppNavigation = () => {
                     path="/admin/forms/:form_slug/edit"
                     middleware={["software_engineer"]}
                     component={FormBuilderEdit}
+                />
+
+                <PrivateRoute
+                    path="/request/:request/template/:template"
+                    middleware={["software_engineer"]}
+                    component={NarrativeReportPreview}
                 />
 
                 <PrivateRoute

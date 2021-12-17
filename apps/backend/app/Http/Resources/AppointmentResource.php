@@ -21,8 +21,8 @@ class AppointmentResource extends JsonResource
             'is_cancelled'     => $this->is_cancelled,
             'is_reschedule'    => $this->is_reschedule,
             'appointment_date' => $this->appointment_date ? $this->appointment_date->format('m/d/Y') : null,
-            'start_time'       => $this->start_time,
-            'end_time'         => $this->end_time,
+            'start_time'       => $this->start_time ? $this->start_time->format('m/d/Y H:i:s') : null,
+            'end_time'         => $this->end_time ? $this->end_time->format('m/d/Y H:i:s') : null,
             'reason'           => $this->reason,
         ];
     }

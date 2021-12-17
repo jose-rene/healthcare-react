@@ -8,7 +8,7 @@
         "quick-start": "SKIP_PREFLIGHT_CHECK=true BROWSER=none HOST=\"0.0.0.0\" PORT=8062 env-cmd -f .env yarn start",
         "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build",
         "serve": "SKIP_PREFLIGHT_CHECK=true  [ ! -d ./build ] && echo 'Building the app' && yarn build; pm2 start ecosystem.serve.config.js",
-        "test": "SKIP_PREFLIGHT_CHECK=true react-scripts test --ci --watchAll=false",
+        "test": "SKIP_PREFLIGHT_CHECK=true react-scripts test --ci --watchAll=false --transformIgnorePatterns \"node_modules/(?!array-move)/\"",
         "test:watch": "SKIP_PREFLIGHT_CHECK=true react-scripts test",
         "eject": "react-scripts eject"
     },
@@ -27,6 +27,7 @@
         "@testing-library/react": "^9.3.2",
         "@testing-library/user-event": "^7.1.2",
         "@tinymce/tinymce-react": "^3.13.0",
+        "array-move": "^4.0.0",
         "axios": "^0.19.2",
         "bootstrap": "5",
         "dayjs": "^1.10.7",

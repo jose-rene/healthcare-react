@@ -16,12 +16,12 @@ class RequestFormSectionResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'slug'            => $this->sectionForm->slug,
-            'name'            => $this->sectionForm->name,
+            'slug'            => $this->section->slug,
+            'name'            => $this->section->name,
             'answer_data'     => $this->answer_data,
-            'fields'          => $this->sectionForm->fields ?? [],
+            'fields'          => $this->section->fields ?? [],
             'form_section_id' => $this->form_section_id,
-            'request_id'      => $this->request_id,
+            'request_id'      => $this->request->uuid,
             'completed_at'    => $this->completed_at,
             'started_at'      => $this->started_at,
         ];

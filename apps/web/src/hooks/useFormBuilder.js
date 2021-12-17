@@ -1,8 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import { Registry, ElementStore } from "react-form-builder3";
 import useApiCall from "./useApiCall";
-import { PUT, POST } from "../config/URLs";
+
 import CustomFormElements from "../components/FormBuilder/Fields";
+
+import { PUT } from "../config/URLs";
 
 const useFormBuilder = ({ form_slug, request_id } = {}) => {
     const formAnswerUrl = `request/${request_id}/request_form_section/${form_slug}`;
@@ -14,7 +16,7 @@ const useFormBuilder = ({ form_slug, request_id } = {}) => {
 
     const [{ loading: savingAnswers }, fireSaveAnswers] = useApiCall({
         url: formAnswerUrl,
-        method: POST,
+        method: PUT,
     });
 
     const [
@@ -88,7 +90,11 @@ const useFormBuilder = ({ form_slug, request_id } = {}) => {
             ...params,
         });
 
-        const { answer_data: answers = {}, fields: fieldData = [], revisions = [] } = response;
+        const {
+            answer_data: answers = {},
+            fields: fieldData = [],
+            revisions = [],
+        } = response;
 
         // set the depth of repeater fields if there is answer data
         (fieldData ?? []).forEach(({ key, custom_name: name }, i) => {

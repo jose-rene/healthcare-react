@@ -4,6 +4,8 @@ import { Button, Card, Collapse, Row, Col } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import dayjs from "dayjs";
 
+import { useUser } from "Context/UserContext";
+
 import Form from "components/elements/Form";
 import PageAlert from "components/elements/PageAlert";
 import FapIcon from "components/elements/FapIcon";
@@ -13,17 +15,21 @@ import RescheduleForm from "../forms/RescheduleForm";
 
 import useApiCall from "hooks/useApiCall";
 
+import { fromUtcTime } from "helpers/datetime";
+
 const ScheduleView = ({
     openSchedule,
     toggleOpenSchedule,
     assessmentData: data,
-    setAssessmentData,
     error,
     reasonOptions,
     refreshAssessment,
     refreshLoading,
 }) => {
     const { id } = useParams();
+
+    const { getUser } = useUser();
+    const { timeZoneName, timeZone } = getUser();
 
     const [{ loading, error: formError }, fireSubmit] = useApiCall({
         method: "post",
@@ -64,18 +70,13 @@ const ScheduleView = ({
             ...{
                 request_id: id,
                 is_scheduled: formValues.is_scheduled === "Yes" ? true : false,
+                timeZone,
             },
         };
 
         try {
-            const { called_at: called_date = null, appointment_date = null } =
-                await fireSubmit({ params: submissionValue });
-            setAssessmentData((prevData) => ({
-                ...prevData,
-                called_date,
-                appointment_date,
-            }));
-            toggleOpenSchedule();
+            await fireSubmit({ params: submissionValue });
+            refreshAssessment("schedule");
         } catch (e) {
             console.log(`Appointment create error:`, e);
         }
@@ -89,6 +90,7 @@ const ScheduleView = ({
                 is_cancelled:
                     formValues.is_cancelled === "Re-Schedule" ? false : true,
                 is_scheduled: formValues.is_scheduled === "Yes" ? true : false,
+                timeZone,
             },
         };
 
@@ -109,7 +111,7 @@ const ScheduleView = ({
                             <h5 className="ms-2">Schedule Member</h5>
                         </div>
                         <div className="ms-auto">
-                            {!openSchedule && (
+                            {!openSchedule && data?.status !== "On Hold" && (
                                 <Button
                                     variant="link"
                                     onClick={toggleOpenSchedule}
@@ -255,9 +257,27 @@ const ScheduleView = ({
                                     {data?.called_date ? (
                                         <>
                                             <p>{data?.called_date}</p>
-                                            <p>
-                                                {data?.appointment_date ||
-                                                    "n/a"}
+                                            <p
+                                                className={
+                                                    data?.status === "On Hold"
+                                                        ? "text-danger"
+                                                        : ""
+                                                }
+                                            >
+                                                {data?.status === "On Hold"
+                                                    ? data?.status
+                                                    : `${
+                                                          data?.appointment_date
+                                                      },
+                                                      ${fromUtcTime(
+                                                          data?.appt_window
+                                                              ?.start
+                                                      )} -
+                                                          ${fromUtcTime(
+                                                              data?.appt_window
+                                                                  ?.end,
+                                                              timeZoneName
+                                                          )}` || "n/a"}
                                             </p>
                                         </>
                                     ) : (

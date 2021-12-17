@@ -10,36 +10,35 @@ const ConfirmationModal = ({
     handleAction,
     handleCancel,
     loading,
-}) =>
-    (
-        <Modal show={showModal} onHide={handleCancel}>
-            <div className="col-md-12 px-4 pt-4">
-                <div className="row mb-4">
-                    <div className="col-md-12">{content}</div>
+}) => (
+    <Modal show={showModal} onHide={handleCancel}>
+        <div className="col-md-12 px-4 pt-4">
+            <div className="row mb-4">
+                <div className="col-md-12">{content}</div>
+            </div>
+            <div className="row">
+                <div className="col-md-6" />
+
+                <div className="col-md-3 mb-2">
+                    <Button
+                        className="btn-block d-flex justify-content-center"
+                        outline
+                        label="Cancel"
+                        onClick={handleCancel}
+                    />
                 </div>
-                <div className="row">
-                    <div className="col-md-6" />
 
-                    <div className="col-md-3 mb-2">
-                        <Button
-                            className="btn-block"
-                            outline
-                            label="Cancel"
-                            onClick={handleCancel}
-                        />
-                    </div>
-
-                    <div className="col-md-3">
-                        <Button
-                            loading={loading}
-                            className="btn-blue text-btn btn-block"
-                            label="Confirm"
-                            onClick={handleAction}
-                        />
-                    </div>
+                <div className="col-md-3">
+                    <Button
+                        loading={loading}
+                        className="btn-blue text-btn btn-block d-flex justify-content-center"
+                        label="Confirm"
+                        onClick={handleAction}
+                    />
                 </div>
             </div>
-        </Modal>
-    );
+        </div>
+    </Modal>
+);
 
 export default ConfirmationModal;

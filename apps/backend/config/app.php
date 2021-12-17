@@ -196,11 +196,12 @@ return [
          * AWS
          */
         Aws\Laravel\AwsServiceProvider::class,
+        App\Providers\PdfProvider::class,
 
         /*
          * Intervention Image Processing
          */
-        Intervention\Image\ImageServiceProvider::class, 
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*

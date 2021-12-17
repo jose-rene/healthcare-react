@@ -5,6 +5,8 @@ import "../edit/style.scss";
 import useFormBuilder from "../../../../hooks/useFormBuilder";
 import SubmitButton from "../../../../components/elements/SubmitButton";
 import RenderForm from "../../../../components/FormBuilder/RenderForm";
+import * as Yup from "yup";
+import { set } from "lodash";
 
 const FormView = ({
     match: {
@@ -56,18 +58,21 @@ const FormView = ({
     const validation = useMemo(() => {
         const returnCustomValidation = {};
 
-        form.forEach(({ custom_name, props }) => {
+        form.forEach(({ custom_name = false, props, required, label = "This field" }) => {
             const { customValidation } = props || {};
+
+            if (required) {
+                set(returnCustomValidation, `${custom_name}.yupSchema`, Yup.string().required(`${label} is required`));
+            }
 
             if (!customValidation) {
                 return true;
             }
 
-            returnCustomValidation[custom_name] = {
-                customRule: customValidation,
-            };
+            set(returnCustomValidation, `${custom_name}.customRule`, customValidation);
         });
 
+        console.log({ form, returnCustomValidation });
         return returnCustomValidation;
     }, [form]);
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
  * @property mixed $narrative_report_template_id
@@ -15,7 +16,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class NarrativeReport extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, RevisionableTrait;
+
+    //Maintain a maximum of n changes at any point of time, while cleaning up old revisions.
+    protected $historyLimit = 100;
+    protected $revisionEnabled = true;
+    protected $keepRevisionOf = ['text', 'narrative_report_template_id', 'request_id'];
 
     /**
      * The attributes that are mass assignable.

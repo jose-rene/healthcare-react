@@ -1,11 +1,10 @@
 <?php
 
 use Aacotroneo\Saml2\Saml2Auth;
-use App\Http\Controllers\Api\RequestFormSectionController;
+use App\Http\Controllers\Api\NarrativeReportController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ImageController;
-use App\Models\Form;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -20,11 +19,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('testing', function(){
-    $request = \App\Models\Request::find(2);
-    $form = Form::find(5);
-    return (new RequestFormSectionController())->show($request, $form);
-});
+// TODO :: REMOVE_ME :: this is meant for development
+Route::get('testing-pdf/report/{narrative_report_template}/request/{request}/',
+    [App\Http\Controllers\Api\DocumentController::class, 'generatePDF']);
+
+Route::get('download/report/{narrative_report_template}/request/{request}/',
+    [App\Http\Controllers\Api\DocumentController::class, 'generatePDF']);
 
 // handle sso login triggering subdomain
 Route::domain(env('DME_SSO_DOMAIN'))->group(function (Router $router) {

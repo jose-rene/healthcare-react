@@ -8,6 +8,7 @@ use App\Http\Resources\DocumentResource;
 use App\Http\Resources\MediaResource;
 use App\Models\Document;
 use App\Models\Request;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request as httpRequest;
 
 class DocumentRequestController extends Controller
@@ -51,9 +52,10 @@ class DocumentRequestController extends Controller
      */
     public function destroy(Request $request, Document $document)
     {
-        if (null !== ($document = $request->documents()->find($document->id))) {
-            $document->delete();
+        if (null === ($deleteDocument = $request->documents()->find($document->id))) {
+            throw new HttpResponseException(response()->json(['errors' => ['document' => [sprintf('Document not found: %s', $document->uuid)]]], 422));
         }
+        $deleteDocument->delete();
 
         return response()->json(['message' => 'ok']);
     }

@@ -20,17 +20,12 @@ class RequestFormSectionController extends Controller
      * @param \App\Models\RequestFormSection $requestFormSection
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Form $requestFormSection)
+    public function show(Request $request, Form $form)
     {
-        $request_id = $request->id;
-        $form_id    = $requestFormSection->id;
-
-        $section = RequestFormSection::with('sectionForm')->where([
-            'form_section_id' => $form_id,
-            'request_id'      => $request_id,
-        ])->orderBy('id', 'desc')->first();
-
-        $requestFormSection->answer_data = $section->answer_data ?? [];
+        $section = RequestFormSection::firstOrCreate([
+            'form_section_id' => $form->id,
+            'request_id'      => $request->id,
+        ], ['answer_data' => []]);
 
         return new RequestFormSectionResource($section);
     }
@@ -43,19 +38,12 @@ class RequestFormSectionController extends Controller
      * @param \App\Models\RequestFormSection $requestFormSection
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Form $form)
+    public function update(Request $request, Form $form)
     {
-        $request_id = $request->id;
-        $form_id    = $form->id;
-
-        /** @var  RequestFormSection $section */
-        $section = RequestFormSection::with('sectionForm')
-            ->where([
-                'form_section_id' => $form_id,
-                'request_id'      => $request_id,
-            ])
-            ->orderBy('id', 'desc')
-            ->firstOrCreate();
+        $section = RequestFormSection::firstOrCreate([
+            'form_section_id' => $form->id,
+            'request_id'      => $request->id,
+        ], ['answer_data' => []]);
 
         $section->answer_data = request('form_data');
 
