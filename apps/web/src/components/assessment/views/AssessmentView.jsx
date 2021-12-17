@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import FapIcon from "components/elements/FapIcon";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Collapse, Row, Col } from "react-bootstrap";
+import { Card, Collapse } from "react-bootstrap";
 
 import ShowFormSection from "../ShowFormSection";
 

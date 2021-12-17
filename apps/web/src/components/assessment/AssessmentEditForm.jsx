@@ -105,7 +105,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                 >
                                     Appointment {"\n"} Scheduled
                                 </li>
-                                <li>Appointment {"\n"} Completed</li>
+                                <li>Assessment {"\n"} Started</li>
                                 <li> Member {"\n"} Assessed</li>
                                 <li>Report {"\n"} Complete</li>
                             </ul>

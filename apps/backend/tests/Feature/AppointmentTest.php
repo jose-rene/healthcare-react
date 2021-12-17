@@ -234,6 +234,13 @@ class AppointmentTest extends TestCase
         // validate response code and structure
         // dd($response->json());
         $apptDate = Carbon::tomorrow();
+        // our central time times in utc
+        $startTime = Carbon::parse($formData['appointment_date'] . ' ' . $formData['start_time'] . ':00', $formData['timeZone'])
+            ->tz('UTC')
+            ->format('m/d/Y H:i:s');
+        $endTime = Carbon::parse($formData['appointment_date'] . ' ' . $formData['end_time'] . ':00', $formData['timeZone'])
+            ->tz('UTC')
+            ->format('m/d/Y H:i:s');
         $response
             ->assertOk()
             ->assertJsonStructure([
@@ -241,11 +248,11 @@ class AppointmentTest extends TestCase
                 'appointment',
             ])
             ->assertJsonPath('appointment.appointment_date', $apptDate->format('m/d/Y'))
-            ->assertJsonPath('appointment.start_time', $formData['start_time'])
-            ->assertJsonPath('appointment.end_time', $formData['end_time'])
+            ->assertJsonPath('appointment.start_time', $startTime)
+            ->assertJsonPath('appointment.end_time', $endTime)
             ->assertJsonPath('status', 'Scheduled')
-            ->assertJsonPath('appt_window.start', $apptDate->format('Y-m-d') . ' ' . $formData['start_time'])
-            ->assertJsonPath('appt_window.end', $apptDate->format('Y-m-d') . ' ' . $formData['end_time']);
+            ->assertJsonPath('appt_window.start', $startTime)
+            ->assertJsonPath('appt_window.end', $endTime);
     }
 
     protected function getFormData()
@@ -257,6 +264,7 @@ class AppointmentTest extends TestCase
             'appointment_date' => Carbon::tomorrow()->format('Y-m-d'),
             'start_time'       => '10:00',
             'end_time'         => '12:00',
+            'timeZone'        => 'America/Chicago',
         ];
     }
 

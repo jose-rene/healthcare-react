@@ -274,8 +274,8 @@ class Request extends Model
         }
 
         return [
-            'start' => $appt['appointment_date']->format('Y-m-d') . ' ' . $appt['start_time'],
-            'end'   => $appt['appointment_date']->format('Y-m-d') . ' ' . $appt['end_time'],
+            'start' => $appt['start_time']->format('m/d/Y H:i:s'),
+            'end'   => $appt['end_time']->format('m/d/Y H:i:s'),
         ];
     }
 

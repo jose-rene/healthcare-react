@@ -99,6 +99,25 @@ class AppointmentController extends Controller
         if (empty($data['is_scheduled'])) {
             $data['appointment_date'] = null;
         }
+        else if (!empty($data['start_time'])) {
+            try {
+                $data['start_time'] = Carbon::parse($data['appointment_date'] . ' ' . $data['start_time'] . ':00', $data['timeZone'])
+                    ->tz('UTC')
+                    ->format('Y-m-d H:i:s');
+            }
+            catch (\Exception $e) {
+                throw new HttpResponseException(response()->json(['errors' => ['action' => ['Could not process start window time']]], 422));
+            }
+
+            try {
+                $data['end_time'] = Carbon::parse($data['appointment_date'] . ' ' . $data['end_time'] . ':00', $data['timeZone'])
+                ->tz('UTC')
+                ->format('Y-m-d H:i:s');
+            }
+            catch (\Exception $e) {
+                throw new HttpResponseException(response()->json(['errors' => ['action' => ['Could not process end window time']]], 422));
+            }
+        }
         $data['request_id'] = $modelRequest->id;
         $data['clinician_id'] = auth()->user()->id;
         
