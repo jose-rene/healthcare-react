@@ -66,6 +66,7 @@ class RequestItem extends Model
     public function getDefaultConsiderationsAttribute()
     {
         if (!$this->considerations()->count()) {
+            // add the default consideration based upon this request item
             $consideration = $this->considerations()->create([
                 'request_item_id' => $this->id,
                 'request_type_id' => $this->request_type_id,

@@ -77,6 +77,7 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('request.form', 'RequestFormController');
     Route::apiResource('narrative_report_template', 'NarrativeReportTemplatesController');
     Route::apiResource('appointment', 'AppointmentController');
+    Route::apiResource('classification', 'ClassificationController')->only(['index', 'show']);
 
 
     Route::apiResource('request.narrative_report_template', 'RequestNarrativeReportTemplateController')->only('show');

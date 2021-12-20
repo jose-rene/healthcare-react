@@ -13,6 +13,7 @@ import {
 import FapIcon from "components/elements/FapIcon";
 
 import "./styles.scss";
+import ConsiderationForm from "../forms/ConsiderationsForm";
 
 const ConsiderationView = ({
     openConsideration,
@@ -20,7 +21,6 @@ const ConsiderationView = ({
     classifications,
     requestItems,
 }) => {
-
     // which request item is in context for consideration form
     const [activeRequestItem, setRequestItem] = useState({});
     // open consideration form for a request item
@@ -45,80 +45,60 @@ const ConsiderationView = ({
                 <Card.Body>
                     <Collapse in={openConsideration}>
                         <div>
-                            <h6 className="mb-3">
-                                {`${activeRequestItem.classification_name} > ${activeRequestItem.name}`}
-                            </h6>
-                            <div>
-                                <FormLabel className="me-2">
-                                    Is this consideration recommended?
-                                </FormLabel>
-                                <Form.Check
-                                    inline
-                                    label="Yes"
-                                    name="recommended"
-                                    type="radio"
-                                    id="recommended-yes"
-                                    value="yes"
-                                />
-                                <Form.Check
-                                    inline
-                                    label="No"
-                                    name="recommended"
-                                    type="radio"
-                                    id="recommended-no"
-                                    value="no"
-                                />
-                            </div>
-                            <Button
-                                variant="secondary"
-                                onClick={() => toggleOpenConsideration()}
-                                className="me-3 mt-3"
-                            >
-                                Cancel
-                            </Button>
+                            <ConsiderationForm
+                                {...{
+                                    toggleOpenConsideration,
+                                    activeRequestItem,
+                                }}
+                            />
                         </div>
                     </Collapse>
                     <Collapse in={!openConsideration}>
                         <div>
                             <Row>
                                 <Col>
-                                    {requestItems.map((item) => (
-                                        item.considerations.map(({classification_name, name}) => (
-                                            <ListGroup
-                                                key={item.classification}
-                                                className="mb-3"
-                                                as="ol"
-                                                numbered="numbered"
-                                            >
-                                                <ListGroup.Item
-                                                    key={item.id}
-                                                    className="bg-light"
-                                                    as="li"
+                                    {requestItems.map((item) =>
+                                        item.considerations.map(
+                                            ({ classification_name, name }) => (
+                                                <ListGroup
+                                                    key={item.classification}
+                                                    className="mb-3"
+                                                    as="ol"
+                                                    numbered="numbered"
                                                 >
-                                                    <h6 className="mb-2">
-                                                        {`${classification_name} > ${name}`}
-                                                    </h6>
-                                                    <Button
-                                                        variant="link"
-                                                        className="fst-italic p-0"
-                                                        onClick={() =>
-                                                            doConsideration(item.id)
-                                                        }
+                                                    <ListGroup.Item
+                                                        key={item.id}
+                                                        className="bg-light"
+                                                        as="li"
                                                     >
-                                                        <span>
-                                                            {item.outcome
-                                                                ? "Edit Considerations"
-                                                                : "Considerations"}
-                                                        </span>
-                                                        <FapIcon
-                                                            icon="angle-double-right"
-                                                            size="sm"
-                                                            className="ms-1"
-                                                        />
-                                                    </Button>
-                                                </ListGroup.Item>
-                                            </ListGroup>
-                                    ))))}
+                                                        <h6 className="mb-2">
+                                                            {`${classification_name} > ${name}`}
+                                                        </h6>
+                                                        <Button
+                                                            variant="link"
+                                                            className="fst-italic p-0"
+                                                            onClick={() =>
+                                                                doConsideration(
+                                                                    item.id
+                                                                )
+                                                            }
+                                                        >
+                                                            <span>
+                                                                {item.outcome
+                                                                    ? "Edit Considerations"
+                                                                    : "Considerations"}
+                                                            </span>
+                                                            <FapIcon
+                                                                icon="angle-double-right"
+                                                                size="sm"
+                                                                className="ms-1"
+                                                            />
+                                                        </Button>
+                                                    </ListGroup.Item>
+                                                </ListGroup>
+                                            )
+                                        )
+                                    )}
                                 </Col>
                             </Row>
                         </div>
