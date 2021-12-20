@@ -76,6 +76,9 @@ class RequestAssessmentFormTest extends TestCase
         // verify response
         $response->assertSuccessful();
 
+        // request status should be assessed
+        $this->request->refresh();
+        $this->assertEquals('4', $this->request->request_status_id);
     }
 
     public function testRetrieveAssessment()
