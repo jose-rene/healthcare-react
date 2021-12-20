@@ -9,7 +9,7 @@ import Textarea from "components/inputs/Textarea";
 import AppointmentScheduleForm from "./AppointmentScheduleForm";
 
 const RescheduleForm = ({ reasonOptions }) => {
-    const { update, getValue } = useFormContext();
+    const { update, getValue, objUpdate } = useFormContext();
 
     const onChange = (e) => {
         update(e.target.name, e.target.value);
@@ -103,6 +103,7 @@ const RescheduleForm = ({ reasonOptions }) => {
                         reschedule
                         reasonOptions={reasonOptions}
                         update={update}
+                        objUpdate={objUpdate}
                         getValue={getValue}
                         onChange={onChange}
                     />

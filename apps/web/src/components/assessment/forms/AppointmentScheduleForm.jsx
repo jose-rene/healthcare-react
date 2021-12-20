@@ -12,6 +12,7 @@ const AppointmentScheduleForm = ({
     reschedule = false,
     reasonOptions,
     update,
+    objUpdate,
     getValue,
     onChange,
 }) => {
@@ -29,9 +30,11 @@ const AppointmentScheduleForm = ({
     };
 
     const updateData = (e) => {
-        update(e.target.name, e.target.value);
-
         if (e.target.name === "start_time") {
+            let temp = {};
+
+            temp.start_time = e.target.value;
+
             const index = getIndexTimes(e.target.value);
             let calcTimes = getTimes(
                 e.target.value,
@@ -40,6 +43,12 @@ const AppointmentScheduleForm = ({
             );
             calcTimes.splice(1, 1);
             setEndTimeOptions(calcTimes);
+
+            temp.end_time = calcTimes[calcTimes.length - 1].value;
+
+            objUpdate(temp);
+        } else {
+            update(e.target.name, e.target.value);
         }
     };
 
