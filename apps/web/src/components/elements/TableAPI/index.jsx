@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import { get } from "lodash";
 
-import { mapTypeToClass } from "../../../helpers/table";
-import Select from "../../inputs/Select";
 import TableHeaders from "./TableHeaders";
 import TablePagination from "./TablePagination";
 import FapIcon from "../FapIcon";
+import Select from "../../inputs/Select";
+
+import { mapTypeToClass } from "helpers/table";
 
 const TableAPI = ({
     label = "Results",
@@ -17,6 +18,7 @@ const TableAPI = ({
     loading = true,
     loadingMessage = "Loading...",
     onChange,
+    onClickRow = null,
     emptyMessage = "No Records Found.",
     dataMeta: {
         total: total_records = 1,
@@ -50,7 +52,11 @@ const TableAPI = ({
             );
         }
         return data.map((d, index) => (
-            <tr key={`tr-th-${index}`}>
+            <tr
+                key={`tr-th-${index}`}
+                role="button"
+                onClick={onClickRow ? () => onClickRow(d) : () => {}}
+            >
                 {headers.map(
                     ({ columnMap, link, type, formatter = false }, indexTd) => {
                         let column = null;

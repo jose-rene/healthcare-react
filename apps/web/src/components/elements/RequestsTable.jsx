@@ -18,8 +18,16 @@ import { fromUtc, formatDate } from "helpers/datetime";
 const RequestsTable = () => {
     const history = useHistory();
 
-    const { getUser, userCan } = useUser();
+    const { getUser, userCan, userIs } = useUser();
     const { primaryRole, timeZoneName } = getUser();
+
+    const isClinician = userIs(["clinical_reviewer", "field_clinician"]);
+    const isHpUsers = userIs([
+        "hp_champion",
+        "hp_finance",
+        "hp_manager",
+        "hp_user",
+    ]);
 
     const [
         {
@@ -92,25 +100,19 @@ const RequestsTable = () => {
             type: String,
             disableSortBy: true,
         },
-        {
+        !isClinician && {
             label: "Actions",
             columnMap: "member.id",
             type: ACTIONS,
             disableSortBy: true,
             formatter(member_id, { id: request_id, request_status_id }) {
-                const isClinician =
-                    primaryRole === "clinical_reviewer" ||
-                    primaryRole === "field_clinician";
-
                 return (
                     <>
                         <Link
                             className="px-2"
                             to={
                                 // eslint-disable-next-line no-nested-ternary
-                                isClinician
-                                    ? `/assessment/${request_id}`
-                                    : !request_status_id
+                                !request_status_id
                                     ? `/member/${member_id}/request/${request_id}/edit`
                                     : `/requests/${request_id}`
                             }
@@ -121,11 +123,9 @@ const RequestsTable = () => {
                                 title={!request_status_id ? `Edit` : `View`}
                             />
                         </Link>
-                        {!isClinician && (
-                            <Link className="px-2" to="#">
-                                <FapIcon icon="file" size="1x" title="Report" />
-                            </Link>
-                        )}
+                        <Link className="px-2" to="#">
+                            <FapIcon icon="file" size="1x" title="Report" />
+                        </Link>
                     </>
                 );
             },
@@ -135,7 +135,7 @@ const RequestsTable = () => {
     const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
         {
             searchObj: {
-                sortColumn: headers[0].columnMap,
+                sortColumn: headers[4].columnMap, // set 'received' as default
                 sortDirection: "asc",
                 perPage: 10,
                 filter: "0",
@@ -160,6 +160,12 @@ const RequestsTable = () => {
         history.push("/healthplan/start-request");
     };
 
+    const handleRow = (row) => {
+        if (!isClinician) return;
+
+        history.push(`/assessment/${row.id}`);
+    };
+
     useEffect(() => {
         redoSearch(searchObj);
 
@@ -175,27 +181,30 @@ const RequestsTable = () => {
 
                         <div className="d-flex mt-3">
                             <ButtonGroup className="mx-3">
-                                {filterOptions.map((filter, idx) => (
-                                    <ToggleButton
-                                        key={idx}
-                                        id={`filter-${idx}`}
-                                        type="radio"
-                                        className={`mb-3 d-flex align-items-center shadow-none ${
-                                            searchObj.filter !== filter.value
-                                                ? "bg-white"
-                                                : ""
-                                        }`}
-                                        variant="secondary"
-                                        name="filter"
-                                        value={filter.value}
-                                        checked={
-                                            searchObj.filter === filter.value
-                                        }
-                                        onChange={formUpdateSearchObj}
-                                    >
-                                        {filter.name}
-                                    </ToggleButton>
-                                ))}
+                                {isHpUsers &&
+                                    filterOptions.map((filter, idx) => (
+                                        <ToggleButton
+                                            key={idx}
+                                            id={`filter-${idx}`}
+                                            type="radio"
+                                            className={`mb-3 d-flex align-items-center shadow-none ${
+                                                searchObj.filter !==
+                                                filter.value
+                                                    ? "bg-white"
+                                                    : ""
+                                            }`}
+                                            variant="secondary"
+                                            name="filter"
+                                            value={filter.value}
+                                            checked={
+                                                searchObj.filter ===
+                                                filter.value
+                                            }
+                                            onChange={formUpdateSearchObj}
+                                        >
+                                            {filter.name}
+                                        </ToggleButton>
+                                    ))}
                             </ButtonGroup>
                             <ContextSelect
                                 label="Status"
@@ -226,6 +235,7 @@ const RequestsTable = () => {
                         data={data}
                         dataMeta={meta}
                         onChange={handleTableChange}
+                        onClickRow={handleRow}
                     />
                 </Col>
             </Row>
