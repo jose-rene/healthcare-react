@@ -22,6 +22,7 @@ class ConsiderationResource extends JsonResource
             'classification'      => $classification ? $classification->id : '',
             'classification_name' => $classification ? $classification->name : '',
             'summary'             => $this->summary,
+            'is_default'          => $this->is_default,
         ];
     }
 }
