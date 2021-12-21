@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import { Row } from "react-bootstrap";
-import useApiCall from "../../hooks/useApiCall";
-import "../../styles/RequestInfo.scss";
+
+import useApiCall from "hooks/useApiCall";
+
+import "styles/RequestInfo.scss";
 
 const Info = () => {
     const [{ data, loading }, fireRequest] = useApiCall({
@@ -18,7 +20,7 @@ const Info = () => {
         <Row className="mb-4">
             <div className="col-6 col-sm-3 margin-box margin-box-bottom">
                 <div className="info-box">
-                    <p style={{ color: "#2EE556" }} className="title-info-box">
+                    <p className="title-info-box text-received">
                         {loading ? "*" : data?.new ?? "n/a"}
                     </p>
                     <p className="subtitle-info-box">New Requests</p>
@@ -27,7 +29,7 @@ const Info = () => {
 
             <div className="col-6 col-sm-3 margin-box margin-box-bottom">
                 <div className="info-box">
-                    <p style={{ color: "#2E94E6" }} className="title-info-box">
+                    <p className="title-info-box text-in_progress">
                         {loading ? "*" : data?.assigned ?? "n/a"}
                     </p>
                     <p className="subtitle-info-box">In Progress</p>
@@ -36,7 +38,7 @@ const Info = () => {
 
             <div className="col-6 col-sm-3 margin-box">
                 <div className="info-box">
-                    <p style={{ color: "#E5A72E" }} className="title-info-box">
+                    <p className="title-info-box text-scheduled">
                         {loading ? "*" : data?.scheduled ?? "n/a"}
                     </p>
                     <p className="subtitle-info-box">Scheduled</p>
@@ -45,7 +47,7 @@ const Info = () => {
 
             <div className="col-6 col-sm-3 margin-box">
                 <div className="info-box">
-                    <p style={{ color: "#E5442E" }} className="title-info-box">
+                    <p className="title-info-box text-submitted">
                         {loading ? "*" : data?.submitted ?? "n/a"}
                     </p>
                     <p className="subtitle-info-box">Submitted</p>
