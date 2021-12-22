@@ -103,9 +103,9 @@ const ConsiderationForm = ({
         <>
             {considerationGroups.map(
                 ({ classification_name, name, is_default }, index) => (
-                    <Card className="mb-2" key={index}>
+                    <>
                         {is_default ? (
-                            <>
+                            <Card className="mb-2" key={index}>
                                 <Card.Header>
                                     <h6 className="mb-0">{`${classification_name} > ${name}`}</h6>
                                 </Card.Header>
@@ -141,9 +141,11 @@ const ConsiderationForm = ({
                                         />
                                     </Form.Group>
                                 </Card.Body>
-                            </>
-                        ) : null}
-                    </Card>
+                            </Card>
+                        ) : (
+                            <div>New consideration form here</div>
+                        )}
+                    </>
                 )
             )}
             <Button
