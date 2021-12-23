@@ -20,6 +20,7 @@ const ConsiderationView = ({
     toggleOpenConsideration,
     classifications,
     requestItems,
+    requestId,
 }) => {
     // which request item is in context for consideration form
     const [activeRequestItem, setRequestItem] = useState({});
@@ -49,6 +50,7 @@ const ConsiderationView = ({
                                 {...{
                                     toggleOpenConsideration,
                                     activeRequestItem,
+                                    requestId,
                                 }}
                             />
                         </div>

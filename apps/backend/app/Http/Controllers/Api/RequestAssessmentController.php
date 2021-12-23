@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Form;
-use App\Models\RequestFormSection;
 use App\Models\Request as ModelRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ConsiderationRequest;
 use App\Http\Resources\RequestAssessmentResource;
-use App\Http\Resources\RequestFormSectionResource;
 use Illuminate\Http\Request;
 
 class RequestAssessmentController extends Controller
@@ -21,6 +19,19 @@ class RequestAssessmentController extends Controller
     public function show(ModelRequest $request)
     {
         return new RequestAssessmentResource($request);
+    }
+
+    /**
+     * Store the considerations.
+     *
+     * @param Request $request
+     * @return RequestResource
+     */
+    public function consideration(ModelRequest $request, ConsiderationRequest $formRequest)
+    {
+        $data = $formRequest->validated();
+
+        return response()->json(['message' => 'ok']);
     }
 
     /**

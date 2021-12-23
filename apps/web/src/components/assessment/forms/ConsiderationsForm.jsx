@@ -17,6 +17,7 @@ import {
 const ConsiderationForm = ({
     toggleOpenConsideration,
     activeRequestItem: requestItem,
+    requestId,
 }) => {
     const {
         considerations = [],
@@ -43,10 +44,16 @@ const ConsiderationForm = ({
     // add a new card for considerations
     const addNewCard = (
         { request_types, name: classification_name },
-        { id = null, name = null, is_default = false } = {
+        {
+            id = null,
+            name = null,
+            is_default = false,
+            is_recommended = null,
+        } = {
             id: null,
             name: null,
             is_default: false,
+            is_recommended: null,
         }
     ) => {
         // console.log("classifications -> ", payerProfile.classifications);
@@ -56,6 +63,7 @@ const ConsiderationForm = ({
                 id,
                 name,
                 is_default,
+                is_recommended,
                 request_type_id: null, // set when all the request types are selected
                 classification_id: classificationId,
                 classification_name,
@@ -74,6 +82,11 @@ const ConsiderationForm = ({
     // get classification data from the api
     const [{ loading: classificationLoading }, fetchClassification] =
         useApiCall();
+    // save considerations to api
+    const [{ loading: saveLoading }, saveConsiderations] = useApiCall({
+        url: `assessment/${requestId}/consideration`,
+        method: "POST",
+    });
 
     useEffect(() => {
         if (!classificationId) {
@@ -187,6 +200,12 @@ const ConsiderationForm = ({
         // console.log("found -> ", index, foundReqType);
     };
 
+    const handleRecommended = (e) => {
+        const currentGroups = [...considerationGroups];
+        currentGroups[0].is_recommended = e.target.value === "yes";
+        setConsiderationGroups(currentGroups);
+    };
+
     const handleSummary = (e, index) => {
         const currentGroups = [...considerationGroups];
         currentGroups[index].summary = e.target.value;
@@ -204,6 +223,8 @@ const ConsiderationForm = ({
             .forEach(
                 ({
                     id,
+                    is_default,
+                    is_recommended,
                     classification_id,
                     request_type_id,
                     request_item,
@@ -211,6 +232,8 @@ const ConsiderationForm = ({
                 }) => {
                     data.push({
                         id,
+                        is_default,
+                        is_recommended,
                         classification_id,
                         request_type_id,
                         request_item,
@@ -223,7 +246,9 @@ const ConsiderationForm = ({
                     } */
                 }
             );
-        console.log(data);
+        saveConsiderations({ params: { considerations: data } }).then(() => {
+            console.log(data);
+        });
     };
 
     return (
@@ -258,6 +283,7 @@ const ConsiderationForm = ({
                                             id="recommended-yes"
                                             value="yes"
                                             key="yes"
+                                            onClick={handleRecommended}
                                         />
                                         <Form.Check
                                             inline
@@ -267,6 +293,7 @@ const ConsiderationForm = ({
                                             id="recommended-no"
                                             value="no"
                                             key="no"
+                                            onClick={handleRecommended}
                                         />
                                         <Textarea
                                             className="form-control mt-2"

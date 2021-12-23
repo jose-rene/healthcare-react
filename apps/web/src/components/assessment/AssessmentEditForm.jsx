@@ -16,7 +16,8 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     const [assessmentData, setAssessmentData] = useState({});
     const [
         [openSchedule, openMember, openActivity, openMedia, openConsideration],
-        setToggler] = useState([false, false, false, false, false]);
+        setToggler,
+    ] = useState([false, false, false, false, false]);
 
     useEffect(() => {
         if (data) {
@@ -194,6 +195,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     requestItems,
                                     refreshAssessment,
                                     refreshLoading,
+                                    requestId,
                                 }}
                             />
                         </Col>
