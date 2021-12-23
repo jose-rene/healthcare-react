@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Consideration;
 use App\Models\Request as ModelRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ConsiderationRequest;
@@ -29,7 +30,44 @@ class RequestAssessmentController extends Controller
      */
     public function consideration(ModelRequest $request, ConsiderationRequest $formRequest)
     {
-        $data = $formRequest->validated();
+        $considerations = collect($formRequest->validated()['considerations']);
+        $default = $considerations->firstWhere('is_default', true);
+        // update the default consideration
+        Consideration::find($default['id'])->update([
+            'summary' => $default['summary'],
+            'is_recommended' => $default['is_recommended'],
+        ]);
+        // get the associated request item
+        $requestItem = $request->requestItems->firstWhere('uuid', $default['request_item']);
+        // the added consideration, are not default
+        $added = $considerations->filter(fn($item) => empty($item['is_default']));
+        // sync
+        $updated = [];
+        // update or remove any considerations that are not present in data
+        $requestItem->considerations
+            ->filter(fn($item) => empty($item['is_default']))
+            ->each(function ($item, $key) use ($added) {
+            if (null !== ($found = $added->firstWhere('id', $item->id))) {
+                $item->update([
+                    'summary'         => $found['summary'],
+                    'request_type_id' => $found['request_type_id'],
+                ]);
+                $updated[] = $item->id;
+            }
+            else {
+                // not present, delete
+                $item->delete();
+            }
+        });
+        // add any considerations not updated
+        $added
+            ->filter(fn($item) => !in_array($item['id'], $updated))
+            ->each(function ($item) use ($requestItem) {
+                $requestItem->considerations()->create([
+                    'summary'           => $item['summary'],
+                    'request_type_id'   => $item['request_type_id'],
+                ]);
+            });
 
         return response()->json(['message' => 'ok']);
     }

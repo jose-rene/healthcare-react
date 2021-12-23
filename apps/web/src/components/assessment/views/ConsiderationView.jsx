@@ -59,48 +59,60 @@ const ConsiderationView = ({
                         <div>
                             <Row>
                                 <Col>
-                                    {requestItems.map((item) =>
-                                        item.considerations.map(
-                                            ({ classification_name, name }) => (
-                                                <ListGroup
-                                                    key={item.classification}
-                                                    className="mb-3"
-                                                    as="ol"
-                                                    numbered="numbered"
+                                    {requestItems.map((item) => (
+                                        <>
+                                            <ListGroup
+                                                key={item.id}
+                                                className="mb-3"
+                                                as="ol"
+                                                numbered="numbered"
+                                            >
+                                                <ListGroup.Item
+                                                    key={item.id}
+                                                    as="li"
+                                                    variant="success"
                                                 >
-                                                    <ListGroup.Item
-                                                        key={item.id}
-                                                        className="bg-light"
-                                                        as="li"
-                                                    >
-                                                        <h6 className="mb-2">
-                                                            {`${classification_name} > ${name}`}
-                                                        </h6>
-                                                        <Button
-                                                            variant="link"
-                                                            className="fst-italic p-0"
-                                                            onClick={() =>
-                                                                doConsideration(
-                                                                    item.id
-                                                                )
-                                                            }
+                                                    <h6 className="mb-0">
+                                                        {`${item.classification_name} > ${item.full_name}`}
+                                                    </h6>
+                                                </ListGroup.Item>
+                                                {item.considerations.map(
+                                                    ({
+                                                        classification_name,
+                                                        name,
+                                                    }) => (
+                                                        <ListGroup.Item
+                                                            key={item.id}
+                                                            className="bg-light"
+                                                            as="li"
                                                         >
-                                                            <span>
-                                                                {item.outcome
-                                                                    ? "Edit Considerations"
-                                                                    : "Considerations"}
-                                                            </span>
-                                                            <FapIcon
-                                                                icon="angle-double-right"
-                                                                size="sm"
-                                                                className="ms-1"
-                                                            />
-                                                        </Button>
-                                                    </ListGroup.Item>
-                                                </ListGroup>
-                                            )
-                                        )
-                                    )}
+                                                            <h6 className="mb-0">
+                                                                {`${classification_name} > ${name}`}
+                                                            </h6>
+                                                        </ListGroup.Item>
+                                                    )
+                                                )}
+                                            </ListGroup>
+                                            <Button
+                                                variant="link"
+                                                className="fst-italic p-0"
+                                                onClick={() =>
+                                                    doConsideration(item.id)
+                                                }
+                                            >
+                                                <span>
+                                                    {item.outcome
+                                                        ? "Edit Considerations"
+                                                        : "Considerations"}
+                                                </span>
+                                                <FapIcon
+                                                    icon="angle-double-right"
+                                                    size="sm"
+                                                    className="ms-1"
+                                                />
+                                            </Button>
+                                        </>
+                                    ))}
                                 </Col>
                             </Row>
                         </div>

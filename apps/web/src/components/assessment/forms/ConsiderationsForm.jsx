@@ -13,6 +13,8 @@ import {
     ListGroup,
     Row,
 } from "react-bootstrap";
+import PageAlert from "components/elements/PageAlert";
+import LoadingOverlay from "react-loading-overlay";
 
 const ConsiderationForm = ({
     toggleOpenConsideration,
@@ -83,10 +85,11 @@ const ConsiderationForm = ({
     const [{ loading: classificationLoading }, fetchClassification] =
         useApiCall();
     // save considerations to api
-    const [{ loading: saveLoading }, saveConsiderations] = useApiCall({
-        url: `assessment/${requestId}/consideration`,
-        method: "POST",
-    });
+    const [{ loading: saveLoading, error: saveError }, saveConsiderations] =
+        useApiCall({
+            url: `assessment/${requestId}/consideration`,
+            method: "POST",
+        });
 
     useEffect(() => {
         if (!classificationId) {
@@ -214,7 +217,7 @@ const ConsiderationForm = ({
 
     const handleSave = () => {
         // console.log(data);
-        const data = [];
+        const params = { considerations: [] };
         considerationGroups
             .filter(
                 ({ request_type_id, is_default }) =>
@@ -224,21 +227,24 @@ const ConsiderationForm = ({
                 ({
                     id,
                     is_default,
-                    is_recommended,
+                    is_recommended = null,
                     classification_id,
                     request_type_id,
                     request_item,
                     summary,
                 }) => {
-                    data.push({
+                    const item = {
                         id,
                         is_default,
-                        is_recommended,
                         classification_id,
                         request_type_id,
                         request_item,
                         summary,
-                    });
+                    };
+                    if (item.is_default) {
+                        item.is_recommended = is_recommended;
+                    }
+                    params.considerations.push(item);
                     // get the last request type
                     /* if (!is_default) {
                         const requestType = typeSelects.slice(-1);
@@ -246,134 +252,181 @@ const ConsiderationForm = ({
                     } */
                 }
             );
-        saveConsiderations({ params: { considerations: data } }).then(() => {
-            console.log(data);
+        saveConsiderations({ params }).then(() => {
+            console.log(params);
         });
     };
 
     return (
         <>
-            {considerationGroups.map(
-                (
-                    {
-                        classification_name,
-                        name,
-                        is_default,
-                        request_type_id,
-                        typeSelects,
-                    },
-                    groupIndex
-                ) => (
-                    <>
-                        {is_default ? (
-                            <>
-                                <Card className="mb-2" key={groupIndex}>
-                                    <Card.Header>
-                                        <h6 className="mb-0">{`${classification_name} > ${name}`}</h6>
-                                    </Card.Header>
-                                    <Card.Body>
-                                        <FormLabel className="me-2">
-                                            Is this consideration recommended?
-                                        </FormLabel>
-                                        <Form.Check
-                                            inline
-                                            label="Yes"
-                                            name="recommended"
-                                            type="radio"
-                                            id="recommended-yes"
-                                            value="yes"
-                                            key="yes"
-                                            onClick={handleRecommended}
-                                        />
-                                        <Form.Check
-                                            inline
-                                            label="No"
-                                            name="recommended"
-                                            type="radio"
-                                            id="recommended-no"
-                                            value="no"
-                                            key="no"
-                                            onClick={handleRecommended}
-                                        />
-                                        <Textarea
-                                            className="form-control mt-2"
-                                            label="Summary"
-                                            id={`summary_${groupIndex}`}
-                                            name="summary"
-                                            type="textarea"
-                                            rows={5}
-                                            onChange={(e) =>
-                                                handleSummary(e, groupIndex)
-                                            }
-                                        />
-                                    </Card.Body>
-                                </Card>
-                                <h5 className="my-3">Add Considerations</h5>
-                            </>
-                        ) : (
-                            <Card key={groupIndex} className="mb-3">
-                                <Card.Header>{classification_name}</Card.Header>
-                                <Card.Body>
-                                    {typeSelects.map((select, index) => (
-                                        <>
-                                            {index === 0 && (
-                                                <h6 className="mt-3">Type</h6>
-                                            )}
-                                            <Select2
-                                                className="basic-single mt-2"
-                                                classNamePrefix="select"
-                                                defaultValue=""
-                                                value={
-                                                    select.value
-                                                        ? select.options.find(
-                                                              (opt) =>
-                                                                  opt.value ===
-                                                                  select.value
-                                                          )
-                                                        : null
+            <LoadingOverlay
+                active={saveLoading}
+                spinner
+                text="Updating..."
+                styles={{
+                    overlay: (base) => ({
+                        ...base,
+                        borderRadius: "12px",
+                    }),
+                }}
+            >
+                {considerationGroups.map(
+                    (
+                        {
+                            classification_name,
+                            summary,
+                            name,
+                            is_default,
+                            is_recommended,
+                            request_type_id,
+                            typeSelects,
+                        },
+                        groupIndex
+                    ) => (
+                        <>
+                            {is_default ? (
+                                <>
+                                    <Card className="mb-2" key={groupIndex}>
+                                        <Card.Header>
+                                            <h6 className="mb-0">{`${classification_name} > ${name}`}</h6>
+                                        </Card.Header>
+                                        <Card.Body>
+                                            <FormLabel className="me-2">
+                                                Is this consideration
+                                                recommended?
+                                            </FormLabel>
+                                            <Form.Check
+                                                inline
+                                                label="Yes"
+                                                name="recommended"
+                                                checked={is_recommended}
+                                                type="radio"
+                                                id="recommended-yes"
+                                                value="yes"
+                                                key="yes"
+                                                onClick={handleRecommended}
+                                            />
+                                            <Form.Check
+                                                inline
+                                                label="No"
+                                                name="recommended"
+                                                checked={
+                                                    is_recommended === false
                                                 }
-                                                isClearable
-                                                isSearchable
-                                                name={`request_type_${index}`}
-                                                options={select.options}
-                                                onChange={(selected, action) =>
-                                                    handleSelectChange(
-                                                        selected,
-                                                        action,
-                                                        index,
-                                                        groupIndex
-                                                    )
+                                                type="radio"
+                                                id="recommended-no"
+                                                value="no"
+                                                key="no"
+                                                onClick={handleRecommended}
+                                            />
+                                            <Textarea
+                                                className="form-control mt-2"
+                                                label="Summary"
+                                                id={`summary_${groupIndex}`}
+                                                name="summary"
+                                                type="textarea"
+                                                value={summary}
+                                                rows={5}
+                                                onChange={(e) =>
+                                                    handleSummary(e, groupIndex)
                                                 }
                                             />
-                                        </>
-                                    ))}
-                                    {request_type_id && (
-                                        <Textarea
-                                            className="form-control mt-2"
-                                            label="Summary"
-                                            id={`summary_${groupIndex}`}
-                                            name="summary"
-                                            type="textarea"
-                                            rows={5}
-                                            onChange={(e) =>
-                                                handleSummary(e, groupIndex)
-                                            }
-                                        />
-                                    )}
-                                </Card.Body>
-                            </Card>
-                        )}
-                    </>
-                )
-            )}
-            <Button
-                variant="secondary"
-                onClick={() => toggleOpenConsideration()}
-                className="me-3"
-            >
-                Cancel
-            </Button>
-            <Button onClick={handleSave}>Save</Button>
+                                        </Card.Body>
+                                    </Card>
+                                    <h5 className="my-3">
+                                        Additional Considerations
+                                    </h5>
+                                </>
+                            ) : (
+                                <Card key={groupIndex} className="mb-3">
+                                    <Card.Header>
+                                        <FapIcon
+                                            icon="check-circle"
+                                            type="fas"
+                                            className={`text-success me-2${
+                                                request_type_id ? "" : " d-none"
+                                            }`}
+                                        />{" "}
+                                        {classification_name}
+                                    </Card.Header>
+                                    <Card.Body>
+                                        {typeSelects.map((select, index) => (
+                                            <>
+                                                {index === 0 && (
+                                                    <h6 className="mt-3">
+                                                        Type
+                                                    </h6>
+                                                )}
+                                                <Select2
+                                                    className="basic-single mt-2"
+                                                    classNamePrefix="select"
+                                                    defaultValue=""
+                                                    value={
+                                                        select.value
+                                                            ? select.options.find(
+                                                                  (opt) =>
+                                                                      opt.value ===
+                                                                      select.value
+                                                              )
+                                                            : null
+                                                    }
+                                                    isClearable
+                                                    isSearchable
+                                                    name={`request_type_${index}`}
+                                                    options={select.options}
+                                                    onChange={(
+                                                        selected,
+                                                        action
+                                                    ) =>
+                                                        handleSelectChange(
+                                                            selected,
+                                                            action,
+                                                            index,
+                                                            groupIndex
+                                                        )
+                                                    }
+                                                />
+                                            </>
+                                        ))}
+                                        {request_type_id && (
+                                            <Textarea
+                                                className="form-control mt-2"
+                                                label="Summary"
+                                                id={`summary_${groupIndex}`}
+                                                name="summary"
+                                                type="textarea"
+                                                value={summary}
+                                                rows={5}
+                                                onChange={(e) =>
+                                                    handleSummary(e, groupIndex)
+                                                }
+                                            />
+                                        )}
+                                    </Card.Body>
+                                </Card>
+                            )}
+                        </>
+                    )
+                )}
+                {saveError ? (
+                    <PageAlert
+                        className="mt-3"
+                        variant="warning"
+                        timeout={5000}
+                        dismissible
+                    >
+                        Error: {saveError}
+                    </PageAlert>
+                ) : null}
+                <Button
+                    variant="secondary"
+                    onClick={() => toggleOpenConsideration()}
+                    className="me-3"
+                >
+                    Cancel
+                </Button>
+                <Button onClick={handleSave}>Save</Button>
+            </LoadingOverlay>
         </>
     );
 };

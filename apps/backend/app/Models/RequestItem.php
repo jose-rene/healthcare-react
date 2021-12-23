@@ -63,7 +63,7 @@ class RequestItem extends Model
         return $this->belongsTo(RequestItemDetail::class, 'request_item_id');
     }
 
-    public function getDefaultConsiderationsAttribute()
+    public function defaultConsiderations()
     {
         if (!$this->considerations()->count()) {
             // add the default consideration based upon this request item
