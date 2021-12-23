@@ -17,18 +17,19 @@ class RequestItemResource extends JsonResource
     public function toArray($request)
     {
         // the parent request types
-        $parents = $this->requestType && $this->requestType->ancestors ? array_reverse($this->mapParents($this->requestType->ancestors, true)) : null;
-        // the related classifcation, will be related to the top parent
+        $parents = $this->requestType && $this->requestType->ancestors ? collect(array_reverse($this->mapParents($this->requestType->ancestors, true))) : null;
+        // the related classification, will be related to the top parent
         $classification = null;
-        if (!empty($parents) && null !== ($requestType = RequestType::find($parents[0])) && $requestType->classification) {
+        if (!empty($parents) && null !== ($requestType = RequestType::find($parents->first()['id'])) && $requestType->classification) {
             $classification = $requestType->classification;
         }
         return [
             'id'                   => $this->uuid,
             'vendor_price'         => $this->vendor_price,
             'name'                 => $this->name,
+            'full_name'            => $parents ? $parents->map(fn($item) => $item['name'])->prepend($this->name)->join(' > ') : null,     
             'request_type_id'      => $this->request_type_id,
-            'request_type_parents' => $parents,
+            'request_type_parents' => $parents ? $parents->map(fn($item) => $item['id']) : null,
             'details'              => RequestTypeDetailResource::collection($this->requestTypeDetails),
             'classification'       => $classification ? $classification->id : "",
             'classification_name'  => $classification ? $classification->name : "",
@@ -51,7 +52,7 @@ class RequestItemResource extends JsonResource
         if (!$requestType) {
             return $parents;
         }
-        $parents[] = $requestType['id'];
+        $parents[] = ['id' => $requestType['id'], 'name' => $requestType['name']];
         if ($requestType['parent']) {
             return $this->mapParents($requestType['parent']);
         }
