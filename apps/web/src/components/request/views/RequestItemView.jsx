@@ -347,7 +347,7 @@ const RequestItemForm = ({ requestItems, payerProfile, openRequestItem }) => {
                                         >
                                             <ListGroup.Item className="bg-light">
                                                 <h6 className="mb-0">
-                                                    {`${item.classification_name} > ${item.name}`}
+                                                    {`${item.classification_name} > ${item.full_name}`}
                                                 </h6>
                                             </ListGroup.Item>
                                             {item.details.map((detail) => (
