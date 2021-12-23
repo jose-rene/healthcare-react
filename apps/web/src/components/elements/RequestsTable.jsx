@@ -72,7 +72,14 @@ const RequestsTable = () => {
                     ({ value }) => value === request_status_id
                 );
 
-                return found?.title || "Partially Entered";
+                const color =
+                    found?.id === "assigned" ? "in_progress" : found?.id;
+
+                return (
+                    <span className={`text-${color || "in_progress"}`}>
+                        {found?.title || "Partially Entered"}
+                    </span>
+                );
             },
             label: "Status",
             type: String,

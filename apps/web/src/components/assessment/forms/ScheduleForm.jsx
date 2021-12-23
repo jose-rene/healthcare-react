@@ -8,7 +8,7 @@ import ContextInput from "components/inputs/ContextInput";
 import AppointmentScheduleForm from "./AppointmentScheduleForm";
 
 const ScheduleForm = ({ reasonOptions }) => {
-    const { update, getValue } = useFormContext();
+    const { update, getValue, objUpdate } = useFormContext();
 
     const onChange = (e) => {
         update(e.target.name, e.target.value);
@@ -30,6 +30,7 @@ const ScheduleForm = ({ reasonOptions }) => {
                 scheduled={getValue("is_scheduled")}
                 reasonOptions={reasonOptions}
                 update={update}
+                objUpdate={objUpdate}
                 getValue={getValue}
                 onChange={onChange}
             />
