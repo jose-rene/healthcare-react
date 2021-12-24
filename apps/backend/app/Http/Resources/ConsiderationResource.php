@@ -15,9 +15,11 @@ class ConsiderationResource extends JsonResource
     public function toArray($request)
     {
         $classification = $this->requestType->topClassification;
+
         return [
             'id'                  => $this->id,
             'request_type_id'     => $this->request_type_id, // new RequestTypeResource($this->requestType),
+            'all_request_types'   => collect($this->requestType->all_parents)->push($this->request_type_id),
             'name'                => $this->requestType->name,
             'classification'      => $classification ? $classification->id : '',
             'classification_name' => $classification ? $classification->name : '',

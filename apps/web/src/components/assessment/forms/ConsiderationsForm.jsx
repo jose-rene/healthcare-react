@@ -20,6 +20,8 @@ const ConsiderationForm = ({
     toggleOpenConsideration,
     activeRequestItem: requestItem,
     requestId,
+    refreshAssessment,
+    refreshLoading,
 }) => {
     const {
         considerations = [],
@@ -49,16 +51,46 @@ const ConsiderationForm = ({
         {
             id = null,
             name = null,
+            summary = "",
             is_default = false,
             is_recommended = null,
+            all_request_types = [],
         } = {
             id: null,
             name: null,
+            summary: "",
             is_default: false,
             is_recommended: null,
+            all_request_types: [],
         }
     ) => {
-        // console.log("classifications -> ", payerProfile.classifications);
+        const options = mapOptions(request_types);
+        const typeSelects = [];
+        let reqTypeId = null;
+        if (!all_request_types.length || is_default) {
+            typeSelects.push({
+                options,
+                value: "",
+            });
+        } else {
+            let reqTypes = request_types;
+            all_request_types.forEach((typeId, index) => {
+                // if it's above the first request type, find the req type options in the classification object
+                if (index > 0) {
+                    // reqTypes will be the child request types from the previous entry
+                    reqTypes = reqTypes.find(
+                        ({ id: itemId }) =>
+                            itemId === typeSelects[index - 1].value
+                    ).request_types;
+
+                    reqTypeId = typeId;
+                }
+                typeSelects.push({
+                    options: mapOptions(reqTypes),
+                    value: typeId,
+                });
+            });
+        }
         setConsiderationGroups((prevGroups) => [
             ...prevGroups,
             {
@@ -66,17 +98,12 @@ const ConsiderationForm = ({
                 name,
                 is_default,
                 is_recommended,
-                request_type_id: null, // set when all the request types are selected
+                request_type_id: reqTypeId, // set when all the request types are selected
                 classification_id: classificationId,
                 classification_name,
                 request_item: requestItemId,
-                typeSelects: [
-                    {
-                        options: mapOptions(request_types),
-                        value: "",
-                    },
-                ],
-                summary: "",
+                typeSelects,
+                summary,
             },
         ]);
     };
@@ -122,7 +149,6 @@ const ConsiderationForm = ({
         index,
         groupIndex
     ) => {
-        // console.log(selected, action, index, groupIndex);
         let i;
         // make a copy of state
         const currentGroups = [...considerationGroups];
@@ -193,7 +219,6 @@ const ConsiderationForm = ({
             }; */
             // this is the request type that the consideration is associated with
             currentGroups[groupIndex].request_type_id = value;
-            // console.log("current groups update details", currentGroups);
             setConsiderationGroups(currentGroups);
             // auto add the next card to enter another request type
             if (!currentGroups[groupIndex + 1]) {
@@ -253,14 +278,14 @@ const ConsiderationForm = ({
                 }
             );
         saveConsiderations({ params }).then(() => {
-            console.log(params);
+            refreshAssessment("consideration");
         });
     };
 
     return (
         <>
             <LoadingOverlay
-                active={saveLoading}
+                active={saveLoading || refreshLoading}
                 spinner
                 text="Updating..."
                 styles={{
@@ -346,48 +371,50 @@ const ConsiderationForm = ({
                                             className={`text-success me-2${
                                                 request_type_id ? "" : " d-none"
                                             }`}
-                                        />{" "}
+                                        />
                                         {classification_name}
                                     </Card.Header>
                                     <Card.Body>
-                                        {typeSelects.map((select, index) => (
-                                            <>
-                                                {index === 0 && (
-                                                    <h6 className="mt-3">
-                                                        Type
-                                                    </h6>
-                                                )}
-                                                <Select2
-                                                    className="basic-single mt-2"
-                                                    classNamePrefix="select"
-                                                    defaultValue=""
-                                                    value={
-                                                        select.value
-                                                            ? select.options.find(
-                                                                  (opt) =>
-                                                                      opt.value ===
-                                                                      select.value
-                                                              )
-                                                            : null
-                                                    }
-                                                    isClearable
-                                                    isSearchable
-                                                    name={`request_type_${index}`}
-                                                    options={select.options}
-                                                    onChange={(
-                                                        selected,
-                                                        action
-                                                    ) =>
-                                                        handleSelectChange(
+                                        {typeSelects.map(
+                                            ({ options, value }, index) => (
+                                                <>
+                                                    {index === 0 && (
+                                                        <h6 className="mt-3">
+                                                            Type
+                                                        </h6>
+                                                    )}
+                                                    <Select2
+                                                        className="basic-single mt-2"
+                                                        classNamePrefix="select"
+                                                        defaultValue=""
+                                                        value={
+                                                            value
+                                                                ? options.find(
+                                                                      (opt) =>
+                                                                          opt.value ==
+                                                                          value
+                                                                  )
+                                                                : null
+                                                        }
+                                                        isClearable
+                                                        isSearchable
+                                                        name={`request_type_${index}`}
+                                                        options={options}
+                                                        onChange={(
                                                             selected,
-                                                            action,
-                                                            index,
-                                                            groupIndex
-                                                        )
-                                                    }
-                                                />
-                                            </>
-                                        ))}
+                                                            action
+                                                        ) =>
+                                                            handleSelectChange(
+                                                                selected,
+                                                                action,
+                                                                index,
+                                                                groupIndex
+                                                            )
+                                                        }
+                                                    />
+                                                </>
+                                            )
+                                        )}
                                         {request_type_id && (
                                             <Textarea
                                                 className="form-control mt-2"
