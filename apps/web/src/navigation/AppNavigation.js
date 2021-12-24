@@ -32,9 +32,9 @@ import Error from "pages/NotFound";
 import SetForgotPassword from "pages/SetForgotPassword";
 import NotificationList from "pages/NotificationList";
 import AdminPayer from "pages/Test/AdminPayer";
-import AdminCompanies from "pages/Admin/Companies/Companies";
-import AdminAddCompanies from "pages/Admin/Companies/AddCompanies";
-import AdminDetailCompanies from "pages/Admin/Companies/DetailCompanies";
+import AdminClients from "pages/Admin/Clients/Clients";
+import AdminAddClients from "pages/Admin/Clients/AddClients";
+import AdminDetailClients from "pages/Admin/Clients/DetailClients";
 import AdminClinicians from "pages/Admin/Clinicians/Clinicians";
 import AdminAddClinicians from "pages/Admin/Clinicians/AddClinicians";
 import FormView from "pages/Admin/FormBuilder/show";
@@ -244,27 +244,27 @@ const AppNavigation = () => {
                 />
 
                 <PrivateRoute
-                    path="/admin/companies"
+                    path="/admin/clients"
                     middleware={["software_engineer"]}
-                    component={AdminCompanies}
+                    component={AdminClients}
                 />
 
                 <PrivateRoute
-                    path="/admin/add-companies"
+                    path="/admin/add-clients"
                     middleware={["software_engineer"]}
-                    component={AdminAddCompanies}
+                    component={AdminAddClients}
                 />
 
                 <PrivateRoute
-                    path="/admin/company/:id"
+                    path="/admin/client/:id"
                     middleware={["software_engineer"]}
-                    component={AdminDetailCompanies}
+                    component={AdminDetailClients}
                 />
 
                 <PrivateRoute
-                    path="/admin/company/:id/edit"
+                    path="/admin/client/:id/edit"
                     middleware={["software_engineer"]}
-                    component={AdminDetailCompanies}
+                    component={AdminDetailClients}
                 />
 
                 <PrivateRoute

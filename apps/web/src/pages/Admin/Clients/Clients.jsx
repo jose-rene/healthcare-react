@@ -22,9 +22,9 @@ import useToast from "hooks/useToast";
 
 import { ACTIONS } from "helpers/table";
 
-import "styles/companies.scss";
+import "styles/clients.scss";
 
-const Companies = (props) => {
+const Clients = (props) => {
     const { generalError } = useToast();
     const [
         {
@@ -95,11 +95,11 @@ const Companies = (props) => {
             formatter(id) {
                 return (
                     <div className="actions">
-                        <Link to={`/admin/company/${id}/edit`} className="mx-1">
+                        <Link to={`/admin/client/${id}/edit`} className="mx-1">
                             <FapIcon size="1x" icon="edit" />
                         </Link>
 
-                        <Link to={`/admin/company/${id}`} className="mx-1">
+                        <Link to={`/admin/client/${id}`} className="mx-1">
                             <FapIcon size="1x" icon="info-circle" />
                         </Link>
                     </div>
@@ -163,7 +163,7 @@ const Companies = (props) => {
 
     const handleNewCompany = () => {
         props.history.push({
-            pathname: "/admin/add-companies",
+            pathname: "/admin/add-clients",
             state: {
                 categoryOptions,
                 subCategoryOptions,
@@ -197,7 +197,7 @@ const Companies = (props) => {
             <Container fluid>
                 <PageTitle
                     hideBack
-                    title="Companies"
+                    title="Clients"
                     actions={[
                         {
                             icon: "plus",
@@ -327,4 +327,4 @@ const Companies = (props) => {
     );
 };
 
-export default Companies;
+export default Clients;

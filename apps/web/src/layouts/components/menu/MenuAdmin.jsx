@@ -47,11 +47,11 @@ const MenuAdmin = () => {
             </NavDropdown>
 
             <Nav.Link
-                href="/admin/companies"
+                href="/admin/clients"
                 className="list-group-item border-end-0"
             >
                 <FapIcon icon="building" className="me-2" fixedWidth />
-                <span>Companies</span>
+                <span>Clients</span>
             </Nav.Link>
 
             <Nav.Link

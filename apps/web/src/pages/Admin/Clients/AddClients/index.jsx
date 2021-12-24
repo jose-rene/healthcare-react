@@ -11,9 +11,9 @@ import PageTitle from "components/PageTitle";
 import useApiCall from "hooks/useApiCall";
 
 import validate from "helpers/validate";
-import AddCompanyForm from "./AddCompanyForm";
+import AddClientForm from "./AddClientForm";
 
-const AddCompanies = (props) => {
+const AddClients = (props) => {
     const [{ error: formError }, postCompanyRequest] = useApiCall({
         method: "post",
         url: "admin/company",
@@ -21,10 +21,10 @@ const AddCompanies = (props) => {
 
     const [validation, setValidation] = useState({
         name: {
-            yupSchema: validate.string().required("Company Name is required"),
+            yupSchema: validate.string().required("Client Name is required"),
         },
         category: {
-            yupSchema: validate.string().required("Company Type is required"),
+            yupSchema: validate.string().required("Client Type is required"),
         },
     });
     const [categoryOptions, setCategoryOptions] = useState([]);
@@ -42,7 +42,7 @@ const AddCompanies = (props) => {
     }, [props.history.location.state]);
 
     const handleBack = () => {
-        props.history.push("/admin/companies");
+        props.history.push("/admin/clients");
     };
 
     const handleSubmit = async (params) => {
@@ -50,16 +50,16 @@ const AddCompanies = (props) => {
             const result = await postCompanyRequest({ params });
 
             setDefaultData(result);
-            props.history.push(`/admin/company/${result.id}`);
+            props.history.push(`/admin/client/${result.id}`);
         } catch (e) {
-            console.log("Company create error:", e);
+            console.log("Client create error:", e);
         }
     };
 
     return (
         <PageLayout>
             <Container fluid>
-                <PageTitle title="Add Company" onBack={handleBack} />
+                <PageTitle title="Add Client" onBack={handleBack} />
 
                 <Row>
                     <Col md={6}>
@@ -83,7 +83,7 @@ const AddCompanies = (props) => {
                     validation={validation}
                 >
                     <Row>
-                        <AddCompanyForm
+                        <AddClientForm
                             categoryOptions={categoryOptions}
                             subCategoryOptions={subCategoryOptions}
                             validation={validation}
@@ -105,4 +105,4 @@ const AddCompanies = (props) => {
     );
 };
 
-export default AddCompanies;
+export default AddClients;

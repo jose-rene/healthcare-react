@@ -54,9 +54,9 @@ const SidebarAdmin = ({ open }) => {
                 </NavDropdown.Item>
             </NavDropdown>
 
-            <Nav.Link href="/admin/companies">
+            <Nav.Link href="/admin/clients">
                 <FapIcon icon="building" size="lg" className="me-2" />
-                <span className={textClass}>Companies</span>
+                <span className={textClass}>Clients</span>
             </Nav.Link>
 
             <Nav.Link href="/admin/clinicians">
