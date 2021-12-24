@@ -8,7 +8,7 @@ import { useFormContext } from "Context/FormContext";
 
 import validate from "helpers/validate";
 
-const AddCompanyForm = ({
+const AddClientForm = ({
     categoryOptions,
     subCategoryOptions,
     validation,
@@ -41,12 +41,12 @@ const AddCompanyForm = ({
     return (
         <>
             <Col md={{ span: 6, offset: 3 }}>
-                <ContextInput name="name" label="Company Name" />
+                <ContextInput name="name" label="Client Name" />
             </Col>
             <Col md={{ span: 6, offset: 3 }}>
                 <Select
                     name="category"
-                    label="Company Type"
+                    label="Client Type"
                     options={categoryOptions}
                 />
             </Col>
@@ -63,4 +63,4 @@ const AddCompanyForm = ({
     );
 };
 
-export default AddCompanyForm;
+export default AddClientForm;

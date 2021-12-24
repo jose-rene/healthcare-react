@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Tab } from "react-bootstrap";
-import PageLayout from "../../../layouts/PageLayout";
+
+import PageLayout from "layouts/PageLayout";
+
 import TabCompanyInfo from "./Tabs/TabCompanyInfo";
 import TabNarrReports from "./Tabs/TabNarrativeReports/TabNarrativeReports";
 import TabRequestTypes from "./Tabs/TabRequestTypes";
@@ -16,10 +18,11 @@ import TabTemplates from "./Tabs/TabTemplates";
 import TabNotes from "./Tabs/TabNotes";
 import TabMisc from "./Tabs/TabMisc";
 
-import useApiCall from "../../../hooks/useApiCall";
-import PageTitle from "../../../components/PageTitle";
+import useApiCall from "hooks/useApiCall";
 
-const DetailCompanies = (props) => {
+import PageTitle from "components/PageTitle";
+
+const DetailClients = (props) => {
     const { match, history } = props;
 
     const { id: company_id = false } = match.params || {};
@@ -37,7 +40,7 @@ const DetailCompanies = (props) => {
     }, []);
 
     const handleBack = () => {
-        history.push("/admin/companies");
+        history.push("/admin/clients");
     };
 
     return (
@@ -45,12 +48,12 @@ const DetailCompanies = (props) => {
             {!loading && (
                 <>
                     <PageTitle
-                        title={(company_id ? "Edit" : "Add") + " Company"}
+                        title={(company_id ? "Edit" : "Add") + " Client"}
                         onBack={handleBack}
                     />
 
                     <Tabs defaultActiveKey="companyInfo">
-                        <Tab eventKey="companyInfo" title="Company Info">
+                        <Tab eventKey="companyInfo" title="Client Info">
                             <TabCompanyInfo
                                 company_id={company_id}
                                 data={data}
@@ -90,7 +93,7 @@ const DetailCompanies = (props) => {
                             <TabReviewers />
                         </Tab>
 
-                        <Tab eventKey="assocCompanies" title="Assoc.Companies">
+                        <Tab eventKey="assocCompanies" title="Assoc.Clients">
                             <TabAssocCompanies />
                         </Tab>
 
@@ -123,4 +126,4 @@ const DetailCompanies = (props) => {
     );
 };
 
-export default DetailCompanies;
+export default DetailClients;

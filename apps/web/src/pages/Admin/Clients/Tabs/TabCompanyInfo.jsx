@@ -4,7 +4,7 @@ import { isEmpty } from "lodash";
 
 import AddressTab from "../AddressTab";
 import ContactTab from "../ContactTab";
-import CompanyDetailForm from "../CompanyDetailForm";
+import CompanyDetailForm from "../ClientDetailForm";
 
 import useApiCall from "hooks/useApiCall";
 

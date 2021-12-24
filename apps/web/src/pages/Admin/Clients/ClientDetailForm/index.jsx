@@ -12,7 +12,7 @@ import useApiCall from "hooks/useApiCall";
 
 import validate from "helpers/validate";
 
-const CompanyDetailForm = ({
+const ClientDetailForm = ({
     company_id,
     data,
     memberIdTypesOptions,
@@ -24,7 +24,7 @@ const CompanyDetailForm = ({
         url: `/admin/payer/${company_id}`,
     });
 
-    const companyValidation = {
+    const clientValidation = {
         category_id: {
             yupSchema: validate.string().required("Payer Category is required"),
         },
@@ -60,14 +60,14 @@ const CompanyDetailForm = ({
             }
         } catch (e) {
             setCompanyInfoStatus(false);
-            console.log("Company Info Update Error:", e);
+            console.log("Client Info Update Error:", e);
         }
     };
 
     return (
         <Form
             onSubmit={handleUpdate}
-            validation={companyValidation}
+            validation={clientValidation}
             defaultData={data}
         >
             <Row className="mt-3">
@@ -148,4 +148,4 @@ const CompanyDetailForm = ({
     );
 };
 
-export default CompanyDetailForm;
+export default ClientDetailForm;
