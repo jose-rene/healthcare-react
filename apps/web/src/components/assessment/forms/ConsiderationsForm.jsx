@@ -240,6 +240,33 @@ const ConsiderationForm = ({
         setConsiderationGroups(currentGroups);
     };
 
+    const handleGroupRemove = (index) => {
+        if (considerationGroups.length < 2) {
+            return;
+        }
+        const currentGroups = [...considerationGroups];
+        // do not remove if the previous one has details and there is not a next one
+        const prev = index - 1;
+        const next = index + 1;
+        if (
+            prev >= 0 &&
+            considerationGroups[prev]?.requestDetails &&
+            !considerationGroups[next]
+        ) {
+            // reset if length of selects is greater than one
+            if (considerationGroups[index].typeSelects.length > 1) {
+                currentGroups[index].typeSelects.length = 1;
+                currentGroups[index].typeSelects[0].value = null;
+                currentGroups[index].request_type_id = null;
+                setConsiderationGroups(currentGroups);
+            }
+
+            return;
+        }
+        currentGroups.splice(index, 1);
+        setConsiderationGroups(currentGroups);
+    };
+
     const handleSave = () => {
         // console.log(data);
         const params = { considerations: [] };
@@ -373,6 +400,19 @@ const ConsiderationForm = ({
                                             }`}
                                         />
                                         {classification_name}
+                                        {request_type_id && (
+                                            <FapIcon
+                                                icon="delete"
+                                                role="button"
+                                                className="float-end text-danger mt-1 cursor-pointer"
+                                                size="1x"
+                                                onClick={() =>
+                                                    handleGroupRemove(
+                                                        groupIndex
+                                                    )
+                                                }
+                                            />
+                                        )}
                                     </Card.Header>
                                     <Card.Body>
                                         {typeSelects.map(
