@@ -345,7 +345,7 @@ const ConsiderationForm = ({
                                         <Card.Body>
                                             <FormLabel className="me-2">
                                                 Is this consideration
-                                                recommended?
+                                                appropriate?
                                             </FormLabel>
                                             <Form.Check
                                                 inline

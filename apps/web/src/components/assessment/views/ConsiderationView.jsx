@@ -77,7 +77,7 @@ const ConsiderationView = ({
                                                     variant="success"
                                                 >
                                                     <h6 className="mb-0">
-                                                        {`${item.classification_name} > ${item.full_name}`}
+                                                        {`Request Item - ${item.classification_name} > ${item.full_name}`}
                                                     </h6>
                                                 </ListGroup.Item>
                                                 {item.considerations.map(
@@ -96,25 +96,27 @@ const ConsiderationView = ({
                                                         </ListGroup.Item>
                                                     )
                                                 )}
+                                                <ListGroup.Item>
+                                                    <Button
+                                                        variant="link"
+                                                        className="fst-italic p-0"
+                                                        onClick={() =>
+                                                            doConsideration(
+                                                                item.id
+                                                            )
+                                                        }
+                                                    >
+                                                        <span>
+                                                            edit considerations
+                                                        </span>
+                                                        <FapIcon
+                                                            icon="angle-double-right"
+                                                            size="sm"
+                                                            className="ms-1"
+                                                        />
+                                                    </Button>
+                                                </ListGroup.Item>
                                             </ListGroup>
-                                            <Button
-                                                variant="link"
-                                                className="fst-italic p-0"
-                                                onClick={() =>
-                                                    doConsideration(item.id)
-                                                }
-                                            >
-                                                <span>
-                                                    {item.outcome
-                                                        ? "Edit Considerations"
-                                                        : "Considerations"}
-                                                </span>
-                                                <FapIcon
-                                                    icon="angle-double-right"
-                                                    size="sm"
-                                                    className="ms-1"
-                                                />
-                                            </Button>
                                         </>
                                     ))}
                                 </Col>
