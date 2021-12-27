@@ -23,11 +23,14 @@ class Consideration extends Model
         'request_item_id',
         'request_type_id',
         'is_default',
+        'is_recommended',
         'summary',
     ];
 
     protected $casts = [
-        'is_default' => 'boolean',
+        'is_default'      => 'boolean',
+        'is_recommended'  => 'boolean',
+        'request_type_id' => 'integer',
     ];
 
     public function requestItem()

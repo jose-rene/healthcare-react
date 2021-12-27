@@ -46,9 +46,9 @@ class RequestAssessmentController extends Controller
         // update or remove any considerations that are not present in data
         $requestItem->considerations
             ->filter(fn($item) => empty($item['is_default']))
-            ->each(function ($item, $key) use ($added) {
+            ->each(function ($item, $key) use ($added, &$updated) {
             if (null !== ($found = $added->firstWhere('id', $item->id))) {
-                $item->update([
+                $update = $item->update([
                     'summary'         => $found['summary'],
                     'request_type_id' => $found['request_type_id'],
                 ]);
@@ -61,7 +61,7 @@ class RequestAssessmentController extends Controller
         });
         // add any considerations not updated
         $added
-            ->filter(fn($item) => !in_array($item['id'], $updated))
+            ->filter(fn($item) => empty($item['id']) || !in_array($item['id'], $updated))
             ->each(function ($item) use ($requestItem) {
                 $requestItem->considerations()->create([
                     'summary'           => $item['summary'],
