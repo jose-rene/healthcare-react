@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-    Button,
-    Card,
-    Col,
-    Collapse,
-    Form,
-    FormLabel,
-    ListGroup,
-    Row,
-} from "react-bootstrap";
+import { Button, Card, Col, Collapse, ListGroup, Row } from "react-bootstrap";
 
 import FapIcon from "components/elements/FapIcon";
 

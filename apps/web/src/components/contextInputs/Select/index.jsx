@@ -17,6 +17,7 @@ const Select = (
         wrapperClass = false,
         labelKey = "title",
         valueKey = "val",
+        disabled = false,
         ...otherProps
     },
     ref
@@ -76,6 +77,7 @@ const Select = (
                     name={name}
                     ref={ref}
                     value={value}
+                    disabled={disabled}
                     onChange={handleOnChange}
                 >
                     {selectOptions}
