@@ -21,7 +21,7 @@ const ActivityView = ({
     refreshAssessment,
     refreshLoading,
 }) => {
-    const { id: request_id } = useParams();
+    const { id, request_id } = useParams(); // If request_id, request form, if id, assessment form
 
     const [{ loading, error: formError }, fireSubmit] = useApiCall({
         method: "post",
@@ -37,7 +37,7 @@ const ActivityView = ({
         const submissionValue = {
             ...formValues,
             ...{
-                request_id,
+                request_id: request_id ? request_id : id,
             },
         };
 
@@ -51,11 +51,26 @@ const ActivityView = ({
 
     return (
         <>
-            <Card className="border-1 border-top-0 border-end-0 border-start-0 bg-light mb-3">
+            <Card
+                className={`border-1 border-top-0 border-end-0 border-start-0 bg-light ${
+                    request_id ? "mt-3" : "mb-3"
+                }`}
+            >
                 <Card.Header className="bg-light border-0 ps-2">
                     <div className="d-flex">
                         <div>
-                            <h5 className="ms-2">Activities</h5>
+                            {request_id ? (
+                                <h5>
+                                    <FapIcon
+                                        icon="check-circle"
+                                        type="fas"
+                                        className="text-success me-3"
+                                    />
+                                    Activities
+                                </h5>
+                            ) : (
+                                <h5 className="ms-2">Activities</h5>
+                            )}
                         </div>
                         <div className="ms-auto">
                             {!openActivity && (

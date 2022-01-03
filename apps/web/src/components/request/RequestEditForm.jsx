@@ -13,6 +13,7 @@ import RequestInfoView from "./views/RequestInfoView";
 import RequestDocView from "./views/RequestDocView";
 import DueDateView from "./views/DueDateView";
 import ClinicianInfoView from "./views/ClinicianInfoView";
+import ActivityView from "components/assessment/views/ActivityView";
 
 import "styles/request-progress.scss";
 
@@ -22,6 +23,7 @@ const RequestEditForm = ({ data }) => {
     // destructured section data from the request data
     const [requestData, setRequestData] = useState({});
     const {
+        activities = [],
         id: requestId = "",
         clinician = null,
         reviewer = null,
@@ -41,51 +43,59 @@ const RequestEditForm = ({ data }) => {
         [
             openClinicianInfo,
             openMember,
+            openActivity,
             openRequestInfo,
             openRequestItem,
             openRequestDoc,
             openDueDate,
         ],
         setToggler,
-    ] = useState([false, false, false, false, false, false]);
+    ] = useState([false, false, false, false, false, false, false]);
 
     const setClinicianInfo = (open) => {
-        setToggler([open, false, false, false, false, false]);
+        setToggler([open, false, false, false, false, false, false]);
     };
     const toggleOpenClinicianInfo = () => {
         setClinicianInfo(!openClinicianInfo);
     };
 
     const setOpenMember = (open) => {
-        setToggler([false, open, false, false, false, false]);
+        setToggler([false, open, false, false, false, false, false]);
     };
     const toggleOpenMember = () => {
         setOpenMember(!openMember);
     };
 
+    const setOpenActivity = (open) => {
+        setToggler([false, false, open, false, false, false, false]);
+    };
+    const toggleOpenActivity = () => {
+        setOpenActivity(!openActivity);
+    };
+
     const setOpenRequestInfo = (open) => {
-        setToggler([false, false, open, false, false, false]);
+        setToggler([false, false, false, open, false, false, false]);
     };
     const toggleOpenRequestInfo = () => {
         setOpenRequestInfo(!openRequestInfo);
     };
 
     const setOpenRequestItem = (open) => {
-        setToggler([false, false, false, open, false, false]);
+        setToggler([false, false, false, false, open, false, false]);
     };
     const toggleOpenRequestItem = () => {
         setOpenRequestItem(!openRequestItem);
     };
 
     const setOpenRequestDoc = (open) => {
-        setToggler([false, false, false, false, open, false]);
+        setToggler([false, false, false, false, false, open, false]);
     };
     const toggleOpenRequestDoc = () => {
         setOpenRequestDoc(!openRequestDoc);
     };
 
     const setOpenDueDate = (open) => {
-        setToggler([false, false, false, false, false, open]);
+        setToggler([false, false, false, false, false, false, open]);
     };
     const toggleOpenDueDate = () => {
         setOpenDueDate(!openDueDate);
@@ -130,16 +140,26 @@ const RequestEditForm = ({ data }) => {
                 method: "get",
                 persist_changes: false,
             });
+
             // close
-            if (form && form === "doc") {
-                setOpenRequestDoc(false);
+            if (form) {
+                switch (form) {
+                    case "doc":
+                        setOpenRequestDoc(false);
+                        break;
+                    case "member":
+                        setOpenMember(false);
+                        break;
+                    case "activity":
+                        setOpenActivity(false);
+                        break;
+                    case "clinician":
+                        setClinicianInfo(false);
+                        break;
+                    default:
+                }
             }
-            if (form && form === "member") {
-                setOpenMember(false);
-            }
-            if (form && form === "clinician") {
-                setClinicianInfo(false);
-            }
+
             setRequestData(result);
         } catch (e) {
             console.log("Request update error:", e);
@@ -230,6 +250,15 @@ const RequestEditForm = ({ data }) => {
                                 toggleOpenMember,
                                 refreshRequest,
                                 requestLoading,
+                            }}
+                        />
+                        <ActivityView
+                            {...{
+                                openActivity,
+                                toggleOpenActivity,
+                                activities,
+                                refreshAssessment: refreshRequest,
+                                refreshLoading: requestLoading,
                             }}
                         />
                         <RequestInfoView
