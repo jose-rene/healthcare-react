@@ -3,16 +3,7 @@ import FapIcon from "components/elements/FapIcon";
 import Select2 from "react-select";
 import Textarea from "components/inputs/Textarea";
 import useApiCall from "hooks/useApiCall";
-import {
-    Button,
-    Card,
-    Col,
-    Collapse,
-    Form,
-    FormLabel,
-    ListGroup,
-    Row,
-} from "react-bootstrap";
+import { Button, Card, Form, FormLabel } from "react-bootstrap";
 import PageAlert from "components/elements/PageAlert";
 import LoadingOverlay from "react-loading-overlay";
 
@@ -109,6 +100,7 @@ const ConsiderationForm = ({
     };
 
     // get classification data from the api
+    // eslint-disable-next-line
     const [{ loading: classificationLoading }, fetchClassification] =
         useApiCall();
     // save considerations to api
@@ -431,7 +423,7 @@ const ConsiderationForm = ({
                                                             value
                                                                 ? options.find(
                                                                       (opt) =>
-                                                                          opt.value ==
+                                                                          opt.value ===
                                                                           value
                                                                   )
                                                                 : null

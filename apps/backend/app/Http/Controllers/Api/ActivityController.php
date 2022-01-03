@@ -21,7 +21,7 @@ class ActivityController extends Controller
     {
         $user = auth()->user();
         if (!$request['request_id']) {
-            if (!$user->can('view-all-requests')) {
+            if (!$user->can('view-all-requests') && !$user->isA('client_services_specialist')) {
                 return response()->json([]);
             }
             $data = Activity::orderBy('id', 'desc')->paginate($request->get('perPage', 50));

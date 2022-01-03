@@ -39,6 +39,16 @@ const RequestsTable = () => {
         url: "/request",
     });
 
+    const [
+        {
+            loading: activityLoading,
+            data: { data: activityData = [], meta: activityMeta = {} },
+        },
+        doGetActivity,
+    ] = useApiCall({
+        url: "/activity",
+    });
+
     const [statusOptions] = useState([
         { id: "all", value: 0, title: "All" },
         { id: "received", value: 1, title: "Received" },
@@ -56,6 +66,13 @@ const RequestsTable = () => {
         { name: "All", value: "0" },
         { name: "My Stuff", value: "1" },
     ]);
+
+    const [tabOptions] = useState([
+        { name: "Requests for you", value: 0 },
+        { name: "Activities", value: 1 },
+    ]);
+
+    const [selectedTab, setSelectedTab] = useState(0);
 
     const [headers] = useState([
         { columnMap: "member.name", label: "Name", type: String },
@@ -118,7 +135,6 @@ const RequestsTable = () => {
                         <Link
                             className="px-2"
                             to={
-                                // eslint-disable-next-line no-nested-ternary
                                 !request_status_id
                                     ? `/member/${member_id}/request/${request_id}/edit`
                                     : `/requests/${request_id}`
@@ -136,6 +152,16 @@ const RequestsTable = () => {
                     </>
                 );
             },
+        },
+    ]);
+
+    const [activityHeaders] = useState([
+        { columnMap: "message", label: "Message", type: String },
+        {
+            columnMap: "datetime",
+            label: "Date",
+            type: Date,
+            formatter: (date) => (date ? fromUtc(date, timeZoneName) : "-"),
         },
     ]);
 
@@ -173,18 +199,58 @@ const RequestsTable = () => {
         history.push(`/assessment/${row.id}`);
     };
 
+    const handleTab = (tab) => {
+        setSelectedTab(tab);
+    };
+
     useEffect(() => {
         redoSearch(searchObj);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchObj]);
 
+    useEffect(() => {
+        if (selectedTab === 1) {
+            doGetActivity();
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedTab]);
+
     return (
         <>
             <Row>
                 <Col>
                     <div className="d-flex justify-content-between align-items-center">
-                        <h3>Requests for you</h3>
+                        {!userIs("client_services_specialist") ? (
+                            <h3>{tabOptions[selectedTab].name}</h3>
+                        ) : (
+                            <div className="d-flex my-3">
+                                <ButtonGroup>
+                                    {tabOptions.map((tab, idx) => (
+                                        <ToggleButton
+                                            key={idx}
+                                            id={`tab-${idx}`}
+                                            type="radio"
+                                            className={`py-3 d-flex align-items-center shadow-none ${
+                                                selectedTab !== tab.value
+                                                    ? "bg-white"
+                                                    : ""
+                                            }`}
+                                            variant="secondary"
+                                            name="filter"
+                                            value={tab.value}
+                                            checked={selectedTab === tab.value}
+                                            onChange={() =>
+                                                handleTab(tab.value)
+                                            }
+                                        >
+                                            {tab.name}
+                                        </ToggleButton>
+                                    ))}
+                                </ButtonGroup>
+                            </div>
+                        )}
 
                         <div className="d-flex mt-3">
                             <ButtonGroup className="mx-3">
@@ -213,12 +279,20 @@ const RequestsTable = () => {
                                         </ToggleButton>
                                     ))}
                             </ButtonGroup>
-                            <ContextSelect
-                                label="Status"
-                                name="request_status_id"
-                                options={statusOptions}
-                                onChange={formUpdateSearchObj}
-                            />
+                            {selectedTab === 0 && (
+                                <ContextSelect
+                                    label="Status"
+                                    name="request_status_id"
+                                    options={statusOptions}
+                                    disabled={
+                                        !userIs([
+                                            "client_services_specialist",
+                                            "field_clinician",
+                                        ])
+                                    }
+                                    onChange={formUpdateSearchObj}
+                                />
+                            )}
                             {primaryRole !== "clinical_reviewer" &&
                                 primaryRole !== "field_clinician" && (
                                     <Button
@@ -235,15 +309,27 @@ const RequestsTable = () => {
             </Row>
             <Row>
                 <Col>
-                    <TableAPI
-                        searchObj={searchObj}
-                        headers={headers}
-                        loading={loading}
-                        data={data}
-                        dataMeta={meta}
-                        onChange={handleTableChange}
-                        onClickRow={handleRow}
-                    />
+                    {selectedTab === 0 && (
+                        <TableAPI
+                            searchObj={searchObj}
+                            headers={headers}
+                            loading={loading}
+                            data={data}
+                            dataMeta={meta}
+                            onChange={handleTableChange}
+                            onClickRow={handleRow}
+                        />
+                    )}
+                    {selectedTab === 1 && (
+                        <TableAPI
+                            searchObj={{}}
+                            headers={activityHeaders}
+                            loading={activityLoading}
+                            data={activityData}
+                            dataMeta={activityMeta}
+                            onChange={() => {}}
+                        />
+                    )}
                 </Col>
             </Row>
         </>
