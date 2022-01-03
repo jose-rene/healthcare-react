@@ -34,7 +34,7 @@ class RequestType extends Model
     }
 
     /**
-     * Will return one level of children or child sections.
+     * Will return one level of children or child types.
      *
      * @return Illuminate\Database\Eloquent\Collection of RequestType
      */
@@ -44,7 +44,7 @@ class RequestType extends Model
     }
 
     /**
-     * Will implement the recursive relationship and return the hiarchy of child sections.
+     * Will implement the recursive relationship and return the hiarchy of child types.
      *
      * @return Illuminate\Database\Eloquent\Collection of RequestType
      */
@@ -54,7 +54,7 @@ class RequestType extends Model
     }
 
     /**
-     * Will return one level of children or child sections.
+     * Will return one level of parent.
      *
      * @return RequestType
      */
@@ -64,7 +64,7 @@ class RequestType extends Model
     }
 
     /**
-     * Will return one level of children or child sections.
+     * Will implement the recursive relationship and return the hiarchy of parent types.
      *
      * @return RequestType
      */
@@ -81,5 +81,50 @@ class RequestType extends Model
     public function requestTypeDetailTemplate()
     {
         return $this->belongsTo(RequestTypeDetailTemplate::class, 'request_type_template_id');
+    }
+
+    public function getAllParentsAttribute()
+    {
+        // the parent request types
+        return $this->ancestors ? array_reverse(self::mapParents($this->ancestors, true)) : null;
+        // the related classifcation, will be related to the top parent
+        $classification = null;
+        if (!empty($parents) && null !== ($requestType = RequestType::find($parents[0])) && $requestType->classification) {
+            $classification = $requestType->classification;
+        }
+    }
+
+    public function getTopClassificationAttribute()
+    {
+        // the related classifcation, will be related to the top parent
+        $classification = null;
+        if (null !== $this->allParents && null !== ($requestType = self::find($this->allParents[0])) && $requestType->classification) {
+            $classification = $requestType->classification;
+        }
+
+        return $classification;
+    }
+
+    /**
+     * Recursively creates an array of parent ids.
+     *
+     * @param mixed $requestType
+     * @return array
+     */
+    protected static function mapParents($requestType, $reset = false)
+    {
+        static $parents = [];
+        if (true === $reset) {
+            $parents = [];
+        }
+        if (!$requestType) {
+            return $parents;
+        }
+        $parents[] = $requestType['id'];
+        if ($requestType['parent']) {
+            return $this->mapParents($requestType['parent']);
+        }
+
+        return $parents;
     }
 }

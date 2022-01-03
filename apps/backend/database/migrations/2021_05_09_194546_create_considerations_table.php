@@ -16,9 +16,11 @@ class CreateConsiderationsTable extends Migration
         Schema::create('considerations', function (Blueprint $table) {
             $table->id();
 
-            $table->string('hcpcs')->comment('hcpcs code');
-            $table->string('request_item_id')->comment('id of parent request item');
-            $table->string('request_type_id')->comment('id of related request type');
+            $table->string('hcpcs')->nullable()->comment('hcpcs code');
+            $table->foreignId('request_item_id')->comment('id of parent request item');
+            $table->foreignId('request_type_id')->comment('id of related request type');
+            $table->boolean('is_default')->default(false)->comment('If this is the default consideration');
+            $table->string('summary')->nullable()->comment('The summary');
 
             $table->timestamps();
             $table->softDeletes();

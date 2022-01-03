@@ -9,12 +9,15 @@ import useApiCall from "hooks/useApiCall";
 import ScheduleView from "./views/ScheduleView";
 import ActivityView from "./views/ActivityView";
 import MediaView from "./views/MediaView";
+import ConsiderationView from "./views/ConsiderationView";
 import AssessmentView from "./views/AssessmentView";
 
 const AssessmentEditForm = ({ reasonOptions, data }) => {
     const [assessmentData, setAssessmentData] = useState({});
-    const [[openSchedule, openMember, openActivity, openMedia], setToggler] =
-        useState([false, false, false, false]);
+    const [
+        [openSchedule, openMember, openActivity, openMedia, openConsideration],
+        setToggler,
+    ] = useState([false, false, false, false, false]);
 
     useEffect(() => {
         if (data) {
@@ -23,28 +26,37 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     }, [data]);
 
     const setOpenSchedule = (open) => {
-        setToggler([open, false, false, false]);
+        setToggler([open, false, false, false, false]);
     };
     const toggleOpenSchedule = () => {
         setOpenSchedule(!openSchedule);
     };
     const setOpenMember = (open) => {
-        setToggler([false, open, false, false]);
+        setToggler([false, open, false, false, false]);
     };
     const toggleOpenMember = () => {
         setOpenMember(!openMember);
     };
     const setOpenActivity = (open) => {
-        setToggler([false, false, open, false]);
+        setToggler([false, false, open, false, false]);
     };
     const toggleOpenActivity = () => {
         setOpenActivity(!openActivity);
     };
     const setOpenMedia = (open) => {
-        setToggler([false, false, false, open]);
+        setToggler([false, false, false, open, false]);
     };
     const toggleOpenMedia = () => {
         setOpenMedia(!openMedia);
+    };
+    const toggleOpenConsideration = (open = null) => {
+        setToggler([
+            false,
+            false,
+            false,
+            false,
+            open === null ? !openConsideration : !!open,
+        ]);
     };
 
     const [{ loading: refreshLoading }, fireRefreshAssessment] = useApiCall();
@@ -63,11 +75,11 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                 case "schedule":
                     setOpenSchedule(false);
                     break;
-                case "activity":
-                    setOpenActivity(false);
-                    break;
                 case "media":
                     setOpenMedia(false);
+                    break;
+                case "consideration":
+                    toggleOpenConsideration(false);
                     break;
             }
         }
@@ -78,6 +90,10 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     const {
         activities = [],
         status = "",
+        member: { payer: { classifications } } = {
+            payer: { classifications: [] },
+        },
+        request_items: requestItems = [],
         id: requestId = "",
         assessment_form: { forms = [], name: assessmentName = "" } = {
             forms: [],
@@ -167,6 +183,19 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     assessmentData,
                                     refreshAssessment,
                                     refreshLoading,
+                                }}
+                            />
+                        </Col>
+                        <Col xl={10}>
+                            <ConsiderationView
+                                {...{
+                                    openConsideration,
+                                    toggleOpenConsideration,
+                                    classifications,
+                                    requestItems,
+                                    refreshAssessment,
+                                    refreshLoading,
+                                    requestId,
                                 }}
                             />
                         </Col>

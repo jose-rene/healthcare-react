@@ -45,6 +45,11 @@ class RequestFormSectionController extends Controller
             'request_id'      => $request->id,
         ], ['answer_data' => []]);
 
+        if ('Assessed' !== $request->status) {
+            $request->status = 'Assessed';
+            $request->save();
+        }
+
         $section->answer_data = request('form_data');
 
         if (!$section->started_at) {

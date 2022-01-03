@@ -19,12 +19,11 @@ class RequestItemResource extends JsonResource
         // the parent request types
         $parents = $this->requestType && $this->requestType->ancestors ? collect(array_reverse($this->mapParents($this->requestType->ancestors, true))) : null;
         // the related classification, will be related to the top parent
-        $classification = null;
-        if (!empty($parents) && null !== ($requestType = RequestType::find($parents->first()['id'])) && $requestType->classification) {
-            $classification = $requestType->classification;
-        }
+        $classification = $this->requestType ? $this->requestType->topClassification : null;
+
         return [
             'id'                   => $this->uuid,
+            'considerations'       => ConsiderationResource::collection($this->defaultConsiderations()),
             'vendor_price'         => $this->vendor_price,
             'name'                 => $this->name,
             'full_name'            => $parents ? $parents->map(fn($item) => $item['name'])->prepend($this->name)->join(' > ') : null,     

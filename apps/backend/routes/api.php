@@ -77,6 +77,7 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('request.form', 'RequestFormController');
     Route::apiResource('narrative_report_template', 'NarrativeReportTemplatesController');
     Route::apiResource('appointment', 'AppointmentController');
+    Route::apiResource('classification', 'ClassificationController')->only(['index', 'show']);
 
 
     Route::apiResource('request.narrative_report_template', 'RequestNarrativeReportTemplateController')->only('show');
@@ -93,6 +94,7 @@ Route::middleware('auth:api')->group(function ($router) {
 
     Route::get('assessment/{request}', 'RequestAssessmentController@show')->name('request.assessment.show');
     Route::put('assessment/{request}/media', 'RequestAssessmentController@media')->name('request.assessment.media');
+    Route::post('assessment/{request}/consideration', 'RequestAssessmentController@consideration')->name('request.assessment.consideration');
     Route::get('assessment/{request}/section/{form}', 'RequestAssessmentController@section')->name('request.assessment.section');
 
     Route::apiResource('request.request_form_section', 'RequestFormSectionController')->only('show', 'update');
