@@ -20,6 +20,7 @@ class ActivityResource extends JsonResource
         return [
             'id'         => $this->uuid,
             'parent_id'  => $this->parent ? $this->parent->uuid : null,
+            'user_id'    => $this->user_id,
             'date'       => $dateTime->format('m/d/Y'),
             'datetime'   => $dateTime->format('m/d/Y H:i:s'),
             'priority'   => $this->priority,

@@ -183,6 +183,9 @@ class RequestController extends Controller
 
         $request->save();
 
+        // here we can send a notification or make an activity
+        // $therapist->notify()
+
         return response()->json(['status' => 'ok', 'clinician' => ['id' => $therapist->id]]);
     }
 

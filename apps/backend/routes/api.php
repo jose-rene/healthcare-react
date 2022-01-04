@@ -43,8 +43,8 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->post('/user/search', 'UserController@search');
     $router->get('/user/available_roles', 'UserController@availableRoles');
     $router->get('logout', 'LoginController@logout');
-    $router->get('notifications', 'NotificationsController@index');
-    $router->put('notifications', 'NotificationsController@update');
+    $router->get('notifications', 'NotificationsController@index')->name('notifications.index');
+    $router->put('notifications', 'NotificationsController@update')->name('notifications.update');
 
     // request info
     $router->get('/request/summary', 'RequestController@summary');
