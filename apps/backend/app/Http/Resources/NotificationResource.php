@@ -16,9 +16,14 @@ class NotificationResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request) + [
-                'human_read_at'    => $this->read_at ? (new Carbon($this->read_at))->diffForHumans() : null,
-                'human_created_at' => (new Carbon($this->created_at))->diffForHumans(),
-            ];
+        return [
+            'id'               => $this->id,
+            'activity_id'      => $this->data['id'] ?? null,
+            'request_id'       => $this->data['request_id'] ?? null,
+            'message'          => $this->data['message'] ?? "",
+            'priority'         => $this->priority,
+            'human_read_at'    => $this->read_at ? (new Carbon($this->read_at))->diffForHumans() : null,
+            'human_created_at' => (new Carbon($this->created_at))->diffForHumans(),
+        ];
     }
 }

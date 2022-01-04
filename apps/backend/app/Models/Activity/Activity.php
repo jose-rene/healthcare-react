@@ -134,21 +134,18 @@ class Activity extends Model
      */
     public function getNotificationUsers()
     {
-        $users = [];
-
-        if ($this->notify_admin) {
-            $users[] = User::where('primary_role', 'client_services_specialist')->get();
-        }
+        // send any activity to admins, this may change for only certain types
+        $users = User::where('primary_role', 'client_services_specialist')->get();
 
         if ($this->notify_reviewer) {
-            $users[] = $this->request->reviewer;
+            $users->push($this->request->reviewer);
         }
 
         if ($this->notify_therapist) {
-            $users[] = $this->request->clinician;
+            $users->push($this->request->clinician);
         }
 
-        return collect($users)->push($this->user)->unique()->values()->all();
+        return $users->push($this->user)->unique();
     }
 
     public function activityReason()

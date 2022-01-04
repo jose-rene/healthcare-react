@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Activity\Activity;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -14,14 +15,16 @@ class ActivityCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $activity;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Activity $activity)
     {
-        //
+        $this->activity = $activity;
     }
 
     /**

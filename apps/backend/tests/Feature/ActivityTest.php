@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Activity\Activity;
 use App\Models\Request;
 use App\Models\User;
+use App\Notifications\RequestActivity;
 use Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -134,6 +135,54 @@ class ActivityTest extends TestCase
             ->assertJsonPath('activities.0.id', $data['id']);
     }
 
+    /**
+     * Test notification generation from created activity.
+     *
+     * @return void
+     */
+    public function testNotification()
+    {
+        // a notification will be generated on activity creation, use notification fake
+        Notification::fake();
+
+        $formData = $this->getFormData();
+        $response = $this->json('POST', route('api.activity.store'), $formData);
+        // validate data
+        $response
+            ->assertStatus(201)
+            ->assertJsonStructure(['id', 'message', 'type', 'activities'])
+            ->assertJsonPath('message', $formData['message'])
+            ->assertJsonPath('priority', $formData['priority'])
+            ->assertJsonPath('user_id', $this->user->id);
+
+        // notification sent to user
+        Notification::assertSentTo($this->user, RequestActivity::class);
+    }
+
+    /**
+     * Test create notification index list.
+     *
+     * @return void
+     */
+    public function testNotificationIndex()
+    {
+        $formData = $this->getFormData();
+        $response = $this->json('POST', route('api.activity.store'), $formData);
+        // validate data
+        $response
+            ->assertStatus(201)
+            ->assertJsonStructure(['id', 'message', 'type', 'activities'])
+            ->assertJsonPath('message', $formData['message'])
+            ->assertJsonPath('priority', $formData['priority'])
+            ->assertJsonPath('user_id', $this->user->id);
+
+        // get notifications
+        $response = $this->json('GET', route('api.notifications.index'));
+        $response
+            ->assertSuccessful()
+            ->assertJsonPath('0.message', $formData['message']);
+    }
+
     protected function getFormData()
     {
         return [
@@ -151,8 +200,6 @@ class ActivityTest extends TestCase
 
         Artisan::call('passport:install');
 
-        // a notification will be generated on activity creation, use notification fake
-        Notification::fake();
         $this->request = Request::factory()->create();
 
         // Generate activity with children for the automated tests
