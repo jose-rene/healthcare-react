@@ -125,7 +125,6 @@ const TableAPI = ({
                         <Select
                             label="Show"
                             inlineLabel
-                            className="form-control"
                             name="perPage"
                             value={perPage}
                             onChange={handlePerPageChange}
