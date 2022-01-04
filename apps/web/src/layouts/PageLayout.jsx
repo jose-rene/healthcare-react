@@ -98,7 +98,10 @@ const PageLayout = ({ loading: childloading = false, children }) => {
                         open ? "" : " collapsed"
                     }`}
                 >
-                    <div className="position-fixed d-flex flex-column h-100 min-vh-100 bg-white">
+                    <div
+                        className="position-fixed d-flex flex-column h-100 min-vh-100 bg-white"
+                        style={{ zIndex: 1 }}
+                    >
                         <Sidebar
                             {...{ logOut, primaryRole, abilities, open }}
                         />
