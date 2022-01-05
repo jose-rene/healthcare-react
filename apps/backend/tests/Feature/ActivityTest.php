@@ -180,6 +180,7 @@ class ActivityTest extends TestCase
         $response = $this->json('GET', route('api.notifications.index'));
         $response
             ->assertSuccessful()
+            ->assertJsonStructure([0 => ['id', 'message', 'title', 'priority']])
             ->assertJsonPath('0.message', $formData['message']);
     }
 
