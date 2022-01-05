@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
-import Icon from "../elements/Icon";
+
+import FapIcon from "../elements/FapIcon";
 
 const Button = ({
     useButton = true,
@@ -62,22 +63,18 @@ const Button = ({
             onClick={onClick}
             disabled={disabled}
         >
-            {icon && <Icon className="me-3" icon={icon} size={iconSize} />}
-            <span className={`${loading ? "me-5" : ""}`}>
-                {renderedLabel}
-            </span>
+            {icon && <FapIcon className="me-3" icon={icon} size={iconSize} />}
+            <span className={`${loading ? "me-5" : ""}`}>{renderedLabel}</span>
             {loading && (
-                <Icon className="align-middle fa-spin ms-3">spinner</Icon>
+                <FapIcon className="align-middle fa-spin ms-3">spinner</FapIcon>
             )}
         </button>
     ) : (
         <Link to={to} className={className} onClick={onClick}>
-            {icon && <Icon className="me-3" icon={icon} size={iconSize} />}
-            <span className={`${loading ? "me-5" : ""}`}>
-                {renderedLabel}
-            </span>
+            {icon && <FapIcon className="me-3" icon={icon} size={iconSize} />}
+            <span className={`${loading ? "me-5" : ""}`}>{renderedLabel}</span>
             {loading && (
-                <Icon className="align-middle fa-spin ms-3">spinner</Icon>
+                <FapIcon className="align-middle fa-spin ms-3">spinner</FapIcon>
             )}
         </Link>
     );

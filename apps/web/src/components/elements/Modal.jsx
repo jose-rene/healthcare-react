@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal as B_MODAL } from "react-bootstrap";
-import Icon from "./Icon";
+
+import FapIcon from "./FapIcon";
 
 const Modal = ({
     show = false,
@@ -26,7 +27,11 @@ const Modal = ({
                 <B_MODAL.Header closeButton={hasClose}>
                     <B_MODAL.Title>
                         {titleIcon ? (
-                            <Icon icon={titleIcon} size="lg" className="me-2" />
+                            <FapIcon
+                                size="lg"
+                                icon={titleIcon}
+                                className="me-2"
+                            />
                         ) : null}
                         {title}
                     </B_MODAL.Title>

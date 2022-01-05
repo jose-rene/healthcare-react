@@ -1,6 +1,6 @@
 import React from "react";
 import { Tab, Tabs } from "react-bootstrap";
-import Icon from "components/elements/Icon";
+import FapIcon from "components/elements/FapIcon";
 import { Button } from "components";
 
 const AddUser = ({ location }) => {
@@ -11,35 +11,73 @@ const AddUser = ({ location }) => {
                     <div className="col-12">
                         <div className="row row-no-margin">
                             <div className="col-12 col-lg-4 p-0 d-flex">
-                                <Button onClick={() => location.push("/contacts")} variant="outline-secondary">
-                                    <Icon icon="plane" style={{ fontSize: 16 }} /> <p
-                                    className="p-0 m-0 d-inline">Back</p>
+                                <Button
+                                    onClick={() => location.push("/contacts")}
+                                    variant="outline-secondary"
+                                >
+                                    <FapIcon
+                                        icon="plane"
+                                        style={{ fontSize: 16 }}
+                                    />{" "}
+                                    <p className="p-0 m-0 d-inline">Back</p>
                                 </Button>
-                                <h1 className="box-title mb-1 me-4 ps-4">Contact Details</h1>
+                                <h1 className="box-title mb-1 me-4 ps-4">
+                                    Contact Details
+                                </h1>
                             </div>
 
                             <div className="col-12 col-lg-8 p-0 row row-no-margin customAlignButtonsContactDetailsHealthPlan">
                                 <div className="buttonResendEmail">
-                                    <Button variant="secondary"
-                                            className="me-md-3 no-break-content custom-secondary-button-companies widthFullDetailsPatient"><Icon
-                                        className="me-2" icon={"paper-plane"} style={{ fontSize: 16 }} /> Resend
-                                        Email</Button>
+                                    <Button
+                                        variant="secondary"
+                                        className="me-md-3 no-break-content custom-secondary-button-companies widthFullDetailsPatient"
+                                    >
+                                        <FapIcon
+                                            className="me-2"
+                                            icon={"paper-plane"}
+                                            style={{ fontSize: 16 }}
+                                        />{" "}
+                                        Resend Email
+                                    </Button>
                                 </div>
                                 <div className="buttonSendReset">
-                                    <Button variant="secondary"
-                                            className="me-md-3 no-break-content custom-secondary-button-companies widthFullDetailsPatient"><Icon
-                                        icon="refresh" className="me-2" style={{ fontSize: 16 }} /> Send Reset
-                                        Email</Button>
+                                    <Button
+                                        variant="secondary"
+                                        className="me-md-3 no-break-content custom-secondary-button-companies widthFullDetailsPatient"
+                                    >
+                                        <FapIcon
+                                            icon="refresh"
+                                            className="me-2"
+                                            style={{ fontSize: 16 }}
+                                        />{" "}
+                                        Send Reset Email
+                                    </Button>
                                 </div>
                                 <div className="buttonDeactivate">
-                                    <Button variant="secondary"
-                                            className="me-md-3 no-break-content custom-secondary-button-companies widthFullDetailsPatient"><Icon
-                                        icon="power" className="me-2" style={{ fontSize: 16 }} /> Deactivate</Button>
+                                    <Button
+                                        variant="secondary"
+                                        className="me-md-3 no-break-content custom-secondary-button-companies widthFullDetailsPatient"
+                                    >
+                                        <FapIcon
+                                            icon="power"
+                                            className="me-2"
+                                            style={{ fontSize: 16 }}
+                                        />{" "}
+                                        Deactivate
+                                    </Button>
                                 </div>
                                 <div className="buttonSetPassword">
-                                    <Button variant="secondary"
-                                            className="me-md-3 no-break-content custom-secondary-button-companies widthFullDetailsPatient"><Icon
-                                        icon="lock" className="me-2" style={{ fontSize: 16 }} /> Set Password</Button>
+                                    <Button
+                                        variant="secondary"
+                                        className="me-md-3 no-break-content custom-secondary-button-companies widthFullDetailsPatient"
+                                    >
+                                        <FapIcon
+                                            icon="lock"
+                                            className="me-2"
+                                            style={{ fontSize: 16 }}
+                                        />{" "}
+                                        Set Password
+                                    </Button>
                                 </div>
                             </div>
                         </div>

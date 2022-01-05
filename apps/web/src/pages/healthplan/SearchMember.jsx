@@ -11,7 +11,7 @@ import ContextInput from "components/inputs/ContextInput";
 import PageAlert from "components/elements/PageAlert";
 import TableAPI from "components/elements/TableAPI";
 import Form from "components/elements/Form";
-import Icon from "components/elements/Icon";
+import FapIcon from "components/elements/FapIcon";
 
 import useToast from "hooks/useToast";
 import useApiCall from "hooks/useApiCall";
@@ -68,7 +68,7 @@ const SearchMember = (props) => {
                         className="btn btn-primary btn-icon btn-sm"
                         to={`/member/${id}/request/add`}
                     >
-                        <Icon icon="plus" className="me-1" size="sm" />
+                        <FapIcon icon="plus" className="me-1" size="sm" />
                         New Request
                     </Link>
                 );
