@@ -1,12 +1,16 @@
 import { debounce, get } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
-import { PUT } from "../../config/URLs";
-import useApiCall from "../../hooks/useApiCall";
-import "../../styles/AlertList.scss";
+
 import Button from "../inputs/Button";
-import Icon from "./Icon";
+import FapIcon from "./FapIcon";
 import PageAlert from "./PageAlert";
+
+import { PUT } from "config/URLs";
+
+import useApiCall from "hooks/useApiCall";
+
+import "styles/AlertList.scss";
 
 const subjectTypeMap = ({
     action = "",
@@ -125,7 +129,7 @@ const List = () => {
         <>
             <div className="box-same-line">
                 <h1 className="box-title" onClick={debouncedFireLoad}>
-                    Alerts {loading && <Icon size="1x" icon="spinner" spin />}
+                    Alerts {loading && <FapIcon size="1x" icon="spinner" />}
                 </h1>
                 <div className="d-none d-sm-block">
                     {enableCheckAll && (
@@ -151,12 +155,8 @@ const List = () => {
                         )}
                         {alerts &&
                             alerts.map((alert) => {
-                                const {
-                                    id,
-                                    read_at,
-                                    data,
-                                    human_created_at,
-                                } = alert;
+                                const { id, read_at, data, human_created_at } =
+                                    alert;
 
                                 return (
                                     <ListGroupItem
@@ -167,10 +167,9 @@ const List = () => {
                                         <div className="d-flex">
                                             <div>
                                                 {alertsLoading[id] ? (
-                                                    <Icon
+                                                    <FapIcon
                                                         size="1x"
                                                         icon="spinner"
-                                                        spin
                                                     />
                                                 ) : (
                                                     <input

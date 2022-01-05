@@ -8,7 +8,7 @@ import { useUser } from "Context/UserContext";
 import { Button } from "components";
 import ContextInput from "components/inputs/ContextInput";
 import InputText from "components/inputs/InputText";
-import Icon from "components/elements/Icon";
+import FapIcon from "components/elements/FapIcon";
 import PageAlert from "components/elements/PageAlert";
 import ConfirmationModal from "components/elements/ConfirmationModal";
 import ContextSelect from "components/contextInputs/Select";
@@ -370,9 +370,9 @@ const TabAccount = ({ history }) => {
                                                                     }
                                                                     variant="icon"
                                                                 >
-                                                                    <Icon>
+                                                                    <FapIcon>
                                                                         trash
-                                                                    </Icon>
+                                                                    </FapIcon>
                                                                 </Button>
                                                             </center>
                                                         </td>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Select2 from "react-select";
+import { Card } from "react-bootstrap";
+
+import FapIcon from "components/elements/FapIcon";
 
 import "./newRequestAddSteps.css";
-import { Card } from "react-bootstrap";
-import Icon from "../../components/elements/Icon";
 /* eslint-disable react-hooks/exhaustive-deps */
 
 const NewRequestAddSteps4 = ({ requestData, setParams }) => {
@@ -323,8 +324,8 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
                                     <Card key={groupIndex} className="mb-3">
                                         <Card.Header>
                                             Request Items
-                                            <Icon
-                                                icon="delete"
+                                            <FapIcon
+                                                icon="trash"
                                                 role="button"
                                                 className="float-right mt-1 cursor-pointer"
                                                 size="1x"
@@ -360,12 +361,12 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
                                                                 .classification
                                                                 .value
                                                                 ? selectGroup.classification.options.find(
-                                                                    (opt) =>
-                                                                        opt.value ===
+                                                                      (opt) =>
+                                                                          opt.value ===
                                                                           selectGroup
                                                                               .classification
                                                                               .value
-                                                                )
+                                                                  )
                                                                 : null
                                                         }
                                                         onChange={(
@@ -398,12 +399,12 @@ const NewRequestAddSteps4 = ({ requestData, setParams }) => {
                                                             value={
                                                                 select.value
                                                                     ? select.options.find(
-                                                                        (
-                                                                            opt
-                                                                        ) =>
-                                                                            opt.value ===
+                                                                          (
+                                                                              opt
+                                                                          ) =>
+                                                                              opt.value ===
                                                                               select.value
-                                                                    )
+                                                                      )
                                                                     : null
                                                             }
                                                             isClearable

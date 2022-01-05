@@ -5,7 +5,7 @@ import { useFormContext } from "Context/FormContext";
 
 import useApiCall from "hooks/useApiCall";
 
-import Icon from "../elements/Icon";
+import FapIcon from "../elements/FapIcon";
 
 /**
  * @link http://localhost:3000password/change?token=d633e4428b78035328a3bba3542ac565b93d612f3a9640ec5a2e98f56227fa3b&email=admin%40admin.com
@@ -165,13 +165,13 @@ const PasswordRequirements = ({
         const ruleIndexCheck = primaryValidated[i];
 
         if (!triggered) {
-            return <Icon icon="circle" iconType="r" className="text-primary" />;
+            return <FapIcon icon="circle" className="text-primary" />;
         }
 
         return ruleIndexCheck ? (
-            <Icon icon="check-circle" iconType="r" className="text-primary" />
+            <FapIcon icon="check-circle" className="text-primary" />
         ) : (
-            <Icon icon="exclamation-triangle" className="text-primary" />
+            <FapIcon icon="exclamation-triangle" className="text-primary" />
         );
     };
 
@@ -179,13 +179,13 @@ const PasswordRequirements = ({
         const ruleIndexCheck = secondaryFails[i];
 
         if (!primaryDone || !triggered) {
-            return <Icon icon="circle" iconType="r" className="text-primary" />;
+            return <FapIcon icon="circle" className="text-primary" />;
         }
 
         return ruleIndexCheck === undefined ? (
-            <Icon icon="check-circle" iconType="r" className="text-primary" />
+            <FapIcon icon="check-circle" className="text-primary" />
         ) : (
-            <Icon icon="exclamation-triangle" className="text-primary" />
+            <FapIcon icon="exclamation-triangle" className="text-primary" />
         );
     };
 

@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { isEmpty } from "lodash";
 import { Accordion, Card } from "react-bootstrap";
+import { isEmpty } from "lodash";
 
 import Button from "../../inputs/Button";
+import FapIcon from "../../elements/FapIcon";
 
-import NewRequestAddSteps1 from "../../../pages/newRequestAddSteps/NewRequestAddSteps1";
-import NewRequestAddSteps2 from "../../../pages/newRequestAddSteps/NewRequestAddSteps2";
-import NewRequestAddSteps3 from "../../../pages/newRequestAddSteps/NewRequestAddSteps3";
-import NewRequestAddSteps4 from "../../../pages/newRequestAddSteps/NewRequestAddSteps4";
-import NewRequestAddSteps5 from "../../../pages/newRequestAddSteps/NewRequestAddSteps5";
-import { validate } from "../../../pages/newRequestAddSteps/validate";
+import NewRequestAddSteps1 from "pages/newRequestAddSteps/NewRequestAddSteps1";
+import NewRequestAddSteps2 from "pages/newRequestAddSteps/NewRequestAddSteps2";
+import NewRequestAddSteps3 from "pages/newRequestAddSteps/NewRequestAddSteps3";
+import NewRequestAddSteps4 from "pages/newRequestAddSteps/NewRequestAddSteps4";
+import NewRequestAddSteps5 from "pages/newRequestAddSteps/NewRequestAddSteps5";
+import { validate } from "pages/newRequestAddSteps/validate";
 
-import useApiCall from "../../../hooks/useApiCall";
-import useToast from "../../../hooks/useToast";
+import useApiCall from "hooks/useApiCall";
+import useToast from "hooks/useToast";
 
 import "./stepper.css";
 
@@ -208,7 +209,7 @@ const Stepper = ({ data }) => {
                             >
                                 {activeStatus[index] ? (
                                     <div className="step-header-active-circle">
-                                        <i className="fas fa-check" />
+                                        <FapIcon icon="check" size="1x" />
                                     </div>
                                 ) : (
                                     <div className="step-header-circle" />

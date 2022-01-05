@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Button as RButton } from "react-bootstrap";
+
 import FapIcon from "../FapIcon";
-import Icon from "../Icon";
 
 const Button = ({
     size = "lg",
@@ -38,7 +38,7 @@ const Button = ({
             className={`${className ?? ""}${block ? " btn-block" : ""}`}
         >
             {icon && (
-                <Icon
+                <FapIcon
                     className={`${renderedLabel ? "me-3" : ""}`}
                     icon={icon}
                     size={iconSize || size}

@@ -1,70 +1,72 @@
+@import url("https://use.fontawesome.com/releases/v5.13.0/css/all.css");
+
 .container-progress {
-	width: 600px;
-	margin: 100px auto;
+    width: 600px;
+    margin: 100px auto;
 }
 .progressbar {
-	counter-reset: step;
-	display: flex;
-	flex-direction: row;
-	width: 100%;
-	min-width: 430px;
-	padding-left: 0;
-	li {
-		list-style-type: none;
-		flex: 1;
-		font-size: 14px;
-		position: relative;
-		text-align: center;
-		color: #7d7d7d;
+    counter-reset: step;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-width: 430px;
+    padding-left: 0;
+    li {
+        list-style-type: none;
+        flex: 1;
+        font-size: 14px;
+        position: relative;
+        text-align: center;
+        color: #7d7d7d;
         // z-index: 2;
-		&:before {
-			width: 20px;
-			height: 20px;
-			content: '';
-			counter-increment: step;
-			line-height: 20px;
-			border: 2px solid #7d7d7d;
-			display: block;
-			text-align: center;
-			margin: 0 auto 10px auto;
-			border-radius: 50%;
-			background-color: #eee;
-		}
-		&:after {
-			width: 100%;
-			height: 2px;
-			content: '';
-			position: absolute;
-			background-color: #7d7d7d;
-			top: 10px;
-			left: -50%;
-			z-index: -1;
-		}
-		&:first-child {
-			&:after {
-				content: none;
-			}
-		}
-	}
-	li.active {
-		color: green;
-		&:before {
-			border-color: #55b776;
-			color: #55b776;
-			font-family: "Font Awesome 5 Free";
-			font-weight: 700;
-            font-size:12px;
-			content: "\f00c";
-			line-height: 1.25em;
-		}
-		+ {
-			li {
-				&:after {
-					background-color: #55b776;
-				}
-			}
-		}
-	}
+        &:before {
+            width: 20px;
+            height: 20px;
+            content: "";
+            counter-increment: step;
+            line-height: 20px;
+            border: 2px solid #7d7d7d;
+            display: block;
+            text-align: center;
+            margin: 0 auto 10px auto;
+            border-radius: 50%;
+            background-color: #eee;
+        }
+        &:after {
+            width: 100%;
+            height: 2px;
+            content: "";
+            position: absolute;
+            background-color: #7d7d7d;
+            top: 10px;
+            left: -50%;
+            z-index: -1;
+        }
+        &:first-child {
+            &:after {
+                content: none;
+            }
+        }
+    }
+    li.active {
+        color: green;
+        &:before {
+            border-color: #55b776;
+            color: #55b776;
+            font-family: "Font Awesome 5 Free";
+            font-weight: 700;
+            font-size: 12px;
+            content: "\f00c";
+            line-height: 1.25em;
+        }
+        + {
+            li {
+                &:after {
+                    background-color: #55b776;
+                }
+            }
+        }
+    }
 }
 
 @media (max-width: 991px) {

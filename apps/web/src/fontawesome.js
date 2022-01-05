@@ -52,6 +52,14 @@ import {
     faFolderPlus,
     faFolderMinus,
     faBriefcase,
+    faSort,
+    faSortDown,
+    faSortUp,
+    faCircle,
+    faCopy,
+    faTimes,
+    faCalendarAlt,
+    faClock,
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add(
@@ -107,7 +115,15 @@ library.add(
     faCopyright,
     faFolderPlus,
     faFolderMinus,
-    faBriefcase
+    faBriefcase,
+    faSort,
+    faSortDown,
+    faSortUp,
+    faCircle,
+    faCopy,
+    faTimes,
+    faCalendarAlt,
+    faClock
 );
 /*
 if (process.env.NODE_ENV === "development") {

@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import InputText from "components/inputs/InputText";
-import { Alert, Button } from "react-bootstrap";
-import Icon from "components/elements/Icon";
-import { BASE_URL, POST } from "../config/URLs";
-import { useForm } from "react-hook-form";
-import useApiCall from "../hooks/useApiCall";
 import { Link } from "react-router-dom";
+import { Alert, Button } from "react-bootstrap";
+import { useForm } from "react-hook-form";
 import qs from "query-string";
+
+import InputText from "components/inputs/InputText";
+import FapIcon from "components/elements/FapIcon";
+
+import { BASE_URL, POST } from "config/URLs";
+
+import useApiCall from "hooks/useApiCall";
 
 export default ({ location: { search: params = "" } }) => {
     const [{ loading = false }, forgotPassword] = useApiCall({
@@ -88,7 +91,7 @@ export default ({ location: { search: params = "" } }) => {
                             </div>
                             {changeSuccess && (
                                 <Alert className="mt-3" variant="success">
-                                    <Icon icon="email" />
+                                    <FapIcon icon="email" />
                                     Please check your email for the password
                                     reset instructions.
                                 </Alert>
@@ -107,9 +110,9 @@ export default ({ location: { search: params = "" } }) => {
                             >
                                 Send Reset Password Email
                                 {loading ? (
-                                    <Icon className="align-middle fa-spin">
+                                    <FapIcon className="align-middle fa-spin">
                                         spinner
-                                    </Icon>
+                                    </FapIcon>
                                 ) : null}
                             </Button>
                         </form>

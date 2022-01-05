@@ -4,10 +4,18 @@
 import React, { useEffect } from "react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import { Pagination, Table } from "react-bootstrap";
-import Select from "../inputs/Select";
-import Icon from "./Icon";
 
-const DataTable = ({ columns, data, entityName, loading, searchObj ,updateSearchObj }) => {
+import Select from "../inputs/Select";
+import FapIcon from "./FapIcon";
+
+const DataTable = ({
+    columns,
+    data,
+    entityName,
+    loading,
+    searchObj,
+    updateSearchObj,
+}) => {
     const {
         getTableProps,
         getTableBodyProps,
@@ -36,8 +44,8 @@ const DataTable = ({ columns, data, entityName, loading, searchObj ,updateSearch
     const itemEnd = itemStart + pageSize - 1;
     const pageInfo = data.length
         ? `Showing ${itemStart} to ${itemEnd} of ${data.length} ${
-            entityName ?? "items"
-        } `
+              entityName ?? "items"
+          } `
         : `No ${entityName} Found`;
     const pageButtons = [];
     for (let i = 0; i < pageCount; i++) {
@@ -90,11 +98,11 @@ const DataTable = ({ columns, data, entityName, loading, searchObj ,updateSearch
     };
 
     useEffect(() => {
-        updateSearchObj({target: {name: 'pageIndex', value: pageIndex}})
+        updateSearchObj({ target: { name: "pageIndex", value: pageIndex } });
     }, [pageIndex]);
 
     useEffect(() => {
-        updateSearchObj({target: {name: 'pageSize', value: pageSize}})
+        updateSearchObj({ target: { name: "pageSize", value: pageSize } });
     }, [pageSize]);
 
     return (
@@ -116,15 +124,15 @@ const DataTable = ({ columns, data, entityName, loading, searchObj ,updateSearch
                                     <span>
                                         {column.isSorted ? (
                                             column.isSortedDesc ? (
-                                                <Icon
+                                                <FapIcon
+                                                    size="1x"
                                                     icon="arrow-down"
-                                                    size="sm"
                                                     className="ms-2"
                                                 />
                                             ) : (
-                                                <Icon
+                                                <FapIcon
+                                                    size="1x"
                                                     icon="arrow-up"
-                                                    size="sm"
                                                     className="ms-2"
                                                 />
                                             )

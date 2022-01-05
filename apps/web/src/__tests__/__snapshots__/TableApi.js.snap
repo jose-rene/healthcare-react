@@ -265,11 +265,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
        
       <span
         className="float-right ms-1"
-      >
-        <i
-          className="icon fas fa-sort   fa-1x "
-        />
-      </span>
+      />
     </th>
     <th
       className="c-pointer text-left align-middle"
@@ -279,11 +275,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
        
       <span
         className="float-right ms-1"
-      >
-        <i
-          className="icon fas fa-sort   fa-1x "
-        />
-      </span>
+      />
     </th>
     <th
       className="c-pointer text-left align-middle"
@@ -293,11 +285,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
        
       <span
         className="float-right ms-1"
-      >
-        <i
-          className="icon fas fa-sort   fa-1x "
-        />
-      </span>
+      />
     </th>
     <th
       className="c-pointer text-left align-middle"
@@ -307,11 +295,7 @@ exports[`<TableAPI /> renders sortable headers 1`] = `
        
       <span
         className="float-right ms-1"
-      >
-        <i
-          className="icon fas fa-sort   fa-1x "
-        />
-      </span>
+      />
     </th>
   </tr>
 </thead>

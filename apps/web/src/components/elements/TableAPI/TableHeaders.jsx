@@ -1,6 +1,8 @@
 import React from "react";
-import { mapTypeToClass } from "../../../helpers/table";
-import Icon from "../Icon";
+
+import FapIcon from "../FapIcon";
+
+import { mapTypeToClass } from "helpers/table";
 
 const TableHeaders = ({
     headers = [],
@@ -24,16 +26,16 @@ const TableHeaders = ({
 
     const sortArrow = (columnMap) => {
         if (columnMap !== sortColumn) {
-            return <Icon size="1x" icon="sort" />;
+            return <FapIcon size="1x" icon="sort" />;
         }
 
         switch (sortDirection) {
             case "asc":
-                return <Icon size="1x" icon="sort-up" />;
+                return <FapIcon size="1x" icon="sort-up" />;
             case "desc":
-                return <Icon size="1x" icon="sort-down" />;
+                return <FapIcon size="1x" icon="sort-down" />;
             default:
-                return <Icon size="1x" icon="sort" />;
+                return <FapIcon size="1x" icon="sort" />;
         }
     };
 

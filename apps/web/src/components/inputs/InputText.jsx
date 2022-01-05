@@ -1,7 +1,9 @@
 import React, { useMemo, forwardRef } from "react";
-import { has } from "lodash";
 import { InputGroup, Form, FloatingLabel } from "react-bootstrap";
 import InputMask from "react-input-mask";
+import { has } from "lodash";
+
+import FapIcon from "components/elements/FapIcon";
 
 const Base = ({ children }) => <div className="input-group">{children}</div>;
 
@@ -146,7 +148,7 @@ const InputText = forwardRef((props, ref) => {
                     <Base.Addon>$</Base.Addon>
                     <Base.Input {...input_attributes} />
                     <Base.Addon>
-                        <i className="far fa-calendar-alt" />
+                        <FapIcon icon="calendar-alt" size="1x" />
                     </Base.Addon>
                 </Base>
             );
@@ -159,7 +161,7 @@ const InputText = forwardRef((props, ref) => {
                     <Base.Addon>$</Base.Addon>
                     <Base.Input {...input_attributes} />
                     <Base.Addon>
-                        <i className="fa fa-clock-o" />
+                        <FapIcon icon="clock" size="1x" />
                     </Base.Addon>
                 </Base>
             );
@@ -171,7 +173,7 @@ const InputText = forwardRef((props, ref) => {
                 <Base>
                     <Base.Input {...input_attributes} />
                     <Base.Addon>
-                        <i className="far fa-calendar-alt" />
+                        <FapIcon icon="calendar-alt" size="1x" />
                     </Base.Addon>
                 </Base>
             );
@@ -183,7 +185,7 @@ const InputText = forwardRef((props, ref) => {
                 <Base>
                     <Base.Input {...input_attributes} />
                     <Base.Addon>
-                        <i className="fa fa-clock-o" />
+                        <FapIcon icon="clock" size="1x" />
                     </Base.Addon>
                 </Base>
             );
@@ -197,7 +199,7 @@ const InputText = forwardRef((props, ref) => {
                             type="submit"
                             className="btn btn-regular btn-blue btn-search"
                         >
-                            <i className="fa fa-search fa-lg" />
+                            <FapIcon icon="search" />
                         </button>
                     </Base.Addon>
                 </Base>

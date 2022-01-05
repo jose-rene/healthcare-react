@@ -1,15 +1,20 @@
 import React, { useMemo, useEffect, useState } from "react";
-import useApiCall from "../../../hooks/useApiCall";
-import TableAPI from "components/elements/TableAPI";
-import PageLayout from "../../../layouts/PageLayout";
-import Icon from "components/elements/Icon";
 import { Link } from "react-router-dom";
-import useSearch from "../../../hooks/useSearch";
+
+import PageLayout from "layouts/PageLayout";
+
 import { Button } from "components";
-import { POST, DELETE } from "../../../config/URLs";
+import TableAPI from "components/elements/TableAPI";
+import FapIcon from "components/elements/FapIcon";
 import ConfirmationModal from "components/elements/ConfirmationModal";
-import { _GET } from "../../../helpers/request";
-import { ACTIONS } from "../../../helpers/table";
+
+import useApiCall from "hooks/useApiCall";
+import useSearch from "hooks/useSearch";
+
+import { POST, DELETE } from "config/URLs";
+
+import { _GET } from "helpers/request";
+import { ACTIONS } from "helpers/table";
 
 const FormIndex = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -66,7 +71,7 @@ const FormIndex = () => {
                 columnMap: "slug",
                 type: ACTIONS,
                 disableSortBy: true,
-                formatter (slug) {
+                formatter(slug) {
                     return (
                         <div className="actions">
                             <Link
@@ -74,7 +79,7 @@ const FormIndex = () => {
                                 to={`/admin/forms/${slug}/edit`}
                                 title="Edit"
                             >
-                                <Icon icon="edit" size="1x" />
+                                <FapIcon icon="edit" size="1x" />
                             </Link>
 
                             <Link
@@ -82,7 +87,7 @@ const FormIndex = () => {
                                 to={`/forms/${slug}/show`}
                                 title="View"
                             >
-                                <Icon icon="eye" size="1x" />
+                                <FapIcon icon="eye" size="1x" />
                             </Link>
 
                             <Link
@@ -90,7 +95,7 @@ const FormIndex = () => {
                                 onClick={() => handleCopyForm(slug)}
                                 title="Duplicate"
                             >
-                                <Icon icon="copy" size="1x" />
+                                <FapIcon icon="copy" size="1x" />
                             </Link>
 
                             <Link
@@ -98,7 +103,7 @@ const FormIndex = () => {
                                 onClick={() => handleDeleteForm(slug)}
                                 title="Delete"
                             >
-                                <Icon icon="trash" size="1x" />
+                                <FapIcon icon="trash" size="1x" />
                             </Link>
                         </div>
                     );

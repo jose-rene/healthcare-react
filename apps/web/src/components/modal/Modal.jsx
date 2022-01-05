@@ -3,10 +3,12 @@ import { useHistory } from "react-router";
 import { isEmpty } from "lodash";
 
 import Modal from "../elements/Modal";
+import FapIcon from "../elements/FapIcon";
 import InputText from "../inputs/InputText";
 import Select from "../inputs/Select";
 import Button from "../inputs/Button";
-import useApiCall from "../../hooks/useApiCall";
+
+import useApiCall from "hooks/useApiCall";
 
 import "./Modal.css";
 
@@ -226,7 +228,7 @@ const FormModal = ({ title, nameField, data, member_id, payerProfile }) => {
     return (
         <div>
             <span className="action-btn" onClick={handleClickOpen}>
-                <i className="far fa-edit" />
+                <FapIcon icon="edit" size="1x" />
             </span>
 
             <Modal show={open} onHide={onclose} title={title}>
