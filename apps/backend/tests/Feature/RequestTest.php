@@ -5,9 +5,12 @@ namespace Tests\Feature;
 use App\Models\Request;
 use App\Models\User;
 use App\Models\UserType\HealthPlanUser;
+use App\Notifications\AssignedNotification;
 use Artisan;
+use Bouncer;
 use Database\Seeders\HealthPlanUserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -25,6 +28,9 @@ class RequestTest extends TestCase
      */
     public function testRouteById()
     {
+        Passport::actingAs(
+            $this->user
+        );
         // get the request by id, should fail
         $response = $this->json('GET', 'v1/request/' . $this->request->id);
         // validate response code
@@ -40,6 +46,9 @@ class RequestTest extends TestCase
      */
     public function testRouteByUuid()
     {
+        Passport::actingAs(
+            $this->user
+        );
         // get the request by uuid
         $response = $this->json('GET', 'v1/request/' . $this->request->uuid);
         // dd($response->json());
@@ -56,17 +65,9 @@ class RequestTest extends TestCase
      */
     public function testRouteSummary()
     {
-        // generate some health plan users
-        Artisan::call('db:seed', [
-            '--class' => HealthPlanUserSeeder::class,
-        ]);
-
-        /**
-         * get the first healthplan user
-         */
-        $hp   = HealthPlanUser::first();
-        $user = $hp->payer->users()->first();
-
+        Passport::actingAs(
+            $this->user
+        );
         // get the request summary for user
         $response = $this->get('v1/request/summary');
         // validate response code and structure
@@ -81,12 +82,15 @@ class RequestTest extends TestCase
     }
 
     /**
-     * Test search.
+     * Test request my stuff filter.
      *
      * @return void
      */
     public function testRequestFilter()
     {
+        Passport::actingAs(
+            $this->user
+        );
         // get the request by id, should fail
         $response = $this->json('GET', route('api.request.index'));
         // validate response code
@@ -100,17 +104,83 @@ class RequestTest extends TestCase
         $response
             ->assertStatus(200)
             ->assertJsonCount(0, 'data');
+    }
 
+    /**
+     * Test request assign.
+     *
+     * @return void
+     */
+    public function testRequestAssign()
+    {
+        // access with admin user
+        Passport::actingAs(
+            $this->admin
+        );
+        // a notification will be generated when clinician is assigned
+        Notification::fake();
+        // assign the therapist
+        $response = $this->json('PUT', route('api.request.assign', ['request' => $this->request]),
+            ['clinician_id' => $this->clinician->uuid]
+        );
+        // dd($response->json());
+        // validate response code
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('clinician.id', $this->clinician->id);
+
+        // notification sent to user
+        Notification::assertSentTo($this->clinician, AssignedNotification::class);
+    }
+
+    /**
+     * Test request assigned notification.
+     *
+     * @return void
+     */
+    public function testAssignedNotification()
+    {
+        $this->withoutExceptionHandling();
+        // access with admin user
+        Passport::actingAs(
+            $this->admin
+        );
+        // assign the therapist
+        $response = $this->json('PUT', route('api.request.assign', ['request' => $this->request]),
+            ['clinician_id' => $this->clinician->uuid]
+        );
+        // dd($response->json());
+        // validate response code
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('clinician.id', $this->clinician->id);
+
+        // verify notification saved to db, get notifications
+        Passport::actingAs(
+            $this->clinician
+        );
+        $response = $this->json('GET', route('api.notifications.index'));
+        // validate response
+        $response
+            ->assertSuccessful()
+            ->assertJsonPath('0.request_id', $this->request->uuid);
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-
+        // seed the Bouncer roles
+        Artisan::call('db:seed', [
+            '--class' => 'BouncerSeeder',
+        ]);
+        // set up the users
+        $this->admin = User::factory()->create(['user_type' => 4, 'primary_role' => 'client_services_specialist']);
+        Bouncer::sync($this->admin)->roles(['client_services_specialist']);
+        $this->clinician = User::factory()->create(['user_type' => 3, 'primary_role' => 'field_clinician']);
+        Bouncer::sync($this->clinician)->roles(['field_clinician']);
+        // make a test request and healthplan user
         $this->request = Request::factory()->create();
-        $this->user = User::factory()->create();
-        Passport::actingAs(
-            $this->user
-        );
+        $this->user = User::factory()->hasHealthPlanUser(1, ['payer_id' => $this->request->payer->id])->create(['user_type' => 2, 'primary_role' => 'hp_user']);
+        Bouncer::sync($this->user)->roles(['hp_user']);
     }
 }

@@ -10,6 +10,7 @@ use App\Jobs\RequestSectionSaveJob;
 use App\Models\Request as ModelRequest;
 use App\Models\RequestStatus;
 use App\Models\User;
+use App\Notifications\AssignedNotification;
 use Exception;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\JsonResponse;
@@ -164,7 +165,7 @@ class RequestController extends Controller
     {
         $user = auth()->user();
         if (!$user->can('assign-clinicians')) {
-            throw new AuthorizationException('You are not authoized to assign clinicians.');
+            throw new AuthorizationException('You are not authorized to assign clinicians.');
         }
         if (null === ($id = $httpRequest->input('clinician_id')) || null === ($therapist = User::firstWhere('uuid', $id))) {
             throw new HttpResponseException(response()->json(['errors' => ['therapist_id' => ['Invalid Therapist']]], 422));
@@ -184,7 +185,11 @@ class RequestController extends Controller
         $request->save();
 
         // here we can send a notification or make an activity
-        // $therapist->notify()
+        $notification = new AssignedNotification($request);
+        $therapist->notify($notification);
+        if (!empty($reviewer)) {
+            $reviewer->notify($notification);
+        }
 
         return response()->json(['status' => 'ok', 'clinician' => ['id' => $therapist->id]]);
     }
