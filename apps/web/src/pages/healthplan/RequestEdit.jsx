@@ -1,11 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Container, Row, Col } from "react-bootstrap";
+
+import PageLayout from "layouts/PageLayout";
+
+import { useUser } from "Context/UserContext";
+
 import PageTitle from "components/PageTitle";
 import RequestEditForm from "components/request/RequestEditForm";
 import FapIcon from "components/elements/FapIcon";
 import PageAlert from "components/elements/PageAlert";
-import PageLayout from "../../layouts/PageLayout";
-import useApiCall from "../../hooks/useApiCall";
+
+import useApiCall from "hooks/useApiCall";
 
 /* eslint-disable react-hooks/exhaustive-deps */
 
@@ -15,7 +20,7 @@ const RequestEdit = ({
     },
     history,
 }) => {
-    // const { error: errorMessage } = useToast();
+    const { userIs } = useUser();
 
     const [request, setRequest] = useState({ id: null });
     const [{ loading = true, error }, fireLoadRequest] = useApiCall({
@@ -56,7 +61,11 @@ const RequestEdit = ({
                                     ? `Request ${request.auth_number}`
                                     : "View Request"
                             }
-                            backLink="/healthplan/start-request"
+                            backLink={
+                                userIs("client_services_specialist")
+                                    ? "/dashboard"
+                                    : "/healthplan/start-request"
+                            }
                         />
                     </Col>
                 </Row>
