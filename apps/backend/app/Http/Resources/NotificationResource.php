@@ -22,8 +22,8 @@ class NotificationResource extends JsonResource
             'activity_id'      => $this->data['id'] ?? null,
             'request_id'       => $this->data['request_id'] ?? null,
             'message'          => $message = $this->data['message'] ?? "",
-            'title'            => $this->data['title'] ?? Str::of($message)->limit(5, ' ...'),
-            'priority'         => $this->data['priority'] ? (int) $this->data['priority'] : 1,
+            'title'            => $this->data['title'] ?? Str::of($message)->words(5, ' ...'),
+            'priority'         => empty($this->data['priority']) ? 1 : (int) $this->data['priority'],
             'human_read_at'    => $this->read_at ? (new Carbon($this->read_at))->diffForHumans() : null,
             'human_created_at' => (new Carbon($this->created_at))->diffForHumans(),
         ];

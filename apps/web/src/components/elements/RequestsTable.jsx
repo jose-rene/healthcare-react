@@ -284,12 +284,6 @@ const RequestsTable = () => {
                                     label="Status"
                                     name="request_status_id"
                                     options={statusOptions}
-                                    disabled={
-                                        !userIs([
-                                            "client_services_specialist",
-                                            "field_clinician",
-                                        ])
-                                    }
                                     onChange={formUpdateSearchObj}
                                 />
                             )}

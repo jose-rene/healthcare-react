@@ -9,15 +9,16 @@ import "./index.scss";
 
 const TopNavNotifications = () => {
     const {
-        notifications: { get, markRead } = {},
+        notifications: { markRead } = {},
         messages,
         messageLevel,
         totalMessageCount,
         mapMessageClass,
+        getNotifications,
     } = useGlobalContext();
 
     useEffect(() => {
-        get();
+        getNotifications();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -93,13 +94,8 @@ const TopNavNotifications = () => {
                                         />
                                     </div>
                                     <div className="ps-3 flex-grow-1">
-                                        <div className="">
-                                            <strong className="ms-auto me-3">
-                                                {m.subject}
-                                            </strong>
-                                        </div>
                                         <div className="text-wrap">
-                                            {m.message}
+                                            {m.title}
                                         </div>
                                     </div>
                                 </div>

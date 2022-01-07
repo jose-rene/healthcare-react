@@ -1,14 +1,50 @@
 import React, { createContext, useState, useContext, useMemo } from "react";
+import useApiCall from "hooks/useApiCall";
 
 export const GlobalContext = createContext({});
-
 export const useGlobalContext = () => useContext(GlobalContext);
 
 export const GlobalProvider = ({ children }) => {
     const [scrollRef, setScrollRef] = useState(null);
     const [messages, setMessages] = useState([]);
-    const [messageLevel, setMessageLevel] = useState("info");
+    const [messageLevel, setMessageLevel] = useState("primary");
     const [totalMessageCount, setTotalMessageCount] = useState(0);
+
+    const [{ loading: notificationsLoading }, pullNotifications] = useApiCall({
+        url: "/notifications",
+    });
+
+    const processMessages = (notes) => {
+        if (!notes || notes.length === 0) {
+            setMessages([]);
+            setMessageLevel("");
+            setTotalMessageCount(0);
+            return;
+        }
+        // make sure pecking order of priority is set
+        const levels = notes.sort((m1, m2) => {
+            if (m1.priority > m2.priority) return -1;
+            if (m1.priority < m2.priority) return 1;
+            return 0;
+        });
+
+        const { priority: level = "" } = levels[0];
+        const { [level]: levelName = "" } = priorities;
+
+        setMessages(notes);
+        setMessageLevel(levelName);
+        setTotalMessageCount(notes.length);
+    };
+
+    const getNotifications = () => {
+        pullNotifications()
+            .then((data) => {
+                processMessages(data);
+            })
+            .catch(() => {
+                processMessages([]);
+            });
+    };
 
     // pecking order for notifications
     const priorities = useMemo(
@@ -28,61 +64,6 @@ export const GlobalProvider = ({ children }) => {
     };
 
     const notifications = {
-        get({ history = 5, withReset = false } = {}) {
-            if (withReset) {
-                setMessages([]);
-                setMessageLevel("");
-                setTotalMessageCount(0);
-            }
-
-            // TODO :: get notifications from the server
-            const notes = [
-                {
-                    id: 1,
-                    subject: "rando message 1",
-                    message:
-                        "lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 lorem 100 ",
-                    priority: 1,
-                },
-                {
-                    id: 2,
-                    subject: "rando message 2",
-                    message: "again",
-                    priority: 4,
-                },
-                {
-                    id: 3,
-                    subject: "rando message 1",
-                    message: "lorem 100 lorem 100 lorem 100 ",
-                    priority: 1,
-                },
-            ];
-
-            if (notes.length === 0) {
-                return {
-                    notes,
-                    level: "",
-                    levelName: "",
-                    totalMessageCount: 0,
-                };
-            }
-
-            // make sure pecking order of priority is set
-            const levels = notes.sort((m1, m2) => {
-                if (m1.priority > m2.priority) return -1;
-                if (m1.priority < m2.priority) return 1;
-                return 0;
-            });
-
-            const { priority: level = "" } = levels[0];
-            const { [level]: levelName = "" } = priorities;
-
-            setMessages(notes);
-            setMessageLevel(levelName);
-            setTotalMessageCount(notes.length);
-
-            return { notes, level, levelName, totalMessageCount };
-        },
         /**
          *
          * @param notification_ids = []
@@ -105,13 +86,13 @@ export const GlobalProvider = ({ children }) => {
             value={{
                 scrollRef,
                 setScrollRef,
-
                 notifications,
-
+                notificationsLoading,
                 messages,
                 messageLevel,
                 totalMessageCount,
                 mapMessageClass,
+                getNotifications,
             }}
         >
             {children}
