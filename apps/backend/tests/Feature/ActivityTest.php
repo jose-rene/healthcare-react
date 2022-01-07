@@ -184,6 +184,63 @@ class ActivityTest extends TestCase
             ->assertJsonPath('0.message', $formData['message']);
     }
 
+    /**
+     * Test create notification index list.
+     *
+     * @return void
+     */
+    public function testDismissNotification()
+    {
+        $formData = $this->getFormData();
+        $response = $this->json('POST', route('api.activity.store'), $formData);
+        // validate data
+        $response
+            ->assertStatus(201);
+
+        // get notifications
+        $response = $this->json('GET', route('api.notifications.index'));
+        $response
+            ->assertOk();
+        
+        $notification = $response->json()[0];
+
+        // dismiss the notifications
+        $response = $this->json('PUT', route('api.notifications.dismiss'), ['id' => $notification['id']]);
+        $response
+            ->assertOk();
+
+        // get notification and verify marked as read
+        $response = $this->json('GET', route('api.notifications.index'));
+        $response
+            ->assertOk()
+            ->assertJsonPath('0.is_read', true);
+    }
+
+    /**
+     * Test create notification index list.
+     *
+     * @return void
+     */
+    public function testDeleteNotification()
+    {
+        $formData = $this->getFormData();
+        $response = $this->json('POST', route('api.activity.store'), $formData);
+        // validate data
+        $response
+            ->assertStatus(201);
+        // it added the users notification
+        $this->assertEquals(1, $this->user->notifications->count());
+
+        // get the notification
+        $notification = $this->user->notifications->first();
+        // delete the notifications
+        $response = $this->json('DELETE', route('api.notifications.destroy'), ['ids' => $notification->id]);
+        $response
+            ->assertOk();
+        // verify deleted
+        $this->assertEquals(0, $this->user->notifications()->get()->count());
+    }
+
     protected function getFormData()
     {
         return [

@@ -194,7 +194,21 @@ class Request extends Model
                 $query->whereIn('payer_id', $payerIds);
                 break;
             case 3: // therapist
-                $query->where('clinician_id', $user->id);
+                if ('field_clinician' === $user->primary_role) {
+                    $query->where('clinician_id', $user->id);
+                }
+                elseif ('clinical_reviewer' === $user->primary_role) {
+                    if (request()->has('is_clinician') && request()->get('is_clinician')) {
+                        $query->where('clinician_id', $user->id);
+                    }
+                    else {
+                        $query->where('reviewer_id', $user->id);
+                    }
+                }
+                else {
+                    // these aren't supported yet
+                    return null;
+                }
                 break;
             default:
                 return null;
