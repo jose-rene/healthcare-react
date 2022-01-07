@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import dayjs from "dayjs";
-
 import PageLayout from "layouts/PageLayout";
-
 import PageTitle from "components/PageTitle";
 import TableAPI from "components/elements/TableAPI";
 import FapIcon from "components/elements/FapIcon";
-
 import { useGlobalContext } from "Context/GlobalContext";
-
 import { ACTIONS } from "helpers/table";
 
 const NotificationList = () => {
@@ -17,7 +13,7 @@ const NotificationList = () => {
 
     const [headers] = useState([
         {
-            columnMap: "subject",
+            columnMap: "title",
             label: "Type",
             type: String,
             disableSortBy: true,
@@ -29,20 +25,16 @@ const NotificationList = () => {
             disableSortBy: true,
         },
         {
-            columnMap: "read_at",
-            label: "Read Date",
-            type: Date,
-            disableSortBy: true,
-            formatter: (date) =>
-                date ? dayjs(date).format("MM/DD/YYYY") : "-",
-        },
-        {
             columnMap: "human_read_at",
             label: "Human Read Date",
             type: Date,
             disableSortBy: true,
             formatter: (date) =>
-                date ? dayjs(date).format("MM/DD/YYYY") : "-",
+                date
+                    ? dayjs(date).format("MM/DD/YYYY") === "Invalid Date"
+                        ? date
+                        : dayjs(date).format("MM/DD/YYYY")
+                    : "-",
         },
         {
             columnMap: "human_created_at",
@@ -50,7 +42,11 @@ const NotificationList = () => {
             type: Date,
             disableSortBy: true,
             formatter: (date) =>
-                date ? dayjs(date).format("MM/DD/YYYY") : "-",
+                date
+                    ? dayjs(date).format("MM/DD/YYYY") === "Invalid Date"
+                        ? date
+                        : dayjs(date).format("MM/DD/YYYY")
+                    : "-",
         },
         {
             label: "Actions",

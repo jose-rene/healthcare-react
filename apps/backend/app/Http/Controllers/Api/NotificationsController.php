@@ -10,8 +10,8 @@ class NotificationsController extends Controller
 {
     public function index()
     {
-        $notifications = auth()->user()->unreadNotifications;
-        $readNotifications = auth()->user()->readNotifications()->take(5)->get();
+        $notifications = auth()->user()->unreadNotifications()->orderBy('created_at', 'desc')->get();
+        $readNotifications = auth()->user()->readNotifications()->orderBy('created_at', 'desc')->take(5)->get();
 
         return NotificationResource::collection($notifications->merge($readNotifications));
     }
