@@ -45,6 +45,8 @@ Route::middleware('auth:api')->group(function ($router) {
     $router->get('logout', 'LoginController@logout');
     $router->get('notifications', 'NotificationsController@index')->name('notifications.index');
     $router->put('notifications', 'NotificationsController@update')->name('notifications.update');
+    $router->put('notifications/dismiss', 'NotificationsController@dismiss')->name('notifications.dismiss');
+    $router->delete('notifications', 'NotificationsController@destroy')->name('notifications.destroy');
 
     // request info
     $router->get('/request/summary', 'RequestController@summary');

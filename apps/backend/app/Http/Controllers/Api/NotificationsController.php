@@ -17,6 +17,19 @@ class NotificationsController extends Controller
     }
 
     /**
+     * dismiss a singler notification
+     * @param Request $request
+     */
+    public function dismiss(Request $request)
+    {
+        if (null !== ($notification = auth()->user()->unreadNotifications()->find($request->get('id')))) {
+            $notification->markAsRead();
+        }
+
+        return response()->json(['status' => true]);
+    }
+
+    /**
      * mark a batch or single notification as read
      * @param Request $request
      */
@@ -28,6 +41,21 @@ class NotificationsController extends Controller
         }
 
         auth()->user()->unreadNotifications()->whereIn('id', $ids)->get()->markAsRead();
+
+        return response()->json(['status' => true]);
+    }
+
+    /**
+     * mark a batch or single notification as read
+     * @param Request $request
+     */
+    public function destroy(Request $request)
+    {
+        $ids = $request->get('ids', []);
+        if (!is_array($ids)) {
+            $ids = [$ids];
+        }
+        auth()->user()->notifications()->whereIn('id', $ids)->get()->each(fn($item) => $item->delete());
 
         return response()->json(['status' => true]);
     }
