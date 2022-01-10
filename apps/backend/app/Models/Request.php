@@ -54,7 +54,10 @@ class Request extends Model
 
     protected $guarded = ['id'];
     protected $dates = ['due_at'];
-    protected $casts = ['due_at_na' => 'boolean'];
+    protected $casts = [
+        'due_at_na'    => 'boolean',
+        'documents_na' => 'boolean',
+    ];
 
     /**
      * Relationship to assessments.

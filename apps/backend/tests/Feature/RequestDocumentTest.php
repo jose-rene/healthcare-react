@@ -105,6 +105,44 @@ class RequestDocumentTest extends TestCase
             ->assertHeader('Content-Type', $documentFromResponse['mime_type']);
     }
 
+    /**
+     * @group requestDocumentUpload
+     */
+    public function testClearNoDocuments()
+    {
+        // get a request
+        $request = Request::first();
+        // specify no documents
+        $response = $this->put(route('api.request.update', ['request' => $request]), [
+            'type_name'        => 'no-documents',
+            'documents_reason' => 'The dog ate it.',
+        ]);
+        $response
+            ->assertSuccessful()
+            ->assertJsonPath('documents_na', true);
+
+        Storage::fake('document');
+        $documentFile = UploadedFile::fake()->create('somePdfThing.pdf', 1000, 'application/pdf');
+
+        // Upload a file
+        $response = $this->post(route('api.request.document.store', $request), [
+            'request_item_id'  => '1',
+            'document_type_id' => '1',
+            'name'             => 'somePdfThing.pdf',
+            'mime_type'        => 'application/pdf',
+            'file'             => $documentFile,
+        ]);
+        $response->assertSuccessful();
+
+        // check request to verify no documents tag set false
+        $response = $this->get(route('api.request.show', ['request' => $request]));
+        $response
+            ->assertOk()
+            ->assertJsonPath('documents_na', false)
+            ->assertJsonPath('documents_reason', '');
+
+    }
+
     public function testMediaUpload()
     {
         Storage::fake('document');

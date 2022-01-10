@@ -9,6 +9,8 @@ import {
     Row,
     ListGroupItem,
     ListGroup,
+    FormGroup,
+    FormCheck,
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 
@@ -25,6 +27,9 @@ const RequestDocForm = ({
     documents,
     refreshRequest,
     requestLoading,
+    saveRequest,
+    hasNoDocuments,
+    documentsReason,
     openRequestDoc,
     toggleOpenRequestDoc,
     disabled,
@@ -34,6 +39,17 @@ const RequestDocForm = ({
 
     // instead of using onDrop, just let acceptedFiles handle that (it does not append more files added later)
     const [uploadFiles, setUploadFiles] = useState([]);
+    const [{ isDocuments, documents_reason }, setIsDocuments] = useState({
+        isDocuments: true,
+        documents_reason: "",
+    });
+
+    useEffect(() => {
+        setIsDocuments({
+            isDocuments: !hasNoDocuments,
+            documents_reason: documentsReason,
+        });
+    }, [hasNoDocuments, documentsReason]);
 
     // add accepted files
     useEffect(() => {
@@ -91,6 +107,11 @@ const RequestDocForm = ({
         return fileSubmit({ params: formData });
     };
 
+    const handleNoDocs = (e) => {
+        const { checked } = e.target;
+        setIsDocuments((prev) => ({ ...prev, isDocuments: checked }));
+    };
+
     const doFileUpload = async () => {
         const promises = uploadFiles.map(async (item) => {
             const result = await handleFile(item);
@@ -104,8 +125,21 @@ const RequestDocForm = ({
         refreshRequest("doc");
     };
 
-    const submitReason = () => {};
-    // console.log("docs -> ", documents);
+    const onReasonChange = (e) => {
+        const { value } = e.target;
+        setIsDocuments((prev) => ({
+            ...prev,
+            documents_reason: value || "",
+        }));
+    };
+
+    const submitReason = () => {
+        if (!documents_reason) {
+            return;
+        }
+        saveRequest({ documents_reason, type_name: "no-documents" });
+    };
+
     return (
         <>
             <Card
@@ -121,7 +155,9 @@ const RequestDocForm = ({
                                     icon="check-circle"
                                     type="fas"
                                     className={`text-success me-3${
-                                        documents.length ? "" : " invisible"
+                                        documents.length || hasNoDocuments
+                                            ? ""
+                                            : " invisible"
                                     }`}
                                 />
                                 Documents
@@ -157,6 +193,20 @@ const RequestDocForm = ({
                             >
                                 <Row>
                                     <Col>
+                                        {documents.length === 0 &&
+                                            uploadFiles.length === 0 && (
+                                                <FormGroup
+                                                    className="mb-3"
+                                                    controlId="formBasicEmail"
+                                                >
+                                                    <FormCheck
+                                                        type="checkbox"
+                                                        label="I am uploading documents"
+                                                        checked={isDocuments}
+                                                        onClick={handleNoDocs}
+                                                    />
+                                                </FormGroup>
+                                            )}
                                         {documents.length > 0 && (
                                             <>
                                                 <h6>Attached Documents</h6>
@@ -184,37 +234,50 @@ const RequestDocForm = ({
                                                 </ListGroup>
                                             </>
                                         )}
-                                        <div
-                                            {...getRootProps({
-                                                className:
-                                                    "alert alert-success cursor-pointer border-3",
-                                            })}
-                                        >
-                                            <input {...getInputProps()} />
-                                            <p>
-                                                Drag and drop files here or
-                                                Click to select files
-                                            </p>
-                                        </div>
-                                        {!documents.length &&
-                                            !uploadFiles.length && (
-                                                <>
-                                                    <Textarea
-                                                        label="Special Instructions"
-                                                        name="comments"
-                                                        type="textarea"
-                                                        rows={5}
-                                                        // onChange={onChange}
-                                                    />
-                                                    <Button
-                                                        onClick={() => {
-                                                            submitReason();
-                                                        }}
-                                                    >
-                                                        Submit
-                                                    </Button>
-                                                </>
-                                            )}
+                                        {isDocuments && (
+                                            <div
+                                                {...getRootProps({
+                                                    className:
+                                                        "alert alert-success cursor-pointer border-3",
+                                                })}
+                                            >
+                                                <input {...getInputProps()} />
+                                                <p>
+                                                    Drag and drop files here or
+                                                    Click to select files
+                                                </p>
+                                            </div>
+                                        )}
+                                        {!isDocuments && (
+                                            <>
+                                                <Textarea
+                                                    label="Reason for no documents"
+                                                    id="documents_reason"
+                                                    name="documents_reason"
+                                                    type="textarea"
+                                                    rows={5}
+                                                    value={documents_reason}
+                                                    onChange={onReasonChange}
+                                                />
+                                                <Button
+                                                    variant="secondary"
+                                                    onClick={
+                                                        toggleOpenRequestDoc
+                                                    }
+                                                    className="me-3 mb-2"
+                                                >
+                                                    Cancel
+                                                </Button>
+                                                <Button
+                                                    onClick={() => {
+                                                        submitReason();
+                                                    }}
+                                                    className="mb-2"
+                                                >
+                                                    Save
+                                                </Button>
+                                            </>
+                                        )}
                                         {uploadFiles.length > 0 && (
                                             <>
                                                 <ListGroup>
@@ -278,7 +341,9 @@ const RequestDocForm = ({
                         <div>
                             <Row className="mb-3">
                                 <Col className="fw-bold" sm={3}>
-                                    Attached Documents
+                                    {hasNoDocuments
+                                        ? "No Documents"
+                                        : "Attached Documents"}
                                 </Col>
                                 <Col>
                                     {documents.length > 0 ? (

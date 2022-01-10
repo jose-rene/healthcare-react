@@ -34,6 +34,8 @@ class RequestDetailResource extends JsonResource
             'appointment_date'  => $this->appointment_date ? $this->appointment_date->format('m/d/Y') : null,
             'due_at'            => $this->due_at ? $this->due_at->format('m/d/Y H:i:s') : '',
             'due_at_na'         => $this->due_at_na,
+            'documents_na'      => $this->documents_na,
+            'documents_reason'  => $this->documents_reason,
             'request_type_name' => $this->requestType->name ?? '',
             'codes'             => RelevantDiagnosesResource::collection($this->relevantDiagnoses),
             'request_items'     => RequestItemResource::collection($this->requestItems),

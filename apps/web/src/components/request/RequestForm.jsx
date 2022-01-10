@@ -25,6 +25,8 @@ const RequestForm = ({ data }) => {
         documents = [],
         due_at: requestDue = "",
         due_at_na: requestDueNa = false,
+        documents_na: hasNoDocuments = false,
+        documents_reason: documentsReason = "",
         status = "None",
     } = requestData;
 
@@ -101,7 +103,7 @@ const RequestForm = ({ data }) => {
             if (!requestItems?.length) {
                 return 2;
             }
-            if (!documents?.length) {
+            if (!documents?.length && !hasNoDocuments) {
                 return 3;
             }
             if (!requestDue && !requestDueNa) {
@@ -154,7 +156,7 @@ const RequestForm = ({ data }) => {
             if (type === "request-items") {
                 setOpenRequestItem(false);
             }
-            if (type === "due") {
+            if (type === "due" || type === "no-documents") {
                 setOpenDueDate(false);
             }
             setRequestData(result);
@@ -254,6 +256,9 @@ const RequestForm = ({ data }) => {
                         documents,
                         refreshRequest,
                         requestLoading,
+                        saveRequest,
+                        hasNoDocuments,
+                        documentsReason,
                         openRequestDoc,
                         toggleOpenRequestDoc,
                         disabled: step < 3,
