@@ -224,6 +224,41 @@ class RequestAddTest extends TestCase
         $this->assertEquals($params, $requestDetailIds);
     }
 
+    /**
+     * Test no documents added.
+     * @group request
+     *
+     * @return void
+     */
+    public function testNoDocuments()
+    {
+        $requestId = $this->getRequest();
+        $route = route('api.request.update', [
+            'request' => $requestId,
+        ]);
+
+        // missing reason, should fail with error
+        $response = $this->put($route, [
+            'type_name' => 'no-documents',
+        ]);
+
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure(['errors']);
+
+        // add reason
+        $response = $this->put($route, [
+            'type_name'        => 'no-documents',
+            'documents_reason' => $reason = 'The dog ate it.',
+        ]);
+
+        // verify success
+        $response
+            ->assertSuccessful()
+            ->assertJsonPath('documents_reason', $reason)
+            ->assertJsonPath('documents_na', true);
+    }
+
     protected function getRequest()
     {
         $response = $this->post($this->route);

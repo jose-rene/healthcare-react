@@ -22,8 +22,11 @@ class DocumentRequestController extends Controller
     {
         /** @var Document $document */
         $document = $request->documents()->create($httpRequest->validated());
-
         $document->file = $httpRequest->file('file');
+        // update request
+        if ($request->documents_na) {
+            $request->update(['documents_na' => false, 'documents_reason' => '']);
+        }
 
         return $document->is_media ? new MediaResource($document) : new DocumentResource($document);
     }

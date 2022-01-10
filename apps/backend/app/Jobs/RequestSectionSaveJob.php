@@ -74,6 +74,10 @@ class RequestSectionSaveJob
                 $this->requestItemsSection();
                 break;
 
+            case 'no-documents':
+                $this->noDocumentsSection();
+                break;
+
             case 'due':
                 // update request.due_at or the note on the request item named due
                 $this->dueSection();
@@ -261,5 +265,18 @@ class RequestSectionSaveJob
         // call member update job
         dispatch(new MemberUpdateJob($data, $member));
         $this->request->refresh();
+    }
+
+    protected function noDocumentsSection()
+    {
+        $data = request()->all();
+        if (empty($data['documents_reason'])) {
+            throw new HttpResponseException(response()->json(['errors' => ['documents_reason' => ['Please provide a reason.']]], 422));
+            return;
+        }
+        $this->request->update([
+            'documents_reason' => $data['documents_reason'],
+            'documents_na'     => true,
+        ]);
     }
 }
