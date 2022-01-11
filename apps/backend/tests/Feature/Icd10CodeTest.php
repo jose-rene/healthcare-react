@@ -29,10 +29,10 @@ class Icd10CodeTest extends TestCase
         // lookup code
         $route = route('api.icd10code.lookup');
         // mock returned api data
-        Http::fake([
+        /*Http::fake([
             'clinicaltables.nlm.nih.gov/api/*' => Http::response($mocked = $this->getMockResponse(), 200, []),
-        ]);
-        $expected = array_map(fn ($item) => ['value' => $item[0], 'label' => $item[0] . ' - ' . $item[1]], $mocked[3]);
+        ]);*/
+        $expected = [['value' => 'A200', 'label' => 'A200 - Bubonic plague']];
         $response = $this->json('GET', $route, ['term' => 'A2']);
         // validate response code
         $response->assertStatus(200);
@@ -75,6 +75,9 @@ class Icd10CodeTest extends TestCase
         // seed the Bouncer roles
         Artisan::call('db:seed', [
             '--class' => 'Database\Seeders\BouncerSeeder',
+        ]);
+        Artisan::call('db:seed', [
+            '--class' => 'Database\Seeders\Icd10CodesSeeder',
         ]);
         $this->user = User::factory()->create(['user_type' => 2, 'primary_role' => 'hp_user']);
         $this->user->healthPlanUser()->save(HealthPlanUser::factory()->create());
