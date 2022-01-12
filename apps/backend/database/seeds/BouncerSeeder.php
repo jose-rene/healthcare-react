@@ -115,6 +115,7 @@ class BouncerSeeder extends Seeder
             'Clinical State Champion',
             'Clinical Trainer',
             'Field Clinician',
+            'Reviewer Manager',
         ];
         foreach ($clinicalServicesRoles as $title) {
             $role = Bouncer::role()->firstOrCreate([

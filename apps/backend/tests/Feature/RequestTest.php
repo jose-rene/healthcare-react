@@ -98,12 +98,30 @@ class RequestTest extends TestCase
             ->assertStatus(200)
             ->assertJsonCount(1, 'data');
 
-        // add the my stuff filter, should get no results since this user is not the user for the requeest
+        // add the my stuff filter, should get no results since this user is not the user for the request
         $response = $this->json('GET', route('api.request.index', ['filter' => '1']));
         // validate response code
         $response
             ->assertStatus(200)
             ->assertJsonCount(0, 'data');
+    }
+
+    /**
+     * Test reviewer manager access.
+     *
+     * @return void
+     */
+    public function testReviewerManager()
+    {
+        $reviewer = User::factory()->create(['user_type' => 3, 'primary_role' => 'reviewer_manager']);
+        Bouncer::sync($this->clinician)->roles(['reviewer_manager']);
+        Passport::actingAs($reviewer);
+        // should get the tests requests, can access all
+        $response = $this->json('GET', route('api.request.index'));
+        // validate response code and that all requests are shown
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount(Request::all()->count(), 'data');
     }
 
     /**

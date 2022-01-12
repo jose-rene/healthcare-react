@@ -15,7 +15,7 @@ const ClinicianInfoForm = () => {
     });
 
     useEffect(() => {
-        getClinicians();
+        getClinicians({ params: { type_id: 1 } });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
