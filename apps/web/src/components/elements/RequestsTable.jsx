@@ -72,6 +72,11 @@ const RequestsTable = () => {
         { name: "Activities", value: 1 },
     ]);
 
+    const [userOptions] = useState([
+        { name: "Reviewer", value: "0" },
+        { name: "Clinician", value: "1" },
+    ]);
+
     const [selectedTab, setSelectedTab] = useState(0);
 
     const [headers] = useState([
@@ -172,6 +177,7 @@ const RequestsTable = () => {
                 sortDirection: "asc",
                 perPage: 10,
                 filter: "0",
+                is_clinician: "0",
             },
         }
     );
@@ -276,6 +282,30 @@ const RequestsTable = () => {
                                             onChange={formUpdateSearchObj}
                                         >
                                             {filter.name}
+                                        </ToggleButton>
+                                    ))}
+                                {userIs(["clinical_reviewer"]) &&
+                                    userOptions.map((user, idx) => (
+                                        <ToggleButton
+                                            key={idx}
+                                            id={`user-${idx}`}
+                                            type="radio"
+                                            className={`mb-3 d-flex align-items-center shadow-none ${
+                                                searchObj.is_clinician !==
+                                                user.value
+                                                    ? "bg-white"
+                                                    : ""
+                                            }`}
+                                            variant="secondary"
+                                            name="is_clinician"
+                                            value={user.value}
+                                            checked={
+                                                searchObj.is_clinician ===
+                                                user.value
+                                            }
+                                            onChange={formUpdateSearchObj}
+                                        >
+                                            {user.name}
                                         </ToggleButton>
                                     ))}
                             </ButtonGroup>

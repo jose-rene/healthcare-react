@@ -208,6 +208,9 @@ class Request extends Model
                         $query->where('reviewer_id', $user->id);
                     }
                 }
+                elseif ('reviewer_manager' === $user->primary_role) {
+                    // can see all requests
+                }
                 else {
                     // these aren't supported yet
                     return null;
