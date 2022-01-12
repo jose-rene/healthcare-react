@@ -10,9 +10,10 @@ import "./index.scss";
 const TopNavNotifications = () => {
     const {
         notifications: { markRead } = {},
-        messages,
+        unread,
         messageLevel,
         totalMessageCount,
+        unreadCount,
         mapMessageClass,
         getNotifications,
     } = useGlobalContext();
@@ -23,21 +24,14 @@ const TopNavNotifications = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleMarkAllRead = () => {
-        const ids = messages.map((m) => m.id);
-        if (ids.length > 0) {
-            markRead(ids);
-        }
-    };
-
     const title = useMemo(() => {
         return (
             <>
                 <span className="c-pointer">
                     <FapIcon icon="bell-on" />
-                    {totalMessageCount > 0 ? (
+                    {unreadCount > 0 ? (
                         <Badge pill bg={messageLevel} className="badge-count">
-                            {totalMessageCount}
+                            {unreadCount}
                         </Badge>
                     ) : (
                         <Badge pill bg="success" className="badge-count">
@@ -47,7 +41,7 @@ const TopNavNotifications = () => {
                 </span>
             </>
         );
-    }, [totalMessageCount, messageLevel]);
+    }, [messageLevel, unreadCount]);
 
     return (
         <NavDropdown
@@ -56,63 +50,54 @@ const TopNavNotifications = () => {
             align="end"
             title={title}
         >
-            {messages.length === 0 ? (
-                <NavDropdown.ItemText className="text-center">
-                    All Caught up
-                </NavDropdown.ItemText>
-            ) : (
-                <>
-                    <NavDropdown.Item
-                        className="text-muted text-center"
-                        style={{
-                            width: "25rem",
-                        }}
-                        onClick={handleMarkAllRead}
-                    >
-                        Mark all as read
-                    </NavDropdown.Item>
-                    {messages.map((m) => {
-                        const className = mapMessageClass(m.priority);
-                        return (
-                            <NavDropdown.Item
-                                key={m.id}
-                                className={`${
-                                    className ? `text-${className}` : ""
-                                }`}
-                                style={{
-                                    width: "25rem",
-                                }}
-                            >
-                                <div className="d-flex">
-                                    <div className="text-center align-self-center">
-                                        <FapIcon
-                                            icon="check-circle"
-                                            type="fas"
-                                            size="2x"
-                                            className="text-success"
-                                            onClick={() => markRead[m.id]}
-                                        />
+            <>
+                <NavDropdown.Item
+                    className="text-muted d-flex justify-content-between"
+                    style={{
+                        width: "25rem",
+                    }}
+                    href="/notifications"
+                >
+                    <span>Notifications</span>
+                    <span>
+                        See All ({unreadCount} / {totalMessageCount})
+                    </span>
+                </NavDropdown.Item>
+                {unread.length === 0 ? (
+                    <NavDropdown.ItemText className="text-center">
+                        All Caught up
+                    </NavDropdown.ItemText>
+                ) : (
+                    <div className="p-3">
+                        {unread.slice(0, 5).map((m) => {
+                            const className = mapMessageClass(m.priority);
+
+                            return (
+                                <div
+                                    key={m.id}
+                                    className={`d-flex justify-content-between align-items-center p-3 ${`alert alert-${className}`}`}
+                                >
+                                    <div>
+                                        <strong className="default">
+                                            <FapIcon
+                                                icon="envelope"
+                                                size="1x"
+                                            />
+                                        </strong>{" "}
+                                        {m.title}
                                     </div>
-                                    <div className="ps-3 flex-grow-1">
-                                        <div className="text-wrap">
-                                            {m.title}
-                                        </div>
-                                    </div>
+                                    <FapIcon
+                                        icon="times"
+                                        size="1x"
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => markRead(m.id)}
+                                    />
                                 </div>
-                            </NavDropdown.Item>
-                        );
-                    })}
-                    <NavDropdown.Item
-                        className="text-muted text-end"
-                        style={{
-                            width: "25rem",
-                        }}
-                        href="/notifications"
-                    >
-                        Show All ({messages.length} / {totalMessageCount})
-                    </NavDropdown.Item>
-                </>
-            )}
+                            );
+                        })}
+                    </div>
+                )}
+            </>
         </NavDropdown>
     );
 };

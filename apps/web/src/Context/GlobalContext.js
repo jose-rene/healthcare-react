@@ -6,19 +6,33 @@ export const useGlobalContext = () => useContext(GlobalContext);
 
 export const GlobalProvider = ({ children }) => {
     const [scrollRef, setScrollRef] = useState(null);
-    const [messages, setMessages] = useState([]);
+    const [{ messages, unread }, setMessages] = useState({
+        messages: [],
+        unread: [],
+    });
     const [messageLevel, setMessageLevel] = useState("primary");
-    const [totalMessageCount, setTotalMessageCount] = useState(0);
+    const [{ totalMessageCount, unreadCount }, setTotalMessageCount] = useState(
+        { totalMessageCount: 0, unreadCount: 0 }
+    );
 
     const [{ loading: notificationsLoading }, pullNotifications] = useApiCall({
         url: "/notifications",
     });
 
+    const [{ loading: updateNotificationsLoading }, updateNotifications] =
+        useApiCall({
+            method: "put",
+            url: "/notifications/dismiss",
+        });
+
     const processMessages = (notes) => {
         if (!notes || notes.length === 0) {
-            setMessages([]);
+            setMessages({
+                messages: [],
+                unread: [],
+            });
             setMessageLevel("");
-            setTotalMessageCount(0);
+            setTotalMessageCount({ totalMessageCount: 0, unreadCount: 0 });
             return;
         }
         // make sure pecking order of priority is set
@@ -30,10 +44,13 @@ export const GlobalProvider = ({ children }) => {
 
         const { priority: level = "" } = levels[0];
         const { [level]: levelName = "" } = priorities;
-
-        setMessages(notes);
+        const unreadNotes = notes.filter((item) => !item.is_read);
+        setMessages({ messages: notes, unread: unreadNotes });
         setMessageLevel(levelName);
-        setTotalMessageCount(notes.length);
+        setTotalMessageCount({
+            totalMessageCount: notes.length,
+            unreadCount: unreadNotes.length,
+        });
     };
 
     const getNotifications = () => {
@@ -68,16 +85,14 @@ export const GlobalProvider = ({ children }) => {
          *
          * @param notification_ids = []
          */
-        async markRead(notification_ids) {
-            console.log(
-                `TODO :: mark notification ids "${notification_ids.join(
-                    " and "
-                )}" as read`
-            );
-            // TODO :: send an array of notification ids.
-            // const notification_ids.map(nId => {
-            //
-            // };
+        async markRead(notification_id) {
+            const result = await updateNotifications({
+                params: { id: notification_id },
+            });
+
+            if (updateNotificationsLoading || result) {
+                getNotifications();
+            }
         },
     };
 
@@ -89,8 +104,10 @@ export const GlobalProvider = ({ children }) => {
                 notifications,
                 notificationsLoading,
                 messages,
+                unread,
                 messageLevel,
                 totalMessageCount,
+                unreadCount,
                 mapMessageClass,
                 getNotifications,
             }}
