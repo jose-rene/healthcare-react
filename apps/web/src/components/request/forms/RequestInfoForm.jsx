@@ -92,7 +92,7 @@ const RequestInfoForm = ({
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const lookup = useCallback(debounce(lookupCodes, 1300), []);
+    const lookup = useCallback(debounce(lookupCodes, 500), []);
 
     const handleCodeChange = (selected, action, index) => {
         const [...currentCodes] = codes;

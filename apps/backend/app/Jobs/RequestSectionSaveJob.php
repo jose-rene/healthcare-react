@@ -65,6 +65,10 @@ class RequestSectionSaveJob
                 $this->authNumberSection();
                 break;
 
+            case 'diagnosis-only':
+                $this->relevantDiagnosisSection();
+                break;
+
             case 'auth-id':
                 // basically updates the auth_number value in the request table
                 $this->authNumberSection();

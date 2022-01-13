@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import { Button, Card, Col, Collapse, ListGroup, Row } from "react-bootstrap";
-
 import FapIcon from "components/elements/FapIcon";
-
-import "./styles.scss";
 import ConsiderationForm from "../forms/ConsiderationsForm";
 
 const ConsiderationView = ({
     openConsideration,
     toggleOpenConsideration,
-    classifications,
     requestItems,
     requestId,
     refreshAssessment,

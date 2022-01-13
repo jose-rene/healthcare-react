@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Card, Col, Collapse, Row } from "react-bootstrap";
+import { Button, Card, Col, Collapse, ListGroup, Row } from "react-bootstrap";
 import AsyncSelect from "react-select/async";
 import FapIcon from "components/elements/FapIcon";
 import useApiCall from "hooks/useApiCall";
@@ -18,7 +18,7 @@ const RequestInfoView = ({
     updateError,
 }) => {
     const [data, setData] = useState({
-        type_name: "diagnosis",
+        type_name: "diagnosis-only",
         codes: [],
     });
 
@@ -68,14 +68,18 @@ const RequestInfoView = ({
         if (input.length < 2 || loading) {
             return null;
         }
-        fireSearch({ params: { term: input.trim() } }).then((options) => {
-            // console.log(options);
-            callback(options);
-        });
+        fireSearch({ params: { term: input.trim() } })
+            .then((options) => {
+                // console.log(options);
+                callback(options);
+            })
+            .catch((e) => {
+                console.log(e);
+            });
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const lookup = useCallback(debounce(lookupCodes, 1300), []);
+    const lookup = useCallback(debounce(lookupCodes, 500), []);
 
     const handleCodeChange = (selected, action, index) => {
         const [...currentCodes] = codes;
@@ -273,17 +277,27 @@ const RequestInfoView = ({
                                 </Col>
                             </Row>
                             <Row className="mb-3">
-                                <Col className="fw-bold" sm={3}>
-                                    Relevant Diagnosis
-                                </Col>
                                 <Col>
                                     {codes?.length && codes[0].code ? (
-                                        <p>
-                                            {codes
-                                                .map((item) => item.description)
-                                                .filter((item) => item)
-                                                .join(", ")}
-                                        </p>
+                                        <ListGroup className="mb-3">
+                                            <ListGroup.Item className="bg-light">
+                                                <h6 className="mb-0">
+                                                    Relevant Diagnosis
+                                                </h6>
+                                            </ListGroup.Item>
+                                            {codes.map(
+                                                (item) =>
+                                                    item.description && (
+                                                        <ListGroup.Item
+                                                            key={
+                                                                item.description
+                                                            }
+                                                        >
+                                                            {item.description}
+                                                        </ListGroup.Item>
+                                                    )
+                                            )}
+                                        </ListGroup>
                                     ) : (
                                         <Button
                                             variant="link"

@@ -122,7 +122,7 @@ class RequestType extends Model
         }
         $parents[] = $requestType['id'];
         if ($requestType['parent']) {
-            return $this->mapParents($requestType['parent']);
+            return self::mapParents($requestType['parent']);
         }
 
         return $parents;
