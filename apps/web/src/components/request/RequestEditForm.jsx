@@ -117,7 +117,7 @@ const RequestEditForm = ({ data }) => {
             const result = await fireSubmit({ params: formData });
             const { type_name: type } = formData;
             // toggle the edit window
-            if (type === "diagnosis") {
+            if (type === "diagnosis-only") {
                 setOpenRequestInfo(false);
             }
             if (type === "request-items") {

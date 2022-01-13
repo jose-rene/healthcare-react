@@ -7,6 +7,7 @@ use App\Models\Request as ModelRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ConsiderationRequest;
 use App\Http\Resources\RequestAssessmentResource;
+use App\Jobs\RequestSectionSaveJob;
 use Illuminate\Http\Request;
 
 class RequestAssessmentController extends Controller
@@ -34,7 +35,7 @@ class RequestAssessmentController extends Controller
         $default = $considerations->firstWhere('is_default', true);
         // update the default consideration
         Consideration::find($default['id'])->update([
-            'summary' => $default['summary'],
+            'summary'        => $default['summary'],
             'is_recommended' => $default['is_recommended'],
         ]);
         // get the associated request item
@@ -76,7 +77,7 @@ class RequestAssessmentController extends Controller
      * Order the media positions.
      *
      * @param Request $request
-     * @return RequestResource
+     * @return array
      */
     public function media(ModelRequest $request, Request $httpRequest)
     {
@@ -85,6 +86,19 @@ class RequestAssessmentController extends Controller
                 $document->update(['position' => $item['position']]);
             }
         });
+
+        return response()->json(['message' => 'ok']);
+    }
+
+    /**
+     * Store the diagnosis.
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function diagnosis(ModelRequest $request, Request $httpRequest)
+    {
+        dispatch(new RequestSectionSaveJob($request, $httpRequest->all()));
 
         return response()->json(['message' => 'ok']);
     }

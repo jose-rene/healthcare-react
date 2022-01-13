@@ -11,13 +11,21 @@ import ActivityView from "./views/ActivityView";
 import MediaView from "./views/MediaView";
 import ConsiderationView from "./views/ConsiderationView";
 import AssessmentView from "./views/AssessmentView";
+import DiagnosisView from "./views/DiagnosisView";
 
 const AssessmentEditForm = ({ reasonOptions, data }) => {
     const [assessmentData, setAssessmentData] = useState({});
     const [
-        [openSchedule, openMember, openActivity, openMedia, openConsideration],
+        [
+            openSchedule,
+            openMember,
+            openActivity,
+            openMedia,
+            openConsideration,
+            openDiagnosis,
+        ],
         setToggler,
-    ] = useState([false, false, false, false, false]);
+    ] = useState([false, false, false, false, false, false]);
 
     useEffect(() => {
         if (data) {
@@ -26,25 +34,25 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     }, [data]);
 
     const setOpenSchedule = (open) => {
-        setToggler([open, false, false, false, false]);
+        setToggler([open, false, false, false, false, false]);
     };
     const toggleOpenSchedule = () => {
         setOpenSchedule(!openSchedule);
     };
     const setOpenMember = (open) => {
-        setToggler([false, open, false, false, false]);
+        setToggler([false, open, false, false, false, false]);
     };
     const toggleOpenMember = () => {
         setOpenMember(!openMember);
     };
     const setOpenActivity = (open) => {
-        setToggler([false, false, open, false, false]);
+        setToggler([false, false, open, false, false, false]);
     };
     const toggleOpenActivity = () => {
         setOpenActivity(!openActivity);
     };
     const setOpenMedia = (open) => {
-        setToggler([false, false, false, open, false]);
+        setToggler([false, false, false, open, false, false]);
     };
     const toggleOpenMedia = () => {
         setOpenMedia(!openMedia);
@@ -56,6 +64,17 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
             false,
             false,
             open === null ? !openConsideration : !!open,
+            false,
+        ]);
+    };
+    const toggleDiagnosis = (open = null) => {
+        setToggler([
+            false,
+            false,
+            false,
+            false,
+            false,
+            open === null ? !openDiagnosis : !!open,
         ]);
     };
 
@@ -81,6 +100,9 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                 case "consideration":
                     toggleOpenConsideration(false);
                     break;
+                case "diagnosis":
+                    toggleDiagnosis(false);
+                    break;
             }
         }
 
@@ -99,6 +121,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
             forms: [],
             name: "",
         },
+        codes: diagnosisCodes = [],
     } = assessmentData;
 
     return (
@@ -183,6 +206,18 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     assessmentData,
                                     refreshAssessment,
                                     refreshLoading,
+                                }}
+                            />
+                        </Col>
+                        <Col xl={10}>
+                            <DiagnosisView
+                                {...{
+                                    openDiagnosis,
+                                    toggleDiagnosis,
+                                    diagnosisCodes,
+                                    refreshAssessment,
+                                    refreshLoading,
+                                    requestId,
                                 }}
                             />
                         </Col>
