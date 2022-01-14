@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo } from "react";
-import { NavDropdown, Badge } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
+import { NavDropdown, Badge, Button } from "react-bootstrap";
 
 import FapIcon from "components/elements/FapIcon";
 
@@ -17,6 +18,8 @@ const TopNavNotifications = () => {
         mapMessageClass,
         getNotifications,
     } = useGlobalContext();
+
+    const history = useHistory();
 
     useEffect(() => {
         getNotifications();
@@ -42,6 +45,12 @@ const TopNavNotifications = () => {
             </>
         );
     }, [messageLevel, unreadCount]);
+
+    const handleRecord = (notification_id) => {
+        markRead(notification_id);
+
+        history.push("/notifications");
+    };
 
     return (
         <NavDropdown
@@ -77,15 +86,22 @@ const TopNavNotifications = () => {
                                     key={m.id}
                                     className={`d-flex justify-content-between align-items-center p-3 ${`alert alert-${className}`}`}
                                 >
-                                    <div>
-                                        <strong className="default">
+                                    <Button
+                                        variant="link"
+                                        className="p-0 text-start"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleRecord(m.id);
+                                        }}
+                                    >
+                                        <strong className="default me-1">
                                             <FapIcon
                                                 icon="envelope"
                                                 size="1x"
                                             />
-                                        </strong>{" "}
+                                        </strong>
                                         {m.title}
-                                    </div>
+                                    </Button>
                                     <FapIcon
                                         icon="times"
                                         size="1x"
