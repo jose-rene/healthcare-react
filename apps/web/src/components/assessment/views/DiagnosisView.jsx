@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Card, Col, Collapse, ListGroup, Row } from "react-bootstrap";
+import { Button, Card, Collapse, ListGroup } from "react-bootstrap";
+
 import DiagnosisForm from "../forms/DiagnosisForm";
 
 const DiagnosisView = ({
