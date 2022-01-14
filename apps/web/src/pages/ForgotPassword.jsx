@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Alert, Button } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import { Alert, Button, Container, Row, Col } from "react-bootstrap";
 import qs from "query-string";
+import * as Yup from "yup";
 
-import InputText from "components/inputs/InputText";
+import Form from "components/elements/Form";
+import ContextInput from "components/inputs/ContextInput";
 import FapIcon from "components/elements/FapIcon";
 
 import { BASE_URL, POST } from "config/URLs";
@@ -17,8 +18,19 @@ export default ({ location: { search: params = "" } }) => {
         url: "/password/email/",
         method: POST,
     });
+
+    const validation = {
+        email: {
+            yupSchema: Yup.string()
+                .matches(
+                    /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    "Please enter a valid email address"
+                )
+                .required("Email is required"),
+        },
+    };
+
     const { email = "" } = qs.parse(params);
-    const { register, handleSubmit, errors, setValue } = useForm();
     const [changeSuccess, setChangeSuccess] = useState(false);
     const [passwordChangeError, setPasswordChangeError] = useState(null);
 
@@ -28,7 +40,6 @@ export default ({ location: { search: params = "" } }) => {
             setChangeSuccess(false);
             await forgotPassword({ params });
             setChangeSuccess(true);
-            setValue("email", "");
         } catch (e) {
             setChangeSuccess(false);
             const {
@@ -50,10 +61,10 @@ export default ({ location: { search: params = "" } }) => {
     };
 
     return (
-        <div className="container-fluid">
-            <div className="row">
-                <div className="col-sm-12 col-md-12 col-lg-6 col-no-padding">
-                    <div className="container-login">
+        <Container fluid>
+            <Row>
+                <Col md={12} lg={6}>
+                    <div className="p-5">
                         <div className="text-center text-lg-left">
                             <Link to="/">
                                 <img alt="Logo" src="/images/logo.png" />
@@ -62,23 +73,13 @@ export default ({ location: { search: params = "" } }) => {
 
                         <h1 className="sign-in-title">Forgot Password</h1>
 
-                        <form onSubmit={handleSubmit(handleForgotPassword)}>
-                            <InputText
-                                label="Email Address"
-                                name="email"
-                                placeholder="Enter your email address"
-                                errors={errors}
-                                style={{ height: "56px" }}
-                                defaultValue={email}
-                                ref={register({
-                                    required: "Email is required",
-                                    pattern: {
-                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                        message:
-                                            "Please enter a valid email address",
-                                    },
-                                })}
-                            />
+                        <Form
+                            autocomplete={false}
+                            defaultData={{ email }}
+                            validation={validation}
+                            onSubmit={handleForgotPassword}
+                        >
+                            <ContextInput label="Email Address" name="email" />
                             <div className="d-flex mt-3">
                                 Nevermind
                                 <Link
@@ -105,22 +106,21 @@ export default ({ location: { search: params = "" } }) => {
                                 type="submit"
                                 variant="primary"
                                 title="Sign in"
-                                className="btn-sign-in"
+                                className="p-3 mt-3 w-100"
                                 disabled={loading}
                             >
                                 Send Reset Password Email
-                                {loading ? (
-                                    <FapIcon className="align-middle fa-spin">
-                                        spinner
-                                    </FapIcon>
-                                ) : null}
+                                {loading ? <FapIcon icon="spinner" /> : null}
                             </Button>
-                        </form>
+                        </Form>
                     </div>
-                </div>
+                </Col>
 
-                <div className="d-none d-sm-none d-md-none d-lg-flex col-lg-6 login-bg col-no-padding" />
-            </div>
-        </div>
+                <Col
+                    lg={6}
+                    className="d-none d-sm-none d-md-none d-lg-flex login-bg col-no-padding"
+                />
+            </Row>
+        </Container>
     );
 };
