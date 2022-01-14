@@ -7,7 +7,7 @@ import ContextInput from "components/inputs/ContextInput";
 import ContextSelect from "components/contextInputs/Select";
 import dayjs from "dayjs";
 
-const DateRangeForm = ({ searchObj, setSearchObj }) => {
+const DateRangeForm = ({ searchObj, setSearchObj, dashboard = false }) => {
     const { objUpdate } = useFormContext();
 
     const [dateRangeOptions] = useState([
@@ -38,25 +38,25 @@ const DateRangeForm = ({ searchObj, setSearchObj }) => {
 
     return (
         <>
-            <Col md={3}>
+            <Col md={dashboard ? 2 : 3}>
                 <ContextInput
                     name="from_date"
                     label="From Date"
-                    className="w-100"
                     type="date"
+                    style={{ width: "100%" }}
                 />
             </Col>
 
-            <Col md={3}>
+            <Col md={dashboard ? 2 : 3}>
                 <ContextInput
                     name="to_date"
                     label="To Date"
-                    className="w-100"
                     type="date"
+                    style={{ width: "100%" }}
                 />
             </Col>
 
-            <Col md={3}>
+            <Col md={dashboard ? 2 : 3}>
                 <ContextSelect
                     name="date_range"
                     label="Date Range"

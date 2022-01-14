@@ -47,7 +47,7 @@ class MyUserResource extends JsonResource
             'phone_primary'          => $this->main_phone ? $this->main_phone->number : '',
             'dob'                    => $this->dob,
             'user_type'              => $this->user_type_name,
-            'roles'                  => RoleResource::collection($this->roles),
+            'roles'                  => RoleResource::collection($this->roles ? $this->roles->sortBy('name', \SORT_NATURAL) : null),
             'primary_role'           => $this->primary_role ?? $this->roles->first()->name ?? '',
             'abilities'              => $abilities->count() > 0 ? $abilities->map(fn(
                 $item,

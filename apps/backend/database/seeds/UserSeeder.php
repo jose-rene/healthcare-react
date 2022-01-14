@@ -37,6 +37,9 @@ class UserSeeder extends Seeder
                 'user_type'      => 1, // engineering user
                 'primary_role'   => 'software_engineer',
             ]);
+            if (!$admin->isA('reviewer_manager')) {
+                $admin->assign('reviewer_manager');
+            }
             // skip the user setup if it was not just created
             if (!$admin->wasRecentlyCreated) {
                 break;

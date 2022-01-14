@@ -5,9 +5,12 @@ import { Col, Row, ButtonGroup, ToggleButton } from "react-bootstrap";
 import { useUser } from "Context/UserContext";
 
 import { Button } from "components";
+import Form from "components/elements/Form";
 import FapIcon from "components/elements/FapIcon";
 import ContextSelect from "components/contextInputs/Select";
 import TableAPI from "components/elements/TableAPI";
+import ContextInput from "components/inputs/ContextInput";
+import DateRangeForm from "components/elements/DateRangeForm";
 
 import useApiCall from "hooks/useApiCall";
 import useSearch from "hooks/useSearch";
@@ -19,7 +22,7 @@ const RequestsTable = () => {
     const history = useHistory();
 
     const { getUser, userCan, userIs } = useUser();
-    const { primaryRole, timeZoneName } = getUser();
+    const { timeZoneName } = getUser();
 
     const isClinician = userIs(["clinical_reviewer", "field_clinician"]);
     const isHpUsers = userIs([
@@ -78,6 +81,7 @@ const RequestsTable = () => {
     ]);
 
     const [selectedTab, setSelectedTab] = useState(0);
+    const [lookup, setLookup] = useState("");
 
     const [headers] = useState([
         { columnMap: "member.name", label: "Name", type: String },
@@ -183,6 +187,7 @@ const RequestsTable = () => {
     );
 
     const redoSearch = async (params = searchObj) => {
+        setLookup("");
         try {
             await fireDoSearch({ params });
         } catch (e) {
@@ -209,9 +214,23 @@ const RequestsTable = () => {
         setSelectedTab(tab);
     };
 
-    useEffect(() => {
-        redoSearch(searchObj);
+    const handleUserOptions = ({ target: { name, value } }) => {
+        updateSearchObj({ ...searchObj, [name]: value });
 
+        redoSearch({ ...searchObj, [name]: value });
+    };
+
+    const handleLookup = async (params) => {
+        setLookup(params.lookup);
+        try {
+            await fireDoSearch({ params });
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    useEffect(() => {
+        redoSearch();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchObj]);
 
@@ -227,98 +246,110 @@ const RequestsTable = () => {
         <>
             <Row>
                 <Col>
-                    <div className="d-flex justify-content-between align-items-center">
-                        {!userIs("client_services_specialist") ? (
-                            <h3>{tabOptions[selectedTab].name}</h3>
-                        ) : (
-                            <div className="d-flex my-3">
-                                <ButtonGroup>
-                                    {tabOptions.map((tab, idx) => (
-                                        <ToggleButton
-                                            key={idx}
-                                            id={`tab-${idx}`}
-                                            type="radio"
-                                            className={`py-3 d-flex align-items-center shadow-none ${
-                                                selectedTab !== tab.value
-                                                    ? "bg-white"
-                                                    : ""
-                                            }`}
-                                            variant="secondary"
-                                            name="filter"
-                                            value={tab.value}
-                                            checked={selectedTab === tab.value}
-                                            onChange={() =>
-                                                handleTab(tab.value)
-                                            }
-                                        >
-                                            {tab.name}
-                                        </ToggleButton>
-                                    ))}
-                                </ButtonGroup>
-                            </div>
-                        )}
-
-                        <div className="d-flex mt-3">
-                            <ButtonGroup className="mx-3">
-                                {isHpUsers &&
-                                    filterOptions.map((filter, idx) => (
-                                        <ToggleButton
-                                            key={idx}
-                                            id={`filter-${idx}`}
-                                            type="radio"
-                                            className={`mb-3 d-flex align-items-center shadow-none ${
-                                                searchObj.filter !==
-                                                filter.value
-                                                    ? "bg-white"
-                                                    : ""
-                                            }`}
-                                            variant="secondary"
-                                            name="filter"
-                                            value={filter.value}
-                                            checked={
-                                                searchObj.filter ===
-                                                filter.value
-                                            }
-                                            onChange={formUpdateSearchObj}
-                                        >
-                                            {filter.name}
-                                        </ToggleButton>
-                                    ))}
-                                {userIs(["clinical_reviewer"]) &&
-                                    userOptions.map((user, idx) => (
-                                        <ToggleButton
-                                            key={idx}
-                                            id={`user-${idx}`}
-                                            type="radio"
-                                            className={`mb-3 d-flex align-items-center shadow-none ${
-                                                searchObj.is_clinician !==
-                                                user.value
-                                                    ? "bg-white"
-                                                    : ""
-                                            }`}
-                                            variant="secondary"
-                                            name="is_clinician"
-                                            value={user.value}
-                                            checked={
-                                                searchObj.is_clinician ===
-                                                user.value
-                                            }
-                                            onChange={formUpdateSearchObj}
-                                        >
-                                            {user.name}
-                                        </ToggleButton>
-                                    ))}
-                            </ButtonGroup>
-                            {selectedTab === 0 && (
-                                <ContextSelect
-                                    label="Status"
-                                    name="request_status_id"
-                                    options={statusOptions}
-                                    onChange={formUpdateSearchObj}
-                                />
+                    <Form
+                        autocomplete={false}
+                        defaultData={searchObj}
+                        onSubmit={redoSearch}
+                    >
+                        <div className="d-flex justify-content-between align-items-center">
+                            {!userIs("client_services_specialist") ? (
+                                <h3>{tabOptions[selectedTab].name}</h3>
+                            ) : (
+                                <div className="d-flex my-3">
+                                    <ButtonGroup>
+                                        {tabOptions.map((tab, idx) => (
+                                            <ToggleButton
+                                                key={idx}
+                                                id={`tab-${idx}`}
+                                                type="radio"
+                                                className={`py-3 d-flex align-items-center shadow-none ${
+                                                    selectedTab !== tab.value
+                                                        ? "bg-white"
+                                                        : ""
+                                                }`}
+                                                variant="secondary"
+                                                name="filter"
+                                                value={tab.value}
+                                                checked={
+                                                    selectedTab === tab.value
+                                                }
+                                                onChange={() =>
+                                                    handleTab(tab.value)
+                                                }
+                                            >
+                                                {tab.name}
+                                            </ToggleButton>
+                                        ))}
+                                    </ButtonGroup>
+                                </div>
                             )}
-                            {primaryRole !== "clinical_reviewer" &&
-                                primaryRole !== "field_clinician" && (
+
+                            <div className="d-flex mt-3">
+                                <ButtonGroup className="mx-3">
+                                    {isHpUsers &&
+                                        filterOptions.map((filter, idx) => (
+                                            <ToggleButton
+                                                key={idx}
+                                                id={`filter-${idx}`}
+                                                type="radio"
+                                                className={`mb-3 d-flex align-items-center shadow-none ${
+                                                    searchObj.filter !==
+                                                    filter.value
+                                                        ? "bg-white"
+                                                        : ""
+                                                }`}
+                                                variant="secondary"
+                                                name="filter"
+                                                value={filter.value}
+                                                checked={
+                                                    searchObj.filter ===
+                                                    filter.value
+                                                }
+                                                onChange={formUpdateSearchObj}
+                                            >
+                                                {filter.name}
+                                            </ToggleButton>
+                                        ))}
+                                    {userIs("clinical_reviewer") &&
+                                        userOptions.map((user, idx) => (
+                                            <ToggleButton
+                                                key={idx}
+                                                id={`user-${idx}`}
+                                                type="radio"
+                                                className={`mb-3 d-flex align-items-center shadow-none ${
+                                                    searchObj.is_clinician !==
+                                                    user.value
+                                                        ? "bg-white"
+                                                        : ""
+                                                } ${
+                                                    userIs("clinical_reviewer")
+                                                        ? "p-3"
+                                                        : ""
+                                                }`}
+                                                variant="secondary"
+                                                name="is_clinician"
+                                                value={user.value}
+                                                checked={
+                                                    searchObj.is_clinician ===
+                                                    user.value
+                                                }
+                                                onChange={handleUserOptions}
+                                            >
+                                                {user.name}
+                                            </ToggleButton>
+                                        ))}
+                                </ButtonGroup>
+
+                                {selectedTab === 0 && !isClinician && (
+                                    <ContextSelect
+                                        label="Status"
+                                        name="request_status_id"
+                                        options={statusOptions}
+                                        onChange={formUpdateSearchObj}
+                                    />
+                                )}
+
+                                {!isClinician && (
                                     <Button
                                         variant="primary"
                                         className="mb-3 mx-3"
@@ -327,10 +358,68 @@ const RequestsTable = () => {
                                         Create New Request
                                     </Button>
                                 )}
+                            </div>
                         </div>
-                    </div>
+
+                        {selectedTab === 0 && isClinician && (
+                            <Row
+                                className={
+                                    userIs("field_clinician") ? "mt-3" : ""
+                                }
+                            >
+                                <Col md={2}>
+                                    <ContextSelect
+                                        label="Status"
+                                        name="request_status_id"
+                                        options={statusOptions}
+                                        onChange={formUpdateSearchObj}
+                                    />
+                                </Col>
+
+                                <DateRangeForm
+                                    searchObj={searchObj}
+                                    setSearchObj={updateSearchObj}
+                                    dashboard
+                                />
+
+                                <Col md={4}>
+                                    <Button
+                                        variant="primary"
+                                        type="submit"
+                                        className="w-100"
+                                    >
+                                        Search
+                                    </Button>
+                                </Col>
+                            </Row>
+                        )}
+                    </Form>
                 </Col>
             </Row>
+
+            {selectedTab === 0 && isClinician && (
+                <Form defaultData={{ lookup }} onSubmit={handleLookup}>
+                    <Row>
+                        <Col md={4}>
+                            <ContextInput
+                                name="lookup"
+                                label="Auth # or Last Name"
+                            />
+                        </Col>
+
+                        <Col md={4}>
+                            <Button
+                                variant="primary"
+                                className="w-100"
+                                type="submit"
+                            >
+                                Lookup
+                            </Button>
+                        </Col>
+                    </Row>
+                </Form>
+            )}
+
             <Row>
                 <Col>
                     {selectedTab === 0 && (
