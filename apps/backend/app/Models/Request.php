@@ -226,12 +226,33 @@ class Request extends Model
             $query->where('payer_user_id', $user->id);
         }
 
+        // lookup, just search by member and auth number on a lookup term
+        if (request()->has('lookup') && ($lookup = request()->get('lookup'))) {
+            return $query->where(function($query) use($lookup) {
+                $query->where('auth_number', 'LIKE', '%' . $lookup . '%')
+                ->OrWhereHas('member', function ($query) use($lookup) {
+                    $query->where(function($query) use($lookup) {
+                        $query
+                            ->where('first_name', 'LIKE', '%' . $lookup . '%')
+                            ->orWhere('last_name', 'LIKE', '%' . $lookup . '%');
+                    });
+                });
+            });
+        }
+        // date range
+        if (request()->has('from_date') && ($fromDate = request()->get('from_date'))) {
+            $query->where('created_at', '>=', $fromDate);
+        }
+        if (request()->has('to_date') && ($toDate = request()->get('to_date'))) {
+            $query->where('created_at', '<=', $toDate);
+        }
+
         return app(Pipeline::class)
             ->send($query)
             ->through([
                 RequestStatusId::class,
                 AuthNumber::class,
-                Dates::class,
+                // Dates::class,
                 TherapyNetworkId::class,
                 Sort::class,
             ])

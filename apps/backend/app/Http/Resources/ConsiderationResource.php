@@ -14,13 +14,13 @@ class ConsiderationResource extends JsonResource
      */
     public function toArray($request)
     {
-        $classification = $this->requestType->topClassification;
+        $classification = $this->requestType ? $this->requestType->topClassification : null;
 
         return [
             'id'                  => $this->id,
             'request_type_id'     => $this->request_type_id, // new RequestTypeResource($this->requestType),
-            'all_request_types'   => collect($this->requestType->all_parents)->push((int) $this->request_type_id),
-            'name'                => $this->requestType->name,
+            'all_request_types'   => $this->requestType ? collect($this->requestType->all_parents)->push((int) $this->request_type_id) : [],
+            'name'                => $this->requestType ? $this->requestType->name : '',
             'classification'      => $classification ? $classification->id : '',
             'classification_name' => $classification ? $classification->name : '',
             'summary'             => $this->summary,
