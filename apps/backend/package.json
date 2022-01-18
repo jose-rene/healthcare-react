@@ -13,7 +13,9 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "test": "php artisan test --parallel",
         "postinstall": "composer install",
-        "remove:vendor": "echo 'Removing \"./vendor\" '; rm -rf vendor"
+        "remove:vendor": "echo 'Removing \"./vendor\" '; rm -rf vendor",
+        "sail:install": "php artisan sail:install",
+        "sail": "./vendor/bin/sail up"
     },
     "devDependencies": {
         "@babel/preset-react": "^7.0.0",

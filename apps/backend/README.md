@@ -49,3 +49,18 @@ Before you run `sudo pecl install pdflib` you need to download pdflib.h
 
 //UPDATE_ME:: I stumbled a little to install pdflib.h but instructions start here
 https://www.pdflib.com/download/pdflib-product-family/
+
+### Docker
+
+Laravel offers sail as a wrapper for docker.
+
+#### Note:
+
+If you set up the alias then to run application commands like `php artisan migrate:fresh --seed` you'd
+run `sail migrate:fresh --seed`
+If you want to run artisan commands or commands in the sail(docker) image then you run `sail` instead of `php artisan`
+
+Links:
+
+* [Setting up the alis](https://laravel.com/docs/8.x/sail#configuring-a-bash-alias)
+* [Sail commands](https://laravel.com/docs/8.x/sail#executing-artisan-commands)
