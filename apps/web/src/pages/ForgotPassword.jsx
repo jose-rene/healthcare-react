@@ -33,8 +33,12 @@ export default ({ location: { search: params = "" } }) => {
     const { email = "" } = qs.parse(params);
     const [changeSuccess, setChangeSuccess] = useState(false);
     const [passwordChangeError, setPasswordChangeError] = useState(null);
+    const [defaultData, setDefaultData] = useState({
+        email,
+    });
 
     const handleForgotPassword = async (params) => {
+        setDefaultData({ ...defaultData, ...params });
         try {
             setPasswordChangeError(null);
             setChangeSuccess(false);
@@ -75,7 +79,7 @@ export default ({ location: { search: params = "" } }) => {
 
                         <Form
                             autocomplete={false}
-                            defaultData={{ email }}
+                            defaultData={defaultData}
                             validation={validation}
                             onSubmit={handleForgotPassword}
                         >

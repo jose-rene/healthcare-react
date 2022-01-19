@@ -81,7 +81,6 @@ const RequestsTable = () => {
     ]);
 
     const [selectedTab, setSelectedTab] = useState(0);
-    const [lookup, setLookup] = useState("");
 
     const [headers] = useState([
         { columnMap: "member.name", label: "Name", type: String },
@@ -182,12 +181,12 @@ const RequestsTable = () => {
                 perPage: 10,
                 filter: "0",
                 is_clinician: "0",
+                lookup: "",
             },
         }
     );
 
     const redoSearch = async (params = searchObj) => {
-        setLookup("");
         try {
             await fireDoSearch({ params });
         } catch (e) {
@@ -219,20 +218,6 @@ const RequestsTable = () => {
 
         redoSearch({ ...searchObj, [name]: value });
     };
-
-    const handleLookup = async (params) => {
-        setLookup(params.lookup);
-        try {
-            await fireDoSearch({ params });
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    useEffect(() => {
-        redoSearch();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchObj]);
 
     useEffect(() => {
         if (selectedTab === 1) {
@@ -340,15 +325,6 @@ const RequestsTable = () => {
                                         ))}
                                 </ButtonGroup>
 
-                                {selectedTab === 0 && !isClinician && (
-                                    <ContextSelect
-                                        label="Status"
-                                        name="request_status_id"
-                                        options={statusOptions}
-                                        onChange={formUpdateSearchObj}
-                                    />
-                                )}
-
                                 {!isClinician && (
                                     <Button
                                         variant="primary"
@@ -361,13 +337,13 @@ const RequestsTable = () => {
                             </div>
                         </div>
 
-                        {selectedTab === 0 && isClinician && (
+                        {selectedTab === 0 && (
                             <Row
                                 className={
                                     userIs("field_clinician") ? "mt-3" : ""
                                 }
                             >
-                                <Col md={2}>
+                                <Col md={3}>
                                     <ContextSelect
                                         label="Status"
                                         name="request_status_id"
@@ -379,10 +355,16 @@ const RequestsTable = () => {
                                 <DateRangeForm
                                     searchObj={searchObj}
                                     setSearchObj={updateSearchObj}
-                                    dashboard
                                 />
 
-                                <Col md={4}>
+                                <Col md={3}>
+                                    <ContextInput
+                                        name="lookup"
+                                        label="Auth # or Last Name"
+                                    />
+                                </Col>
+
+                                <Col md={3}>
                                     <Button
                                         variant="primary"
                                         type="submit"
@@ -396,29 +378,6 @@ const RequestsTable = () => {
                     </Form>
                 </Col>
             </Row>
-
-            {selectedTab === 0 && isClinician && (
-                <Form defaultData={{ lookup }} onSubmit={handleLookup}>
-                    <Row>
-                        <Col md={4}>
-                            <ContextInput
-                                name="lookup"
-                                label="Auth # or Last Name"
-                            />
-                        </Col>
-
-                        <Col md={4}>
-                            <Button
-                                variant="primary"
-                                className="w-100"
-                                type="submit"
-                            >
-                                Lookup
-                            </Button>
-                        </Col>
-                    </Row>
-                </Form>
-            )}
 
             <Row>
                 <Col>

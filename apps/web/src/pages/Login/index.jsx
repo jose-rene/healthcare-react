@@ -2,10 +2,14 @@ import qs from "query-string";
 import React, { useRef, useState } from "react";
 import { Redirect } from "react-router-dom";
 import * as Yup from "yup";
-import Form from "components/elements/Form";
+
 import { useUser } from "Context/UserContext";
-import useAuth, { AuthError } from "../../hooks/useAuth";
+
+import Form from "components/elements/Form";
+
 import LoginForm from "./LoginForm";
+
+import useAuth, { AuthError } from "hooks/useAuth";
 
 // this rule wants both the htmlFor and label nested, should be either not both
 /* eslint-disable jsx-a11y/label-has-associated-control */
