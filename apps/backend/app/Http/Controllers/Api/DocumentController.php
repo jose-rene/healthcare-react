@@ -86,11 +86,12 @@ class DocumentController extends Controller
     ) {
         // Use the resource to generate request data for this sample
         $request_data = new RequestDetailResource($request);
-        $template     = $narrative_report_template->template;
+        $template     = '<div class="tinymce content">' . $narrative_report_template->template . '</div>';
+        $style        = '.tinymce.content{ ' . $narrative_report_template->styles . '}';
         $filename     = 'some-pdf-file.pdf';
 
         $report_html = $reportBuilder->buildHtml($template, $request_data);
-        $pdf         = $reportBuilder->htmlToPDF($report_html);
+        $pdf         = $reportBuilder->htmlToPDF($report_html, compact('style'));
 
         // stream the pdf to the browser
         return response()->make($pdf, 200, [

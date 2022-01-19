@@ -11,6 +11,7 @@ class NarrativeReportTemplateRequest extends FormRequest
         return [
             'name'     => [],
             'template' => [],
+            'styles'   => [],
         ];
     }
 

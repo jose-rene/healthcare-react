@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import Select from "../../../../components/inputs/Select";
 
 import { get } from "lodash";
+import ContextInput from "../../../../components/inputs/ContextInput";
 
 const EditNarrativeReport = ({ match }) => {
     const { slug = false } = match.params;
@@ -39,6 +40,7 @@ const EditNarrativeReport = ({ match }) => {
 
     const [form, setForm] = useState({
         templateField: ``,
+        styles: "",
     });
 
     const [answerData, setAnswerData] = useState(null);
@@ -46,17 +48,18 @@ const EditNarrativeReport = ({ match }) => {
     const [selectedReport, setSelectedReport] = useState(null);
 
     const handleFormSubmit = (formValues) => {
-        const { templateField: template = "" } = formValues;
         setForm(formValues);
-        fireUpdateTemplate({ params: { template } });
+        fireUpdateTemplate({ params: formValues });
     };
 
     useEffect(() => {
         fireLoadReports();
 
         (async () => {
-            const { template = "" } = await fireLoadTemplate().catch(() => {});
-            setForm({ templateField: template });
+            const { template = "", ...others } = await fireLoadTemplate().catch(
+                () => {}
+            );
+            setForm({ templateField: template, ...others });
         })();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,6 +86,16 @@ const EditNarrativeReport = ({ match }) => {
             <Row>
                 <Col>
                     <Form defaultData={form} onSubmit={handleFormSubmit}>
+                        <ContextInput
+                            type="textarea"
+                            label="Styles"
+                            name="styles"
+                            style={{ height: "5rem" }}
+                            placeholder="p{ background: yellow; margin: 3px;}"
+                            help={`The root of the styles is wrapped automatically
+                            with the class .tinymce.content. These styles won't show
+                            up in the tinymce editor. You can see them in the preview`}
+                        />
                         <FancyEditor name="templateField" />
                         <hr />
                         <SubmitButton loading={saving} />
@@ -126,6 +139,7 @@ const EditNarrativeReport = ({ match }) => {
                     <h3>Preview</h3>
                     {form.templateField && (
                         <Card>
+                            <style>{form.styles}</style>
                             <Card.Body
                                 dangerouslySetInnerHTML={{
                                     __html: handlebarsTemplate(
