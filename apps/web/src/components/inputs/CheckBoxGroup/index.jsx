@@ -1,7 +1,14 @@
 import React from "react";
 import Checkbox from "../Checkbox";
 
-const CheckBoxGroup = ({ options = false, name, onChange, checked = false, type = "checkbox" }) => {
+const CheckBoxGroup = ({
+    options = false,
+    name,
+    onChange,
+    checked = false,
+    hasError = false,
+    type = "checkbox",
+}) => {
     return (
         <div>
             {options.map(({ text, label, value, children, ...opt }) => {
@@ -12,8 +19,10 @@ const CheckBoxGroup = ({ options = false, name, onChange, checked = false, type 
                         name={`${name}[${value}]`}
                         value={true}
                         checked={checked[value]}
-                        onChange={onChange} {...opt}>{children}
-                    </Checkbox>
+                        onChange={onChange} {...opt}
+                        labelLeft
+                        hasError={hasError}
+                    />
                 );
             })}
         </div>

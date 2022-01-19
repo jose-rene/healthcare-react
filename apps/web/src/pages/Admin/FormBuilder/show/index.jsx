@@ -3,21 +3,21 @@ import PageLayout from "../../../../layouts/PageLayout";
 import Form from "components/elements/Form";
 import "../edit/style.scss";
 import useFormBuilder from "../../../../hooks/useFormBuilder";
-import SubmitButton from "../../../../components/elements/SubmitButton";
 import RenderForm from "../../../../components/FormBuilder/RenderForm";
-import * as Yup from "yup";
-import { set } from "lodash";
+import FormBuilderWrapper from "../../../../components/FormBuilder/FormBuilderWrapper";
 
 const FormView = ({
     match: {
         params: { form_slug },
     },
 }) => {
+    const formBuilderHook = useFormBuilder({ form_slug });
+    const [
+        { form, fieldAutofill, defaultAnswers, formLoading, validation },
+        { fireLoadForm },
+    ] = formBuilderHook;
     const [formDataLoaded, setFormDataLoaded] = useState(false);
     const [formTitle, setFormTitle] = useState(null);
-    const [{ form, defaultAnswers, formLoading, saving }, { fireLoadForm }] = useFormBuilder({
-        form_slug,
-    });
     const [formSaves, setFormSaves] = useState([]);
     const [autoSaveCount, setAutoSaveCount] = useState(0);
 
@@ -27,57 +27,27 @@ const FormView = ({
 
     const pushFormSave = (obj, action = "n/a", autoIncrement = true) => {
         if (autoIncrement) {
-            setAutoSaveCount(prev => prev + 1);
+            setAutoSaveCount((prev) => prev + 1);
         }
         setFormSaves([...formSaves, { action, ...obj }]);
     };
 
+    const handleLoadForm = async () => {
+        const { name } = await fireLoadForm();
+        setFormTitle(name);
+        pushFormSave({ log: "form data loaded" }, "loaded", false);
+        setFormDataLoaded(true);
+    };
+
     useEffect(() => {
-        if (!form_slug) {
-            throw new Error({
-                code: 403,
-                message: "missing/invalid form name",
-            });
-        }
-
-        (async () => {
-            const { name } = await fireLoadForm();
-            setFormTitle(name);
-
-            pushFormSave({ log: "form data loaded" }, "loaded", false);
-
-            setTimeout(() => {
-                setFormDataLoaded(true);
-            }, 500);
-        })();
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        handleLoadForm();
     }, []);
 
-    // maps field validation to validation object
-    const validation = useMemo(() => {
-        const returnCustomValidation = {};
-
-        form.forEach(({ custom_name = false, props, required, label = "This field" }) => {
-            const { customValidation } = props || {};
-
-            if (required) {
-                set(returnCustomValidation, `${custom_name}.yupSchema`, Yup.string().required(`${label} is required`));
-            }
-
-            if (!customValidation) {
-                return true;
-            }
-
-            set(returnCustomValidation, `${custom_name}.customRule`, customValidation);
-        });
-
-        console.log({ form, returnCustomValidation });
-        return returnCustomValidation;
-    }, [form]);
-
     const handleSubmit = (ff) => {
-        pushFormSave({ ...ff, saveOptions: { quickSave: false } }, "complete-form");
+        pushFormSave(
+            { ...ff, saveOptions: { quickSave: false } },
+            "complete-form"
+        );
     };
 
     const handleFormChange = async (ff) => {
@@ -99,34 +69,46 @@ const FormView = ({
                 <hr />
                 {form.length > 0 && (
                     <Form
-                        onFormChange={handleFormChange}
+                        formBuilder
+                        onChange={handleFormChange}
                         onSubmit={handleSubmit}
                         validation={validation}
                         autocomplete="off"
                         defaultData={defaultAnswers}
+                        autoFiller={fieldAutofill}
                     >
-                        <RenderForm formElements={form} />
-
-                        <SubmitButton loading={saving} />
+                        <FormBuilderWrapper
+                            fields={form}
+                            formBuilderHook={formBuilderHook}
+                            showSubmit
+                        >
+                            <RenderForm />
+                        </FormBuilderWrapper>
                     </Form>
                 )}
 
                 <div className="my-3 p3">
-                    <h3>
-                        This is a demo of the built form answers.
-                    </h3>
+                    <h3>This is a demo of the built form answers.</h3>
                     <p className="text-muted">
-                        The submit button will not actually save
-                        answers to the database. But, you can view what would save below.
+                        The submit button will not actually save answers to the
+                        database. But, you can view what would save below.
                     </p>
 
-                    <p>
-                        autoSaveCount: {autoSaveCount}
-                    </p>
-
-                    <pre>
-                        {JSON.stringify(revFormSaves, null, 2)}
-                    </pre>
+                    <div className="row">
+                        <div className="col-md-6">
+                            <p>autoSaveCount: {autoSaveCount}</p>
+                            <pre>{JSON.stringify(revFormSaves, null, 2)}</pre>
+                        </div>
+                        <div className="col-md-6">
+                            <h2>
+                                Validation Rules, formDataLoaded:
+                                {formDataLoaded ? "yes" : "no"}
+                            </h2>
+                            <pre>{JSON.stringify(validation, null, 2)}</pre>
+                            <h2>Form</h2>
+                            <pre>{JSON.stringify(form, null, 2)}</pre>
+                        </div>
+                    </div>
                 </div>
             </div>
         </PageLayout>

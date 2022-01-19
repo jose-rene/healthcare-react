@@ -7,14 +7,23 @@ import FapIcon from "components/elements/FapIcon";
 
 const Base = ({ children }) => <div className="input-group">{children}</div>;
 
+const GryMaskInput = forwardRef((props, ref) => {
+    const { isInvalid = false, className: _className = "" } = props;
+
+    // The input mask does not automatically set the is-valid class
+    const className = `${_className} ` + (isInvalid ? `is-invalid` : "");
+
+    return <InputMask {...props} ref={ref} className={className} />;
+});
+
 Base.Input = forwardRef((props, ref) => {
-    const { mask } = props;
+    const { mask, static: s, italic, bold, ...otherProps } = props;
 
     if (mask) {
-        return <InputMask {...props} ref={ref} />;
+        return <GryMaskInput {...props} ref={ref} />;
     }
 
-    return <Form.Control {...props} ref={ref} />;
+    return <Form.Control {...otherProps} ref={ref} />;
 });
 
 Base.Addon = ({ children, textProps, ...props }) => (

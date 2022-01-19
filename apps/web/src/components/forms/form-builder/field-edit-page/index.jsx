@@ -12,7 +12,7 @@ import {
     ContentState,
 } from "draft-js";
 import { set } from "lodash";
-import { CustomRule, CustomValidation } from "..";
+import { CustomRule, CustomValidation, Autofill } from "..";
 
 import Textarea from "../../../inputs/Textarea";
 import { Button } from "../../../index";
@@ -40,7 +40,7 @@ export default class FormElementsEdit extends React.Component {
     editElementProp(elementName, propName, e) {
         const { [propName]: newValue = "" } = e.target || {};
         // elemProperty could be content or label
-        // targProperty could be value or checked
+        // targetProperty could be value or checked
         const this_element = this.state.element;
         set(this_element, elementName, newValue);
 
@@ -141,8 +141,7 @@ export default class FormElementsEdit extends React.Component {
         const span_width =
             this.props.element?.span_width ||
             this.props.element.props?.span_width;
-        const count = Math.ceil(12 / span_width);
-        console.log({ span_width, count });
+        //const count = Math.ceil(12 / span_width);
 
         return (
             <div className="form-group mt-3">
@@ -978,6 +977,17 @@ export default class FormElementsEdit extends React.Component {
                         onChange={this.editElementProp.bind(
                             this,
                             "props.customValidation",
+                            "value"
+                        )}
+                        element={this.props.element}
+                        updateElement={this.props.updateElement}
+                    />
+
+                    <Autofill
+                        eventKey="2"
+                        onChange={this.editElementProp.bind(
+                            this,
+                            "props.autofill",
                             "value"
                         )}
                         element={this.props.element}

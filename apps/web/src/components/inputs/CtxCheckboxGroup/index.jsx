@@ -6,13 +6,14 @@ const CtxCheckboxGroup = ({
     name,
     rowIndex = 0,
     children,
-    customRule,
     options: _options = [],
     type = "checkbox",
+    label = null,
     ...props
 }) => {
-    const { getValue, editing, shouldShow, update } = useFormContext();
+    const { getValue, getError, update } = useFormContext();
     const values = getValue(name, []);
+    const error = getError({ name });
 
     const options = useMemo(() => {
         return _options.map(({ text, label, ...otherOptionProps }) => ({
@@ -22,23 +23,24 @@ const CtxCheckboxGroup = ({
         }));
     }, [_options]);
 
-    if (!editing && customRule && !shouldShow(customRule, { name, rowIndex })) {
-        return null;
-    }
-
     const handleOnChange = ({ target: { name: fieldName, checked } }) => {
         update(fieldName, checked);
     };
 
     return (
-        <CheckBoxGroup
-            checked={values}
-            name={name}
-            options={options}
-            type={type}
-            {...props}
-            onChange={handleOnChange}
-        />
+        <>
+            {label && <div>{label}</div>}
+            <CheckBoxGroup
+                checked={values}
+                name={name}
+                options={options}
+                type={type}
+                {...props}
+                onChange={handleOnChange}
+                hasError={!!error}
+            />
+            {error && <div className="text-danger mb-3 mt-0 invalid-feedback d-block">{error}</div>}
+        </>
     );
 };
 

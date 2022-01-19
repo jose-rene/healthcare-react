@@ -24,6 +24,7 @@ GryCheckbox.register = {
     icon: "fas fa-check-square",
     name: "checkbox",
     label: "Checkbox",
+    inline: false,
     props: {
         custom_name: "checkbox",
         customValidation: ``,
