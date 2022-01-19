@@ -37,12 +37,12 @@ class UserSeeder extends Seeder
                 'user_type'      => 1, // engineering user
                 'primary_role'   => 'software_engineer',
             ]);
-            if (!$admin->isA('reviewer_manager')) {
-                $admin->assign('reviewer_manager');
-            }
             // skip the user setup if it was not just created
             if (!$admin->wasRecentlyCreated) {
-                break;
+                if (!$admin->isA('reviewer_manager')) {
+                    $admin->assign('reviewer_manager');
+                }
+                continue;
             }
             $admin->markEmailAsVerified();
             // add a phone
@@ -58,6 +58,7 @@ class UserSeeder extends Seeder
                 'software_engineer',
                 'field_clinician',
                 'clinical_reviewer',
+                'reviewer_manager',
                 'coo',
                 'client_services_manager',
                 'client_services_specialist',

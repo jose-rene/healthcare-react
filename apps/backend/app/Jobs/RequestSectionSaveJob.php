@@ -6,6 +6,7 @@ use App\Http\Requests\MemberRequest;
 use App\Models\Request;
 use App\Models\RequestItem;
 use App\Models\RequestStatus;
+use App\Models\RequestType;
 use App\Models\RequestTypeDetail;
 use Carbon\Carbon;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -76,6 +77,10 @@ class RequestSectionSaveJob
 
             case 'request-items':
                 $this->requestItemsSection();
+                break;
+
+            case 'request-types':
+                $this->requestTypesSection();
                 break;
 
             case 'no-documents':
@@ -248,6 +253,47 @@ class RequestSectionSaveJob
         // sync the associated request type details for each request item
         $this->request->requestItems
             ->each(fn ($item) => $item->requestTypeDetails()->sync($requestTypeDetails[$item['request_type_id']]));
+        $this->request->refresh();
+    }
+
+    protected function requestTypesSection()
+    {
+        $rules = [
+            'request_types'             => ['bail', 'required', 'array', 'min:1'],
+            'request_types.*.id'        => ['bail', 'required', 'integer', 'exists:request_types,id'],
+            'request_types.*.details'   => ['array'],
+            'request_types.*.details.*' => ['bail', 'integer', 'exists:request_type_details,id'],
+        ];
+        $validator = Validator::make(request()->all(), $rules, [
+            'required' => 'A valid request item is required.',
+            'exists'   => 'An invalid request item was entered',
+        ]);
+        if ($validator->fails()) {
+            throw new HttpResponseException(response()->json(['errors' => ['request_item' => [$validator->errors()->first()]]], 422));
+
+            return;
+        }
+
+        $types = request()->collect('request_types');
+        // array of request item params
+        $requestItems = $types->map(fn($item) => [
+            'id' => ($first = RequestItem::firstWhere([
+                'request_id'      => $this->request->id,
+                'request_type_id' => $item['id'],
+            ])) ? $first->id : null,
+            'request_id'      => $this->request->id,
+            'request_type_id' => $item['id'],
+            'name'            => RequestType::find($item['id'])->name,
+        ]);
+        // sync request items
+        $this->request
+            ->requestItems()
+            ->sync($requestItems->toArray());
+        // refresh to reload relationships
+        $this->request->refresh(); 
+        // sync the associated request type details for each request item
+        $this->request->requestItems
+            ->each(fn ($item) => $item->requestTypeDetails()->sync($types->firstWhere('id', $item->request_type_id)['details']));
         $this->request->refresh();
     }
 
