@@ -8,6 +8,7 @@ const ContextRadioInput = (
         onChange: propsOnChange,
         checked = false,
         inline = false,
+        labelRight = false,
     },
     ref
 ) => {
@@ -21,21 +22,26 @@ const ContextRadioInput = (
         return inline ? " form-check-inline" : "";
     }, [inline]);
 
-    return (
-        <div className={`${wrapperClass}${classAppend}`}>
+    const labelHtml = useMemo(() => {
+        return (
             <label className="form-check-label" htmlFor={`${name}-${label}`}>
                 {label}
             </label>
-            <input
-                id={`${name}-${label}`}
-                className="form-check-input m-1 me-2"
-                type="radio"
-                name={name}
-                ref={ref}
-                value={label}
-                checked={checked}
-                onChange={handleOnChange}
-            />
+        );
+    }, [label, labelRight]);
+
+    return (
+        <div className={`${wrapperClass}${classAppend}`}>
+            {!labelRight && labelHtml} <input
+            id={`${name}-${label}`}
+            className="form-check-input m-1 me-2"
+            type="radio"
+            name={name}
+            ref={ref}
+            value={label}
+            checked={checked}
+            onChange={handleOnChange}
+        /> {labelRight && labelHtml}
         </div>
     );
 };

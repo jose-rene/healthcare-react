@@ -16,15 +16,8 @@ const CustomValidation = ({
             value={customValidation}
             name="customValidation"
             rows={5}
-            helpText={
-                <a
-                    href="https://lodash.com/docs/4.17.15#template"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Template help
-                </a>
-            }
+            helpText="If condition is not falsy then output the text as a red validation error. Variables
+            must start with ~ for example ~first_name"
             {...props}
         />
     );

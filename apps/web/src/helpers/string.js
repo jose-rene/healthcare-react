@@ -1,4 +1,5 @@
 import Handlebars from "handlebars";
+import dot from "dot-object";
 
 Handlebars.registerHelper("compare", function (v1, operator, v2, options) {
     const operators = {
@@ -64,11 +65,14 @@ export const handlebarsTemplate = (templateString, object) => {
 
 /**
  *
- * @param condition
- * @param form -  this is required even though it's not used here. The eval method could pull in one of those values
+ * @param {string} condition
+ * @param {Object} form -  this is required even though it's not used here. The eval method could pull in one of those values
+ * @param {Object} options
+ * @param {boolean} [options.debug] - console logs the resulting template and form object
+ * @param {boolean} [options.strict] - on catch in the try catch return true to shw there are form errors
  * @returns {any}
  */
-export const jsEval = (condition, form) => {
+export const jsEval = (condition, form, { debug = false, strict = false } = {}) => {
     try {
         //const template = handlebarsTemplate(condition, data);
         const template = condition
@@ -78,11 +82,24 @@ export const jsEval = (condition, form) => {
             // use the optional operator
             .replace(/\./g, "?.");
 
+        if (debug) {
+            console.log("jsEval", { template, form });
+        }
+
         /* eslint no-eval: 0 */
         return eval(template);
     } catch (e) {
         //console.log("jsEval", { e, condition, form });
     }
 
-    return false;
+    return strict;
+};
+
+/**
+ * @description converts complex object to dot notation
+ * @param {Object} obj
+ * @return {*}
+ */
+export const objToDot = (obj) => {
+    return dot.dot(obj);
 };

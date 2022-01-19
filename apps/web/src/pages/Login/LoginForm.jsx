@@ -1,9 +1,10 @@
-import { useFormContext } from "../../Context/FormContext";
-import { Row, Alert, Container } from "react-bootstrap";
-import ContextInput from "../../components/inputs/ContextInput";
-import { Link } from "react-router-dom";
-import SubmitButton from "../../components/elements/SubmitButton";
 import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Row, Alert, Container } from "react-bootstrap";
+
+import { useFormContext } from "Context/FormContext";
+import ContextInput from "components/inputs/ContextInput";
+import SubmitButton from "components/elements/SubmitButton";
 
 const LoginForm = ({
     error,
@@ -13,7 +14,7 @@ const LoginForm = ({
     userLoading,
     email,
 }) => {
-    const { setValidated } = useFormContext();
+    const { setValidated, getValue } = useFormContext();
 
     useEffect(() => {
         setValidated(false);
@@ -67,7 +68,7 @@ const LoginForm = ({
                             <div className="d-flex mt-3">
                                 <Link
                                     to={`/password/reset?email=${
-                                        email.current || ""
+                                        getValue("email") || ""
                                     }`}
                                     className="btn-forgot-password"
                                 >

@@ -99,9 +99,9 @@ const FormBuilderEdit = (props) => {
                             edit
                             data={form}
                             toolbarItems={items}
-                            renderEditForm={(props) => (
-                                <FormElementsEdit {...props} />
-                            )}
+                            renderEditForm={(props) => {
+                                return <FormElementsEdit {...props} />;
+                            }}
                         />
                     </Form>
                 )}

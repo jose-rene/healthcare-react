@@ -3,7 +3,7 @@ import ContextRadioInput from "../../inputs/ContextRadioInput";
 import { useFormContext } from "../../../Context/FormContext";
 
 const GryRadioGroup = (props) => {
-    const { onChange, getValue } = useFormContext();
+    const { onChange, getValue, getError } = useFormContext();
 
     const allProps = {
         ...(props.data ?? {}),
@@ -12,42 +12,46 @@ const GryRadioGroup = (props) => {
 
     const {
         label = null,
-        custom_name,
+        custom_name: name,
         options = [],
         customRule,
         inline = false,
         ...rest
     } = allProps;
 
-    if (!custom_name) {
+    const error = getError({ name });
+
+    if (!name) {
         return <p>Missing custom_name</p>;
     }
 
-    const value = getValue(custom_name);
+    const value = getValue(name);
 
     return (
-        <div className="clearfix">
-            <label
-                htmlFor={`_${custom_name}`}
-                className={inline ? "float-start" : ""}
-            >
+        <div className="clearfix my-3">
+            <label htmlFor={`_${name}`} className={inline ? "float-start" : ""}>
                 {label}
             </label>
             <div
-                id={`_${custom_name}`}
-                className={inline ? "float-start ps-3" : ""}
+                id={`_${name}`}
+                className={`${error ? "is-invalid" : ""} ${
+                    inline ? "float-start ps-3" : ""
+                }`}
             >
-                {options.map((radio) => (
+                {options.map((radio, index) => (
                     <ContextRadioInput
-                        {...{ ...rest, name: custom_name }}
+                        {...{ ...rest, name }}
                         inline={inline}
                         label={radio.text}
                         value={radio.value}
                         onChange={onChange}
                         checked={value === radio.value}
+                        labelRight
+                        key={`${name}-radio-${index}`}
                     />
                 ))}
             </div>
+            {error && <div className="invalid-feedback">{error}</div>}
         </div>
     );
 };
@@ -56,6 +60,7 @@ GryRadioGroup.register = {
     icon: "fas fa-radio-square",
     name: "Radio Group",
     label: "Group of radios",
+    inline: false,
     options: [{ value: "welcome", text: "welcome" }],
     props: {
         custom_name: "radio-group",

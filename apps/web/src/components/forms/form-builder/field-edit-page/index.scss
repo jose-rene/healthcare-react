@@ -1,0 +1,7 @@
+.field-editor {
+    input[type="checkbox"] {
+        + .custom-control-label {
+            margin-left: .5em;
+        }
+    }
+}

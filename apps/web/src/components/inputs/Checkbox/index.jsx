@@ -13,12 +13,13 @@ const Checkbox = (
         helpText = false,
         errors = {},
         labelLeft = false,
+        hasError: _hasError = false,
         ...otherProps
     },
     ref
 ) => {
     const { [name]: { message = false } = {} } = errors;
-    const hasError = !!message;
+    const hasError = !!message || _hasError;
 
     return (
         <div className={inline ? "form-check form-check-inline" : "form-group"}>
@@ -45,7 +46,7 @@ const Checkbox = (
                     {helpText}
                 </Form.Text>
             )}
-            {hasError && (
+            {hasError && message && (
                 <Form.Text className="invalid-feedback mt-3">
                     {message}
                 </Form.Text>

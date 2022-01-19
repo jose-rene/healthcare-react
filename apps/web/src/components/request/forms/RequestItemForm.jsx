@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react/no-array-index-key */
+import React, { useState, useEffect, useCallback } from "react";
 import {
     Button,
     Card,
@@ -10,10 +11,10 @@ import {
 } from "react-bootstrap";
 import Select2 from "react-select";
 import LoadingOverlay from "react-loading-overlay";
-
 import FapIcon from "components/elements/FapIcon";
 import PageAlert from "components/elements/PageAlert";
 import Textarea from "components/inputs/Textarea";
+
 /* eslint-disable react/no-array-index-key */
 
 const RequestItemForm = ({
@@ -26,51 +27,9 @@ const RequestItemForm = ({
     updateError,
     disabled,
 }) => {
-    const [data, setData] = useState({
-        type_name: "request-items",
-        request_type_details: [],
-    });
-
-    const { request_type_details: details = [] } = data;
-
-    // console.log("req items ", disabled, requestItems);
-
-    /* const [requestClassifications, setRequestClassifications] = useState([]);
-    console.log("classifications", payerProfile.classifications);
-    useEffect(() => {
-        setRequestClassifications(payerProfile.classifications);
-    }, [requestData]); */
     // combine request type selects and request detail select into a group
     const [requestItemGroups, setRequestItemGroups] = useState([]);
-    const requestDetailCount = requestItemGroups.filter(
-        (item) => item?.requestDetails?.value
-    ).length;
 
-    // handle request details update
-    const updateRequestDetails = (groups) => {
-        setRequestItemGroups(groups);
-        const requestDetails = [];
-        const comments = [];
-        groups.forEach((item) => {
-            if (item?.requestDetails?.value) {
-                requestDetails.push(
-                    item.requestDetails.value.map((val) => val.value)
-                );
-                comments.push(item.comments ?? "");
-            }
-        });
-        if (data.request_type_details !== requestDetails) {
-            // console.log("set data", requestDetails);
-            setData((prevData) => {
-                return {
-                    ...prevData,
-                    request_type_details: requestDetails,
-                    comments,
-                };
-            });
-        }
-    };
-    // console.log(data);
     // map id / name objects to react select value / label objects
     const mapOptions = (values) => {
         if (!values) {
@@ -99,6 +58,7 @@ const RequestItemForm = ({
                         value: "",
                     }, */
                 ],
+                requestTypeId: null,
                 requestDetails: null,
                 comments: "",
             },
@@ -108,6 +68,7 @@ const RequestItemForm = ({
     useEffect(() => {
         // if there is previously saved data
         if (requestItems) {
+            // console.log(requestItems);
             // the array from which state will be constructed based upon the passed data
             const currentGroups = [];
             // build the requestitem groups from the top level
@@ -137,6 +98,7 @@ const RequestItemForm = ({
                             value: item.classification ?? "",
                         },
                         typeSelects: [],
+                        requestTypeId: item.request_type_id ?? null,
                         requestDetails: null,
                         comments: "",
                     };
@@ -185,7 +147,8 @@ const RequestItemForm = ({
                 }
             });
             // set state
-            updateRequestDetails(currentGroups);
+            setRequestItemGroups(currentGroups);
+            // updateRequestDetails(currentGroups);
             // return;
         }
         // otherwise populate the initial group select by adding a new card
@@ -211,6 +174,7 @@ const RequestItemForm = ({
                 },
                 typeSelects: [],
                 requestDetails: null,
+                requestTypeId: null,
                 comments: "",
             };
             // set this index to this updated group
@@ -234,6 +198,7 @@ const RequestItemForm = ({
                         value: "",
                     },
                 ],
+                requestTypeId: null,
                 requestDetails: null,
                 comments: "",
             };
@@ -242,7 +207,8 @@ const RequestItemForm = ({
         }
         // console.log(selected, action, value, selectedItem);
         // update state
-        updateRequestDetails(currentGroups);
+        setRequestItemGroups(currentGroups);
+        // updateRequestDetails(currentGroups);
     };
     const handleSelectChange = (selected, action, index, groupIndex) => {
         let i;
@@ -263,8 +229,10 @@ const RequestItemForm = ({
         if (action?.action && action.action === "clear") {
             // set the value of this type to blank
             currentGroups[groupIndex].typeSelects[index].value = "";
+            currentGroups[groupIndex].requestTypeId = null;
             // update state
-            updateRequestDetails(currentGroups);
+            setRequestItemGroups(currentGroups);
+            // updateRequestDetails(currentGroups);
             return;
         }
         // populate the next select or request types
@@ -305,7 +273,8 @@ const RequestItemForm = ({
                 },
             ];
             // set state
-            updateRequestDetails(currentGroups);
+            setRequestItemGroups(currentGroups);
+            // updateRequestDetails(currentGroups);
         } else if (foundReqType?.details) {
             // show the request details
             // console.log("details => ", foundReqType.details);
@@ -315,8 +284,10 @@ const RequestItemForm = ({
                     foundReqType.details.filter((detail) => detail.is_default)
                 ),
             };
+            currentGroups[groupIndex].requestTypeId = foundReqType.id;
             // console.log("current groups update details", currentGroups);
-            updateRequestDetails(currentGroups);
+            setRequestItemGroups(currentGroups);
+            // updateRequestDetails(currentGroups);
             // auto add the next card to enter another request type
             if (!currentGroups[groupIndex + 1]) {
                 addNewItemsCard();
@@ -328,7 +299,8 @@ const RequestItemForm = ({
         // setRequestDetail((prevDetail) => ({ ...prevDetail, value: selected }));
         const currentGroups = [...requestItemGroups];
         currentGroups[index].requestDetails.value = selected;
-        updateRequestDetails(currentGroups);
+        setRequestItemGroups(currentGroups);
+        // updateRequestDetails(currentGroups);
         // can probably be done with es6?
         /* setRequestItemGroups((prevItems) => ([
             ...prevItems,
@@ -339,7 +311,8 @@ const RequestItemForm = ({
     const handleComments = (e, index) => {
         const currentGroups = [...requestItemGroups];
         currentGroups[index].comments = e.target.value;
-        updateRequestDetails(currentGroups);
+        setRequestItemGroups(currentGroups);
+        // updateRequestDetails(currentGroups);
     };
     const handleGroupRemove = (index) => {
         if (requestItemGroups.length < 2) {
@@ -359,17 +332,51 @@ const RequestItemForm = ({
                 currentGroups[index].typeSelects.length = 1;
                 currentGroups[index].typeSelects[0].value = null;
                 currentGroups[index].details = null;
-                updateRequestDetails(currentGroups);
+                setRequestItemGroups(currentGroups);
+                // updateRequestDetails(currentGroups);
             }
             return;
         }
         currentGroups.splice(index, 1);
-        updateRequestDetails(currentGroups);
+        setRequestItemGroups(currentGroups);
+        // updateRequestDetails(currentGroups);
     };
+
+    const isSubmittable = useCallback(
+        () => requestItemGroups.filter((item) => item.requestTypeId).length > 0,
+        [requestItemGroups]
+    );
 
     const handleSave = () => {
         // console.log(data);
-        saveRequest(data);
+        if (!isSubmittable()) {
+            return;
+        }
+        const request_types = [];
+        // add the comment and request details for each request type
+        requestItemGroups
+            .filter((item) => item.requestTypeId)
+            .forEach(
+                ({
+                    requestTypeId,
+                    requestDetails: { value: details = [] },
+                    comments = "",
+                }) => {
+                    request_types.push({
+                        id: requestTypeId,
+                        details: details
+                            ? details.map(({ value = [] }) => value)
+                            : [],
+                        comments,
+                    });
+                }
+            );
+        const formData = {
+            type_name: "request-types",
+            request_types,
+        };
+        // console.log(formData);
+        saveRequest(formData);
     };
 
     return (
@@ -433,7 +440,7 @@ const RequestItemForm = ({
                                         {requestItemGroups.map(
                                             (selectGroup, groupIndex) => (
                                                 <Card
-                                                    key={groupIndex}
+                                                    key={`card_${groupIndex}`}
                                                     className="mb-3"
                                                 >
                                                     <Card.Header>
@@ -441,19 +448,17 @@ const RequestItemForm = ({
                                                             icon="check-circle"
                                                             type="fas"
                                                             className={`text-success me-2${
-                                                                selectGroup
-                                                                    .requestDetails
-                                                                    ?.value
-                                                                    ?.length
+                                                                selectGroup.requestTypeId
                                                                     ? ""
                                                                     : " d-none"
                                                             }`}
                                                         />
                                                         Request Item
-                                                        {groupIndex + 1}
-                                                        {selectGroup.requestDetails &&
-                                                            requestDetailCount >
-                                                                1 && (
+                                                        <span className="ms-1">
+                                                            {groupIndex + 1}
+                                                        </span>
+                                                        {selectGroup.requestTypeId &&
+                                                            groupIndex > 0 && (
                                                                 <FapIcon
                                                                     icon="delete"
                                                                     role="button"
@@ -619,7 +624,7 @@ const RequestItemForm = ({
                                                 </Card>
                                             )
                                         )}
-                                        {details?.length > 0 && (
+                                        {isSubmittable() && (
                                             <Row>
                                                 <Col className="mb-3">
                                                     <Button
@@ -651,7 +656,7 @@ const RequestItemForm = ({
                                     <Col>
                                         {requestItems.map((item) => (
                                             <ListGroup
-                                                key={item.classification}
+                                                key={item.request_type_id}
                                                 className="mb-3"
                                             >
                                                 <ListGroup.Item className="bg-light">
@@ -661,7 +666,7 @@ const RequestItemForm = ({
                                                 </ListGroup.Item>
                                                 {item.details.map((detail) => (
                                                     <ListGroupItem
-                                                        key={detail.id}
+                                                        key={`detail_${detail.id}`}
                                                     >
                                                         {detail.name}
                                                     </ListGroupItem>

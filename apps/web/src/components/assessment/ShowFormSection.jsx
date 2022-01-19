@@ -3,16 +3,18 @@ import useFormBuilder from "../../hooks/useFormBuilder";
 import Form from "../elements/Form";
 import RenderForm from "../FormBuilder/RenderForm";
 import FormLoadingSpinner from "../forms/FormLoadingSpinner";
+import FormBuilderWrapper from "../FormBuilder/FormBuilderWrapper";
 
 const ShowFormSection = ({ requestId, formSlug, name }) => {
     const [formDataLoaded, setFormDataLoaded] = useState(false);
-    const [
-        { form, defaultAnswers, formLoading },
-        { fireLoadForm, fireSaveAnswers },
-    ] = useFormBuilder({
+    const formBuilderHook = useFormBuilder({
         form_slug: formSlug,
         request_id: requestId,
     });
+    const [
+        { form, defaultAnswers, formLoading },
+        { fireLoadForm, fireSaveAnswers },
+    ] = formBuilderHook;
 
     useEffect(() => {
         (async () => {
@@ -48,7 +50,6 @@ const ShowFormSection = ({ requestId, formSlug, name }) => {
     }, [form]);
 
     const handleSubmit = (formValues) => {
-        // console.log("handleSubmit", { formValues });
         fireSaveAnswers({ ...formValues, completed_form: true });
     };
 
@@ -60,21 +61,24 @@ const ShowFormSection = ({ requestId, formSlug, name }) => {
         fireSaveAnswers({ ...formValues, completed_form: false });
     };
 
-    // TODO :: load form with answers
-    // TODO :: render form using form show component
-
     return (
         <div className="container">
             {formLoading && <FormLoadingSpinner />}
             {(!formLoading && form.length) > 0 && (
                 <Form
-                    onFormChange={handleFormChange}
+                    onChange={handleFormChange}
                     defaultData={defaultAnswers}
                     validation={validation}
                     autocomplete="off"
                     onSubmit={handleSubmit}
                 >
-                    <RenderForm formElements={form} />
+                    <FormBuilderWrapper
+                        fields={form}
+                        formBuilderHook={formBuilderHook}
+                        showSubmit
+                    >
+                        <RenderForm />
+                    </FormBuilderWrapper>
                 </Form>
             )}
         </div>

@@ -9,19 +9,25 @@ import GryInputGroupRepeater from "./GryInputGroupRepeater";
 import GryCheckbox from "./GryCheckbox";
 import GryRadioGroup from "./GryRadioGroup";
 import GryRowSpace from "./GryRowSpace";
+import GryNumberInput from "./GryNumberInput";
 
 const CustomFormElements = {
-    GryInput,
+    // output
     GryText,
-    GryRowSpace,
-    GryTextarea,
+    // inputs
+    GryInput,
     GryPhone,
+    GryNumberInput,
+    GryTextarea,
+    // toggles and dropdowns
+    GryRadioGroup,
     GryCheckbox,
     GryCheckboxGroup,
+    GrySelect,
+    GryRowSpace,
+    // groupings
     GryInputGroup,
     GryInputGroupRepeater,
-    GrySelect,
-    GryRadioGroup,
 };
 
 export default CustomFormElements;

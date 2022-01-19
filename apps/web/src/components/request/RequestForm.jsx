@@ -148,17 +148,6 @@ const RequestForm = ({ data }) => {
         try {
             const result = await fireSubmit({ params: formData });
             // console.log(result);
-            const { type_name: type } = formData;
-            // toggle the edit window - no longer necessary
-            if (type === "diagnosis") {
-                setOpenRequestInfo(false);
-            }
-            if (type === "request-items") {
-                setOpenRequestItem(false);
-            }
-            if (type === "due" || type === "no-documents") {
-                setOpenDueDate(false);
-            }
             setRequestData(result);
         } catch (e) {
             console.log("Request update error:", e);

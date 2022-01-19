@@ -71,7 +71,7 @@ const AppNavigation = () => {
                     // initializeUser(response);
                     initUser(response);
                 } catch (e) {
-                    console.log("fail!!!");
+                    //console.log("fail!!!");
                     logout();
                 }
             })();

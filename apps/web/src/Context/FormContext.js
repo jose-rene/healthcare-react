@@ -1,4 +1,11 @@
-import React, { useContext, useState, useMemo, createContext, useEffect, useCallback } from "react";
+import React, {
+    useContext,
+    useState,
+    useMemo,
+    createContext,
+    useEffect,
+    useCallback,
+} from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
 import { jsEval } from "../helpers/string";
@@ -15,10 +22,9 @@ export const useFormContext = () => useContext(FormContext);
  * @param onSubmit
  * @param validation
  * @param defaultData
+ * @param {string} [autoFiller] autofill field conditions and valluevalues
  * @param _editing
- * @param debug
- * @param onFormChange - watches the form object for changes and on change after debounce fire this callback with the form object. Caution this ignores validation
- * @param debounce - used for onFormChange. after debouce fire onFormChange
+ * @param onChange - watches the form object for changes and on change after debounce fire this callback with the form object. Caution this ignores validation
  * @returns {JSX.Element}
  * @constructor
  */
@@ -27,26 +33,49 @@ const FormProvider = ({
     onSubmit,
     validation = {},
     defaultData = {},
+    autoFiller = "",
     editing: _editing = false,
-    onFormChange,
+    formBuilder: _formBuilder = false,
+    onChange: onFormChange,
     debounceMs = 1000,
 }) => {
     const [editing, setEditing] = useState(_editing);
     const [form, setForm] = useState(defaultData);
     const [tick, setTick] = useState(null);
+    const [autoFillTick, setAutoFillTick] = useState(null);
     const [errors, setErrors] = useState({});
     const [validated, setValidated] = useState(false);
     const [valid, setValid] = useState(false);
     const [validationRules, setValidationRules] = useState(validation);
     const [formatDatas, setFormatDatas] = useState({});
+    const [preSubmitCallbacks, setPreSubmitCallbacks] = useState(null);
 
     const debouncedOnFormChange = useCallback(
-        debounce(() => {
+        /** @type {function(any, any):void} */
+        debounce((tick, autoFillTick) => {
             if (tick !== null) {
                 setTick(tick + 1);
             }
+
+            if (_formBuilder && autoFillTick !== null) {
+                setAutoFillTick(autoFillTick + 1);
+            }
         }, debounceMs),
-        [form]
+        []
+    );
+
+    const debounceAutoFillTick = useCallback(
+        /** @type {function(any, any):void} */
+        debounce((tick, autoFillTick) => {
+            if (tick !== null) {
+                setTick(tick + 1);
+            }
+
+            if (_formBuilder && autoFillTick !== null) {
+                setAutoFillTick(autoFillTick + 1);
+            }
+        }, 500),
+        []
     );
 
     useEffect(() => {
@@ -64,7 +93,6 @@ const FormProvider = ({
     }, [validation]);
 
     useEffect(() => {
-        setTick(null);
         setForm(defaultData);
         setTick(0);
     }, [defaultData]);
@@ -76,16 +104,13 @@ const FormProvider = ({
     useEffect(() => {
         setValidated(false);
         setTick(0);
+        setAutoFillTick(0);
 
         return () => setValidated(false);
     }, []);
 
     // after onSubmit validate the fields onChange
     useEffect(() => {
-        if (onFormChange) {
-            debouncedOnFormChange();
-        }
-
         if (validated) {
             validateForm();
         }
@@ -100,6 +125,55 @@ const FormProvider = ({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tick]);
+
+    useEffect(() => {
+        if (autoFillTick !== null && _formBuilder) {
+            handleAutofill(form);
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [autoFillTick]);
+
+    useEffect(() => {
+        if (autoFillTick !== null && _formBuilder) {
+            handleAutofill(form);
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [autoFillTick]);
+
+    const handleAutofill = useCallback((_form) => {
+        const autoFillerKeys = Object.keys(autoFiller || {});
+
+        if (_formBuilder && autoFillerKeys.length > 0) {
+            autoFillerKeys.forEach((autofillInputName) => {
+                let foundValue = "!~!";
+                const _rules = autoFiller[autofillInputName];
+
+                if (_rules.length > 0) {
+                    _rules.forEach((r) => {
+                        const value = jsEval(r, _form);
+
+                        if (foundValue === "!~!" && value) {
+                            foundValue = value;
+                        }
+                    });
+                }
+
+                if (
+                    foundValue !== "!~!" &&
+                    foundValue !== false &&
+                    foundValue !== undefined
+                ) {
+                    update(
+                        autofillInputName.replace(/\.autofill/, ""),
+                        foundValue,
+                        _form
+                    );
+                }
+            });
+        }
+    }, [form]);
 
     const handleFormChange = () => {
         let formValues = form;
@@ -117,6 +191,10 @@ const FormProvider = ({
     };
 
     const validateForm = () => {
+        if (!validationRules) {
+            return true;
+        }
+
         let errorTest = {};
 
         Object.keys(validationRules).forEach((fieldName) => {
@@ -126,7 +204,7 @@ const FormProvider = ({
                 yupSchema,
                 callback,
             } = validationRules[fieldName];
-            const { [fieldName]: value = "" } = form;
+            const value = get(form, fieldName, "");
 
             // run validations
             if (rules.includes(REQUIRED) && (!value || value.length === 0)) {
@@ -163,8 +241,8 @@ const FormProvider = ({
 
             // custom rule
             if (!errorTest[fieldName] && customRule.length > 0) {
-                const result = jsEval(customRule, form);
-                if (result.length > 0) {
+                const result = jsEval(customRule, form, { strict: true });
+                if (result && result.length > 0) {
                     errorTest = {
                         ...errorTest,
                         [fieldName]: { message: result },
@@ -201,7 +279,12 @@ const FormProvider = ({
                 formValues = callback(formValues, getValue, callbackName);
             });
 
-            onSubmit(formValues);
+            // runs global pre submit data formatting
+            const cleanedFormData = !preSubmitCallbacks
+                ? formValues
+                : preSubmitCallbacks({ form: formValues });
+
+            onSubmit(cleanedFormData);
         }
     };
 
@@ -213,10 +296,11 @@ const FormProvider = ({
         return get(form, key, defaultValue);
     };
 
-    const update = (name, value) => {
-        const oldForm = { ...form };
+    const update = (name, value, _form = form) => {
+        const oldForm = { ..._form };
         set(oldForm, name, value);
         setForm(() => oldForm);
+        debounceAutoFillTick(tick, autoFillTick);
     };
 
     const objUpdate = (obj) => {
@@ -225,6 +309,8 @@ const FormProvider = ({
             set(oldForm, o, obj[o]);
         });
         setForm(() => oldForm);
+
+        debounceAutoFillTick(tick, autoFillTick);
     };
 
     const onChange = ({ target: { name, value, type = "text" } }) => {
@@ -235,6 +321,8 @@ const FormProvider = ({
             set(oldForm, name, value);
         }
         setForm(() => oldForm);
+
+        debounceAutoFillTick(tick, autoFillTick);
     };
 
     const clear = () => {
@@ -243,21 +331,25 @@ const FormProvider = ({
         setValid(false);
     };
 
+    /**
+     * @description adds callback on form submit. The params on
+     *                  callback will be { form: formValues }
+     * @param newCallback
+     */
+    const addPreSubmitCallback = (newCallback) => {
+        setPreSubmitCallbacks(() => newCallback);
+    };
+
     const shouldShow = useCallback(
         (rule, { name, elementIndex: rowIndex = 0 }) => {
             try {
-                const template = rule
-                    .replace(/\.?@index\.?/gi, "[" + rowIndex.toString() + "].");
+                const template = rule.replace(
+                    /\.?@index\.?/gi,
+                    "[" + rowIndex.toString() + "]."
+                );
 
-                const show = jsEval(template, form);
-
-                if (!show && !editing && name && !!form[name]) {
-                    update(name, "");
-                }
-
-                return show;
+                return jsEval(template, form);
             } catch (e) {}
-
             return false;
         },
 
@@ -288,6 +380,13 @@ const FormProvider = ({
                 shouldShow,
                 setEditing,
                 setValidated,
+                validationRules,
+                setValidationRules,
+
+                // These callbacks are triggered pre-validation on form submit only.
+                preSubmitCallbacks,
+                addPreSubmitCallback,
+                setPreSubmitCallbacks,
             }}
         >
             {children}

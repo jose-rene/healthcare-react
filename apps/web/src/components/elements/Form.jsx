@@ -25,6 +25,7 @@ const Form = ({
     validation = {},
     editing = false,
     bsFormProps = {},
+    formBuilder = false,
     ...props
 }) => {
     const handleSubmit = (e, submit) => {
@@ -40,6 +41,7 @@ const Form = ({
             validation={validation}
             editing={editing}
             autocomplete={autocomplete}
+            formBuilder={formBuilder}
             {...props}
         >
             <BootstrapWrap
