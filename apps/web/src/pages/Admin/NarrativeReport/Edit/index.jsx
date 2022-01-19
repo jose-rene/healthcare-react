@@ -82,8 +82,8 @@ const EditNarrativeReport = ({ match }) => {
     }, [answerData]);
 
     const styles = useMemo(() => {
-        if(!form.styles){
-            return '';
+        if (!form.styles) {
+            return "";
         }
         return form.styles;
     }, [form.styles]);
@@ -99,9 +99,8 @@ const EditNarrativeReport = ({ match }) => {
                             name="styles"
                             style={{ height: "5rem" }}
                             placeholder="p{ background: yellow; margin: 3px;}"
-                            help={`The root of the styles is wrapped automatically
-                            with the class .tinymce.content. These styles won't show
-                            up in the tinymce editor. You can see them in the preview`}
+                            help={`Be careful the styles registered here can effect the site.
+                            If you prefix the class with an underscore or something you should be ok.`}
                         />
                         <FancyEditor name="templateField" />
                         <hr />
