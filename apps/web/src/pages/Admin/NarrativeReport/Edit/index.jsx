@@ -81,6 +81,13 @@ const EditNarrativeReport = ({ match }) => {
         }
     }, [answerData]);
 
+    const styles = useMemo(() => {
+        if(!form.styles){
+            return '';
+        }
+        return form.styles;
+    }, [form.styles]);
+
     return loading ? null : (
         <div>
             <Row>
@@ -139,7 +146,7 @@ const EditNarrativeReport = ({ match }) => {
                     <h3>Preview</h3>
                     {form.templateField && (
                         <Card>
-                            <style>{form.styles}</style>
+                            {styles && <style>{styles}</style>}
                             <Card.Body
                                 dangerouslySetInnerHTML={{
                                     __html: handlebarsTemplate(
