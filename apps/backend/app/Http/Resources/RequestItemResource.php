@@ -27,7 +27,7 @@ class RequestItemResource extends JsonResource
             'vendor_price'         => $this->vendor_price,
             'name'                 => $this->name,
             'full_name'            => $parents ? $parents->map(fn($item) => $item['name'])->prepend($this->name)->join(' > ') : null,     
-            'request_type_id'      => $this->request_type_id,
+            'request_type_id'      => (int) $this->request_type_id,
             'request_type_parents' => $parents ? $parents->map(fn($item) => $item['id']) : null,
             'details'              => RequestTypeDetailResource::collection($this->requestTypeDetails),
             'classification'       => $classification ? $classification->id : "",

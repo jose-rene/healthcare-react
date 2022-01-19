@@ -225,6 +225,65 @@ class RequestAddTest extends TestCase
     }
 
     /**
+     * Test update request types.
+     * @group   request
+     *
+     * @return void
+     */
+    public function testUpdateRequestTypes()
+    {
+        $requestId = $this->getRequest();
+        $route = route('api.request.update', [
+            'request' => $requestId,
+        ]);
+
+        // missing request items, should fail with error
+        $response = $this->put($route, [
+            'type_name' => 'request-types',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonStructure(['errors']);
+
+        // invalid request items, should fail with error
+        $response = $this->put($route, [
+            'type_name'       => 'request-types',
+            'request_types' => ['one', 'two', 'three'],
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonStructure(['errors']);
+
+        // create some valid request types with details
+        $typesWithDetails = RequestType::factory()->hasRequestTypeDetails($detailCount = 3)
+            ->count(1)
+            ->create(['payer_id' => $this->payer]);
+        // create request types without details and merge in with details types
+        $requestTypes = RequestType::factory()->count(1)->create(['payer_id' => $this->payer])->merge($typesWithDetails);
+
+        // get an array of params from the default request types
+        $params = $requestTypes
+            ->map(fn ($type) => [
+                'id' => $type->id, 'comments' => 'Hello World', 'details' => $type->requestTypeDetails ? $type->requestTypeDetails->map(fn($det) => $det['id'])->toArray() : []
+            ])->values()->all();
+
+        // send valid request type details
+        $response = $this->put($route, [
+            'type_name'     => 'request-types',
+            'request_types' => $params,
+        ]);
+
+        // verify response and data
+        $response
+            ->assertSuccessful()
+            ->assertJsonCount($requestTypes->count(), 'request_items')
+            ->assertJsonCount(0, 'request_items.0.details')
+            ->assertJsonCount($detailCount, 'request_items.1.details')
+            ->assertJsonPath('request_items.0.request_type_id', $params[0]['id'])
+            ->assertJsonPath('request_items.1.request_type_id', $params[1]['id']);
+    }
+
+    /**
      * Test no documents added.
      * @group request
      *
