@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import Select from "../../../../components/inputs/Select";
 
 import { get } from "lodash";
+import ContextInput from "../../../../components/inputs/ContextInput";
 
 const EditNarrativeReport = ({ match }) => {
     const { slug = false } = match.params;
@@ -39,6 +40,7 @@ const EditNarrativeReport = ({ match }) => {
 
     const [form, setForm] = useState({
         templateField: ``,
+        styles: "",
     });
 
     const [answerData, setAnswerData] = useState(null);
@@ -46,17 +48,18 @@ const EditNarrativeReport = ({ match }) => {
     const [selectedReport, setSelectedReport] = useState(null);
 
     const handleFormSubmit = (formValues) => {
-        const { templateField: template = "" } = formValues;
         setForm(formValues);
-        fireUpdateTemplate({ params: { template } });
+        fireUpdateTemplate({ params: formValues });
     };
 
     useEffect(() => {
         fireLoadReports();
 
         (async () => {
-            const { template = "" } = await fireLoadTemplate().catch(() => {});
-            setForm({ templateField: template });
+            const { template = "", ...others } = await fireLoadTemplate().catch(
+                () => {}
+            );
+            setForm({ templateField: template, ...others });
         })();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,11 +81,27 @@ const EditNarrativeReport = ({ match }) => {
         }
     }, [answerData]);
 
+    const styles = useMemo(() => {
+        if (!form.styles) {
+            return "";
+        }
+        return form.styles;
+    }, [form.styles]);
+
     return loading ? null : (
         <div>
             <Row>
                 <Col>
                     <Form defaultData={form} onSubmit={handleFormSubmit}>
+                        <ContextInput
+                            type="textarea"
+                            label="Styles"
+                            name="styles"
+                            style={{ height: "5rem" }}
+                            placeholder="p{ background: yellow; margin: 3px;}"
+                            help={`Be careful the styles registered here can effect the site.
+                            If you prefix the class with an underscore or something you should be ok.`}
+                        />
                         <FancyEditor name="templateField" />
                         <hr />
                         <SubmitButton loading={saving} />
@@ -126,6 +145,7 @@ const EditNarrativeReport = ({ match }) => {
                     <h3>Preview</h3>
                     {form.templateField && (
                         <Card>
+                            {styles && <style>{styles}</style>}
                             <Card.Body
                                 dangerouslySetInnerHTML={{
                                     __html: handlebarsTemplate(

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property mixed $name
  * @property mixed $slug
  * @property mixed $template
+ * @property mixed $styles
  */
 class NarrativeReportTemplate extends Model
 {
@@ -26,6 +27,7 @@ class NarrativeReportTemplate extends Model
         'name',
         'slug',
         'template',
+        'styles',
     ];
 
     /*

@@ -25,6 +25,14 @@ Handlebars.registerHelper("compare", function (v1, operator, v2, options) {
     return console.error('Error: Expression "' + operator + '" not found');
 });
 
+Handlebars.registerHelper("isequal", function (value, comparison) {
+    return value == comparison;
+});
+
+Handlebars.registerHelper("contains", function (value, comparison) {
+    return value.includes(comparison);
+});
+
 /**
  * @description lowercase's string and converts into kebab case
  * @param {string} text
