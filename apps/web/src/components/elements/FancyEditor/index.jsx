@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { useFormContext } from "../../../Context/FormContext";
 
@@ -18,60 +18,78 @@ const FancyEditor = ({
 }) => {
     const { getValue, update } = useFormContext();
     const value = getValue(name);
-    const [editorValue, setEditorValue] = useState("");
-
-    const toolbarSections = [
-        "undo redo",
-        "formatselect",
-        "bold italic underline backcolor",
-        "alignleft aligncenter alignright alignjustify table",
-        "bullist numlist outdent indent",
-        "removeformat",
-        "help",
-    ];
 
     const plugins = [
-        "advlist",
-        "autolink",
         "lists",
-        "link",
-        "image",
         "charmap",
-        "print",
-        "preview",
-        "anchor",
         "searchreplace",
-        "visualblocks",
         "code",
-        "fullscreen",
         "insertdatetime",
-        "media",
-        "table",
+        "contextmenu",
         "paste",
-        "code",
-        "help",
+        "table",
         "wordcount",
     ];
 
-    useEffect(() => {
-        setEditorValue(value);
-    }, [value]);
-
     const handleOnChange = (newValue) => {
-        setEditorValue(newValue);
         update(name, newValue);
     };
 
     return (
         <Editor
             onEditorChange={handleOnChange}
-            value={editorValue}
+            value={value}
             init={{
                 height,
                 menubar,
                 plugins,
-                toolbar: toolbarSections.join(" | "),
-                //content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                toolbar: [
+                    {
+                        name: "history",
+                        items: ["code", "undo", "redo", "insertdatetime"],
+                    },
+                    {
+                        name: "styles",
+                        items: ["styleselect", "table"],
+                    },
+                    {
+                        name: "formatting",
+                        items: ["bold", "italic", "underline"],
+                    },
+                    {
+                        name: "list",
+                        items: ["bullist"],
+                    },
+                    {
+                        name: "edit",
+                        items: ["searchreplace", "spellchecker", "wordcount"],
+                    },
+                ],
+                table_toolbar:
+                    "tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol",
+                paste_as_text: true,
+                table_cell_advtab: false,
+                table_row_advtab: false,
+                insertdatetime_dateformat: "%m-%d-%Y",
+                browser_spellcheck: true,
+                formats: {
+                    underline: { inline: "u", exact: true },
+                },
+                content_style:
+                    "h1,h2,h3,h4,h5{margin-bottom:-.6em;margin-top:-.4em;}, p{line-height: 1em;}",
+                style_formats: [
+                    {
+                        title: "Options",
+                        items: [
+                            { title: "Heading 1", format: "h1" },
+                            { title: "Heading 2", format: "h2" },
+                            { title: "Heading 3", format: "h3" },
+                            { title: "Heading 4", format: "h4" },
+                            { title: "Heading 5", format: "h5" },
+                            { title: "Heading 6", format: "h6" },
+                        ],
+                    },
+                ],
             }}
         />
     );

@@ -39,7 +39,7 @@ const EditNarrativeReport = ({ match }) => {
     });
 
     const [form, setForm] = useState({
-        templateField: ``,
+        template: "",
         styles: "",
     });
 
@@ -59,7 +59,7 @@ const EditNarrativeReport = ({ match }) => {
             const { template = "", ...others } = await fireLoadTemplate().catch(
                 () => {}
             );
-            setForm({ templateField: template, ...others });
+            setForm({ template, ...others });
         })();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -102,7 +102,7 @@ const EditNarrativeReport = ({ match }) => {
                             help={`Be careful the styles registered here can effect the site.
                             If you prefix the class with an underscore or something you should be ok.`}
                         />
-                        <FancyEditor name="templateField" />
+                        <FancyEditor name="template" />
                         <hr />
                         <SubmitButton loading={saving} />
                         {selectedReport && (
@@ -143,13 +143,13 @@ const EditNarrativeReport = ({ match }) => {
                     />
                     <hr />
                     <h3>Preview</h3>
-                    {form.templateField && (
+                    {form.template && (
                         <Card>
                             {styles && <style>{styles}</style>}
                             <Card.Body
                                 dangerouslySetInnerHTML={{
                                     __html: handlebarsTemplate(
-                                        form.templateField,
+                                        form.template,
                                         answerObj
                                     ),
                                 }}
