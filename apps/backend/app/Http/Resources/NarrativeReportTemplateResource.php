@@ -20,6 +20,7 @@ class NarrativeReportTemplateResource extends JsonResource
             'name'     => $this->name,
             'slug'     => $this->slug,
             'template' => $this->template,
+            'styles'   => $this->styles,
         ];
     }
 }
