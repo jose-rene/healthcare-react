@@ -39,7 +39,7 @@ const EditNarrativeReport = ({ match }) => {
     });
 
     const [form, setForm] = useState({
-        template: ``,
+        template: "",
         styles: "",
     });
 
