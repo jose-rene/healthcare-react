@@ -181,7 +181,9 @@ class RequestTest extends TestCase
         // validate response
         $response
             ->assertSuccessful()
-            ->assertJsonPath('0.request_id', $this->request->uuid);
+            ->assertJsonPath('0.request_id', $this->request->uuid)
+            ->assertJsonPath('0.action.title', 'View Request')
+            ->assertJsonPath('0.action.url', '/assessment/' . $this->request->uuid);
     }
 
     protected function setUp(): void

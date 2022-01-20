@@ -1,10 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
-import PageLayout from "../../../../layouts/PageLayout";
-import Form from "components/elements/Form";
+
+import PageLayout from "layouts/PageLayout";
+
 import "../edit/style.scss";
-import useFormBuilder from "../../../../hooks/useFormBuilder";
-import RenderForm from "../../../../components/FormBuilder/RenderForm";
-import FormBuilderWrapper from "../../../../components/FormBuilder/FormBuilderWrapper";
+
+import Form from "components/elements/Form";
+import RenderForm from "components/FormBuilder/RenderForm";
+import FormBuilderWrapper from "components/FormBuilder/FormBuilderWrapper";
+
+import useFormBuilder from "hooks/useFormBuilder";
 
 const FormView = ({
     match: {
@@ -41,6 +45,8 @@ const FormView = ({
 
     useEffect(() => {
         handleLoadForm();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleSubmit = (ff) => {

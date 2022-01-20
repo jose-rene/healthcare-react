@@ -25,6 +25,8 @@ class NotificationResource extends JsonResource
             'priority'         => empty($this->data['priority']) ? 1 : (int) $this->data['priority'],
             'human_read_at'    => $this->read_at ? $this->read_at->diffForHumans() : null,
             'human_created_at' => $this->created_at->diffForHumans(),
+            'created_at'       => $this->created_at->format('Y-m-d'),
+            'action'           => $this->data['action'] ?? null,
             'is_read'          => !!$this->read_at,
         ];
     }

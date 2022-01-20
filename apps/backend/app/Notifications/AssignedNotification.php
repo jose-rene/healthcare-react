@@ -64,7 +64,8 @@ class AssignedNotification extends Notification
             'request_id' => $this->request->uuid,
             'title'      => sprintf('New assessment %s.', $this->request->auth_number),
             'message'    => sprintf('Request %s has been assigned to you.', $this->request->auth_number),
-            'priority'   => 3, // high
+            'priority'   => 3, // warning
+            'action'     => ['title' => 'View Request', 'url' => '/assessment/' . $this->request->uuid],
         ];
     }
 }

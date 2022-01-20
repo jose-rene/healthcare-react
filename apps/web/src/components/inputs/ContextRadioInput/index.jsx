@@ -28,20 +28,24 @@ const ContextRadioInput = (
                 {label}
             </label>
         );
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [label, labelRight]);
 
     return (
         <div className={`${wrapperClass}${classAppend}`}>
-            {!labelRight && labelHtml} <input
-            id={`${name}-${label}`}
-            className="form-check-input m-1 me-2"
-            type="radio"
-            name={name}
-            ref={ref}
-            value={label}
-            checked={checked}
-            onChange={handleOnChange}
-        /> {labelRight && labelHtml}
+            {!labelRight && labelHtml}{" "}
+            <input
+                id={`${name}-${label}`}
+                className="form-check-input m-1 me-2"
+                type="radio"
+                name={name}
+                ref={ref}
+                value={label}
+                checked={checked}
+                onChange={handleOnChange}
+            />{" "}
+            {labelRight && labelHtml}
         </div>
     );
 };

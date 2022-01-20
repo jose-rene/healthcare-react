@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { set, get, debounce } from "lodash";
 import { BaseSchema } from "yup";
+
 import { jsEval } from "../helpers/string";
 
 export const REQUIRED = "required";
@@ -50,6 +51,7 @@ const FormProvider = ({
     const [formatDatas, setFormatDatas] = useState({});
     const [preSubmitCallbacks, setPreSubmitCallbacks] = useState(null);
 
+    // eslint-disable-next-line
     const debouncedOnFormChange = useCallback(
         /** @type {function(any, any):void} */
         debounce((tick, autoFillTick) => {
@@ -142,38 +144,43 @@ const FormProvider = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [autoFillTick]);
 
-    const handleAutofill = useCallback((_form) => {
-        const autoFillerKeys = Object.keys(autoFiller || {});
+    const handleAutofill = useCallback(
+        (_form) => {
+            const autoFillerKeys = Object.keys(autoFiller || {});
 
-        if (_formBuilder && autoFillerKeys.length > 0) {
-            autoFillerKeys.forEach((autofillInputName) => {
-                let foundValue = "!~!";
-                const _rules = autoFiller[autofillInputName];
+            if (_formBuilder && autoFillerKeys.length > 0) {
+                autoFillerKeys.forEach((autofillInputName) => {
+                    let foundValue = "!~!";
+                    const _rules = autoFiller[autofillInputName];
 
-                if (_rules.length > 0) {
-                    _rules.forEach((r) => {
-                        const value = jsEval(r, _form);
+                    if (_rules.length > 0) {
+                        _rules.forEach((r) => {
+                            const value = jsEval(r, _form);
 
-                        if (foundValue === "!~!" && value) {
-                            foundValue = value;
-                        }
-                    });
-                }
+                            if (foundValue === "!~!" && value) {
+                                foundValue = value;
+                            }
+                        });
+                    }
 
-                if (
-                    foundValue !== "!~!" &&
-                    foundValue !== false &&
-                    foundValue !== undefined
-                ) {
-                    update(
-                        autofillInputName.replace(/\.autofill/, ""),
-                        foundValue,
-                        _form
-                    );
-                }
-            });
-        }
-    }, [form]);
+                    if (
+                        foundValue !== "!~!" &&
+                        foundValue !== false &&
+                        foundValue !== undefined
+                    ) {
+                        update(
+                            autofillInputName.replace(/\.autofill/, ""),
+                            foundValue,
+                            _form
+                        );
+                    }
+                });
+            }
+        },
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [form]
+    );
 
     const handleFormChange = () => {
         let formValues = form;
