@@ -10,21 +10,19 @@ const GryText = (props) => {
     const label = __html || defaultLabel;
     const outputTemplate = template(label, form);
 
-    return (
-        <div dangerouslySetInnerHTML={{ __html: outputTemplate }} />
-    );
+    return <div dangerouslySetInnerHTML={{ __html: outputTemplate }} />;
 };
 
 GryText.register = {
-    icon: 'fas fa-align-justify',
-    name: 'Text Output',
-    label: 'Text to output',
+    icon: "fas fa-align-justify",
+    name: "Text Output",
+    label: "Text to output",
     props: {
-        custom_name: 'text-output',
+        custom_name: "field_name_here",
 
-        customValidation: ``,
+        customValidation: "",
 
-        customRules: ``,
+        customRules: "",
     },
 };
 

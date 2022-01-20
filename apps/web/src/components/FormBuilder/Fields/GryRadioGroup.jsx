@@ -63,9 +63,9 @@ GryRadioGroup.register = {
     inline: false,
     options: [{ value: "welcome", text: "welcome" }],
     props: {
-        custom_name: "radio-group",
-        customValidation: ``,
-        customRules: ``,
+        custom_name: "radio_group",
+        customValidation: "",
+        customRules: "",
         inline: false,
     },
 };

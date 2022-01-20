@@ -9,13 +9,7 @@ const GryPhone = (props) => {
 
     const { custom_name = "phone" } = allProps;
 
-    return (
-        <PhoneInput
-            label="Phone"
-            {...allProps}
-            name={custom_name}
-        />
-    );
+    return <PhoneInput label="Phone" {...allProps} name={custom_name} />;
 };
 
 GryPhone.register = {
@@ -26,8 +20,8 @@ GryPhone.register = {
     label: "Input Phone",
     props: {
         custom_name: "phone",
-        customValidation: ``,
-        customRules: ``,
+        customValidation: "",
+        customRules: "",
     },
 };
 

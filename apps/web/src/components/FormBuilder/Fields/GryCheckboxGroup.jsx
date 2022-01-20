@@ -13,24 +13,18 @@ const GryCheckboxGroup = (props) => {
         return <p>Missing custom_name</p>;
     }
 
-    return (
-        <CtxCheckboxGroup
-            {...{ ...rest, name: custom_name }}
-        />
-    );
+    return <CtxCheckboxGroup {...{ ...rest, name: custom_name }} />;
 };
 
 GryCheckboxGroup.register = {
-    icon: 'fas fa-check-square',
-    name: 'Checkbox Group',
-    label: 'Group of checkboxes',
-    options: [
-        { value: 'welcome', text: 'welcome' },
-    ],
+    icon: "fas fa-check-square",
+    name: "Checkbox Group",
+    label: "Group of checkboxes",
+    options: [{ value: "welcome", text: "welcome" }],
     props: {
-        custom_name: 'checkbox-group',
-        customValidation: ``,
-        customRules: ``,
+        custom_name: "checkbox_group",
+        customValidation: "",
+        customRules: "",
     },
 };
 
