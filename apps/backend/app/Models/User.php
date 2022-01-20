@@ -339,6 +339,50 @@ class User extends Authenticatable implements MustVerifyEmail
         return $methods;
     }
 
+    /**
+     * Returns notification settings.
+     *
+     * @return string
+     */
+    public function getNotificationSettingsAttribute()
+    {
+        return empty($this->notification_prefs) || empty($this->notification_prefs['notifications']) ? [] : $this->notification_prefs['notifications'];
+    }
+
+    /**
+     * Sets notification settings.
+     *
+     * @return void
+     */
+    public function setNotificationSettingsAttribute($notifications)
+    {
+        $prefs = empty($this->notification_prefs) ? [] : $this->notification_prefs;
+        $prefs['notifications'] = $notifications;
+        $this->notification_prefs = $prefs;
+    }
+
+    /**
+     * Returns search settings.
+     *
+     * @return string
+     */
+    public function getSearchSettingsAttribute()
+    {
+        return empty($this->notification_prefs) || empty($this->notification_prefs['search']) ? [] : $this->notification_prefs['search'];
+    }
+
+    /**
+     * Sets search settings.
+     *
+     * @return void
+     */
+    public function setSearchSettingsAttribute($search)
+    {
+        $prefs = empty($this->notification_prefs) ? [] : $this->notification_prefs;
+        $prefs['search'] = $search;
+        $this->notification_prefs = $prefs;
+    }
+
     public function getAuthTokens($remember_me = false)
     {
         $tokenResult = $this->createToken('Personal Access Token');

@@ -40,7 +40,14 @@ class ClinicalServicesUserController extends Controller
         abort_if(!$policy->update(auth()->user(), $user), 403, 'You do not have permissions for this resource');
 
         // update
-        $user->update($data = $request->validated());
+        $data = $request->validated();
+        // save notification prefs to the the appropriate key
+        $notificationPrefs = empty($data['notification_prefs']) ? [] : $data['notification_prefs'];
+        $prefs = null === $user->notification_prefs ? [] : $user->notification_prefs;
+        $prefs['notifications'] = $data['notification_prefs'];
+        $data['notification_prefs'] = $prefs;
+        // update user
+        $user->update($data);
         if (!empty($data['title']) && $user->clinicalServicesUser->title !== $data['title']) {
             $user->clinicalServicesUser()->update(['title' => $data['title']]);
         }

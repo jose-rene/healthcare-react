@@ -221,6 +221,12 @@ class Request extends Model
                 break;
         }
 
+        // save search prefs
+        if ($user->searchSettings != ($searchPrefs = request()->all())) {
+            $user->searchSettings = $searchPrefs;
+            $user->save();
+        }
+
         // my stuff
         if (request()->has('filter') && request()->get('filter')) {
             $query->where('payer_user_id', $user->id);
