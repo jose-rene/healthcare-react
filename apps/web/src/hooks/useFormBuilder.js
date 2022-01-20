@@ -82,6 +82,8 @@ const useFormBuilder = ({ form_slug = undefined, request_id } = {}) => {
             buildFormSchema(fields);
         }
         setLoaded(true);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fields]);
 
     const formLoaded = useMemo(() => {
@@ -146,7 +148,7 @@ const useFormBuilder = ({ form_slug = undefined, request_id } = {}) => {
         if (required) {
             rule.required = true;
 
-            if (fieldType == "GryCheckboxGroup") {
+            if (fieldType === "GryCheckboxGroup") {
                 rule.yupSchema = `!Object.keys(~${name} || {}).filter(e => !!~${name}[e]).length && "${label} is required"`;
                 return true;
             } else {
@@ -261,6 +263,8 @@ const useFormBuilder = ({ form_slug = undefined, request_id } = {}) => {
                 return item;
             });
         },
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [form]
     );
 

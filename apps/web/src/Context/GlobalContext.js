@@ -25,6 +25,12 @@ export const GlobalProvider = ({ children }) => {
             url: "/notifications/dismiss",
         });
 
+    const [{ loading: deleteNotificationsLoading }, deleteNotifications] =
+        useApiCall({
+            method: "delete",
+            url: "/notifications",
+        });
+
     const processMessages = (notes) => {
         if (!notes || notes.length === 0) {
             setMessages({
@@ -93,6 +99,16 @@ export const GlobalProvider = ({ children }) => {
             });
 
             if (updateNotificationsLoading || result) {
+                getNotifications();
+            }
+        },
+
+        async remove(notification_id) {
+            const result = await deleteNotifications({
+                params: { ids: [notification_id] },
+            });
+
+            if (deleteNotificationsLoading || result) {
                 getNotifications();
             }
         },

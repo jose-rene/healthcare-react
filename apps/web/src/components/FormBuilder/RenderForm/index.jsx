@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+
 import FormGroup from "components/elements/FormGroup";
+
 import { useFormBuilderFieldContext } from "../context/FormBuilderFieldContext";
 import FormLoadingSpinner from "../../forms/FormLoadingSpinner";
 
@@ -49,6 +51,8 @@ const RenderForm = () => {
         const elements = buildGroups(formElements, childIds, fields);
 
         setFormElementsState(elements);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formElements]);
 
     useEffect(() => {

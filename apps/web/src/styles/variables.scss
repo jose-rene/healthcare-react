@@ -80,3 +80,6 @@ $h7-font-size: 0.875rem;
 $custom-font-sizes: (
     7: $h7-font-size,
 );
+
+// so outline button hover will have light text instead of dark
+$min-contrast-ratio: 3;
