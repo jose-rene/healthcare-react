@@ -1,71 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
+import { Container, Row, Col, Button, Card, ListGroup } from "react-bootstrap";
 import dayjs from "dayjs";
-import PageLayout from "layouts/PageLayout";
-import PageTitle from "components/PageTitle";
-import TableAPI from "components/elements/TableAPI";
-import FapIcon from "components/elements/FapIcon";
+
 import { useGlobalContext } from "Context/GlobalContext";
-import { ACTIONS } from "helpers/table";
+
+import PageLayout from "layouts/PageLayout";
+
+import FapIcon from "components/elements/FapIcon";
+import LoadingIcon from "components/elements/LoadingIcon";
+
+import "styles/notifications.scss";
 
 const NotificationList = () => {
-    const { notifications: { markRead } = {}, messages } = useGlobalContext();
+    const {
+        notifications: { markRead, remove } = {},
+        mapMessageClass,
+        messages,
+    } = useGlobalContext();
 
-    const [headers] = useState([
-        {
-            columnMap: "title",
-            label: "Type",
-            type: String,
-            disableSortBy: true,
-        },
-        {
-            columnMap: "message",
-            label: "Data",
-            type: String,
-            disableSortBy: true,
-        },
-        {
-            columnMap: "human_read_at",
-            label: "Human Read Date",
-            type: Date,
-            disableSortBy: true,
-            formatter: (date) =>
-                date
-                    ? dayjs(date).format("MM/DD/YYYY") === "Invalid Date"
-                        ? date
-                        : dayjs(date).format("MM/DD/YYYY")
-                    : "-",
-        },
-        {
-            columnMap: "human_created_at",
-            label: "Human Created Date",
-            type: Date,
-            disableSortBy: true,
-            formatter: (date) =>
-                date
-                    ? dayjs(date).format("MM/DD/YYYY") === "Invalid Date"
-                        ? date
-                        : dayjs(date).format("MM/DD/YYYY")
-                    : "-",
-        },
-        {
-            label: "Actions",
-            columnMap: "id",
-            type: ACTIONS,
-            disableSortBy: true,
-            formatter(id) {
-                return (
-                    <FapIcon
-                        icon="check-circle"
-                        type="fas"
-                        size="1x"
-                        className="text-success"
-                        onClick={() => markRead[id]}
-                    />
-                );
-            },
-        },
-    ]);
+    const history = useHistory();
 
     const [loading, setLoading] = useState(false);
 
@@ -75,20 +29,112 @@ const NotificationList = () => {
         }
     }, [messages]);
 
+    let bgColor = true;
+
+    const renderMessage = (items, isRead) => {
+        return (
+            items &&
+            items.length > 0 &&
+            items
+                .sort(function (x, y) {
+                    return isRead === false
+                        ? x.priority - y.priority
+                        : dayjs(y.created_at) - dayjs(x.created_at);
+                })
+                .map((message) => {
+                    const className = mapMessageClass(message.priority);
+                    bgColor = !bgColor;
+
+                    return (
+                        isRead === message.is_read && (
+                            <ListGroup.Item className="p-0" key={message.id}>
+                                <div
+                                    className={`p-3 d-flex align-items-center alert-${className} ${
+                                        bgColor ? "bg-light" : "bg-white"
+                                    }`}
+                                >
+                                    <div className="dropdown-list-image mx-2">
+                                        <strong className="default me-1">
+                                            <FapIcon
+                                                icon="envelope"
+                                                size="2x"
+                                            />
+                                        </strong>
+                                    </div>
+                                    <div className="font-weight-bold message-content mx-2">
+                                        <div
+                                            className={`mb-2 ${
+                                                !message.is_read
+                                                    ? "fw-bolder"
+                                                    : ""
+                                            }`}
+                                        >
+                                            {message.message}
+                                        </div>
+                                        {message.action && (
+                                            <Button
+                                                variant="outline-primary"
+                                                size="sm"
+                                                onClick={() => {
+                                                    markRead(message.id);
+                                                    history.push(
+                                                        message.action.url
+                                                    );
+                                                }}
+                                            >
+                                                {message.action.title}
+                                            </Button>
+                                        )}
+                                    </div>
+                                    <span className="mx-auto my-auto">
+                                        <div className="btn-group">
+                                            <FapIcon
+                                                icon="trash-alt"
+                                                size="1x"
+                                                style={{
+                                                    cursor: "pointer",
+                                                }}
+                                                className="text-danger"
+                                                onClick={() =>
+                                                    remove(message.id)
+                                                }
+                                            />
+                                        </div>
+                                        <br />
+                                        <div className="text-right text-muted pt-1">
+                                            {message.human_created_at}
+                                        </div>
+                                    </span>
+                                </div>
+                            </ListGroup.Item>
+                        )
+                    );
+                })
+        );
+    };
+
+    if (loading) {
+        return <LoadingIcon />;
+    }
+
     return (
         <PageLayout>
             <Container fluid>
-                <PageTitle title="Notifications" hideBack />
-
                 <Row>
-                    <Col>
-                        <TableAPI
-                            searchObj={{}}
-                            headers={headers}
-                            loading={loading}
-                            data={messages}
-                            dataMeta={{}}
-                        />
+                    <Col lg={9} className="right">
+                        <Card className="box shadow-sm rounded bg-white mb-3">
+                            <Card.Header className="p-3">
+                                Notifications
+                            </Card.Header>
+                            <ListGroup variant="flush">
+                                {/* 
+                                    false: unread
+                                    true: read
+                                 */}
+                                {renderMessage(messages, false)}
+                                {renderMessage(messages, true)}
+                            </ListGroup>
+                        </Card>
                     </Col>
                 </Row>
             </Container>
