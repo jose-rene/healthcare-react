@@ -55,7 +55,8 @@ class MyUserResource extends JsonResource
             ) => $item['name']) : [],
             'reset_password'         => (bool)$this->reset_password,
             'avatar_url'             => $this->avatar_url,
-            'notification_prefs'     => $this->notification_prefs ?? [],
+            'notification_prefs'     => $this->notificationSettings, // this is a key of notification_prefs
+            'search_prefs'           => $this->searchSettings, // this is a key of notification_prefs
             'alert_threshold_number' => $this->alert_threshold_number,
             $this->mergeWhen(!empty($userTypeResource), $userTypeResource),
         ];

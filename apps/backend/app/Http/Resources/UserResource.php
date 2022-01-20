@@ -69,7 +69,8 @@ class UserResource extends JsonResource
             'roles'              => $roles,
             'abilities'          => $abilities->count() > 0 ? $abilities->map(fn ($item, $key) => $item['name']) : [],
             'two_factor_options' => $this->two_factor_options,
-            'notification_prefs' => $this->notification_prefs ?? [],
+            'notification_prefs' => $this->notificationSettings, // this is a key of notification_prefs
+            'search_prefs'       => $this->searchSettings, // this is a key of notification_prefs
             $this->mergeWhen(!empty($userTypeResource), $userTypeResource),
         ];
     }

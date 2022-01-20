@@ -32,7 +32,7 @@ class AssignedNotification extends Notification
      */
     public function via($notifiable)
     {
-        $prefs = $notifiable->notification_prefs ?? [];
+        $prefs = $notifiable->notificationSettings;
         $prefs[] = 'database';
 
         return $prefs;

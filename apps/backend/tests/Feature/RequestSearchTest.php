@@ -40,7 +40,6 @@ class RequestSearchTest extends TestCase
             ->first();
         // search requests
         $response = $this->get(route('api.request.index', $search));
-
         // assert there are 5 requests sorted by member name
         $response
             ->assertStatus(200)
@@ -48,6 +47,8 @@ class RequestSearchTest extends TestCase
             ->assertJsonPath('meta.total', 5)
             ->assertJsonPath('data.0.id', $requestData['id'])
             ->assertJsonPath('data.0.member.last_name', $requestData['last_name']);
+        // assert the search settings were saved
+        $this->assertEquals($search, $this->user->searchSettings);
     }
 
     /**
