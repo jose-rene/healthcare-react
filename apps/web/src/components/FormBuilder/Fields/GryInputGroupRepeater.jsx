@@ -27,14 +27,12 @@ GryInputGroupRepeater.register = {
     icon: "fas fa-columns",
     span_width: 12,
 
-    buttons: [
-        <DuplicateButton />,
-    ],
+    buttons: [<DuplicateButton />],
 
     props: {
         custom_name: "group",
-        customValidation: ``,
-        customRules: ``,
+        customValidation: "",
+        customRules: "",
         span_width: 12,
     },
 };

@@ -18,7 +18,6 @@ const GrySelect = (props) => {
             <Select
                 labelKey="text"
                 valueKey="value"
-
                 {...{ ...rest, name: custom_name }}
             />
         </div>
@@ -26,16 +25,14 @@ const GrySelect = (props) => {
 };
 
 GrySelect.register = {
-    icon: 'fas fa-boxes',
-    name: 'Select',
-    label: 'Select',
-    options: [
-        { value: 'welcome', text: 'welcome' },
-    ],
+    icon: "fas fa-boxes",
+    name: "Select",
+    label: "Select",
+    options: [{ value: "welcome", text: "welcome" }],
     props: {
-        custom_name: 'select',
-        customValidation: ``,
-        customRules: ``,
+        custom_name: "field_name_here",
+        customValidation: "",
+        customRules: "",
     },
 };
 

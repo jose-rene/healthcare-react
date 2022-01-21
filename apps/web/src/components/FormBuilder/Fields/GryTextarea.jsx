@@ -14,7 +14,11 @@ const GryTextarea = (props) => {
     }
 
     return (
-        <ContextInput type="textarea" autoComplete="off" {...{ ...rest, name: custom_name }} />
+        <ContextInput
+            type="textarea"
+            autoComplete="off"
+            {...{ ...rest, name: custom_name }}
+        />
     );
 };
 
@@ -26,11 +30,11 @@ GryTextarea.register = {
     static: true,
     label: "Input Textarea",
     props: {
-        custom_name: "NAME",
+        custom_name: "field_name_here",
 
-        customValidation: ``,
+        customValidation: "",
 
-        customRules: ``,
+        customRules: "",
     },
 };
 

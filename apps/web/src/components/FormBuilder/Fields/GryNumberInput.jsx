@@ -14,7 +14,11 @@ const GryNumberInput = (props) => {
     }
 
     return (
-        <ContextInput type="number" autoComplete="off" {...{ ...rest, name: custom_name }} />
+        <ContextInput
+            type="number"
+            autoComplete="off"
+            {...{ ...rest, name: custom_name }}
+        />
     );
 };
 
@@ -24,11 +28,11 @@ GryNumberInput.register = {
     static: true,
     label: "Input Number",
     props: {
-        custom_name: "Field Name Here",
+        custom_name: "field_name_here",
 
-        customValidation: ``,
+        customValidation: "",
 
-        customRules: ``,
+        customRules: "",
 
         type: "number",
         step: "1",

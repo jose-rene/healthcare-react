@@ -31,8 +31,8 @@ GryInputGroup.register = {
 
     props: {
         custom_name: "group",
-        customValidation: ``,
-        customRules: ``,
+        customValidation: "",
+        customRules: "",
         span_width: 12,
     },
 };

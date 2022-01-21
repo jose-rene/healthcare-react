@@ -1,20 +1,18 @@
 import React from "react";
 
 const GryRowSpace = () => {
-    return (
-        <div className="pt-3" />
-    );
+    return <div className="pt-3" />;
 };
 
 GryRowSpace.register = {
     icon: "fas fa-space",
     name: "Row Space",
     props: {
-        custom_name: "row-space",
+        custom_name: "field_name_here",
 
-        customValidation: ``,
+        customValidation: "",
 
-        customRules: ``,
+        customRules: "",
     },
 };
 
