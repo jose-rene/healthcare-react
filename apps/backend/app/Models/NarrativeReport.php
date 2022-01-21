@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
+ * @property mixed $id
  * @property mixed $narrative_report_template_id
  * @property mixed $template
  * @property mixed $object_name

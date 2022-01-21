@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Button as RButton } from "react-bootstrap";
 
 import FapIcon from "../FapIcon";
+import { useFormContext } from "../../../Context/FormContext";
 
 const Button = ({
     size = "lg",
@@ -18,7 +19,19 @@ const Button = ({
     iconSize = undefined,
     disabled = false,
     loading = false,
+    name = undefined,
+    value = undefined,
 }) => {
+    const { update } = useFormContext();
+
+    const handleOnClick = (e) => {
+        if (name && update) {
+            update(name, value);
+        }
+
+        onClick && onClick(e);
+    };
+
     const renderedLabel = useMemo(() => {
         const lbl = label || children;
 
@@ -33,7 +46,7 @@ const Button = ({
             size={size}
             // eslint-disable-next-line react/button-has-type
             type={type}
-            onClick={onClick}
+            onClick={handleOnClick}
             disabled={disabled}
             className={`${className ?? ""}${block ? " btn-block" : ""}`}
         >

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 
 import PageLayout from "layouts/PageLayout";
@@ -11,17 +11,17 @@ import useApiCall from "hooks/useApiCall";
 
 import { BASE_URL, PUT } from "config/URLs";
 
-// TODO :: next step in sending/ download the pdf is caching the new template version.
 const NarrativeReportPreview = ({
     match: {
         params: { request, template },
     },
 }) => {
+    const [form, setForm] = useState({});
+
     const [{ data, loading }, fireLoadRequestTemplate] = useApiCall({
         url: `request/${request}/narrative_report_template/${template}`,
     });
 
-    // eslint-disable-next-line
     const [{ loading: saving }, fireSaveRequest] = useApiCall({
         url: `request/${request}/narrative_report_template/${template}`,
         method: PUT,
@@ -33,18 +33,24 @@ const NarrativeReportPreview = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const form = useMemo(() => {
-        return {
-            templateField: data.template,
-        };
+    useEffect(() => {
+        setForm(data);
     }, [data]);
 
-    const handleFormSubmit = ({ templateField }) => {
-        fireSaveRequest({
-            params: {
-                text: templateField,
-            },
-        });
+    const handleFormSubmit = async (formData) => {
+        try {
+            const response = await fireSaveRequest({ params: formData });
+            const { narrative_report_id } = response || {};
+
+            if (formData.submit === "download_pdf" && narrative_report_id) {
+                window.open(
+                    `${BASE_URL}/download/report/${narrative_report_id}/modified`,
+                    "_blank"
+                );
+            }
+        } catch (e) {
+            console.log("err", { e });
+        }
     };
 
     return (
@@ -54,21 +60,23 @@ const NarrativeReportPreview = ({
                 <Row>
                     <Col>
                         <Form defaultData={form} onSubmit={handleFormSubmit}>
-                            <FancyEditor name="templateField" />
+                            <FancyEditor name="template" />
                             <hr />
 
-                            <SubmitButton loading={loading} label="Send" />
-                            <a
-                                href={`${BASE_URL}/download/report/${template}/request/${request}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={
-                                    `btn btn-secondary btn-lg ms-3 ` +
-                                    (loading ? "disabled" : "")
-                                }
-                            >
-                                Download PDF
-                            </a>
+                            <SubmitButton
+                                loading={loading || saving}
+                                label="Send"
+                                name="submit"
+                                value="send"
+                            />
+                            <SubmitButton
+                                className="ms-3"
+                                variant="secondary"
+                                loading={loading || saving}
+                                label="Download PDF"
+                                name="submit"
+                                value="download_pdf"
+                            />
                         </Form>
                     </Col>
                 </Row>
