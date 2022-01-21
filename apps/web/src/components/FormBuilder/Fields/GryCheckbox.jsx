@@ -13,11 +13,7 @@ const GryCheckbox = (props) => {
         return <p>Missing custom_name</p>;
     }
 
-    return (
-        <ContextCheckbox
-            {...{ ...rest, name: custom_name }}
-        />
-    );
+    return <ContextCheckbox {...{ ...rest, name: custom_name }} />;
 };
 
 GryCheckbox.register = {
@@ -27,8 +23,8 @@ GryCheckbox.register = {
     inline: false,
     props: {
         custom_name: "checkbox",
-        customValidation: ``,
-        customRules: ``,
+        customValidation: "",
+        customRules: "",
     },
 };
 

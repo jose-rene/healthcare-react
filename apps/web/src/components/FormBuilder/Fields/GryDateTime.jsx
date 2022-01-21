@@ -1,7 +1,7 @@
 import React from "react";
 import ContextInput from "../../inputs/ContextInput";
 
-const GryInput = (props) => {
+const GryDateTime = (props) => {
     const allProps = {
         ...(props.data ?? {}),
         ...props,
@@ -14,17 +14,21 @@ const GryInput = (props) => {
     }
 
     return (
-        <ContextInput autoComplete="off" {...{ ...rest, name: custom_name }} />
+        <ContextInput
+            type="datetime-local"
+            autoComplete="off"
+            {...{ ...rest, name: custom_name }}
+        />
     );
 };
 
-GryInput.register = {
+GryDateTime.register = {
     // icon: 'fa fa-keyboard',
     // element: 'bare',
-    icon: "fas fa-font",
-    name: "Input Text",
+    icon: "fas fa-time",
+    name: "Datetime Input",
     static: true,
-    label: "Input Text Custom",
+    label: "Date Input",
     props: {
         custom_name: "field_name_here",
 
@@ -34,4 +38,4 @@ GryInput.register = {
     },
 };
 
-export default GryInput;
+export default GryDateTime;
