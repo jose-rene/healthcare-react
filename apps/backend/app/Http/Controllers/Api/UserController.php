@@ -330,6 +330,14 @@ class UserController extends Controller
             }
         }
 
+        // save notification prefs to the notification key of prefs
+        if (isset($data['notification_prefs'])) {
+            $notificationPrefs = empty($data['notification_prefs']) ? [] : $data['notification_prefs'];
+            if ($user->notificationSettings != $notificationPrefs) {
+                $user->notificationSettings = $notificationPrefs;
+            }
+        }
+
         $user->save();
 
         return new UserResource($user);

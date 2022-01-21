@@ -33,7 +33,7 @@ class RequestActivity extends Notification
      */
     public function via($notifiable)
     {
-        $prefs = $notifiable->notification_prefs ?? [];
+        $prefs = $notifiable->notificationSettings;
         $prefs[] = 'database';
 
         return $prefs;
@@ -78,6 +78,6 @@ class RequestActivity extends Notification
 
     public function getActivityData()
     {
-        return $this->activity->toArray();
+        return $this->activity->toArray() + ['action' => ['title' => 'View Activity', 'url' => '/activity/' . $this->activity->uuid]];
     }
 }
