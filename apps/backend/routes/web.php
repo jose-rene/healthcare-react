@@ -23,8 +23,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('testing-pdf/report/{narrative_report_template}/request/{request}/',
     [App\Http\Controllers\Api\DocumentController::class, 'generatePDF']);
 
-Route::get('download/report/{narrative_report_template}/request/{request}/',
-    [App\Http\Controllers\Api\DocumentController::class, 'generatePDF']);
+Route::get(
+    'download/report/{narrative_report}/modified',
+    [App\Http\Controllers\Api\DocumentController::class, 'generateModifiedPDF']
+);
+
+Route::get(
+    'download/report/{narrative_report_template}/request/{request}/',
+    [App\Http\Controllers\Api\DocumentController::class, 'generatePDF']
+);
 
 // handle sso login triggering subdomain
 Route::domain(env('DME_SSO_DOMAIN'))->group(function (Router $router) {

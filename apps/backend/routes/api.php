@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Resources\MyUserResource;
-use App\Models\Form;
 use App\Models\Member;
 use Illuminate\Support\Facades\Route;
 
@@ -82,7 +81,8 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('classification', 'ClassificationController')->only(['index', 'show']);
 
 
-    Route::apiResource('request.narrative_report_template', 'RequestNarrativeReportTemplateController')->only('show');
+    Route::apiResource('request.narrative_report_template', 'RequestNarrativeReportTemplateController')->only('show',
+        'update');
 
     Route::put('/form/{form}/snapshot', 'FormController@snapshot');
     Route::put('/form/{form}/rollback', 'FormController@rollback');
