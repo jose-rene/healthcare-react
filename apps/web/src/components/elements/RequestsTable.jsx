@@ -213,7 +213,7 @@ const RequestsTable = () => {
         setSelectedTab(tab);
     };
 
-    const handleUserOptions = ({ target: { name, value } }) => {
+    const handleOptions = ({ target: { name, value } }) => {
         updateSearchObj({ ...searchObj, [name]: value });
 
         redoSearch({ ...searchObj, [name]: value });
@@ -271,7 +271,8 @@ const RequestsTable = () => {
 
                             <div className="d-flex mt-3">
                                 <ButtonGroup className="mx-3">
-                                    {isHpUsers &&
+                                    {(isHpUsers ||
+                                        userIs("reviewer_manager")) &&
                                         filterOptions.map((filter, idx) => (
                                             <ToggleButton
                                                 key={idx}
@@ -290,12 +291,17 @@ const RequestsTable = () => {
                                                     searchObj.filter ===
                                                     filter.value
                                                 }
-                                                onChange={formUpdateSearchObj}
+                                                onChange={handleOptions}
                                             >
                                                 {filter.name}
                                             </ToggleButton>
                                         ))}
-                                    {userIs("clinical_reviewer") &&
+                                </ButtonGroup>
+                                <ButtonGroup className="mx-3">
+                                    {userIs([
+                                        "clinical_reviewer",
+                                        "reviewer_manager",
+                                    ]) &&
                                         userOptions.map((user, idx) => (
                                             <ToggleButton
                                                 key={idx}
@@ -307,7 +313,10 @@ const RequestsTable = () => {
                                                         ? "bg-white"
                                                         : ""
                                                 } ${
-                                                    userIs("clinical_reviewer")
+                                                    userIs([
+                                                        "clinical_reviewer",
+                                                        "reviewer_manager",
+                                                    ])
                                                         ? "p-3"
                                                         : ""
                                                 }`}
@@ -318,14 +327,14 @@ const RequestsTable = () => {
                                                     searchObj.is_clinician ===
                                                     user.value
                                                 }
-                                                onChange={handleUserOptions}
+                                                onChange={handleOptions}
                                             >
                                                 {user.name}
                                             </ToggleButton>
                                         ))}
                                 </ButtonGroup>
 
-                                {!isClinician && (
+                                {!isClinician && !userIs("reviewer_manager") && (
                                     <Button
                                         variant="primary"
                                         className="mb-3 mx-3"
