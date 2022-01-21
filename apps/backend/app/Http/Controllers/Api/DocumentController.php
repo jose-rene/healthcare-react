@@ -8,6 +8,7 @@ use App\Http\Resources\DocumentResource;
 use App\Http\Resources\RequestDetailResource;
 use App\Interfaces\ReportBuilder;
 use App\Models\Document;
+use App\Models\NarrativeReport;
 use App\Models\NarrativeReportTemplate;
 use App\Models\Request as ModelRequest;
 use Exception;
@@ -92,6 +93,23 @@ class DocumentController extends Controller
 
         $report_html = $reportBuilder->buildHtml($template, $request_data);
         $pdf         = $reportBuilder->htmlToPDF($report_html, compact('style'));
+
+        // stream the pdf to the browser
+        return response()->make($pdf, 200, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => "inline; filename=\"{$filename}\"",
+        ]);
+    }
+
+    public function generateModifiedPDF(
+        NarrativeReport $narrative_report,
+        ReportBuilder $reportBuilder
+    ) {
+        // Use the resource to generate request data for this sample
+        $filename = "narrative-report-{$narrative_report->id}.pdf";
+
+        $report_html = $reportBuilder->buildHtml($narrative_report->text);
+        $pdf         = $reportBuilder->htmlToPDF($report_html);
 
         // stream the pdf to the browser
         return response()->make($pdf, 200, [
