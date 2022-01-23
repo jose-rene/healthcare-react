@@ -23,7 +23,7 @@ class FontChecker
         $pdf_lib->set_option("SearchPath={{" . $font_dir . "}}");
 
         /* enumerate all fonts on the searchpath and create a UPR file */
-        $pdf_lib->set_option("enumeratefonts saveresources={filename={font_lister_pdflib.upr}}");
+        $pdf_lib->set_option("enumeratefonts saveresources={filename={fonts/font_lister_pdflib.upr}}");
 
         /* Retrieve the names of all enumerated fonts */
         do {
