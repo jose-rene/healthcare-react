@@ -39,6 +39,20 @@ class UserSeeder extends Seeder
             ]);
             // skip the user setup if it was not just created
             if (!$admin->wasRecentlyCreated) {
+                // handle the new role Reviewer Manager
+                if (null !== ($role = Bouncer::role()->firstWhere('name', 'reviewer_manager'))) {
+                    if (!$role->domain) {
+                        $role->update(['domain' => 'Clinical Services']);
+                    }
+                }
+                else {
+                    Bouncer::role()->create([
+                        'domain' => 'Clinical Services',
+                        'name'   => 'reviewer_manager',
+                        'title'  => 'Reviewer Manager',
+                    ]);
+                }
+
                 if (!$admin->isA('reviewer_manager')) {
                     $admin->assign('reviewer_manager');
                 }

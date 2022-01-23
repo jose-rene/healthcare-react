@@ -26,7 +26,7 @@ Handlebars.registerHelper("compare", function (v1, operator, v2, options) {
 });
 
 Handlebars.registerHelper("isequal", function (value, comparison) {
-    return value == comparison;
+    return value === comparison;
 });
 
 Handlebars.registerHelper("contains", function (value, comparison) {
@@ -72,7 +72,11 @@ export const handlebarsTemplate = (templateString, object) => {
  * @param {boolean} [options.strict] - on catch in the try catch return true to shw there are form errors
  * @returns {any}
  */
-export const jsEval = (condition, form, { debug = false, strict = false } = {}) => {
+export const jsEval = (
+    condition,
+    form,
+    { debug = false, strict = false } = {}
+) => {
     try {
         //const template = handlebarsTemplate(condition, data);
         const template = condition
