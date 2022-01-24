@@ -55,8 +55,9 @@ class Request extends Model
     protected $guarded = ['id'];
     protected $dates = ['due_at'];
     protected $casts = [
-        'due_at_na'    => 'boolean',
-        'documents_na' => 'boolean',
+        'due_at_na'         => 'boolean',
+        'documents_na'      => 'boolean',
+        'classification_id' => 'integer',
     ];
 
     /**
@@ -157,6 +158,11 @@ class Request extends Model
     public function payer()
     {
         return $this->belongsTo(Payer::class);
+    }
+
+    public function classification()
+    {
+        return $this->belongsTo(Classification::class, 'classification_id');
     }
 
     public function clinician()
