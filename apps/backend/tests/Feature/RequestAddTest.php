@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Address;
+use App\Models\Classification;
 use App\Models\Lob;
 use App\Models\Member;
 use App\Models\Payer;
@@ -93,7 +94,7 @@ class RequestAddTest extends TestCase
          * assessment 2nd step.
          */
         $response = $this->put($route, $params = [
-            'type_name'   => ' auth-id',
+            'type_name'   => 'auth-id',
             'auth_number' => '1234',
         ]);
         $response->assertSuccessful();
@@ -225,6 +226,42 @@ class RequestAddTest extends TestCase
     }
 
     /**
+     * Test update classification.
+     * @group   request
+     *
+     * @return void
+     */
+    public function testUpdateClassification()
+    {
+        $requestId = $this->getRequest();
+        $route = route('api.request.update', [
+            'request' => $requestId,
+        ]);
+        $classification = Classification::inRandomOrder()->first();
+        // missing request items, should fail with error
+        $response = $this->put($route, [
+            'type_name' => 'diagnosis', // set with diagnosis section
+            'codes'     => [],
+            'classification_id' => $classification->id,
+        ]);
+        // verify classification was updated
+        $response
+            ->assertOk()
+            ->assertJsonPath('classification_id', $classification->id);
+
+        // test removing classification
+        $response = $this->put($route, [
+            'type_name' => 'diagnosis', // set with diagnosis section
+            'codes'     => [],
+            'classification_id' => '',
+        ]);
+        // verify classification was removed
+        $response
+            ->assertOk()
+            ->assertJsonPath('classification_id', null);
+    }
+
+    /**
      * Test update request types.
      * @group   request
      *
@@ -335,6 +372,9 @@ class RequestAddTest extends TestCase
         // seed the Bouncer roles
         Artisan::call('db:seed', [
             '--class' => 'Database\Seeders\BouncerSeeder',
+        ]);
+        Artisan::call('db:seed', [
+            '--class' => 'Database\Seeders\HealthPlanUserSeeder',
         ]);
         Artisan::call('db:seed', [
             '--class' => 'Database\Seeders\RequestTypeSeeder',

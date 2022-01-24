@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Http\Requests\MemberRequest;
+use App\Models\Classification;
 use App\Models\Request;
 use App\Models\RequestItem;
 use App\Models\RequestStatus;
@@ -64,6 +65,7 @@ class RequestSectionSaveJob
                 // update, or delete what is in the database
                 $this->relevantDiagnosisSection();
                 $this->authNumberSection();
+                $this->classificationSection();
                 break;
 
             case 'diagnosis-only':
@@ -148,6 +150,44 @@ class RequestSectionSaveJob
         } catch (ValidationException $e) {
             throw new HttpResponseException(response()->json(['errors' => ['auth_number' => ['The Auth ID provided is not unique.']]], 422));
         }
+    }
+
+    protected function classificationSection()
+    {
+        $data = request()->all();
+        if (empty($data['classification_id'])) {
+            // remove
+            if ($this->request->classification_id) {
+                $this->request->classification()->dissociate();
+                $this->request->save();
+            }
+            return;
+        }
+        $rules = [
+            'classification_id' => ['bail', 'integer', 'exists:classifications,id'],
+        ];
+        $validator = Validator::make($data, $rules, [
+            'exists'   => 'An invalid classification was selected',
+        ]);
+        if ($validator->fails()) {
+            throw new HttpResponseException(response()->json(['errors' => ['classification_id' => [$validator->errors()->first()]]], 422));
+
+            return;
+        }
+
+        if ($this->request->classification_id === $data['classification_id']) {
+            return; // nothing to update
+        }
+
+        if ($this->request->requestItems) {
+            // these will have the wrong classification when it changes, remove them
+            $this->request->requestItems->each(fn($item) => $item->delete());
+            $this->request->unsetRelation('requestItems');
+        }
+
+        $this->request->classification()->associate(Classification::find($data['classification_id']));
+        // save the request
+        $this->request->save();
     }
 
     protected function dueSection()
