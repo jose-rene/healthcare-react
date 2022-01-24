@@ -21,6 +21,7 @@ class RequestDetailResource extends JsonResource
             'reviewer'          => $this->reviewer ? ['id' => $this->reviewer->uuid, 'name' => $this->reviewer->full_name] : null,
             'status'            => $this->statusName,
             'status_id'         => (int) $this->request_status_id,
+            'classification_id' => $this->classification_id ?? null,
             'member'            => new MemberDetailResource($this->member),
             'payer'             => new PayerDetailResource($this->payer),
             'member_verified'   => $this->member_verified,

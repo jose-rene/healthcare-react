@@ -11,6 +11,7 @@ import {
     ListGroupItem,
 } from "react-bootstrap";
 import AsyncSelect from "react-select/async";
+import Select2 from "react-select";
 import FapIcon from "components/elements/FapIcon";
 import useApiCall from "hooks/useApiCall";
 import PageAlert from "components/elements/PageAlert";
@@ -24,6 +25,8 @@ const RequestInfoForm = ({
     openRequestInfo,
     toggleOpenRequestInfo,
     saveRequest,
+    payerProfile: { classifications: payerClassifications = [] },
+    classificationId,
     requestLoading,
     updateError,
 }) => {
@@ -31,15 +34,35 @@ const RequestInfoForm = ({
         type_name: "diagnosis",
         codes: [],
         auth_number: auth_number ?? "",
+        classification_id: classificationId ?? "",
     });
 
     // const [auth_number, setAuthNumber] = useState("");
     const [codes, setCodes] = useState([]);
 
+    const [classification, setClassification] = useState({
+        options: [],
+        value: "",
+    });
+
     const handleAuthChange = (auth_number) => {
         setData((prevData) => {
             return { ...prevData, auth_number };
         });
+    };
+
+    const handleClassification = (selected, action) => {
+        if (action?.action === "clear") {
+            setData((prevData) => ({ ...prevData, classification_id: "" }));
+            setClassification((prev) => ({ ...prev, value: "" }));
+            return;
+        }
+        const value = selected?.value ?? null;
+        setData((prevData) => ({
+            ...prevData,
+            classification_id: value,
+        }));
+        setClassification((prev) => ({ ...prev, value }));
     };
 
     const updateData = (codeData) => {
@@ -59,8 +82,22 @@ const RequestInfoForm = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]); */
 
+    const mapOptions = (values) => {
+        if (!values) {
+            return [];
+        }
+        const options = values.map((item) => {
+            return { label: item.name, value: item.id };
+        });
+        return options;
+    };
+
+    const getClassification = (value) => {
+        const selected = payerClassifications.find((item) => item.id === value);
+        return selected ? selected.name : "n/a";
+    };
+
     useEffect(() => {
-        // console.log(requestCodes);
         if (requestCodes?.length) {
             updateData(requestCodes);
         }
@@ -72,9 +109,15 @@ const RequestInfoForm = ({
                 description: "",
             },
         ]);
+    }, [requestCodes]);
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    useEffect(() => {
+        // set classfications
+        setClassification({
+            options: mapOptions(payerClassifications ?? []),
+            value: classificationId,
+        });
+    }, [payerClassifications, classificationId]);
 
     const [{ loading }, fireSearch] = useApiCall({
         method: "get",
@@ -130,10 +173,10 @@ const RequestInfoForm = ({
         updateData(currentCodes);
     };
     const handleSave = () => {
-        console.log(data);
+        // console.log(data);
         saveRequest(data);
     };
-    const filled = requestCodes.length && auth_number;
+    const filled = requestCodes.length && auth_number && classificationId;
 
     return (
         <>
@@ -189,6 +232,34 @@ const RequestInfoForm = ({
                             >
                                 <Row>
                                     <Col xl={8} lg={10}>
+                                        <Row>
+                                            <Col className="mb-3">
+                                                <Select2
+                                                    className="basic-single mt-2"
+                                                    classNamePrefix="select"
+                                                    defaultValue=""
+                                                    isClearable
+                                                    isSearchable
+                                                    name="payerClassifications"
+                                                    options={
+                                                        classification.options
+                                                    }
+                                                    value={
+                                                        classification.value
+                                                            ? classification.options.find(
+                                                                  (opt) =>
+                                                                      opt.value ===
+                                                                      classification.value
+                                                              )
+                                                            : null
+                                                    }
+                                                    onChange={
+                                                        handleClassification
+                                                    }
+                                                    placeholder="Select Classification..."
+                                                />
+                                            </Col>
+                                        </Row>
                                         <Row>
                                             <Col md="12" className="mb-3">
                                                 <FloatingLabel
@@ -295,6 +366,29 @@ const RequestInfoForm = ({
                     </Collapse>
                     <Collapse in={!openRequestInfo}>
                         <div>
+                            <Row className="mb-3">
+                                <Col className="fw-bold" sm={3}>
+                                    Classification
+                                </Col>
+                                <Col>
+                                    {classificationId ? (
+                                        getClassification(classificationId)
+                                    ) : (
+                                        <Button
+                                            variant="link"
+                                            className="fst-italic p-0"
+                                            onClick={toggleOpenRequestInfo}
+                                        >
+                                            Select Classification
+                                            <FapIcon
+                                                icon="angle-double-right"
+                                                size="sm"
+                                                className="ms-1"
+                                            />
+                                        </Button>
+                                    )}
+                                </Col>
+                            </Row>
                             <Row className="mb-3">
                                 <Col className="fw-bold" sm={3}>
                                     Assessment ID

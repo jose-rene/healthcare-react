@@ -18,6 +18,7 @@ const RequestForm = ({ data }) => {
         activities = [],
         id: requestId = "",
         auth_number = "",
+        classification_id: classificationId,
         member: memberData = null,
         codes: requestCodes = [],
         request_items: requestItems = [],
@@ -97,7 +98,7 @@ const RequestForm = ({ data }) => {
     // current step
     const getStepCompleted = useMemo(() => {
         return () => {
-            if (!auth_number || !requestCodes?.length) {
+            if (!auth_number || !requestCodes?.length || !classificationId) {
                 return 1;
             }
             if (!requestItems?.length) {
@@ -223,6 +224,8 @@ const RequestForm = ({ data }) => {
                         openRequestInfo,
                         toggleOpenRequestInfo,
                         saveRequest,
+                        payerProfile,
+                        classificationId,
                         requestLoading,
                         updateError,
                     }}
@@ -231,6 +234,7 @@ const RequestForm = ({ data }) => {
                     {...{
                         requestItems,
                         payerProfile,
+                        classificationId,
                         openRequestItem,
                         toggleOpenRequestItem,
                         saveRequest,
