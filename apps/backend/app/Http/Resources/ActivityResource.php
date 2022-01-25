@@ -25,7 +25,7 @@ class ActivityResource extends JsonResource
             'datetime'   => $dateTime->format('m/d/Y H:i:s'),
             'priority'   => $this->priority,
             'message'    => $this->message,
-            'type'       => $this->type,
+            'type'       => $this->activityType ? $this->activityType->slug : null,
             'activities' => $this->activities->count() ? self::Collection($this->activities) : null,
         ];
     }
