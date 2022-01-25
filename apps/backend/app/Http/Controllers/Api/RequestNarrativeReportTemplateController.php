@@ -17,17 +17,23 @@ class RequestNarrativeReportTemplateController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param ModelRequest            $request
+     * @param                         $request_name
      * @param NarrativeReportTemplate $narrativeReportTemplate
      * @return Response
      */
     public function show(
-        ModelRequest $request,
+        $request_name,
         NarrativeReportTemplate $narrativeReportTemplate,
         ReportBuilder $reportBuilder
     ) {
+        if ($request_name === 'no_report_test_json') {
+            $request_data = $narrativeReportTemplate->test_json;
+        } else {
+            $request      = ModelRequest::findOrFail($request_name);
+            $request_data = new RequestDetailResource($request);
+        }
+
         $report_template = $narrativeReportTemplate->template;
-        $request_data    = new RequestDetailResource($request);
         $template        = $reportBuilder->buildHtml($report_template, $request_data);
 
         return response()->json(compact('template'));

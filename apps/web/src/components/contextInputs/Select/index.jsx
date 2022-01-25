@@ -18,6 +18,9 @@ const Select = (
         labelKey = "title",
         valueKey = "val",
         disabled = false,
+        addEmpty = false,
+        emptyLabel = "Please Select",
+        onChange: propsOnChange = false,
         ...otherProps
     },
     ref
@@ -30,10 +33,10 @@ const Select = (
     const hasError = !!message;
 
     const handleOnChange = (e) => {
-        if (otherProps.onChange) {
-            otherProps.onChange(e);
-        } else {
-            onChange(e);
+        onChange && onChange(e);
+
+        if (propsOnChange) {
+            propsOnChange(e);
         }
     };
 
@@ -80,6 +83,7 @@ const Select = (
                     disabled={disabled}
                     onChange={handleOnChange}
                 >
+                    {addEmpty && <option value="">{emptyLabel}</option>}
                     {selectOptions}
                 </Form.Select>
             </FloatingLabel>

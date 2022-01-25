@@ -81,8 +81,9 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::apiResource('classification', 'ClassificationController')->only(['index', 'show']);
 
 
-    Route::apiResource('request.narrative_report_template', 'RequestNarrativeReportTemplateController')->only('show',
-        'update');
+    Route::get('request/{request_id}/narrative_report_template/{narrative_report_template}',
+        'RequestNarrativeReportTemplateController@show');
+    Route::apiResource('request.narrative_report_template', 'RequestNarrativeReportTemplateController')->only('update');
 
     Route::put('/form/{form}/snapshot', 'FormController@snapshot');
     Route::put('/form/{form}/rollback', 'FormController@rollback');
