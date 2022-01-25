@@ -1,6 +1,7 @@
 import React from "react";
 import Checkbox from "./index";
-import { useFormContext } from "../../../Context/FormContext";
+
+import { useFormContext } from "Context/FormContext";
 
 const ContextCheckbox = (props) => {
     const { onChange: propsOnChange, name, value: valueLabel = true } = props;
@@ -9,15 +10,15 @@ const ContextCheckbox = (props) => {
     const checked = getValue(name);
 
     const handleOnChange = (e) => {
-        if (propsOnChange) {
-            return propsOnChange(e);
-        }
-
         const {
             target: { checked },
         } = e;
 
         update(name, !!checked);
+
+        if (propsOnChange) {
+            return propsOnChange(e);
+        }
     };
 
     return (
