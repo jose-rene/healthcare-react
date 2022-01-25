@@ -8,7 +8,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Route;
-
 class RequestActivity extends Notification
 {
     use Queueable;
@@ -78,6 +77,10 @@ class RequestActivity extends Notification
 
     public function getActivityData()
     {
-        return $this->activity->toArray() + ['action' => ['title' => 'View Activity', 'url' => '/activity/' . $this->activity->uuid]];
+        $extra = [
+            'action' => ['title' => 'View Activity', 'url' => '/activity/' . $this->activity->uuid],
+            'type' => $this->activity->activityType ? $this->activity->activityType->slug : 'request-update',
+        ];
+        return $this->activity->toArray() + $extra;
     }
 }

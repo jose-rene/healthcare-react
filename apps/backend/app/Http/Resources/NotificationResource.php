@@ -27,6 +27,7 @@ class NotificationResource extends JsonResource
             'human_created_at' => $this->created_at->diffForHumans(),
             'created_at'       => $this->created_at->format('Y-m-d'),
             'action'           => $this->data['action'] ?? null,
+            'type'             => $this->data['type'] ?? null,
             'is_read'          => !!$this->read_at,
         ];
     }
