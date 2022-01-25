@@ -103,9 +103,9 @@ export const GlobalProvider = ({ children }) => {
             }
         },
 
-        async remove(notification_id) {
+        async remove(notification_ids) {
             const result = await deleteNotifications({
-                params: { ids: [notification_id] },
+                params: { ids: notification_ids },
             });
 
             if (deleteNotificationsLoading || result) {
