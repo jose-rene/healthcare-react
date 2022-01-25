@@ -45,7 +45,7 @@ class Sort extends BaseSearchPipeline
                 break;
 
                 default:
-                    return null;
+                    return $builder;
                 break;
             }
         }

@@ -43,6 +43,9 @@
     echo 'Linking .env file'
     ln -nfs {{ $app_dir }}/.env {{ $new_release_dir }}/.env
 
+    echo 'Linking fonts folder'
+    ln -nfs {{ $app_dir }}/fonts {{ $new_release_dir }}/public/fonts
+
     echo 'Run migrations'
     cd {{ $new_release_dir }}
     php artisan migrate --force

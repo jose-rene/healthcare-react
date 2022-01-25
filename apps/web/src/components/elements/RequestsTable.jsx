@@ -22,7 +22,7 @@ const RequestsTable = () => {
     const history = useHistory();
 
     const { getUser, userCan, userIs } = useUser();
-    const { timeZoneName } = getUser();
+    const { timeZoneName, search_prefs } = getUser();
 
     const isClinician = userIs(["clinical_reviewer", "field_clinician"]);
     const isHpUsers = userIs([
@@ -176,12 +176,15 @@ const RequestsTable = () => {
     const [{ searchObj }, { formUpdateSearchObj, updateSearchObj }] = useSearch(
         {
             searchObj: {
-                sortColumn: headers[4].columnMap, // set 'received' as default
-                sortDirection: "asc",
-                perPage: 10,
-                filter: "0",
-                is_clinician: "0",
-                lookup: "",
+                ...{
+                    sortColumn: headers[4].columnMap, // set 'received' as default
+                    sortDirection: "asc",
+                    perPage: 10,
+                    filter: "0",
+                    is_clinician: "0",
+                    lookup: "",
+                },
+                ...(search_prefs ?? {}),
             },
         }
     );
@@ -214,10 +217,15 @@ const RequestsTable = () => {
     };
 
     const handleOptions = ({ target: { name, value } }) => {
-        updateSearchObj({ ...searchObj, [name]: value });
-
+        updateSearchObj({ [name]: value });
         redoSearch({ ...searchObj, [name]: value });
     };
+
+    useEffect(() => {
+        redoSearch();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (selectedTab === 1) {
