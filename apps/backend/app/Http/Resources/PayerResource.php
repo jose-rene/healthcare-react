@@ -3,9 +3,13 @@
 namespace App\Http\Resources;
 
 use App\Models\Language;
+use App\Models\Payer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin Payer
+ */
 class PayerResource extends JsonResource
 {
     /**
@@ -36,6 +40,7 @@ class PayerResource extends JsonResource
             'avatar_url'          => route('payer.avatar.show', ['payer' => $this]),
             'company_category'    => $this->company_category,
             'category'            => $this->category,
+            'user' => new UserResource($this->user),
         ];
     }
 }

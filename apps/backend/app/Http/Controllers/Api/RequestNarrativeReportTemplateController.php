@@ -40,14 +40,14 @@ class RequestNarrativeReportTemplateController extends Controller
     }
 
     public function update(
-        ModelRequest $request,
-        NarrativeReportTemplate $narrativeReportTemplate
+        NarrativeReportTemplate $narrativeReportTemplate,
+        ModelRequest $request = null
     ) {
         $template = request('template');
 
         $search = [
             'narrative_report_template_id' => $narrativeReportTemplate->id,
-            'request_id'                   => $request->id,
+            'request_id'                   => $request->id ?? '1',
         ];
 
         $narrative_report = NarrativeReport::updateOrCreate($search, $search + [

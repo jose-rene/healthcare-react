@@ -7,10 +7,10 @@ use App\Http\SearchPipeline\UserRole;
 use App\Http\SearchPipeline\UserSort;
 use App\Http\SearchPipeline\UserType;
 use App\Models\Activity\Activity;
+use App\Models\UserType\BusinessOperationsUser;
 use App\Models\UserType\ClinicalServicesUser;
 use App\Models\UserType\EngineeringUser;
 use App\Models\UserType\HealthPlanUser;
-use App\Models\UserType\BusinessOperationsUser;
 use App\Traits\Uuidable;
 use Carbon\Carbon;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
@@ -32,6 +32,7 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
 /**
  * @property int             id
  * @property string          name
+ * @property string          age
  * @property string          email
  * @property string          middle_name
  * @property string          first_name
@@ -161,6 +162,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function profileImage()
     {
         return $this->morphOne(Image::class, 'imageable');
+    }
+
+    public function getAgeAttribute()
+    {
+        return $this->dob->age ?? '';
     }
 
     public function getActiveAttribute()

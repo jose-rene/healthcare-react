@@ -142,6 +142,11 @@ class Member extends Model
         return $this->hasMany(MemberPayerHistory::class)->orderBy('id', 'desc');
     }
 
+    public function getAgeAttribute()
+    {
+        return $this->dob->age ?? '';
+    }
+
     /**
      * Contact list attribute.
      *

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Http\SearchPipeline\AuthNumber;
-use App\Http\SearchPipeline\Dates;
 use App\Http\SearchPipeline\RequestStatusId;
 use App\Http\SearchPipeline\Sort;
 use App\Http\SearchPipeline\TherapyNetworkId;
@@ -19,18 +18,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 /**
  * @property Carbon             created_at
  * @property RequestItem        requestItems
  * @property int                id
  * @property Member             member
+ * @property Member             $hpUser
  * @property Document           documents
  * @property string             uuid
  * @property Activity           activities
  * @property User               therapist
  * @property User               reviewer
  * @property User               admin
+ * @property Carbon             $assessed_date
  * @property RequestFormSection $requestFormSections
  *
  * @observer App\Observers\RequestObserver
@@ -178,7 +180,7 @@ class Request extends Model
 
     public function hpUser()
     {
-        return $this->hasOne(Member::class, 'payer_user_id');
+        return $this->belongsTo(Member::class, 'payer_user_id');
     }
 
     public function payerUser()
@@ -289,31 +291,38 @@ class Request extends Model
 
     public function getReceivedDateAttribute()
     {
-        $received = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 1) : null;
+        $received = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id',
+            self::$received) : null;
         return $received ? $received->date : $this->created_at;
     }
 
     public function getCalledDateAttribute()
     {
-        $called = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 2) : null;
+        $called = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', self::$assigned) : null;
         return $called ? $called->date : null;
     }
 
     public function getAppointmentDateAttribute()
     {
-        $appt = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 3) : null;
+        $appt = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', self::$scheduled) : null;
         return $appt ? $appt->date : null;
+    }
+
+    public function getAssessedDateAttribute()
+    {
+        $date = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', self::$assessed) : null;
+        return $date ? $date->date : null;
     }
 
     public function getCancelledDateAttribute()
     {
-        $date = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 4) : null;
+        $date = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', self::$cancelled) : null;
         return $date ? $date->date : null;
     }
 
     public function getOnHoldDateAttribute()
     {
-        $date = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', 5) : null;
+        $date = $this->requestDates ? $this->requestDates->firstWhere('request_date_type_id', self::$submitted) : null;
         return $date ? $date->date : null;
     }
 
@@ -347,7 +356,7 @@ class Request extends Model
     {
         $status = Str::snake($statusName);
         if (!$statusId = self::${$status}) {
-            throw new \RuntimeException(sprintf('Invalid Request Status: %s', $statusName));
+            throw new RuntimeException(sprintf('Invalid Request Status: %s', $statusName));
         }
 
         $this->request_status_id = $statusId;
