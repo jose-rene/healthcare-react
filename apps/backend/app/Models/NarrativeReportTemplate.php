@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property mixed $name
  * @property mixed $slug
  * @property mixed $template
+ * @property mixed $test_json
  * @property mixed $styles
  */
 class NarrativeReportTemplate extends Model
@@ -27,7 +28,12 @@ class NarrativeReportTemplate extends Model
         'name',
         'slug',
         'template',
+        'test_json',
         'styles',
+    ];
+
+    protected $casts = [
+        'test_json' => 'json',
     ];
 
     /*

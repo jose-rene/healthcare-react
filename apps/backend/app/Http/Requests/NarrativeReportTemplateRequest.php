@@ -9,9 +9,10 @@ class NarrativeReportTemplateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'     => [],
-            'template' => [],
-            'styles'   => [],
+            'name'      => [],
+            'template'  => [],
+            'test_json' => [],
+            'styles'    => [],
         ];
     }
 

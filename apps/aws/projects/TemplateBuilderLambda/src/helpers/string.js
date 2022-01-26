@@ -21,7 +21,15 @@ Handlebars.registerHelper("compare", function (v1, operator, v2, options) {
         }
         return options.inverse(this);
     }
-    return console.error("Error: Expression \"" + operator + "\" not found");
+    return console.error('Error: Expression "' + operator + '" not found');
+});
+
+Handlebars.registerHelper("isequal", function (value, comparison) {
+    return value === comparison;
+});
+
+Handlebars.registerHelper("contains", function (value, comparison) {
+    return value.includes(comparison);
 });
 
 exports.handlebarsTemplate = (templateString, object) => {
