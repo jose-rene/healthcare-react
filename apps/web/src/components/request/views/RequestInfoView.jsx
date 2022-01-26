@@ -11,6 +11,8 @@ import debounce from "lodash/debounce";
 const RequestInfoView = ({
     auth_number,
     requestCodes,
+    payerProfile: { classifications: payerClassifications = [] },
+    classificationId,
     openRequestInfo,
     toggleOpenRequestInfo,
     saveRequest,
@@ -22,8 +24,8 @@ const RequestInfoView = ({
         codes: [],
     });
 
-    // const [auth_number, setAuthNumber] = useState("");
     const [codes, setCodes] = useState([]);
+    const [classificationName, setClassificationName] = useState("");
 
     const updateData = (codeData) => {
         setCodes(codeData);
@@ -55,9 +57,14 @@ const RequestInfoView = ({
                 description: "",
             },
         ]);
+    }, [requestCodes]);
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    useEffect(() => {
+        const selected = payerClassifications.find(
+            (item) => item.id === classificationId
+        );
+        setClassificationName(selected?.name ?? "n/a");
+    }, [classificationId, payerClassifications]);
 
     const [{ loading }, fireSearch] = useApiCall({
         method: "get",
@@ -255,6 +262,12 @@ const RequestInfoView = ({
                     </Collapse>
                     <Collapse in={!openRequestInfo}>
                         <div>
+                            <Row className="mb-3">
+                                <Col className="fw-bold" sm={3}>
+                                    Classification
+                                </Col>
+                                <Col>{classificationName}</Col>
+                            </Row>
                             <Row className="mb-3">
                                 <Col className="fw-bold" sm={3}>
                                     Assessment ID

@@ -30,6 +30,7 @@ const RequestItemForm = ({
 }) => {
     // combine request type selects and request detail select into a group
     const [requestItemGroups, setRequestItemGroups] = useState([]);
+    const [classification, setClassification] = useState(null);
 
     // map id / name objects to react select value / label objects
     const mapOptions = (values) => {
@@ -44,10 +45,17 @@ const RequestItemForm = ({
         return options;
     };
     // get classification info by id from payer classifications
-    const getClassification = useCallback(
-        () => payerClassifications.find((item) => item.id === classificationId),
-        [payerClassifications, classificationId]
-    );
+    useEffect(() => {
+        if (!classificationId || !payerClassifications) {
+            return;
+        }
+        const found = payerClassifications.find(
+            (item) => item.id === classificationId
+        );
+        if (found) {
+            setClassification(found);
+        }
+    }, [payerClassifications, classificationId]);
 
     // console.log(getClassification());
     // add a new card for request items
@@ -58,7 +66,9 @@ const RequestItemForm = ({
             {
                 typeSelects: [
                     {
-                        options: mapOptions(getClassification().request_types),
+                        options: classification?.request_types
+                            ? mapOptions(classification.request_types)
+                            : [],
                         value: "",
                     },
                 ],
@@ -75,12 +85,13 @@ const RequestItemForm = ({
             // console.log(requestItems);
             // the array from which state will be constructed based upon the passed data
             const currentGroups = [];
-            const classification = getClassification();
             // build the requestitem groups from the top level
             requestItems.forEach((item, groupIndex) => {
                 // console.log(groupIndex, item.classification);
                 let foundReqTypes = {
-                    request_types: classification.request_types,
+                    request_types: classification?.request_types
+                        ? classification.request_types
+                        : [],
                 };
                 if (
                     item.request_type_parents &&
@@ -182,7 +193,9 @@ const RequestItemForm = ({
         }
         // populate the next select or request types
         // get the nested request_types to use
-        let reqTypes = getClassification().request_types;
+        let reqTypes = classification?.request_types
+            ? classification.request_types
+            : [];
         /* eslint-disable */
         if (index > 0) {
             for (i = 0; i < index; i++) {

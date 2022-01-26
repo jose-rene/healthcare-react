@@ -28,6 +28,7 @@ const RequestEditForm = ({ data }) => {
         clinician = null,
         reviewer = null,
         auth_number = "",
+        classification_id: classificationId,
         member: memberData = null,
         codes: requestCodes = [],
         request_items: requestItems = [],
@@ -265,6 +266,8 @@ const RequestEditForm = ({ data }) => {
                             {...{
                                 auth_number,
                                 requestCodes,
+                                classificationId,
+                                payerProfile,
                                 openRequestInfo,
                                 toggleOpenRequestInfo,
                                 saveRequest,
@@ -276,6 +279,7 @@ const RequestEditForm = ({ data }) => {
                             {...{
                                 requestItems,
                                 payerProfile,
+                                classificationId,
                                 openRequestItem,
                                 toggleOpenRequestItem,
                                 saveRequest,

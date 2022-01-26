@@ -64,21 +64,18 @@ const ConsiderationView = ({
                                                     variant="success"
                                                 >
                                                     <h6 className="mb-0">
-                                                        {`Request Item - ${item.classification_name} > ${item.full_name}`}
+                                                        {`${item.classification_name} > ${item.full_name}`}
                                                     </h6>
                                                 </ListGroup.Item>
                                                 {item.considerations.map(
-                                                    ({
-                                                        classification_name,
-                                                        name,
-                                                    }) => (
+                                                    ({ name }) => (
                                                         <ListGroup.Item
                                                             key={item.id}
                                                             className="bg-light"
                                                             as="li"
                                                         >
                                                             <h6 className="mb-0">
-                                                                {`${classification_name} > ${name}`}
+                                                                {name}
                                                             </h6>
                                                         </ListGroup.Item>
                                                     )
