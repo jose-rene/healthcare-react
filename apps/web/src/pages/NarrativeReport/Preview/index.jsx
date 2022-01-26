@@ -65,7 +65,7 @@ const NarrativeReportPreview = ({
 
                             <SubmitButton
                                 loading={loading || saving}
-                                label="Send"
+                                label="Save and email"
                                 name="submit"
                                 value="send"
                             />

@@ -54,7 +54,16 @@ export const template = (templateString, object) => {
     return templateObj(object);
 };
 
-export const handlebarsTemplate = (templateString, object) => {
+export const handlebarsTemplate = (templateString, objectValue) => {
+    let object = objectValue;
+
+    try {
+        object =
+            typeof objectValue === "string"
+                ? JSON.parse(objectValue)
+                : objectValue;
+    } catch {}
+
     try {
         const templateObj = Handlebars.compile(templateString);
         return templateObj(object);

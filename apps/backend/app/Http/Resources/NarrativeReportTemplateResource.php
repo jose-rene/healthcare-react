@@ -16,11 +16,12 @@ class NarrativeReportTemplateResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'       => $this->id,
-            'name'     => $this->name,
-            'slug'     => $this->slug,
-            'template' => $this->template,
-            'styles'   => $this->styles,
+            'id'        => $this->id,
+            'name'      => $this->name,
+            'slug'      => $this->slug,
+            'template'  => $this->template,
+            'test_json' => $this->test_json,
+            'styles'    => $this->styles,
         ];
     }
 }

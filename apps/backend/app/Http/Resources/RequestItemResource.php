@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\RequestType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -24,11 +23,14 @@ class RequestItemResource extends JsonResource
 
         return [
             'id'                   => $this->uuid,
+            'decision'             => $this->decision,
+            'assessment'           => $this->assessment,
             'considerations'       => ConsiderationResource::collection($this->defaultConsiderations()),
             'vendor_price'         => $this->vendor_price,
             'name'                 => $this->name,
-            'full_name'            => $parents ? $parents->map(fn($item) => $item['name'])->prepend($this->name)->join(' > ') : null,     
-            'request_type_id'      => (int) $this->request_type_id,
+            'full_name'            => $parents ? $parents->map(fn($item
+            ) => $item['name'])->prepend($this->name)->join(' > ') : null,
+            'request_type_id'      => (int)$this->request_type_id,
             'request_type_parents' => $parents ? $parents->map(fn($item) => $item['id']) : null,
             'details'              => RequestTypeDetailResource::collection($this->requestTypeDetails),
             'classification'       => $classification ? $classification->id : "",

@@ -2,9 +2,13 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin Member
+ */
 class MemberDetailResource extends JsonResource
 {
     /**
@@ -30,6 +34,7 @@ class MemberDetailResource extends JsonResource
             'payer'         => $this->payer ? new PayerDetailResource($this->payer) : null,
             'lob'           => $this->lob ? new LobResource($this->lob) : null,
             'dob'           => $this->dob->format('m/d/Y'),
+            'age'           => $this->age,
             'address'       => new AddressResource($address),
             'phone'         => new PhoneResource($this->mainPhone),
             'email'         => new EmailResource($this->mainEmail),
