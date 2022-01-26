@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- *
+ * @property string  $hcpcs
+ * @property integer $request_item_id
+ * @property integer $request_type_id
+ * @property boolean $is_default
+ * @property boolean $is_recommended
+ * @property string  $summary
  **/
 class Consideration extends Model
 {
