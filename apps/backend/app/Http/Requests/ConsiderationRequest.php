@@ -29,9 +29,9 @@ class ConsiderationRequest extends FormRequest
             'considerations.*.request_item'      => ['required', 'exists:request_items,uuid'],
             // 'considerations.*.request_type_id' => ['bail', 'required_if:is_default,false', 'exists:request_types,id'],
             'considerations.*.classification_id' => ['bail', 'required', 'exists:classifications,id'],
-            'considerations.*.summary'           => ['bail', 'required', 'min:2'],
             'considerations.*.is_default'        => ['bail', 'boolean'],
             'considerations.*.is_recommended'    => ['bail', 'required_if:is_default,true', 'boolean'],
+            'summary'                            => ['bail', 'required', 'min:2'],
         ];
     }
 
@@ -40,9 +40,9 @@ class ConsiderationRequest extends FormRequest
         return [
             'considerations.*.request_type_id.required_unless' => 'Request Type is required',
             'considerations.*.request_type_id.exists' => 'Request Type not found',
-            'considerations.*.summary.required' => 'Summary is required',
             'considerations.*.is_recommended.boolean' => 'Select yes/no that the consideration is recommended',
             'considerations.*.is_recommended.required_if' => 'Select yes/no that the consideration is recommended',
+            'summary.required' => 'Summary is required',
         ];
     }
 }

@@ -31,11 +31,11 @@ class RequestAssessmentController extends Controller
      */
     public function consideration(ModelRequest $request, ConsiderationRequest $formRequest)
     {
-        $considerations = collect($formRequest->validated()['considerations']);
+        $data = $formRequest->validated();
+        $considerations = collect($data['considerations']);
         $default = $considerations->firstWhere('is_default', true);
         // update the default consideration
         Consideration::find($default['id'])->update([
-            'summary'        => $default['summary'],
             'is_recommended' => $default['is_recommended'],
         ]);
         // get the associated request item
@@ -50,7 +50,6 @@ class RequestAssessmentController extends Controller
             ->each(function ($item, $key) use ($added, &$updated) {
             if (null !== ($found = $added->firstWhere('id', $item->id))) {
                 $update = $item->update([
-                    'summary'         => $found['summary'],
                     'request_type_id' => $found['request_type_id'],
                 ]);
                 $updated[] = $item->id;
@@ -65,10 +64,13 @@ class RequestAssessmentController extends Controller
             ->filter(fn($item) => empty($item['id']) || !in_array($item['id'], $updated))
             ->each(function ($item) use ($requestItem) {
                 $requestItem->considerations()->create([
-                    'summary'           => $item['summary'],
                     'request_type_id'   => $item['request_type_id'],
                 ]);
             });
+
+        if (!$requestItem->clinician_summary || $data['summary'] !== $requestItem->clinician_summary) {
+            $requestItem->update(['clinician_summary' => $data['summary']]);
+        }
 
         return response()->json(['message' => 'ok']);
     }

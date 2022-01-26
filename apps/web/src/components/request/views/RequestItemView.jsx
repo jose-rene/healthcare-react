@@ -9,7 +9,12 @@ import {
 } from "react-bootstrap";
 /* eslint-disable react/no-array-index-key */
 
-const RequestItemForm = ({ requestItems, payerProfile, openRequestItem }) => {
+const RequestItemForm = ({
+    requestItems,
+    payerProfile: { classifications: payerClassifications = [] },
+    classificationId,
+    openRequestItem,
+}) => {
     const [data, setData] = useState({
         type_name: "request-items",
         request_type_details: [],
@@ -18,14 +23,14 @@ const RequestItemForm = ({ requestItems, payerProfile, openRequestItem }) => {
     // console.log("req items ", disabled, requestItems);
 
     /* const [requestClassifications, setRequestClassifications] = useState([]);
-    console.log("classifications", payerProfile.classifications);
+    console.log("classifications", payerClassifications);
     useEffect(() => {
-        setRequestClassifications(payerProfile.classifications);
+        setRequestClassifications(payerClassifications);
     }, [requestData]); */
     // combine request type selects and request detail select into a group
     // eslint-disable-next-line
     const [requestItemGroups, setRequestItemGroups] = useState([]);
-
+    const [classification, setClassification] = useState(null);
     // console.log(requestItemGroups);
     // handle request details update
     const updateRequestDetails = (groups) => {
@@ -61,23 +66,35 @@ const RequestItemForm = ({ requestItems, payerProfile, openRequestItem }) => {
         // console.log("options ", options);
         return options;
     };
+    // get classification info by id from payer classifications
+    useEffect(() => {
+        if (!classificationId || !payerClassifications) {
+            return;
+        }
+        const found = payerClassifications.find(
+            (item) => item.id === classificationId
+        );
+        if (found) {
+            setClassification(found);
+        }
+    }, [payerClassifications, classificationId]);
     // add a new card for request items
     const addNewItemsCard = () => {
-        // console.log("classifications -> ", payerProfile.classifications);
+        // console.log("classifications -> ", payerClassifications);
         setRequestItemGroups((prevGroups) => [
             ...prevGroups,
             {
-                classification: {
-                    options: mapOptions(payerProfile.classifications ?? []),
-                    value: "",
-                },
                 typeSelects: [
-                    /* {
-                        options: mapOptions(payerProfile.request_types),
+                    {
+                        options: classification?.request_types
+                            ? mapOptions(classification.request_types)
+                            : [],
                         value: "",
-                    }, */
+                    },
                 ],
+                requestTypeId: null,
                 requestDetails: null,
+                comments: "",
             },
         ]);
     };
@@ -85,37 +102,28 @@ const RequestItemForm = ({ requestItems, payerProfile, openRequestItem }) => {
     useEffect(() => {
         // if there is previously saved data
         if (requestItems) {
+            // console.log(requestItems);
             // the array from which state will be constructed based upon the passed data
             const currentGroups = [];
             // build the requestitem groups from the top level
             requestItems.forEach((item, groupIndex) => {
                 // console.log(groupIndex, item.classification);
-                const classification = { request_types: [] };
-                if (item.classification) {
-                    const found = payerProfile.classifications.find(
-                        (what) => item.classification === what.id
-                    );
-                    if (found?.request_types) {
-                        classification.request_types = found.request_types;
-                    }
-                    // console.log("classification -> ", classification);
-                }
                 let foundReqTypes = {
-                    request_types: classification.request_types,
+                    request_types: classification?.request_types
+                        ? classification.request_types
+                        : [],
+                };
+                // the group at this index
+                currentGroups[groupIndex] = {
+                    typeSelects: [],
+                    requestTypeId: item.request_type_id ?? null,
+                    requestDetails: null,
+                    comments: "",
                 };
                 if (
                     item.request_type_parents &&
                     item.request_type_parents.length
                 ) {
-                    // the group at this index
-                    currentGroups[groupIndex] = {
-                        classification: {
-                            options: mapOptions(payerProfile.classifications),
-                            value: item.classification ?? "",
-                        },
-                        typeSelects: [],
-                        requestDetails: null,
-                    };
                     // build the menus for each request type from the parent chain;
                     item.request_type_parents.forEach((typeId, i) => {
                         // console.log("parent ", i, typeId);
@@ -161,14 +169,18 @@ const RequestItemForm = ({ requestItems, payerProfile, openRequestItem }) => {
                 }
             });
             // set state
-            updateRequestDetails(currentGroups);
+            setRequestItemGroups(currentGroups);
+            // updateRequestDetails(currentGroups);
             // return;
+        } else {
+            // reset
+            setRequestItemGroups([]);
         }
         // otherwise populate the initial group select by adding a new card
         addNewItemsCard();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [payerProfile]);
+    }, [requestItems]);
     // set params when request items change
     /* useEffect(() => {
         setParams(data);
@@ -180,13 +192,13 @@ const RequestItemForm = ({ requestItems, payerProfile, openRequestItem }) => {
     //     // get the value
     //     const { value } = selected;
     //     // find the selected item for the request types
-    //     const selectedItem = payerProfile.classifications.find(
+    //     const selectedItem = payerClassifications.find(
     //         (item) => item.id === value
     //     );
     //     // this will basically clear out all selects and add a blank request type select
     //     const updatedGroup = {
     //         classification: {
-    //             options: mapOptions(payerProfile.classifications),
+    //             options: mapOptions(payerClassifications),
     //             value,
     //         },
     //         typeSelects: [
@@ -229,7 +241,7 @@ const RequestItemForm = ({ requestItems, payerProfile, openRequestItem }) => {
     //     // populate the next select or request types
     //     // get the nested request_types to use
     //     // search in classifications for selected and get req types
-    //     const selectedClassification = payerProfile.classifications.find(
+    //     const selectedClassification = payerClassifications.find(
     //         (item) => item.id === currentGroups[groupIndex].classification.value
     //     );
     //     let reqTypes = selectedClassification.request_types;

@@ -54,21 +54,21 @@ const PageLayout = ({ loading: childloading = false, children }) => {
         }));
     }, [_roles]);
 
-    const [{ loading }, fireSavePrimaryRole] = useApiCall({
+    const [{ loading: switchLoading }, fireSavePrimaryRole] = useApiCall({
         url: "user/profile",
         method: PUT,
     });
 
-    const handleRoleSwitch = async ({ target: { name, value } }) => {
+    const handleRoleSwitch = async ({ target: { value } }) => {
         if (value !== primaryRole) {
-            await fireSavePrimaryRole({
+            const data = await fireSavePrimaryRole({
                 params: {
                     primary_role: value,
                 },
             });
-
-            if (!loading) {
-                window.location.reload();
+            if (data) {
+                window.location.assign("/dashboard");
+                // initUser(data);
             }
         }
     };
@@ -144,7 +144,7 @@ const PageLayout = ({ loading: childloading = false, children }) => {
                     {...{ logOut, primaryRole, abilities, open }}
                 />
                 <div className="p-3 flex-grow-1 layuot">
-                    {childloading ? (
+                    {childloading || switchLoading ? (
                         <div className="text-center">
                             <Spinner animation="border" variant="secondary" />
                         </div>
