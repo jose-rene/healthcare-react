@@ -14,7 +14,7 @@ class AddNarrativeReportTestJson extends Migration
     public function up()
     {
         Schema::table('narrative_report_templates', function (Blueprint $table) {
-            $table->longText('test_json')->nullable()->after('template')->default(json_encode([]));
+            $table->longText('test_json')->nullable()->after('template');
         });
     }
 
