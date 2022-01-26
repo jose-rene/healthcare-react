@@ -171,7 +171,7 @@ class ActivityTest extends TestCase
         // validate data
         $response
             ->assertStatus(201)
-            ->assertJsonStructure(['id', 'message', 'type', 'activities'])
+            ->assertJsonStructure(['id', 'message', 'type', 'activities', 'type'])
             ->assertJsonPath('message', $formData['message'])
             ->assertJsonPath('priority', $formData['priority'])
             ->assertJsonPath('user_id', $this->user->id);
