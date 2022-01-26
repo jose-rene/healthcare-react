@@ -17,7 +17,8 @@ class RequestItemResource extends JsonResource
     public function toArray($request)
     {
         // the parent request types
-        $parents = $this->requestType && $this->requestType->ancestors ? collect(array_reverse($this->mapParents($this->requestType->ancestors, true))) : null;
+        $ancestors = $this->requestType && $this->requestType->ancestors ? $this->mapParents($this->requestType->ancestors) : null;
+        $parents = $this->requestType && $this->requestType->ancestors ? collect(array_reverse($ancestors, true)) : null;
         // the related classification, will be related to the top parent
         $classification = $this->requestType ? $this->requestType->topClassification : null;
 
@@ -32,6 +33,7 @@ class RequestItemResource extends JsonResource
             'details'              => RequestTypeDetailResource::collection($this->requestTypeDetails),
             'classification'       => $classification ? $classification->id : "",
             'classification_name'  => $classification ? $classification->name : "",
+            'summary'              => $this->clinician_summary,
             // ->pluck('name', 'id'),
         ];
     }

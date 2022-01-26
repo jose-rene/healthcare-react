@@ -59,7 +59,6 @@ class ConsiderationRequestTest extends TestCase
                 'request_item'      => $requestItem->uuid,
                 'request_type_id'   => $defaultConsideration['request_type_id'],
                 'classification_id' => $defaultConsideration['classification'],
-                'summary'           => 'This is a summary.',
                 'is_default'        => true,
                 'is_recommended'    => true,
             ],
@@ -67,11 +66,14 @@ class ConsiderationRequestTest extends TestCase
                 'request_item'      => $requestItem->uuid,
                 'request_type_id'   => $types[0],
                 'classification_id' => (int) $classificationId,
-                'summary'           => 'This is an additional consideration summary.'
             ],
         ];
+        $formData = [
+            'considerations' => $considerations,
+            'summary'        => 'This is the summary.',
+        ];
         // add / update the considerations
-        $response = $this->json('POST', route('api.request.assessment.consideration', ['request' => $this->request->uuid]), ['considerations' => $considerations]);
+        $response = $this->json('POST', route('api.request.assessment.consideration', ['request' => $this->request->uuid]), $formData);
         // verify success
         $response
             ->assertSuccessful();
@@ -85,20 +87,20 @@ class ConsiderationRequestTest extends TestCase
             ->assertJsonStructure([
                 'request_items' => [['considerations']],
             ])
+            ->assertJsonPath('request_items.0.summary', $formData['summary'])
             ->assertJsonPath('request_items.0.considerations.0.is_default', true)
             ->assertJsonPath('request_items.0.considerations.0.is_recommended', true)
-            ->assertJsonPath('request_items.0.considerations.0.summary', $considerations[0]['summary'])
-            ->assertJsonPath('request_items.0.considerations.1.summary', $considerations[1]['summary'])
             ->assertJsonPath('request_items.0.considerations.1.request_type_id', $considerations[1]['request_type_id']);
         
         // get the data for the added consideration
         $considerationData = $response->json()['request_items'][0]['considerations'][1];
         // change the consideration data
         $considerations[1]['id'] = $considerationData['id'];
-        $considerations[1]['summary'] = 'This is an updated summary';
+        $formData['considerations'] = $considerations;
+        $formData['summary'] = 'This is an updated summary.';
 
         // update the added consideration
-        $response = $this->json('POST', route('api.request.assessment.consideration', ['request' => $this->request->uuid]), ['considerations' => $considerations]);
+        $response = $this->json('POST', route('api.request.assessment.consideration', ['request' => $this->request->uuid]), $formData);
         // verify success
         $response
             ->assertSuccessful();
@@ -112,8 +114,8 @@ class ConsiderationRequestTest extends TestCase
             ->assertJsonStructure([
                 'request_items' => [['considerations']],
             ])
+            ->assertJsonPath('request_items.0.summary', $formData['summary'])
             ->assertJsonCount(2, 'request_items.0.considerations')
-            ->assertJsonPath('request_items.0.considerations.1.summary', $considerations[1]['summary'])
             ->assertJsonPath('request_items.0.considerations.1.request_type_id', $considerations[1]['request_type_id']);
     }
 

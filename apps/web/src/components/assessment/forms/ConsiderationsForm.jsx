@@ -21,6 +21,7 @@ const ConsiderationForm = ({
     } = requestItem;
     // the default classification details from the classification id in request item
     const [classification, setClassification] = useState(null);
+    const [summary, setSummary] = useState("");
     // combine request type selects for considerations in a group
     const [considerationGroups, setConsiderationGroups] = useState([]);
 
@@ -135,6 +136,10 @@ const ConsiderationForm = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [classificationId]);
 
+    useEffect(() => {
+        setSummary(requestItem?.summary ?? "");
+    }, [requestItem]);
+
     const handleSelectChange = (
         selected,
         { action = null },
@@ -226,10 +231,8 @@ const ConsiderationForm = ({
         setConsiderationGroups(currentGroups);
     };
 
-    const handleSummary = (e, index) => {
-        const currentGroups = [...considerationGroups];
-        currentGroups[index].summary = e.target.value;
-        setConsiderationGroups(currentGroups);
+    const handleSummary = (e) => {
+        setSummary(e.target.value);
     };
 
     const handleGroupRemove = (index) => {
@@ -261,7 +264,7 @@ const ConsiderationForm = ({
 
     const handleSave = () => {
         // console.log(data);
-        const params = { considerations: [] };
+        const params = { considerations: [], summary };
         considerationGroups
             .filter(
                 ({ request_type_id, is_default }) =>
@@ -283,7 +286,6 @@ const ConsiderationForm = ({
                         classification_id,
                         request_type_id,
                         request_item,
-                        summary,
                     };
                     if (item.is_default) {
                         item.is_recommended = is_recommended;
@@ -318,7 +320,6 @@ const ConsiderationForm = ({
                     (
                         {
                             classification_name,
-                            summary,
                             name,
                             is_default,
                             is_recommended,
@@ -363,18 +364,22 @@ const ConsiderationForm = ({
                                                 key="no"
                                                 onClick={handleRecommended}
                                             />
-                                            <Textarea
-                                                className="form-control mt-2"
-                                                label="Summary"
-                                                id={`summary_${groupIndex}`}
-                                                name="summary"
-                                                type="textarea"
-                                                value={summary}
-                                                rows={5}
-                                                onChange={(e) =>
-                                                    handleSummary(e, groupIndex)
-                                                }
-                                            />
+                                            {null !== is_recommended && (
+                                                <Textarea
+                                                    className="form-control mt-2"
+                                                    label="Summary"
+                                                    name="summary"
+                                                    type="textarea"
+                                                    value={summary}
+                                                    rows={5}
+                                                    onChange={(e) =>
+                                                        handleSummary(
+                                                            e,
+                                                            groupIndex
+                                                        )
+                                                    }
+                                                />
+                                            )}
                                         </Card.Body>
                                     </Card>
                                     <h5 className="my-3">
@@ -391,7 +396,7 @@ const ConsiderationForm = ({
                                                 request_type_id ? "" : " d-none"
                                             }`}
                                         />
-                                        {classification_name}
+                                        Consideration {groupIndex}
                                         {request_type_id && (
                                             <FapIcon
                                                 icon="delete"
@@ -411,9 +416,7 @@ const ConsiderationForm = ({
                                             ({ options, value }, index) => (
                                                 <>
                                                     {index === 0 && (
-                                                        <h6 className="mt-3">
-                                                            Type
-                                                        </h6>
+                                                        <h6>Request Type</h6>
                                                     )}
                                                     <Select2
                                                         className="basic-single mt-2"
@@ -446,20 +449,6 @@ const ConsiderationForm = ({
                                                     />
                                                 </>
                                             )
-                                        )}
-                                        {request_type_id && (
-                                            <Textarea
-                                                className="form-control mt-2"
-                                                label="Summary"
-                                                id={`summary_${groupIndex}`}
-                                                name="summary"
-                                                type="textarea"
-                                                value={summary}
-                                                rows={5}
-                                                onChange={(e) =>
-                                                    handleSummary(e, groupIndex)
-                                                }
-                                            />
                                         )}
                                     </Card.Body>
                                 </Card>
