@@ -44,6 +44,7 @@ const RequestItemForm = ({
         // console.log("options ", options);
         return options;
     };
+
     // get classification info by id from payer classifications
     useEffect(() => {
         if (!classificationId || !payerClassifications) {
@@ -57,7 +58,6 @@ const RequestItemForm = ({
         }
     }, [payerClassifications, classificationId]);
 
-    // console.log(getClassification());
     // add a new card for request items
     const addNewItemsCard = () => {
         // console.log("classifications -> ", payerClassifications);
@@ -78,8 +78,13 @@ const RequestItemForm = ({
             },
         ]);
     };
+
     // populate the initial request type selects
     useEffect(() => {
+        if (!classification) {
+            // needed to populate request types
+            return;
+        }
         // if there is previously saved data
         if (requestItems) {
             // console.log(requestItems);
@@ -93,17 +98,17 @@ const RequestItemForm = ({
                         ? classification.request_types
                         : [],
                 };
+                // the group at this index
+                currentGroups[groupIndex] = {
+                    typeSelects: [],
+                    requestTypeId: item.request_type_id ?? null,
+                    requestDetails: null,
+                    comments: "",
+                };
                 if (
                     item.request_type_parents &&
                     item.request_type_parents.length
                 ) {
-                    // the group at this index
-                    currentGroups[groupIndex] = {
-                        typeSelects: [],
-                        requestTypeId: item.request_type_id ?? null,
-                        requestDetails: null,
-                        comments: "",
-                    };
                     // build the menus for each request type from the parent chain;
                     item.request_type_parents.forEach((typeId, i) => {
                         // console.log("parent ", i, typeId);
@@ -160,7 +165,7 @@ const RequestItemForm = ({
         addNewItemsCard();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [requestItems]);
+    }, [requestItems, classification]);
     // set params when request items change
     /* useEffect(() => {
         setParams(data);
@@ -429,7 +434,9 @@ const RequestItemForm = ({
                                                     <Card.Body>
                                                         {selectGroup.typeSelects.map(
                                                             (select, index) => (
-                                                                <>
+                                                                <React.Fragment
+                                                                    key={`reqtype_${index}`}
+                                                                >
                                                                     {index ===
                                                                         0 && (
                                                                         <h6 className="mt-3">
@@ -469,7 +476,7 @@ const RequestItemForm = ({
                                                                             )
                                                                         }
                                                                     />
-                                                                </>
+                                                                </React.Fragment>
                                                             )
                                                         )}
                                                         {selectGroup.requestDetails && (

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Card, Col, Collapse, ListGroup, Row } from "react-bootstrap";
+import useApiCall from "hooks/useApiCall";
 import FapIcon from "components/elements/FapIcon";
 import ConsiderationForm from "../forms/ConsiderationsForm";
 
@@ -12,7 +13,8 @@ const ConsiderationView = ({
     refreshLoading,
 }) => {
     // which request item is in context for consideration form
-    const [activeRequestItem, setRequestItem] = useState({});
+    const [activeRequestItem, setRequestItem] = useState();
+    const [classification, setClassification] = useState(null);
     // open consideration form for a request item
     const doConsideration = (id) => {
         const item = requestItems.find((i) => i.id === id);
@@ -21,6 +23,34 @@ const ConsiderationView = ({
             toggleOpenConsideration(true);
         }
     };
+    // get classification data from the api
+    // eslint-disable-next-line
+    const [{ loading: classificationLoading }, fetchClassification] =
+        useApiCall();
+
+    useEffect(() => {
+        if (!requestItems?.length) {
+            return;
+        }
+        // fetch the classification from id
+        const fetchData = async (id) => {
+            const data = await fetchClassification({
+                url: `classification/${id}`,
+            });
+            return data;
+        };
+        fetchData(requestItems[0].classification)
+            .then((data) => {
+                setClassification(data);
+                /* considerations.forEach((item) => {
+                    addNewCard(data, item);
+                });
+                // add a new card for another consideration to be added
+                addNewCard(data); */
+            })
+            .catch((e) => console.log(e));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [requestItems]);
 
     return (
         <>
@@ -39,6 +69,7 @@ const ConsiderationView = ({
                                 {...{
                                     toggleOpenConsideration,
                                     activeRequestItem,
+                                    classification,
                                     requestId,
                                     refreshAssessment,
                                     refreshLoading,
@@ -59,18 +90,19 @@ const ConsiderationView = ({
                                                 numbered="numbered"
                                             >
                                                 <ListGroup.Item
-                                                    key={item.id}
+                                                    key={`ri_${item.id}`}
                                                     as="li"
                                                     variant="success"
                                                 >
                                                     <h6 className="mb-0">
-                                                        {`${item.classification_name} > ${item.full_name}`}
+                                                        Request Item
+                                                        {item.full_name}
                                                     </h6>
                                                 </ListGroup.Item>
                                                 {item.considerations.map(
-                                                    ({ name }) => (
+                                                    ({ name, id }) => (
                                                         <ListGroup.Item
-                                                            key={item.id}
+                                                            key={`cs_${id}`}
                                                             className="bg-light"
                                                             as="li"
                                                         >
