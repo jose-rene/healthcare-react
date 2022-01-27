@@ -191,7 +191,11 @@ const useFormBuilder = ({ form_slug = undefined, request_id } = {}) => {
             const { autofill = false } = props;
 
             if (autofill) {
-                set(flatAutoFillRules, `${custom_name}.autofill`, autofill);
+                set(
+                    flatAutoFillRules,
+                    `${custom_name}.autofill`,
+                    autofill.split("\n")
+                );
             }
 
             checkForValidation(_element, fieldValidation);
