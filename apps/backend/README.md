@@ -12,7 +12,7 @@ libs. Add `App\Interfaces\ToPDF $toPDF` as a param you can see the provider here
 Using the provider singleton is nice because the whole application uses one instance of the PDFLib code and if we switch
 away from pdf lib that is the only place to make the change.
 
-Sample usage
+Sample usage:
 
 ```injectablephp
 $template = <<<TEMPLATE

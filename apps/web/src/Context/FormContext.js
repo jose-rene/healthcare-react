@@ -52,31 +52,23 @@ const FormProvider = ({
     const [preSubmitCallbacks, setPreSubmitCallbacks] = useState(null);
 
     // eslint-disable-next-line
-    const debouncedOnFormChange = useCallback(
-        /** @type {function(any, any):void} */
-        debounce((tick, autoFillTick) => {
-            if (tick !== null) {
-                setTick(tick + 1);
-            }
-
-            if (_formBuilder && autoFillTick !== null) {
-                setAutoFillTick(autoFillTick + 1);
-            }
-        }, debounceMs),
-        []
-    );
-
     const debounceAutoFillTick = useCallback(
-        /** @type {function(any, any):void} */
-        debounce((tick, autoFillTick) => {
-            if (tick !== null) {
-                setTick(tick + 1);
-            }
-
+        /** @type {function(any):void} */
+        debounce((autoFillTick) => {
             if (_formBuilder && autoFillTick !== null) {
                 setAutoFillTick(autoFillTick + 1);
             }
         }, 500),
+        []
+    );
+
+    const debouncedOnFormChange = useCallback(
+        /** @type {function(any):void} */
+        debounce((tick) => {
+            if (tick !== null) {
+                setTick(tick + 1);
+            }
+        }, debounceMs),
         []
     );
 
@@ -113,6 +105,10 @@ const FormProvider = ({
 
     // after onSubmit validate the fields onChange
     useEffect(() => {
+        if (onFormChange) {
+            debouncedOnFormChange(tick);
+        }
+
         if (validated) {
             validateForm();
         }
@@ -136,14 +132,6 @@ const FormProvider = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [autoFillTick]);
 
-    useEffect(() => {
-        if (autoFillTick !== null && _formBuilder) {
-            handleAutofill(form);
-        }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [autoFillTick]);
-
     const handleAutofill = useCallback(
         (_form) => {
             const autoFillerKeys = Object.keys(autoFiller || {});
@@ -151,7 +139,8 @@ const FormProvider = ({
             if (_formBuilder && autoFillerKeys.length > 0) {
                 autoFillerKeys.forEach((autofillInputName) => {
                     let foundValue = "!~!";
-                    const _rules = autoFiller[autofillInputName];
+                    const _rules =
+                        autoFiller[autofillInputName]?.autofill || [];
 
                     if (_rules.length > 0) {
                         _rules.forEach((r) => {
@@ -208,6 +197,7 @@ const FormProvider = ({
             const {
                 rules = [],
                 customRule = "",
+                customValidation = "",
                 yupSchema,
                 callback,
             } = validationRules[fieldName];
@@ -249,6 +239,16 @@ const FormProvider = ({
             // custom rule
             if (!errorTest[fieldName] && customRule.length > 0) {
                 const result = jsEval(customRule, form, { strict: true });
+                if (result && result.length > 0) {
+                    errorTest = {
+                        ...errorTest,
+                        [fieldName]: { message: result },
+                    };
+                }
+            }
+
+            if (!errorTest[fieldName] && customValidation.length > 0) {
+                const result = jsEval(customValidation, form, { strict: true });
                 if (result && result.length > 0) {
                     errorTest = {
                         ...errorTest,
@@ -307,7 +307,7 @@ const FormProvider = ({
         const oldForm = { ..._form };
         set(oldForm, name, value);
         setForm(() => oldForm);
-        debounceAutoFillTick(tick, autoFillTick);
+        debounceAutoFillTick(autoFillTick);
     };
 
     const objUpdate = (obj) => {
@@ -317,7 +317,7 @@ const FormProvider = ({
         });
         setForm(() => oldForm);
 
-        debounceAutoFillTick(tick, autoFillTick);
+        debounceAutoFillTick(autoFillTick);
     };
 
     const onChange = ({ target: { name, value, type = "text" } }) => {
@@ -329,7 +329,7 @@ const FormProvider = ({
         }
         setForm(() => oldForm);
 
-        debounceAutoFillTick(tick, autoFillTick);
+        debounceAutoFillTick(autoFillTick);
     };
 
     const clear = () => {
@@ -349,14 +349,18 @@ const FormProvider = ({
 
     const shouldShow = useCallback(
         (rule, { name, elementIndex: rowIndex = 0 }) => {
+            if (!rule) {
+                return true;
+            }
+
             try {
                 const template = rule.replace(
-                    /\.?@index\.?/gi,
-                    "[" + rowIndex.toString() + "]."
+                    /[\[.]@index[\].]/gi,
+                    "[" + rowIndex.toString() + "]"
                 );
 
                 return jsEval(template, form);
-            } catch (e) {}
+            } catch (err) {}
             return false;
         },
 
