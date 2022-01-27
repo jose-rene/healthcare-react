@@ -177,8 +177,8 @@ const RequestsTable = () => {
         {
             searchObj: {
                 ...{
-                    sortColumn: headers[4].columnMap, // set 'received' as default
-                    sortDirection: "asc",
+                    sortColumn: "created_at",
+                    sortDirection: "desc",
                     perPage: 10,
                     filter: "0",
                     is_clinician: "0",
