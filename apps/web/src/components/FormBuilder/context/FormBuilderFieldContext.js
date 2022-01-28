@@ -75,7 +75,6 @@ export const FormBuilderProvider = ({
                 formBuilderHook,
             }}
         >
-            <pre>{JSON.stringify(fieldVisibility, null, 2)}</pre>
             {children}
         </FormBuilderFieldContext.Provider>
     );

@@ -8,6 +8,7 @@ import PageTitle from "components/PageTitle";
 import AssessmentEditForm from "components/assessment/AssessmentEditForm";
 
 import useApiCall from "hooks/useApiCall";
+import { AssessmentProvider } from "../../Context/AssessmentContext";
 
 const Assessment = (props) => {
     const { id } = useParams();
@@ -42,47 +43,52 @@ const Assessment = (props) => {
 
     return (
         <PageLayout>
-            <Container fluid>
-                <Row className="justify-content-lg-center">
-                    <Col xl={10}>
-                        <PageTitle title="Assessment" onBack={handleBack} />
-                    </Col>
-                </Row>
+            <AssessmentProvider>
+                <Container fluid>
+                    <Row className="justify-content-lg-center">
+                        <Col xl={10}>
+                            <PageTitle title="Assessment" onBack={handleBack} />
+                        </Col>
+                    </Row>
 
-                <Row className="justify-content-lg-center">
-                    <Col xl={10}>
-                        <Alert variant="success" className="px-4 py-3">
-                            <div className="d-flex align-items-center w-100">
-                                <div>
-                                    <h5 className="mb-0">
-                                        {data?.member?.name}
-                                    </h5>
-                                    <h5 className="mb-0">
-                                        {data?.member?.address?.address_1}{" "}
-                                        {data?.member?.address?.city}
-                                        {data?.member && ","}{" "}
-                                        {data?.member?.address?.state}{" "}
-                                        {data?.member?.address?.postal_code}
-                                    </h5>
-                                    <h5 className="mb-0">
-                                        {data?.member?.phone?.number}
-                                    </h5>
+                    <Row className="justify-content-lg-center">
+                        <Col xl={10}>
+                            <Alert variant="success" className="px-4 py-3">
+                                <div className="d-flex align-items-center w-100">
+                                    <div>
+                                        <h5 className="mb-0">
+                                            {data?.member?.name}
+                                        </h5>
+                                        <h5 className="mb-0">
+                                            {data?.member?.address?.address_1}{" "}
+                                            {data?.member?.address?.city}
+                                            {data?.member && ","}{" "}
+                                            {data?.member?.address?.state}{" "}
+                                            {data?.member?.address?.postal_code}
+                                        </h5>
+                                        <h5 className="mb-0">
+                                            {data?.member?.phone?.number}
+                                        </h5>
+                                    </div>
+                                    <div className="ms-auto">
+                                        <p className="fs-7 mb-2 text-muted">
+                                            Date of Birth
+                                        </p>
+                                        <h6 className="mb-0">
+                                            {data?.member?.dob}
+                                        </h6>
+                                    </div>
                                 </div>
-                                <div className="ms-auto">
-                                    <p className="fs-7 mb-2 text-muted">
-                                        Date of Birth
-                                    </p>
-                                    <h6 className="mb-0">
-                                        {data?.member?.dob}
-                                    </h6>
-                                </div>
-                            </div>
-                        </Alert>
-                    </Col>
-                </Row>
+                            </Alert>
+                        </Col>
+                    </Row>
 
-                <AssessmentEditForm reasonOptions={reasonOptions} data={data} />
-            </Container>
+                    <AssessmentEditForm
+                        reasonOptions={reasonOptions}
+                        data={data}
+                    />
+                </Container>
+            </AssessmentProvider>
         </PageLayout>
     );
 };

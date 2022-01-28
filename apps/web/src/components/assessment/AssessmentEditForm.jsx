@@ -12,6 +12,7 @@ import MediaView from "./views/MediaView";
 import ConsiderationView from "./views/ConsiderationView";
 import AssessmentView from "./views/AssessmentView";
 import DiagnosisView from "./views/DiagnosisView";
+import { useAssessmentContext } from "../../Context/AssessmentContext";
 
 const AssessmentEditForm = ({ reasonOptions, data }) => {
     const [assessmentData, setAssessmentData] = useState({});
@@ -26,6 +27,8 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
         ],
         setToggler,
     ] = useState([false, false, false, false, false, false]);
+
+    const { sectionsCompleted } = useAssessmentContext();
 
     useEffect(() => {
         if (data) {
@@ -246,7 +249,9 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                             </Col>
                         ) : null}
                         <Col xl={10}>
-                            <Button className="mt-3">Submit</Button>
+                            <Button className="mt-3" active={sectionsCompleted}>
+                                Submit
+                            </Button>
                         </Col>
                     </>
                 )}

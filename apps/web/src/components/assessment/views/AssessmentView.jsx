@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Card, Collapse } from "react-bootstrap";
 
 import ShowFormSection from "../ShowFormSection";
+import AssessmentSectionHeader from "./AssessmentSectionHeader";
 
 const AssessmentView = ({ forms, assessmentName, requestId }) => {
     const [formToggle, setFormToggle] = useState([]);
@@ -41,30 +42,30 @@ const AssessmentView = ({ forms, assessmentName, requestId }) => {
                             className="border-1 border-0 bg-light mb-3"
                         >
                             <Card.Header className="bg-light border-0 py-0">
-                                <div className="d-flex">
-                                    <div>
-                                        <h5 className="ms-2">
-                                            <a
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    toggleForm(formIndex);
-                                                }}
-                                                style={{ cursor: "pointer" }}
-                                            >
-                                                <FapIcon
-                                                    icon={
-                                                        isFormOpen(formIndex)
-                                                            ? "minus"
-                                                            : "plus"
-                                                    }
-                                                    size="sm"
-                                                    className="me-1"
-                                                />
-                                                {name}
-                                            </a>
-                                        </h5>
-                                    </div>
-                                </div>
+                                <h5 className="">
+                                    <a
+                                        className="d-flex text-decoration-none"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            toggleForm(formIndex);
+                                        }}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <FapIcon
+                                            icon={
+                                                isFormOpen(formIndex)
+                                                    ? "minus"
+                                                    : "plus"
+                                            }
+                                            size="sm"
+                                            className="me-1 flex-grow-0"
+                                        />
+                                        <AssessmentSectionHeader
+                                            sectionName={slug}
+                                            title={name}
+                                        />
+                                    </a>
+                                </h5>
                             </Card.Header>
                             <Card.Body className="pt-0">
                                 <Collapse in={isFormOpen(formIndex)}>

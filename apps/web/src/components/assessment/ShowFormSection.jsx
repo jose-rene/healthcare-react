@@ -4,9 +4,11 @@ import Form from "../elements/Form";
 import RenderForm from "../FormBuilder/RenderForm";
 import FormLoadingSpinner from "../forms/FormLoadingSpinner";
 import FormBuilderWrapper from "../FormBuilder/FormBuilderWrapper";
+import { useAssessmentContext } from "../../Context/AssessmentContext";
 
 const ShowFormSection = ({ requestId, formSlug, name }) => {
     const [formDataLoaded, setFormDataLoaded] = useState(false);
+    const { update: assetUpdate, sectionsCompleted } = useAssessmentContext();
     const formBuilderHook = useFormBuilder({
         form_slug: formSlug,
         request_id: requestId,
@@ -15,6 +17,10 @@ const ShowFormSection = ({ requestId, formSlug, name }) => {
         { form, defaultAnswers, formLoading },
         { fireLoadForm, fireSaveAnswers },
     ] = formBuilderHook;
+
+    useEffect(() => {
+        assetUpdate(formSlug, { ...defaultAnswers });
+    }, [defaultAnswers]);
 
     useEffect(() => {
         (async () => {
@@ -50,7 +56,9 @@ const ShowFormSection = ({ requestId, formSlug, name }) => {
     }, [form]);
 
     const handleSubmit = (formValues) => {
-        fireSaveAnswers({ ...formValues, completed_form: true });
+        const values = { ...formValues, completed_form: true };
+        assetUpdate(formSlug, values);
+        fireSaveAnswers(values);
     };
 
     const handleFormChange = (formValues) => {
@@ -58,6 +66,7 @@ const ShowFormSection = ({ requestId, formSlug, name }) => {
             return false;
         }
 
+        assetUpdate(formSlug, formValues);
         fireSaveAnswers({ ...formValues, completed_form: false });
     };
 
