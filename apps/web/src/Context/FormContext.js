@@ -355,7 +355,7 @@ const FormProvider = ({
 
             try {
                 const template = rule.replace(
-                    /[\[.]@index[\].]/gi,
+                    /[[.]@index[\].]/gi,
                     "[" + rowIndex.toString() + "]"
                 );
 

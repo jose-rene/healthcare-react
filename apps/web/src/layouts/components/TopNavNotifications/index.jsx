@@ -6,6 +6,8 @@ import FapIcon from "components/elements/FapIcon";
 
 import { useGlobalContext } from "Context/GlobalContext";
 
+import { getIcon } from "helpers/iconophy";
+
 import "./index.scss";
 
 const TopNavNotifications = () => {
@@ -96,7 +98,7 @@ const TopNavNotifications = () => {
                                     >
                                         <strong className="default me-1">
                                             <FapIcon
-                                                icon="envelope"
+                                                icon={getIcon(m.type)}
                                                 size="1x"
                                             />
                                         </strong>

@@ -7,6 +7,7 @@ import {
     ListGroupItem,
     Row,
 } from "react-bootstrap";
+
 /* eslint-disable react/no-array-index-key */
 
 const RequestItemForm = ({
@@ -33,6 +34,8 @@ const RequestItemForm = ({
     const [classification, setClassification] = useState(null);
     // console.log(requestItemGroups);
     // handle request details update
+
+    // eslint-disable-next-line
     const updateRequestDetails = (groups) => {
         setRequestItemGroups(groups);
         const requestDetails = [];
