@@ -1,13 +1,16 @@
 import React, { useEffect } from "react";
-import { Col, Card, Row } from "react-bootstrap";
-import ContextInput from "../../../../components/inputs/ContextInput";
-import FancyEditor from "../../../../components/elements/FancyEditor";
-import SubmitButton from "../../../../components/elements/SubmitButton";
 import { Link } from "react-router-dom";
+import { Col, Card, Row } from "react-bootstrap";
 import { get } from "lodash";
-import { handlebarsTemplate } from "../../../../helpers/string";
-import Select from "../../../../components/contextInputs/Select";
-import { useFormContext } from "../../../../Context/FormContext";
+
+import { useFormContext } from "Context/FormContext";
+
+import ContextInput from "components/inputs/ContextInput";
+import FancyEditor from "components/elements/FancyEditor";
+import SubmitButton from "components/elements/SubmitButton";
+import Select from "components/contextInputs/Select";
+
+import { handlebarsTemplate } from "helpers/string";
 
 const NarrativeReportEditorForm = ({
     saving = false,
@@ -28,11 +31,15 @@ const NarrativeReportEditorForm = ({
         addPreSubmitCallback(({ form: cleanForm }) => {
             return { ...cleanForm, test_json: JSON.parse(cleanForm.test_json) };
         });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         const reportIndex = reports.findIndex((r) => r.id === selectedReport);
         update("test_json", JSON.stringify(reports[reportIndex], null, 2));
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedReport]);
 
     return (

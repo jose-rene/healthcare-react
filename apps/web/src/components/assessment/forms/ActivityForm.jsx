@@ -5,6 +5,7 @@ import { useUser } from "Context/UserContext";
 import FapIcon from "components/elements/FapIcon";
 
 import { fromUtcTime, fromUtcDate } from "helpers/datetime";
+import { getIcon } from "helpers/iconophy";
 
 import Item from "./TreeItem";
 
@@ -41,7 +42,12 @@ export default (props) => {
                           </span>
                       </time>
                       <div className="cbp_tmicon">
-                          <FapIcon icon="briefcase" size="1x" />
+                          <FapIcon
+                              icon={
+                                  item.type ? getIcon(item.type) : "briefcase"
+                              }
+                              size="1x"
+                          />
                       </div>
                       <div className="cbp_tmlabel">
                           {" "}

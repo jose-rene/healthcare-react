@@ -9,6 +9,8 @@ import FapIcon from "components/elements/FapIcon";
 import LoadingIcon from "components/elements/LoadingIcon";
 import Checkbox from "components/inputs/Checkbox/ContextCheckbox";
 
+import { getIcon } from "helpers/iconophy";
+
 const NotificationListForm = ({
     messages,
     loading,
@@ -67,7 +69,7 @@ const NotificationListForm = ({
                                     <div className="dropdown-list-image mx-2">
                                         <strong className="default me-1">
                                             <FapIcon
-                                                icon="envelope"
+                                                icon={getIcon(message.type)}
                                                 size="2x"
                                             />
                                         </strong>
@@ -141,28 +143,40 @@ const NotificationListForm = ({
                 <Card className="box shadow-sm rounded bg-white mb-3">
                     <Card.Header className="p-3 d-flex justify-content-between align-items-center">
                         Notifications
-                        <div className="d-flex">
-                            <Button
-                                variant="outline-danger"
-                                className="mx-3"
-                                size="sm"
-                                type="submit"
-                            >
-                                Remove Checked
-                            </Button>
-                            <Checkbox
-                                name="selectAll"
-                                onChange={handleSelectAll}
-                            />
-                        </div>
+                        {messages && messages.length ? (
+                            <div className="d-flex">
+                                <Button
+                                    variant="outline-danger"
+                                    className="mx-3"
+                                    size="sm"
+                                    type="submit"
+                                >
+                                    Remove Checked
+                                </Button>
+                                <Checkbox
+                                    name="selectAll"
+                                    onChange={handleSelectAll}
+                                />
+                            </div>
+                        ) : (
+                            <div />
+                        )}
                     </Card.Header>
                     <ListGroup variant="flush">
                         {/* 
                                     false: unread
                                     true: read
                                  */}
-                        {renderMessage(messages, false)}
-                        {renderMessage(messages, true)}
+                        {messages && messages.length ? (
+                            <>
+                                {renderMessage(messages, false)}
+                                {renderMessage(messages, true)}
+                            </>
+                        ) : (
+                            <ListGroup.Item className="p-5 d-flex align-items-center justify-content-center">
+                                All caught up!
+                            </ListGroup.Item>
+                        )}
                     </ListGroup>
                 </Card>
             </Col>
