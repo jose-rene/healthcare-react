@@ -95,8 +95,16 @@ const ConsiderationView = ({
                                                     variant="success"
                                                 >
                                                     <h6 className="mb-0">
+                                                        {item.summary &&
+                                                            item.summary !==
+                                                                "" && (
+                                                                <FapIcon
+                                                                    icon="check-circle"
+                                                                    type="fas"
+                                                                    className="text-success font-bold me-2"
+                                                                />
+                                                            )}
                                                         Request Item
-                                                        {item.full_name}
                                                     </h6>
                                                 </ListGroup.Item>
                                                 {item.considerations.map(
