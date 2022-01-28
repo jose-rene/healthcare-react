@@ -6,7 +6,7 @@ import FormLoadingSpinner from "../forms/FormLoadingSpinner";
 import FormBuilderWrapper from "../FormBuilder/FormBuilderWrapper";
 import { useAssessmentContext } from "../../Context/AssessmentContext";
 
-const ShowFormSection = ({ requestId, formSlug, name }) => {
+const ShowFormSection = ({ requestId, formSlug, name, onSubmit }) => {
     const [formDataLoaded, setFormDataLoaded] = useState(false);
     const { update: assetUpdate, sectionsCompleted } = useAssessmentContext();
     const formBuilderHook = useFormBuilder({
@@ -55,10 +55,11 @@ const ShowFormSection = ({ requestId, formSlug, name }) => {
         return returnCustomValidation;
     }, [form]);
 
-    const handleSubmit = (formValues) => {
+    const handleSubmit = async (formValues) => {
         const values = { ...formValues, completed_form: true };
         assetUpdate(formSlug, values);
-        fireSaveAnswers(values);
+        await fireSaveAnswers(values);
+        onSubmit();
     };
 
     const handleFormChange = (formValues) => {

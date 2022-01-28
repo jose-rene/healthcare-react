@@ -134,6 +134,9 @@ const FormProvider = ({
 
     const handleAutofill = useCallback(
         (_form) => {
+            if (autoFillTick === null) {
+                return true;
+            }
             const autoFillerKeys = Object.keys(autoFiller || {});
 
             if (_formBuilder && autoFillerKeys.length > 0) {
@@ -270,6 +273,7 @@ const FormProvider = ({
     };
 
     const handleFormSubmit = () => {
+        setAutoFillTick(null);
         setValidated(true);
 
         // this validation is basically for messages. react-bootstrap is in charge of blocking submit
