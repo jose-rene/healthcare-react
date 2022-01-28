@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Card, Collapse } from "react-bootstrap";
 
 import ShowFormSection from "../ShowFormSection";
+import AssessmentSectionStatus from "./AssessmentSectionStatus";
 
 const AssessmentView = ({ forms, assessmentName, requestId }) => {
     const [formToggle, setFormToggle] = useState([]);
@@ -59,6 +60,9 @@ const AssessmentView = ({ forms, assessmentName, requestId }) => {
                                                     }
                                                     size="sm"
                                                     className="me-1"
+                                                />
+                                                <AssessmentSectionStatus
+                                                    sectionName={slug}
                                                 />
                                                 {name}
                                             </a>
