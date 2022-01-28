@@ -35,7 +35,6 @@ class Form extends Model
         'slug',
         'name',
         'description',
-        'type_id',
         'fields',
     ];
 
