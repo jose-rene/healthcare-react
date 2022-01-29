@@ -266,18 +266,19 @@ const ScheduleView = ({
                                             >
                                                 {data?.status === "On Hold"
                                                     ? data?.status
-                                                    : `${
-                                                          data?.appointment_date
-                                                      },
-                                                      ${fromUtcTime(
-                                                          data?.appt_window
-                                                              ?.start
-                                                      )} -
+                                                    : (!!data?.appointment_date &&
+                                                          `${
+                                                              data.appointment_date
+                                                          } ${fromUtcTime(
+                                                              data?.appt_window
+                                                                  ?.start
+                                                          )} -
                                                           ${fromUtcTime(
                                                               data?.appt_window
                                                                   ?.end,
                                                               timeZoneName
-                                                          )}` || "n/a"}
+                                                          )}`) ||
+                                                      "n/a"}
                                             </p>
                                         </>
                                     ) : (

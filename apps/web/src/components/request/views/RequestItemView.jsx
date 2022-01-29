@@ -202,16 +202,18 @@ const RequestItemForm = ({
                                 <Col>
                                     {requestItems.map((item) => (
                                         <ListGroup
-                                            key={item.classification}
+                                            key={`ri_${item.id}`}
                                             className="mb-3 mx-0"
                                         >
                                             <ListGroup.Item className="bg-light">
                                                 <h6 className="mb-0">
-                                                    {`${item.classification_name} > ${item.full_name}`}
+                                                    {item.full_name}
                                                 </h6>
                                             </ListGroup.Item>
                                             {item.details.map((detail) => (
-                                                <ListGroupItem key={detail.id}>
+                                                <ListGroupItem
+                                                    key={`detail_${detail.id}`}
+                                                >
                                                     {detail.name}
                                                 </ListGroupItem>
                                             ))}
