@@ -10,6 +10,7 @@ import useApiCall from "hooks/useApiCall";
 import { formatDate } from "helpers/datetime";
 
 import MemberForm from "../MemberForm";
+import DisplayPhone from "../../DisplayPhone";
 
 const MemberInfoView = ({
     memberData,
@@ -198,7 +199,11 @@ const MemberInfoView = ({
                                 <Col className="fw-bold" sm={3}>
                                     Phone
                                 </Col>
-                                <Col>{memberData.phone.number}</Col>
+                                <Col>
+                                    <DisplayPhone
+                                        phone={memberData.phone.number}
+                                    />
+                                </Col>
                             </Row>
                             <Row className="mb-3">
                                 <Col className="fw-bold" sm={3}>

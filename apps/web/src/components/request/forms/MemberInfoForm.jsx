@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import useApiCall from "hooks/useApiCall";
 import LoadingOverlay from "react-loading-overlay";
 import MemberForm from "../MemberForm";
+import DisplayPhone from "../../DisplayPhone";
 
 const MemberInfoForm = ({
     memberData,
@@ -181,7 +182,9 @@ const MemberInfoForm = ({
                                 <Col className="fw-bold" sm={3}>
                                     Phone
                                 </Col>
-                                <Col>{phone_number}</Col>
+                                <Col>
+                                    <DisplayPhone phone={phone_number} />
+                                </Col>
                             </Row>
                             <Row className="mb-3">
                                 <Col className="fw-bold" sm={3}>
