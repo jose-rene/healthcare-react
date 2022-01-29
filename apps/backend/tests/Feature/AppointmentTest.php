@@ -275,6 +275,9 @@ class AppointmentTest extends TestCase
         Artisan::call('db:seed', [
             '--class' => 'BouncerSeeder',
         ]);
+        Artisan::call('db:seed', [
+            '--class' => 'ActivityTypeSeeder',
+        ]);
         $this->user = User::factory()->create(['user_type' => 3, 'primary_role' => 'field_clinican']);
         Bouncer::sync($this->user)->roles(['field_clinician']);
         $this->request = Request::factory()->create(['clinician_id' => $this->user->id]);

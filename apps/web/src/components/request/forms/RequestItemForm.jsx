@@ -103,7 +103,7 @@ const RequestItemForm = ({
                     typeSelects: [],
                     requestTypeId: item.request_type_id ?? null,
                     requestDetails: null,
-                    comments: "",
+                    comments: item.comments ?? "",
                 };
                 if (
                     item.request_type_parents &&
@@ -520,6 +520,9 @@ const RequestItemForm = ({
                                                                     <Textarea
                                                                         label="Comments"
                                                                         name="comments"
+                                                                        value={
+                                                                            selectGroup.comments
+                                                                        }
                                                                         type="textarea"
                                                                         rows={5}
                                                                         onChange={(
@@ -570,12 +573,12 @@ const RequestItemForm = ({
                                     <Col>
                                         {requestItems.map((item) => (
                                             <ListGroup
-                                                key={item.request_type_id}
+                                                key={`ri_${item.id}`}
                                                 className="mb-3"
                                             >
                                                 <ListGroup.Item className="bg-light">
                                                     <h6 className="mb-0">
-                                                        {`${item.classification_name} > ${item.full_name}`}
+                                                        {item.full_name}
                                                     </h6>
                                                 </ListGroup.Item>
                                                 {item.details.map((detail) => (

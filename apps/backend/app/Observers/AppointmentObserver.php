@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Activity\Activity;
+use App\Models\Activity\ActivityType;
 use App\Models\Appointment;
 use App\Models\Request;
 
@@ -53,24 +54,28 @@ class AppointmentObserver
 
         // create activity and indirectly the notification
         $apptDate = $appointment->appointment_date
-            ? sprintf('%s %s - %s', $appointment->appointment_date->format('m/d/Y'), $appointment->start_time, $appointment->end_time)
+            ? $appointment->appointment_date->format('m/d/Y')
             : 'n/a';
         $callDate = $appointment->called_at ? $appointment->called_at->format('m/d/Y') : 'n/a';
         // set the activity message
-        $message = sprintf('Member called %s, appointment scheduled %s.', $callDate, $apptDate);
+        $message = sprintf('Contacted Member %s, appointment scheduled %s.', $callDate, $apptDate);
         if ($appointment->is_cancelled) {
             $message = sprintf('Appointment cancelled: %s', $appointment->reason);
         }
         elseif ($appointment->is_reschedule) {
             $message = sprintf('Appointment re-scheduled %s.', $apptDate);
         }
-        Activity::create([
-            'request_id'   => $appointment->request->id,
-            'notify_admin' => 1,
-            'user_id'      => $appointment->request->clinician_id,
-            'priority'     => true,
-            'json_message' => ['appointment_date' => $apptDate, 'called_date' => $callDate],
-            'message'      => $message,
+        // activity type for scheduling
+        $type = ActivityType::firstWhere('slug', 'scheduling');
+        // create the activity (will generate a notification)
+        $activity = Activity::create([
+            'activity_type_id' => $type ? $type->id : null,
+            'request_id'       => $appointment->request->id,
+            'notify_admin'     => 1,
+            'user_id'          => $appointment->request->clinician_id,
+            'priority'         => true,
+            'json_message'     => ['appointment_date' => $apptDate, 'called_date' => $callDate],
+            'message'          => $message,
         ]);
     }
 
