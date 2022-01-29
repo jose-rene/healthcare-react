@@ -126,14 +126,14 @@ const FormProvider = ({
 
     useEffect(() => {
         if (autoFillTick !== null && _formBuilder) {
-            handleAutofill(form);
+            handleAutofill(form, autoFillTick);
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [autoFillTick]);
 
     const handleAutofill = useCallback(
-        (_form) => {
+        (_form, autoFillTick) => {
             if (autoFillTick === null) {
                 return true;
             }
