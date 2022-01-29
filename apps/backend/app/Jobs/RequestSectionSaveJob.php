@@ -324,6 +324,7 @@ class RequestSectionSaveJob
             'request_id'      => $this->request->id,
             'request_type_id' => $item['id'],
             'name'            => RequestType::find($item['id'])->name,
+            'note'            => $item['comments'],
         ]);
         // sync request items
         $this->request

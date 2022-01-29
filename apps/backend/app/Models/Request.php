@@ -259,7 +259,7 @@ class Request extends Model
             $query->where('created_at', '>=', $fromDate);
         }
         if (request()->has('to_date') && ($toDate = request()->get('to_date'))) {
-            $query->where('created_at', '<=', $toDate);
+            $query->where('created_at', '<=', $toDate . ' 23:59:59');
         }
 
         return app(Pipeline::class)

@@ -34,6 +34,7 @@ class RequestItemResource extends JsonResource
             'classification'       => $classification ? $classification->id : "",
             'classification_name'  => $classification ? $classification->name : "",
             'summary'              => $this->clinician_summary,
+            'comments'             => $this->note,
             // ->pluck('name', 'id'),
         ];
     }
