@@ -10,6 +10,7 @@ use App\Models\RequestStatus;
 use App\Models\RequestType;
 use App\Models\RequestTypeDetail;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Validator;
@@ -100,7 +101,7 @@ class RequestSectionSaveJob
                     'date'                 => Carbon::now(),
                 ]);
                 // marks the request as received
-                $request->requestStatus()->associate(RequestStatus::find(1))->save();
+                $request->requestStatus()->associate(RequestStatus::slug('submitted')->first())->save();
                 break;
         }
     }
@@ -207,9 +208,9 @@ class RequestSectionSaveJob
         }
         try {
             $dueDate = Carbon::parse($due, request()->input('timeZone'))->tz('UTC');
-        }
-        catch (\Exception $e) {
-            throw new HttpResponseException(response()->json(['errors' => ['action' => ['Could not process Due Date']]], 422));
+        } catch (Exception $e) {
+            throw new HttpResponseException(response()->json(['errors' => ['action' => ['Could not process Due Date']]],
+                422));
         }
         if ($dueDate->isToday() || $dueDate->isPast()) {
             throw new HttpResponseException(response()->json(['errors' => ['action' => ['Due date must be in the future']]], 422));
@@ -330,7 +331,7 @@ class RequestSectionSaveJob
             ->requestItems()
             ->sync($requestItems->toArray());
         // refresh to reload relationships
-        $this->request->refresh(); 
+        $this->request->refresh();
         // sync the associated request type details for each request item
         $this->request->requestItems
             ->each(fn ($item) => $item->requestTypeDetails()->sync($types->firstWhere('id', $item->request_type_id)['details']));

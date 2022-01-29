@@ -19,7 +19,7 @@ class ClassificationController extends Controller
     {
         $data = Classification::paginate($request->get('perPage', 50));
 
-        return ClassificationResource::collect($data);
+        return ClassificationResource::collection($data);
     }
 
     /**
