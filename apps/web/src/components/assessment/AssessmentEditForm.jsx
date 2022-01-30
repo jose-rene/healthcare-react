@@ -27,15 +27,17 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
             openMedia,
             openConsideration,
             openDiagnosis,
+            openAssessment,
         ],
         setToggler,
-    ] = useState([false, false, false, false, false, false]);
+    ] = useState([false, false, false, false, false, false, false]);
 
     const {
         isFullFormValid,
         updateFormValidation,
         isSectionValid,
         sectionStatus: getFormStatus,
+        sectionsCompleted,
     } = useAssessmentContext();
 
     const [{}, fireSaveAssessmentRequest] = useApiCall({
@@ -57,25 +59,25 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     }, [data]);
 
     const setOpenSchedule = (open) => {
-        setToggler([open, false, false, false, false, false]);
+        setToggler([open, false, false, false, false, false, false]);
     };
     const toggleOpenSchedule = () => {
         setOpenSchedule(!openSchedule);
     };
     const setOpenMember = (open) => {
-        setToggler([false, open, false, false, false, false]);
+        setToggler([false, open, false, false, false, false, false]);
     };
     const toggleOpenMember = () => {
         setOpenMember(!openMember);
     };
     const setOpenActivity = (open) => {
-        setToggler([false, false, open, false, false, false]);
+        setToggler([false, false, open, false, false, false, false]);
     };
     const toggleOpenActivity = () => {
         setOpenActivity(!openActivity);
     };
     const setOpenMedia = (open) => {
-        setToggler([false, false, false, open, false, false]);
+        setToggler([false, false, false, open, false, false, false]);
     };
     const toggleOpenMedia = () => {
         setOpenMedia(!openMedia);
@@ -88,6 +90,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
             false,
             open === null ? !openConsideration : !!open,
             false,
+            false,
         ]);
     };
     const toggleDiagnosis = (open = null) => {
@@ -98,6 +101,18 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
             false,
             false,
             open === null ? !openDiagnosis : !!open,
+            false,
+        ]);
+    };
+    const toggleAssessment = (open = null) => {
+        setToggler([
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            open === null ? !openAssessment : !!open,
         ]);
     };
 
@@ -251,6 +266,21 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                 }}
                             />
                         </Col>
+                        {forms && forms.length ? (
+                            <Col xl={10}>
+                                <AssessmentView
+                                    {...{
+                                        forms,
+                                        assessmentName,
+                                        requestId,
+                                        getFormStatus,
+                                        openAssessment,
+                                        toggleAssessment,
+                                        valid: sectionsCompleted,
+                                    }}
+                                />
+                            </Col>
+                        ) : null}
                         <Col xl={10}>
                             <ConsiderationView
                                 {...{
@@ -265,18 +295,6 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                 }}
                             />
                         </Col>
-                        {forms && forms.length ? (
-                            <Col xl={10}>
-                                <AssessmentView
-                                    {...{
-                                        forms,
-                                        assessmentName,
-                                        requestId,
-                                        getFormStatus,
-                                    }}
-                                />
-                            </Col>
-                        ) : null}
                         <Col xl={10}>
                             <Button
                                 className="mt-3"
