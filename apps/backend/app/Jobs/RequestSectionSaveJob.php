@@ -101,7 +101,7 @@ class RequestSectionSaveJob
                     'date'                 => Carbon::now(),
                 ]);
                 // marks the request as received
-                $request->requestStatus()->associate(RequestStatus::slug('submitted')->first())->save();
+                $request->requestStatus()->associate(RequestStatus::slug('received')->first())->save();
                 break;
         }
     }
