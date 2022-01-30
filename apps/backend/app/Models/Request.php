@@ -34,6 +34,7 @@ use RuntimeException;
  * @property User               admin
  * @property Carbon             $assessed_date
  * @property RequestFormSection $requestFormSections
+ * @property RelevantDiagnoses  $relevantDiagnoses
  *
  * @observer App\Observers\RequestObserver
  */

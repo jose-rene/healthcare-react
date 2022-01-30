@@ -126,14 +126,17 @@ const FormProvider = ({
 
     useEffect(() => {
         if (autoFillTick !== null && _formBuilder) {
-            handleAutofill(form);
+            handleAutofill(form, autoFillTick);
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [autoFillTick]);
 
     const handleAutofill = useCallback(
-        (_form) => {
+        (_form, autoFillTick) => {
+            if (autoFillTick === null) {
+                return true;
+            }
             const autoFillerKeys = Object.keys(autoFiller || {});
 
             if (_formBuilder && autoFillerKeys.length > 0) {
@@ -270,6 +273,7 @@ const FormProvider = ({
     };
 
     const handleFormSubmit = () => {
+        setAutoFillTick(null);
         setValidated(true);
 
         // this validation is basically for messages. react-bootstrap is in charge of blocking submit

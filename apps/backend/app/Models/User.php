@@ -31,6 +31,7 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 /**
  * @property int             id
+ * @property string          uuid
  * @property string          name
  * @property string          age
  * @property string          email
@@ -48,6 +49,7 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
  * @property Payer|null      payer
  * @property Carbon          inactive_at
  * @property boolean         active
+ * @property Phone           mainPhone
  * @link https://github.com/JosephSilber/bouncer#cheat-sheet
  */
 class User extends Authenticatable implements MustVerifyEmail

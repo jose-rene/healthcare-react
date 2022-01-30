@@ -5,6 +5,10 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ *
+ * @mixin \App\Models\Request
+ */
 class RequestDetailResource extends JsonResource
 {
     /**
@@ -17,10 +21,13 @@ class RequestDetailResource extends JsonResource
     {
         return [
             'id'                => $this->uuid,
-            'clinician'         => $this->clinician ? ['id' => $this->clinician->uuid, 'name' => $this->clinician->full_name] : null,
-            'reviewer'          => $this->reviewer ? ['id' => $this->reviewer->uuid, 'name' => $this->reviewer->full_name] : null,
+            'clinician'         => $this->clinician ? [
+                'id'   => $this->clinician->uuid,
+                'name' => $this->clinician->full_name,
+            ] : null,
+            'reviewer'          => $this->reviewer ? new ReviewerResource($this->reviewer) : null,
             'status'            => $this->statusName,
-            'status_id'         => (int) $this->request_status_id,
+            'status_id'         => (int)$this->request_status_id,
             'classification_id' => $this->classification_id ?? null,
             'member'            => new MemberDetailResource($this->member),
             'payer'             => new PayerDetailResource($this->payer),

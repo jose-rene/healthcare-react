@@ -29,7 +29,7 @@ class RequestNarrativeReportTemplateController extends Controller
         if ($request_name === 'no_report_test_json') {
             $request_data = $narrativeReportTemplate->test_json;
         } else {
-            $request      = ModelRequest::findOrFail($request_name);
+            $request      = ModelRequest::where('uuid', $request_name)->firstOrFail();
             $request_data = new RequestDetailResource($request);
         }
 
