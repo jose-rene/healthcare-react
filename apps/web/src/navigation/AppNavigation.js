@@ -71,7 +71,7 @@ const AppNavigation = () => {
                     // initializeUser(response);
                     initUser(response);
                 } catch (e) {
-                    //console.log("fail!!!");
+                    // console.log("fail!!!");
                     logout();
                 }
             })();
@@ -207,7 +207,11 @@ const AppNavigation = () => {
 
                 <PrivateRoute
                     path="/request/:request/template/:template"
-                    middleware={["software_engineer"]}
+                    middleware={[
+                        "software_engineer",
+                        "clinical_reviewer",
+                        "reviewer_manager",
+                    ]}
                     component={NarrativeReportPreview}
                 />
 

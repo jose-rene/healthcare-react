@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ConsiderationRequest;
 use App\Http\Resources\RequestAssessmentResource;
 use App\Jobs\RequestSectionSaveJob;
+use App\Jobs\SubmitAssessmentJob;
 use App\Models\Consideration;
 use App\Models\Request as ModelRequest;
 use Illuminate\Http\Request;
@@ -106,14 +107,14 @@ class RequestAssessmentController extends Controller
     }
 
     /**
-     * general update o the assessment request.
+     * Submit the assessment.
      *
      * @param Request $request
      * @return array
      */
-    public function update(ModelRequest $request)
+    public function submit(ModelRequest $request)
     {
-        dispatch(new RequestSectionSaveJob($request, request()->all()));
+        dispatch(new SubmitAssessmentJob($request));
 
         return response()->json(['message' => 'ok']);
     }

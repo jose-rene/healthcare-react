@@ -6,7 +6,12 @@ import { Card, Collapse } from "react-bootstrap";
 import ShowFormSection from "../ShowFormSection";
 import AssessmentSectionHeader from "./AssessmentSectionHeader";
 
-const AssessmentView = ({ forms, assessmentName, requestId }) => {
+const AssessmentView = ({
+    forms,
+    assessmentName,
+    requestId,
+    getFormStatus,
+}) => {
     const [formToggle, setFormToggle] = useState([]);
     useEffect(() => {
         setFormToggle(new Array(forms.length).fill(false));
@@ -49,10 +54,19 @@ const AssessmentView = ({ forms, assessmentName, requestId }) => {
                             key={slug}
                             className="border-1 border-0 bg-light mb-3"
                         >
-                            <Card.Header className="bg-light border-0 py-0">
+                            <Card.Header className="bg-light border-0 py-0 ps-0">
                                 <h5 className="">
+                                    <FapIcon
+                                        icon="check-circle"
+                                        type="fas"
+                                        className={`text-success ms-n3 me-1${
+                                            getFormStatus(slug)
+                                                ? ""
+                                                : " invisible"
+                                        }`}
+                                    />
                                     <a
-                                        className="d-flex text-decoration-none"
+                                        className="d-inline text-decoration-none"
                                         onClick={(e) => {
                                             e.preventDefault();
                                             toggleForm(formIndex);

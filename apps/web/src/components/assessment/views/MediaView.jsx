@@ -29,6 +29,7 @@ const MediaView = ({
     assessmentData: { media, media_tags },
     refreshAssessment,
     refreshLoading,
+    valid,
 }) => {
     const { id: requestId } = useParams();
 
@@ -130,10 +131,19 @@ const MediaView = ({
             />
 
             <Card className="border-1 border-top-0 border-end-0 border-start-0 bg-light mb-3">
-                <Card.Header className="bg-light border-0 ps-2">
+                <Card.Header className="bg-light border-0 ps-0">
                     <div className="d-flex">
                         <div>
-                            <h5 className="ms-2">Media</h5>
+                            <h5>
+                                <FapIcon
+                                    icon="check-circle"
+                                    type="fas"
+                                    className={`text-success ms-n3 me-1${
+                                        valid ? "" : " invisible"
+                                    }`}
+                                />
+                                Media
+                            </h5>
                         </div>
                         <div className="ms-auto">
                             {!openMedia && (
