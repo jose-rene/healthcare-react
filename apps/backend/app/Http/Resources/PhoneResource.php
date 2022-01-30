@@ -2,10 +2,12 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Phone;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
+ * @mixin Phone
  * @OA\Schema(type="object")
  */
 class PhoneResource extends JsonResource

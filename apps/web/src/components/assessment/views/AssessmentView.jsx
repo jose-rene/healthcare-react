@@ -25,6 +25,14 @@ const AssessmentView = ({ forms, assessmentName, requestId }) => {
         return formToggle[index];
     };
 
+    const handleOnSubmit = (formIndex) => {
+        if (forms.length == formIndex) {
+            return true;
+        }
+
+        toggleForm(formIndex + 1);
+    };
+
     return (
         <>
             <Card className="border-1 border-top-0 border-end-0 border-start-0 bg-light mb-3">
@@ -75,6 +83,9 @@ const AssessmentView = ({ forms, assessmentName, requestId }) => {
                                             requestId={requestId}
                                             formSlug={slug}
                                             name={name}
+                                            onSubmit={() =>
+                                                handleOnSubmit(formIndex)
+                                            }
                                         />
                                     </div>
                                 </Collapse>

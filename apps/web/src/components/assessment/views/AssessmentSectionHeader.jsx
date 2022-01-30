@@ -19,7 +19,7 @@ const AssessmentSectionHeader = ({ sectionName, title }) => {
                 <FapIcon
                     icon={status ? "check" : "times"}
                     size="sm"
-                    className="me-1"
+                    className="me-1 d-none"
                 />
             </div>
         </div>

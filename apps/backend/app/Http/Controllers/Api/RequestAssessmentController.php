@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Consideration;
-use App\Models\Request as ModelRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ConsiderationRequest;
 use App\Http\Resources\RequestAssessmentResource;
 use App\Jobs\RequestSectionSaveJob;
+use App\Models\Consideration;
+use App\Models\Request as ModelRequest;
 use Illuminate\Http\Request;
 
 class RequestAssessmentController extends Controller
@@ -101,6 +101,19 @@ class RequestAssessmentController extends Controller
     public function diagnosis(ModelRequest $request, Request $httpRequest)
     {
         dispatch(new RequestSectionSaveJob($request, $httpRequest->all()));
+
+        return response()->json(['message' => 'ok']);
+    }
+
+    /**
+     * general update o the assessment request.
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function update(ModelRequest $request)
+    {
+        dispatch(new RequestSectionSaveJob($request, request()->all()));
 
         return response()->json(['message' => 'ok']);
     }

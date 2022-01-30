@@ -13,8 +13,10 @@ import ConsiderationView from "./views/ConsiderationView";
 import AssessmentView from "./views/AssessmentView";
 import DiagnosisView from "./views/DiagnosisView";
 import { useAssessmentContext } from "../../Context/AssessmentContext";
+import { PUT } from "../../config/URLs";
 
 const AssessmentEditForm = ({ reasonOptions, data }) => {
+    const { id } = data;
     const [assessmentData, setAssessmentData] = useState({});
     const [
         [
@@ -29,6 +31,11 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     ] = useState([false, false, false, false, false, false]);
 
     const { sectionsCompleted } = useAssessmentContext();
+
+    const [{}, fireSaveAssessmentRequest] = useApiCall({
+        method: PUT,
+        url: `assessment/${id}`,
+    });
 
     useEffect(() => {
         if (data) {
@@ -126,6 +133,11 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
         },
         codes: diagnosisCodes = [],
     } = assessmentData;
+
+    const handleAssessmentSubmit = () => {
+        console.log("handleAssessmentSubmit.clicked");
+        fireSaveAssessmentRequest({ params: { type_name: "submit" } });
+    };
 
     return (
         <>
@@ -249,7 +261,11 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                             </Col>
                         ) : null}
                         <Col xl={10}>
-                            <Button className="mt-3" active={sectionsCompleted}>
+                            <Button
+                                className="mt-3"
+                                disabled={!sectionsCompleted}
+                                onClick={handleAssessmentSubmit}
+                            >
                                 Submit
                             </Button>
                         </Col>
