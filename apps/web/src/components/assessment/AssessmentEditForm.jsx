@@ -6,6 +6,7 @@ import MemberInfoView from "components/request/views/MemberInfoView";
 import LoadingIcon from "components/elements/LoadingIcon";
 
 import useApiCall from "hooks/useApiCall";
+import { useUser } from "Context/UserContext";
 import ScheduleView from "./views/ScheduleView";
 import ActivityView from "./views/ActivityView";
 import MediaView from "./views/MediaView";
@@ -30,16 +31,28 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
         setToggler,
     ] = useState([false, false, false, false, false, false]);
 
-    const { sectionsCompleted } = useAssessmentContext();
+    const {
+        isFullFormValid,
+        updateFormValidation,
+        isSectionValid,
+        sectionStatus: getFormStatus,
+    } = useAssessmentContext();
 
     const [{}, fireSaveAssessmentRequest] = useApiCall({
         method: PUT,
-        url: `assessment/${id}`,
+        url: `assessment/${id}/submit`,
     });
+
+    const { userIs } = useUser();
 
     useEffect(() => {
         if (data) {
             setAssessmentData(data);
+            updateFormValidation({
+                schedule: true,
+                media: true,
+                considerations: true,
+            });
         }
     }, [data]);
 
@@ -185,6 +198,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     reasonOptions,
                                     refreshAssessment,
                                     refreshLoading,
+                                    valid: isSectionValid("schedule"),
                                 }}
                             />
                         </Col>
@@ -221,6 +235,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     assessmentData,
                                     refreshAssessment,
                                     refreshLoading,
+                                    valid: isSectionValid("media"),
                                 }}
                             />
                         </Col>
@@ -246,6 +261,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     refreshAssessment,
                                     refreshLoading,
                                     requestId,
+                                    valid: isSectionValid("considerations"),
                                 }}
                             />
                         </Col>
@@ -256,6 +272,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                         forms,
                                         assessmentName,
                                         requestId,
+                                        getFormStatus,
                                     }}
                                 />
                             </Col>
@@ -263,11 +280,23 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                         <Col xl={10}>
                             <Button
                                 className="mt-3"
-                                disabled={!sectionsCompleted}
+                                disabled={!isFullFormValid}
                                 onClick={handleAssessmentSubmit}
                             >
-                                Submit
+                                {status === "Submitted" ? "Update" : "Submit"}
                             </Button>
+                            {status === "Submitted" &&
+                                userIs([
+                                    "clinical_reviewer",
+                                    "reviewer_manager",
+                                ]) && (
+                                    <a
+                                        href={`/request/${id}/template/default`}
+                                        className="ms-4 mt-3 btn btn-success"
+                                    >
+                                    Narrative Report
+                                    </a>
+                                )}
                         </Col>
                     </>
                 )}

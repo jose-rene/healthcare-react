@@ -111,9 +111,11 @@ Route::middleware('auth:api')->group(function ($router) {
     Route::put('assessment/{request}/media', 'RequestAssessmentController@media')->name('request.assessment.media');
     Route::post('assessment/{request}/consideration', 'RequestAssessmentController@consideration')->name('request.assessment.consideration');
     Route::put('assessment/{request}/diagnosis', 'RequestAssessmentController@diagnosis')->name('request.assessment.diagnosis');
+    Route::get('assessment/{request}/section/{form}', 'RequestAssessmentController@section')->name('request.assessment.section');
+    Route::put('assessment/{request}/submit', 'RequestAssessmentController@submit')->name('request.assessment.submit');
     Route::get('assessment/{request}/section/{form}',
         'RequestAssessmentController@section')->name('request.assessment.section');
-    Route::put('assessment/{request}', 'RequestAssessmentController@update')->name('request.assessment.update');
+    Route::put('assessment/{request}', 'RequestAssessmentController@submit')->name('request.assessment.update');
 
     Route::apiResource('request.request_form_section', 'RequestFormSectionController')->only('show', 'update');
     Route::apiResource('form.form_answers', 'FormAnswerController')->only(['store', 'show', 'update']);

@@ -77,10 +77,12 @@ class RequestActivity extends Notification
 
     public function getActivityData()
     {
+        // @todo change url to '/activity/' . $this->activity->uuid when endpoint or handler is in place
         $extra = [
-            'action' => ['title' => 'View Activity', 'url' => '/activity/' . $this->activity->uuid],
+            'action' => ['title' => 'View Activity', 'url' => '/assessment/' . $this->activity->request->uuid],
             'type' => $this->activity->activityType ? $this->activity->activityType->slug : 'request-update',
         ];
+
         return $this->activity->toArray() + $extra;
     }
 }

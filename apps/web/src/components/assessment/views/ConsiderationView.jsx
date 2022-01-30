@@ -11,6 +11,7 @@ const ConsiderationView = ({
     requestId,
     refreshAssessment,
     refreshLoading,
+    valid,
 }) => {
     // which request item is in context for consideration form
     const [activeRequestItem, setRequestItem] = useState();
@@ -55,10 +56,19 @@ const ConsiderationView = ({
     return (
         <>
             <Card className="border-1 border-top-0 border-end-0 border-start-0 bg-light mb-3">
-                <Card.Header className="bg-light border-0 ps-2">
+                <Card.Header className="bg-light border-0 ps-0">
                     <div className="d-flex">
                         <div>
-                            <h5 className="ms-2">Considerations</h5>
+                            <h5>
+                                <FapIcon
+                                    icon="check-circle"
+                                    type="fas"
+                                    className={`text-success ms-n3 me-1${
+                                        valid ? "" : " invisible"
+                                    }`}
+                                />
+                                Considerations
+                            </h5>
                         </div>
                     </div>
                 </Card.Header>
@@ -100,10 +110,10 @@ const ConsiderationView = ({
                                                                 "" && (
                                                                 <FapIcon
                                                                     icon="check-circle"
-                                                                    type="fas"
+                                                                type="fas"
                                                                     className="text-success font-bold me-2"
-                                                                />
-                                                            )}
+                                                            />
+                                                        )}
                                                         Request Item
                                                     </h6>
                                                 </ListGroup.Item>
