@@ -9,7 +9,6 @@ import RequestItemForm from "./forms/RequestItemForm";
 import RequestDocForm from "./forms/RequestDocForm";
 import MemberInfoForm from "./forms/MemberInfoForm";
 import DueDateForm from "./forms/DueDateForm";
-import ActivityView from "components/assessment/views/ActivityView";
 
 const RequestForm = ({ data }) => {
     // destructured section data from the request data
@@ -206,15 +205,6 @@ const RequestForm = ({ data }) => {
                         toggleOpenMember,
                         refreshRequest,
                         requestLoading,
-                    }}
-                />
-                <ActivityView
-                    {...{
-                        openActivity,
-                        toggleOpenActivity,
-                        activities,
-                        refreshAssessment: refreshRequest,
-                        refreshLoading: requestLoading,
                     }}
                 />
                 <RequestInfoForm
