@@ -62,10 +62,10 @@ class ClinicalServicesUserTest extends TestCase
         );
         // search clinical user
         $response = $this->json('GET', route('api.admin.clinicaluser.search'), ['type_id' => 1]);
-        // there will be 2 clinical users, the one created and the one seeded
+        // there will be 3 clinical users, one field_clinician created and field_clinician and clinical_reviewer from seeder
         $response
         ->assertOk()
-        ->assertJsonPath('meta.total', 2);
+        ->assertJsonPath('meta.total', 3);
     }
 
     /**

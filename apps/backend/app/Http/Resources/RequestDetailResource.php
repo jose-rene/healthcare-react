@@ -27,8 +27,11 @@ class RequestDetailResource extends JsonResource
 
 
         foreach ($form_sections as $form_section) {
-            $section_details = $form_section->section;
-            $form_name       = $section_details->slug;
+            if (null === ($section_details = $form_section->section)) {
+                continue;
+            }
+
+            $form_name = $section_details->slug;
 
             Arr::set($form, $form_name, $form_section->answer_data);
 
