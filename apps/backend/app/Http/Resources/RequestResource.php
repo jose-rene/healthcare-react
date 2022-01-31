@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Arr;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,6 +19,39 @@ class RequestResource extends JsonResource
      */
     public function toArray($request)
     {
+        $critical_factors = [];
+        $form             = [];
+
+        $form_sections = $this->requestFormSections;
+
+        foreach ($form_sections as $form_section) {
+            $section_details = $form_section->section;
+            $form_name       = $section_details->slug;
+
+            Arr::set($form, $form_name, $form_section->answer_data);
+
+            foreach ($form_section->answer_data as $field_name => $answer) {
+                if (!is_array($answer)) {
+                    continue;
+                }
+
+                // TODO :: account for repeater groups. Right now it won't
+
+                /**
+                 * This is not a repeater group
+                 */
+                if (Arr::get($answer, 'cf', false) !== true) {
+                    continue;
+                }
+
+                if (!isset($critical_factors[$form_name][$field_name])) {
+                    Arr::set($critical_factors, "{$form_name}.{$field_name}", []);
+                }
+
+                $critical_factors[$form_name][$field_name][] = $answer;
+            }
+        }
+
         return [
             'id'                => $this->uuid,
             'clinician'         => $this->clinician ? [
@@ -48,8 +82,8 @@ class RequestResource extends JsonResource
             'request_items'     => RequestItemResource::collection($this->requestItems),
             'activities'        => ActivityResource::collection($this->activities),
             'documents'         => DocumentResource::collection($this->documents),
-            'form'              => RequestFormSectionResource::collection($this->requestFormSections),
-            'critical_factors'  => CriticalFactorsResource::collection($this->requestFormSections),
+            'form'              => $critical_factors,
+            'critical_factors'  => $form,
         ];
     }
 }
