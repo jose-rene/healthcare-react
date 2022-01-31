@@ -8,12 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property Carbon $answer_data
- * @property Carbon $form_section_id
- * @property Carbon $request_id
- * @property Carbon $completed_at
- * @property Carbon $started_at
- * @property Form $sectionForm
+ * @property Carbon  $answer_data
+ * @property Carbon  $form_section_id
+ * @property Carbon  $request_id
+ * @property Carbon  $completed_at
+ * @property Carbon  $started_at
+ * @property Form    $sectionForm
+ * @property Form    $section
+ * @property Request $request
  **/
 class RequestFormSection extends Model
 {

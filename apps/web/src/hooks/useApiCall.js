@@ -13,6 +13,7 @@ export default ({
     baseURL = API_URL,
     hasAuthedUrl = false,
     defaultData = {},
+    defaultLoading = false,
 } = {}) => {
     const {
         REACT_APP_API_ID: ClientId = undefined,
@@ -22,7 +23,7 @@ export default ({
     const [cancelToken, setCancelToken] = useState(null);
     const [data, setData] = useState(defaultData);
     const [error, setError] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(defaultLoading);
 
     const formatParams = (params, _method = method) => ({
         [_method === GET ? "params" : "data"]: params,
