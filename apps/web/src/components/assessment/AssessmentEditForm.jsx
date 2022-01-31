@@ -40,6 +40,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
         sectionsCompleted,
     } = useAssessmentContext();
 
+    // eslint-disable-next-line
     const [{}, fireSaveAssessmentRequest] = useApiCall({
         method: PUT,
         url: `assessment/${id}/submit`,
@@ -56,6 +57,8 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                 considerations: true,
             });
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
     const setOpenSchedule = (open) => {
@@ -312,7 +315,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                         href={`/request/${id}/template/default`}
                                         className="ms-4 mt-3 btn btn-success"
                                     >
-                                    Narrative Report
+                                        Narrative Report
                                     </a>
                                 )}
                         </Col>

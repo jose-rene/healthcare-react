@@ -75,7 +75,13 @@ const MemberInfoView = ({
             yupSchema: Yup.string().required("State is required"),
         },
         postal_code: {
-            yupSchema: Yup.string().required("Postal Code is required"),
+            yupSchema: Yup.string()
+                .required("Postal Code is required")
+                .test(
+                    "len",
+                    "Must be exactly 5 characters",
+                    (val) => Number(val).toString().length === 5
+                ),
         },
         dob: {
             yupSchema: Yup.string().required("Date of Birth is required"),

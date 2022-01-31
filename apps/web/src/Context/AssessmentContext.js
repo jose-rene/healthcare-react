@@ -43,6 +43,8 @@ export const AssessmentProvider = ({ children }) => {
 
     useEffect(() => {
         processSections();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sections]);
 
     const sectionsCompleted = useMemo(() => {

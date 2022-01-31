@@ -14,7 +14,6 @@ const RequestForm = ({ data }) => {
     // destructured section data from the request data
     const [requestData, setRequestData] = useState({});
     const {
-        activities = [],
         id: requestId = "",
         auth_number = "",
         classification_id: classificationId,
@@ -34,7 +33,6 @@ const RequestForm = ({ data }) => {
     const [
         [
             openMember,
-            openActivity,
             openRequestInfo,
             openRequestItem,
             openRequestDoc,
@@ -50,16 +48,9 @@ const RequestForm = ({ data }) => {
         setOpenMember(!openMember);
     };
 
-    const setOpenActivity = (open) => {
-        setToggler([false, open, false, false, false, false]);
-    };
-    const toggleOpenActivity = () => {
-        setOpenActivity(!openActivity);
-    };
-
     // const [openRequestInfo, setOpenRequestInfo] = useState(false);
     const setOpenRequestInfo = (open) => {
-        setToggler([false, false, open, false, false, false]);
+        setToggler([false, open, false, false, false]);
     };
 
     const toggleOpenRequestInfo = () => {
@@ -67,27 +58,27 @@ const RequestForm = ({ data }) => {
     };
     // const [openRequestItem, setOpenRequestItem] = useState(false);
     const setOpenRequestItem = (open) => {
-        setToggler([false, false, false, open, false, false]);
+        setToggler([false, false, open, false, false]);
     };
     const toggleOpenRequestItem = () => {
         setOpenRequestItem(!openRequestItem);
     };
     // const [openRequestDoc, setOpenRequestDoc] = useState(false);
     const setOpenRequestDoc = (open) => {
-        setToggler([false, false, false, false, open, false]);
+        setToggler([false, false, false, open, false]);
     };
     const toggleOpenRequestDoc = () => {
         setOpenRequestDoc(!openRequestDoc);
     };
     // const [openDueDate, setOpenDueDate] = useState(false);
     const setOpenDueDate = (open) => {
-        setToggler([false, false, false, false, false, open]);
+        setToggler([false, false, false, false, open]);
     };
     const toggleOpenDueDate = () => {
         setOpenDueDate(!openDueDate);
     };
     const closeAllForms = () => {
-        setToggler([false, false, false, false, false, false]);
+        setToggler([false, false, false, false, false]);
     };
 
     useEffect(() => {
