@@ -48,6 +48,8 @@ class RequestResource extends JsonResource
             'request_items'     => RequestItemResource::collection($this->requestItems),
             'activities'        => ActivityResource::collection($this->activities),
             'documents'         => DocumentResource::collection($this->documents),
+            'form'              => RequestFormSectionResource::collection($this->requestFormSections),
+            'critical_factors'  => CriticalFactorsResource::collection($this->requestFormSections),
         ];
     }
 }

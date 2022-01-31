@@ -50,6 +50,8 @@ class RequestDetailResource extends JsonResource
             'activities'        => ActivityResource::collection($this->activities),
             'documents'         => DocumentResource::collection($this->documents),
             'media'             => MediaResource::collection($this->media),
+            'form'              => RequestFormSectionResource::collection($this->requestFormSections),
+            'critical_factors'  => CriticalFactorsResource::collection($this->requestFormSections),
         ];
     }
 }
