@@ -9,6 +9,7 @@ const EditNarrativeReport = ({ match }) => {
 
     const [{ loading }, fireLoadTemplate] = useApiCall({
         url: `narrative_report_template/${slug}`,
+        defaultLoading: true,
     });
 
     const [{ loading: saving }, fireUpdateTemplate] = useApiCall({

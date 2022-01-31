@@ -121,7 +121,7 @@ class Request extends Model
 
     public function requestFormSections()
     {
-        return $this->hasMany(RequestFormSection::class);
+        return $this->hasMany(RequestFormSection::class, 'request_id');
     }
 
     /**
