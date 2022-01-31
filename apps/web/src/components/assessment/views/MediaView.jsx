@@ -42,6 +42,8 @@ const MediaView = ({
                 item.position = i;
             });
             setMediaList(media);
+        } else {
+            setMediaList([]);
         }
     }, [media]);
 
@@ -253,10 +255,10 @@ const MediaView = ({
                                                         <h6 className="mb-0 text-center">
                                                             {item?.tags?.length
                                                                 ? item
-                                                                    ?.tags[0] !==
+                                                                      ?.tags[0] !==
                                                                   ""
                                                                     ? item
-                                                                        ?.tags[0]
+                                                                          ?.tags[0]
                                                                     : item?.name
                                                                 : item?.name}
                                                         </h6>

@@ -30,7 +30,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
             openAssessment,
         ],
         setToggler,
-    ] = useState([false, false, false, false, false, false, false]);
+    ] = useState([false, false, false, false, false, false, true]);
 
     const {
         isFullFormValid,
@@ -51,15 +51,30 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     useEffect(() => {
         if (data) {
             setAssessmentData(data);
-            updateFormValidation({
-                schedule: true,
-                media: true,
-                considerations: true,
-            });
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
+
+    useEffect(() => {
+        let considerationsValid = true;
+        if (assessmentData.request_items?.length) {
+            assessmentData.request_items.forEach((item) => {
+                if (!item.summary) {
+                    considerationsValid = false;
+                }
+            });
+        } else {
+            considerationsValid = false;
+        }
+        updateFormValidation({
+            schedule: !!assessmentData.appointment_date,
+            media: !!assessmentData.media?.length,
+            considerations: considerationsValid,
+        });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [assessmentData]);
 
     const setOpenSchedule = (open) => {
         setToggler([open, false, false, false, false, false, false]);
@@ -144,6 +159,9 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                 case "diagnosis":
                     toggleDiagnosis(false);
                     break;
+                case "final":
+                    // @todo show a message
+                    break;
             }
         }
 
@@ -166,8 +184,10 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     } = assessmentData;
 
     const handleAssessmentSubmit = () => {
-        console.log("handleAssessmentSubmit.clicked");
-        fireSaveAssessmentRequest({ params: { type_name: "submit" } });
+        // console.log("handleAssessmentSubmit.clicked");
+        fireSaveAssessmentRequest({ params: { type_name: "submit" } }).then(
+            () => refreshAssessment("final")
+        );
     };
 
     return (
@@ -191,7 +211,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     Appointment {"\n"} Scheduled
                                 </li>
                                 <li>Assessment {"\n"} Started</li>
-                                <li> Member {"\n"} Assessed</li>
+                                <li>Member {"\n"} Assessed</li>
                                 <li>Report {"\n"} Complete</li>
                             </ul>
                         </Card.Body>

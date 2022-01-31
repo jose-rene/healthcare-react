@@ -5,7 +5,7 @@ import React, {
     useMemo,
     useEffect,
 } from "react";
-import { set } from "lodash";
+import { set, isEmpty } from "lodash";
 
 export const AssessmentContext = createContext({});
 export const useAssessmentContext = () => useContext(AssessmentContext);
@@ -48,6 +48,10 @@ export const AssessmentProvider = ({ children }) => {
     }, [sections]);
 
     const sectionsCompleted = useMemo(() => {
+        if (isEmpty(sectionStatuses)) {
+            return false;
+        }
+
         let isCompleted = true;
 
         Object.keys(sectionStatuses).forEach((key) => {
