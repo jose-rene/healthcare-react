@@ -321,12 +321,11 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                         <Col xl={10}>
                             <Button
                                 className="mt-3"
-                                disabled={!isFullFormValid}
                                 onClick={handleAssessmentSubmit}
                             >
                                 {status === "Submitted" ? "Update" : "Submit"}
                             </Button>
-                            {status === "Submitted" &&
+                            {!!status &&
                                 userIs([
                                     "clinical_reviewer",
                                     "reviewer_manager",
