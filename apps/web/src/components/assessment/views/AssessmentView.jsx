@@ -34,7 +34,7 @@ const AssessmentView = ({
     };
 
     const handleOnSubmit = (formIndex) => {
-        if (forms.length == formIndex) {
+        if (forms.length === formIndex) {
             return true;
         }
 
