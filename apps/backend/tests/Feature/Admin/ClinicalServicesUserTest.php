@@ -186,9 +186,10 @@ class ClinicalServicesUserTest extends TestCase
             '--class' => 'ClinicalUserRelatedSeeder',
         ]);
         // seed some therapist clinicians
-        ClinicalServicesUser::factory([
+        $users = ClinicalServicesUser::factory([
             'user_id' => fn () => User::factory()->create(['user_type' => User::mapType('ClinicalServicesUser'), 'primary_role' => 'field_clinician']),
         ])->count(5)->create();
+        $users->each(fn($item) => ($item->user->assign('field_clinician')));
         $this->payer = Payer::factory()->hasLobs(5, ['is_tat_enabled' => 1])->count(1)->create()->first();
         $this->admin = User::factory()->create(['user_type' => 4, 'primary_role' => 'client_services_specialist']);
         Bouncer::sync($this->admin)->roles(['client_services_specialist']);

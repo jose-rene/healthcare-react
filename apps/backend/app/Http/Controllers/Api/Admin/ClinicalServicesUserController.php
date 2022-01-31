@@ -56,17 +56,21 @@ class ClinicalServicesUserController extends Controller
 
     public function search(Request $request)
     {
-        $query = User::where('user_type', 3);
+        // only check if the role is available, not if it is primary role
         if ($request->has('type_id')) {
             switch ($request->type_id) {
                 case 2:
-                    $query->whereIn('primary_role', ['clinical_reviewer', 'reviewer_manager']);
+                    $query = User::whereIs('clinical_reviewer', 'reviewer_manager');
                 break;
                 case 1:
-                    $query->where('primary_role', 'field_clinician');
+                    $query = User::whereIs('field_clinician', 'clinical_reviewer', 'reviewer_manager');
                 break;
             }
         }
+        else {
+            $query = User::where('user_type', 3);
+        }
+
         $users = $query->whereHas('clinicalServicesUser', function ($query) use ($request) {
                 $query->where('clinical_user_status_id', empty($request->status_id) ? 1 : $request->status_id);
                 // @deprecated, this will depend upon role
