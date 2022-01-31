@@ -35,20 +35,42 @@ class RequestResource extends JsonResource
                     continue;
                 }
 
+                $found_repeater = false;
+
                 // TODO :: account for repeater groups. Right now it won't
+                if (is_array($answer) && is_numeric(key($answer))) {
+                    foreach ($answer as $repeater_index => $repeater_answer) {
+                        $found_repeater = true;
 
-                /**
-                 * This is not a repeater group
-                 */
-                if (Arr::get($answer, 'cf', false) !== true) {
-                    continue;
+                        /**
+                         * This is not a repeater group
+                         */
+                        if (Arr::get($repeater_answer, 'cf', false) !== true) {
+                            continue;
+                        }
+
+                        if (!isset($critical_factors[$form_name][$field_name])) {
+                            Arr::set($critical_factors, "{$form_name}.{$field_name}", []);
+                        }
+
+                        $critical_factors[$form_name][$field_name][$repeater_index][] = $repeater_answer;
+                    }
                 }
 
-                if (!isset($critical_factors[$form_name][$field_name])) {
-                    Arr::set($critical_factors, "{$form_name}.{$field_name}", []);
-                }
+                if (!$found_repeater) {
+                    /**
+                     * This is not a repeater group
+                     */
+                    if (Arr::get($answer, 'cf', false) !== true) {
+                        continue;
+                    }
 
-                $critical_factors[$form_name][$field_name][] = $answer;
+                    if (!isset($critical_factors[$form_name][$field_name])) {
+                        Arr::set($critical_factors, "{$form_name}.{$field_name}", []);
+                    }
+
+                    $critical_factors[$form_name][$field_name][] = $answer;
+                }
             }
         }
 
@@ -82,8 +104,8 @@ class RequestResource extends JsonResource
             'request_items'     => RequestItemResource::collection($this->requestItems),
             'activities'        => ActivityResource::collection($this->activities),
             'documents'         => DocumentResource::collection($this->documents),
-            'form'              => $critical_factors,
-            'critical_factors'  => $form,
+            'form'              => $form,
+            'critical_factors'  => $critical_factors,
         ];
     }
 }

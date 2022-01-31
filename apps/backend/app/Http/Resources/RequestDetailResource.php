@@ -25,6 +25,7 @@ class RequestDetailResource extends JsonResource
 
         $form_sections = $this->requestFormSections;
 
+
         foreach ($form_sections as $form_section) {
             $section_details = $form_section->section;
             $form_name       = $section_details->slug;
@@ -36,20 +37,42 @@ class RequestDetailResource extends JsonResource
                     continue;
                 }
 
+                $found_repeater = false;
+
                 // TODO :: account for repeater groups. Right now it won't
+                if (is_array($answer) && is_numeric(key($answer))) {
+                    foreach ($answer as $repeater_index => $repeater_answer) {
+                        $found_repeater = true;
 
-                /**
-                 * This is not a repeater group
-                 */
-                if (Arr::get($answer, 'cf', false) !== true) {
-                    continue;
+                        /**
+                         * This is not a repeater group
+                         */
+                        if (Arr::get($repeater_answer, 'cf', false) !== true) {
+                            continue;
+                        }
+
+                        if (!isset($critical_factors[$form_name][$field_name])) {
+                            Arr::set($critical_factors, "{$form_name}.{$field_name}", []);
+                        }
+
+                        $critical_factors[$form_name][$field_name][$repeater_index][] = $repeater_answer;
+                    }
                 }
 
-                if (!isset($critical_factors[$form_name][$field_name])) {
-                    Arr::set($critical_factors, "{$form_name}.{$field_name}", []);
-                }
+                if (!$found_repeater) {
+                    /**
+                     * This is not a repeater group
+                     */
+                    if (Arr::get($answer, 'cf', false) !== true) {
+                        continue;
+                    }
 
-                $critical_factors[$form_name][$field_name][] = $answer;
+                    if (!isset($critical_factors[$form_name][$field_name])) {
+                        Arr::set($critical_factors, "{$form_name}.{$field_name}", []);
+                    }
+
+                    $critical_factors[$form_name][$field_name][] = $answer;
+                }
             }
         }
 
