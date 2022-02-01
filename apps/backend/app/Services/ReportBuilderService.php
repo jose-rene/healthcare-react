@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Interfaces\ReportBuilder;
 use App\Interfaces\ToPDF;
-use App\Traits\SanitationStation;
+use App\Traits\Sanistation;
 
 class ReportBuilderService implements ReportBuilder
 {
@@ -21,7 +21,7 @@ class ReportBuilderService implements ReportBuilder
     {
         $lambda = $this->lambda;
 
-        $template = SanitationStation::sanitize($template);
+        $template = Sanistation::sanitize($template);
 
         $template_data = [
             "data"     => $data,

@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-trait SanitationStation
+trait Sanistation
 {
     /**
      * Removes the style attribute from all the elements except tables.
