@@ -33,7 +33,6 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     ] = useState([false, false, false, false, false, false, true]);
 
     const {
-        isFullFormValid,
         updateFormValidation,
         isSectionValid,
         sectionStatus: getFormStatus,
