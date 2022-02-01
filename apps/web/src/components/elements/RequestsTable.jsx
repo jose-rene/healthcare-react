@@ -132,35 +132,36 @@ const RequestsTable = () => {
             type: String,
             disableSortBy: true,
         },
-        !isClinician && {
-            label: "Actions",
-            columnMap: "member.id",
-            type: ACTIONS,
-            disableSortBy: true,
-            formatter(member_id, { id: request_id, request_status_id }) {
-                return (
-                    <>
-                        <Link
-                            className="px-2"
-                            to={
-                                !request_status_id
-                                    ? `/member/${member_id}/request/${request_id}/edit`
-                                    : `/requests/${request_id}`
-                            }
-                        >
-                            <FapIcon
-                                size="1x"
-                                icon={!request_status_id ? `edit` : `eye`}
-                                title={!request_status_id ? `Edit` : `View`}
-                            />
-                        </Link>
-                        <Link className="px-2" to="#">
-                            <FapIcon icon="file" size="1x" title="Report" />
-                        </Link>
-                    </>
-                );
+        !isClinician &&
+            !userIs("reviewer_manager") && {
+                label: "Actions",
+                columnMap: "member.id",
+                type: ACTIONS,
+                disableSortBy: true,
+                formatter(member_id, { id: request_id, request_status_id }) {
+                    return (
+                        <>
+                            <Link
+                                className="px-2"
+                                to={
+                                    !request_status_id
+                                        ? `/member/${member_id}/request/${request_id}/edit`
+                                        : `/requests/${request_id}`
+                                }
+                            >
+                                <FapIcon
+                                    size="1x"
+                                    icon={!request_status_id ? `edit` : `eye`}
+                                    title={!request_status_id ? `Edit` : `View`}
+                                />
+                            </Link>
+                            <Link className="px-2" to="#">
+                                <FapIcon icon="file" size="1x" title="Report" />
+                            </Link>
+                        </>
+                    );
+                },
             },
-        },
     ]);
 
     const [activityHeaders] = useState([
@@ -207,7 +208,7 @@ const RequestsTable = () => {
     };
 
     const handleRow = (row) => {
-        if (!isClinician) return;
+        if (!isClinician && !userIs("reviewer_manager")) return;
 
         history.push(`/assessment/${row.id}`);
     };

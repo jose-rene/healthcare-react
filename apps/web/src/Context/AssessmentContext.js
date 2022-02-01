@@ -5,7 +5,7 @@ import React, {
     useMemo,
     useEffect,
 } from "react";
-import { set } from "lodash";
+import { set, isEmpty } from "lodash";
 
 export const AssessmentContext = createContext({});
 export const useAssessmentContext = () => useContext(AssessmentContext);
@@ -14,6 +14,7 @@ export const AssessmentProvider = ({ children }) => {
     const [sections, setSections] = useState({});
     const [criticalFactors, setCriticalFactors] = useState({});
     const [sectionStatuses, setSectionStatuses] = useState({});
+    const [fullFormValid, setFullFormValid] = useState({});
 
     const processSections = () => {
         const sectionStatuses = {};
@@ -42,9 +43,15 @@ export const AssessmentProvider = ({ children }) => {
 
     useEffect(() => {
         processSections();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sections]);
 
     const sectionsCompleted = useMemo(() => {
+        if (isEmpty(sectionStatuses)) {
+            return false;
+        }
+
         let isCompleted = true;
 
         Object.keys(sectionStatuses).forEach((key) => {
@@ -55,6 +62,18 @@ export const AssessmentProvider = ({ children }) => {
 
         return isCompleted;
     }, [sectionStatuses]);
+
+    const isFullFormValid = useMemo(() => {
+        let isCompleted = true;
+
+        Object.keys(fullFormValid).forEach((key) => {
+            if (isCompleted === true && !fullFormValid[key]) {
+                isCompleted = false;
+            }
+        });
+
+        return isCompleted;
+    }, [fullFormValid]);
 
     /**
      *
@@ -71,6 +90,23 @@ export const AssessmentProvider = ({ children }) => {
         return sectionStatuses[sectionName] || false;
     };
 
+    /**
+     *
+     * @param {string} sectionName section name of the form
+     * @param {boolean} [status] valid(true) of not valid(false)
+     */
+    const setFormValidation = (sectionName, status = true) => {
+        setFullFormValid((prev) => ({ ...prev, [sectionName]: status }));
+    };
+
+    const updateFormValidation = ($validation) =>
+        setFullFormValid((prev) => ({ ...prev, ...$validation }));
+
+    const isSectionValid = (name) => {
+        const { [name]: valid = false } = fullFormValid;
+        return valid;
+    };
+
     return (
         <AssessmentContext.Provider
             value={{
@@ -81,6 +117,11 @@ export const AssessmentProvider = ({ children }) => {
                 update,
                 sections,
                 setSections,
+                fullFormValid,
+                setFormValidation,
+                updateFormValidation,
+                isSectionValid,
+                isFullFormValid: isFullFormValid && sectionsCompleted,
             }}
         >
             {/*

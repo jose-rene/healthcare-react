@@ -15,7 +15,7 @@ class ImportAssessment extends Command
      *
      * @var string
      */
-    protected $signature = 'assessment:import {name=Standard Assessment : The assessment name}';
+    protected $signature = 'assessment:import {name=Standard Assessment : The assessment name } {--sections=0 : Optional number of sections to include}';
 
     /**
      * The console command description.
@@ -35,6 +35,7 @@ class ImportAssessment extends Command
         if (null === ($assessment = (Assessment::firstWhere('name', $name)))) {
             $assessment = Assessment::create(['name' => $name]);
         }
+        $number = (int) $this->option('sections');
 
         $verify = strtolower($this->ask('Importing an assessment will overwrite current data, are you sure (y/n)?'));
         if ('y' !== $verify) {
@@ -50,6 +51,7 @@ class ImportAssessment extends Command
         $assessmentForms = [];
         $header = null;
         $handle = fopen($path, "r");
+        $index = 0;
 
         while (false !== ($row = fgetcsv($handle))) {
             if (!$header) {
@@ -73,6 +75,10 @@ class ImportAssessment extends Command
             // insert raw json without converting to array first
             DB::update('update forms set fields = ? where id = ?', [$data['fields'], $form->id]);
             $assessmentForms[$form->id] = ['position' => $data['position']];
+            $index ++;
+            if ($number && $number === $index) {
+                break;
+            }
         }
         fclose($handle);
         // sync the pivot relationship

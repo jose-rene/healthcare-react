@@ -6,6 +6,7 @@ import MemberInfoView from "components/request/views/MemberInfoView";
 import LoadingIcon from "components/elements/LoadingIcon";
 
 import useApiCall from "hooks/useApiCall";
+import { useUser } from "Context/UserContext";
 import ScheduleView from "./views/ScheduleView";
 import ActivityView from "./views/ActivityView";
 import MediaView from "./views/MediaView";
@@ -26,43 +27,74 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
             openMedia,
             openConsideration,
             openDiagnosis,
+            openAssessment,
         ],
         setToggler,
-    ] = useState([false, false, false, false, false, false]);
+    ] = useState([false, false, false, false, false, false, true]);
 
-    const { sectionsCompleted } = useAssessmentContext();
+    const {
+        updateFormValidation,
+        isSectionValid,
+        sectionStatus: getFormStatus,
+        sectionsCompleted,
+    } = useAssessmentContext();
 
+    // eslint-disable-next-line
     const [{}, fireSaveAssessmentRequest] = useApiCall({
         method: PUT,
-        url: `assessment/${id}`,
+        url: `assessment/${id}/submit`,
     });
+
+    const { userIs } = useUser();
 
     useEffect(() => {
         if (data) {
             setAssessmentData(data);
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
+    useEffect(() => {
+        let considerationsValid = true;
+        if (assessmentData.request_items?.length) {
+            assessmentData.request_items.forEach((item) => {
+                if (!item.summary) {
+                    considerationsValid = false;
+                }
+            });
+        } else {
+            considerationsValid = false;
+        }
+        updateFormValidation({
+            schedule: !!assessmentData.appointment_date,
+            media: !!assessmentData.media?.length,
+            considerations: considerationsValid,
+        });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [assessmentData]);
+
     const setOpenSchedule = (open) => {
-        setToggler([open, false, false, false, false, false]);
+        setToggler([open, false, false, false, false, false, false]);
     };
     const toggleOpenSchedule = () => {
         setOpenSchedule(!openSchedule);
     };
     const setOpenMember = (open) => {
-        setToggler([false, open, false, false, false, false]);
+        setToggler([false, open, false, false, false, false, false]);
     };
     const toggleOpenMember = () => {
         setOpenMember(!openMember);
     };
     const setOpenActivity = (open) => {
-        setToggler([false, false, open, false, false, false]);
+        setToggler([false, false, open, false, false, false, false]);
     };
     const toggleOpenActivity = () => {
         setOpenActivity(!openActivity);
     };
     const setOpenMedia = (open) => {
-        setToggler([false, false, false, open, false, false]);
+        setToggler([false, false, false, open, false, false, false]);
     };
     const toggleOpenMedia = () => {
         setOpenMedia(!openMedia);
@@ -75,6 +107,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
             false,
             open === null ? !openConsideration : !!open,
             false,
+            false,
         ]);
     };
     const toggleDiagnosis = (open = null) => {
@@ -85,6 +118,18 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
             false,
             false,
             open === null ? !openDiagnosis : !!open,
+            false,
+        ]);
+    };
+    const toggleAssessment = (open = null) => {
+        setToggler([
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            open === null ? !openAssessment : !!open,
         ]);
     };
 
@@ -113,6 +158,9 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                 case "diagnosis":
                     toggleDiagnosis(false);
                     break;
+                case "final":
+                    // @todo show a message
+                    break;
             }
         }
 
@@ -135,8 +183,10 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
     } = assessmentData;
 
     const handleAssessmentSubmit = () => {
-        console.log("handleAssessmentSubmit.clicked");
-        fireSaveAssessmentRequest({ params: { type_name: "submit" } });
+        // console.log("handleAssessmentSubmit.clicked");
+        fireSaveAssessmentRequest({ params: { type_name: "submit" } }).then(
+            () => refreshAssessment("final")
+        );
     };
 
     return (
@@ -160,7 +210,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     Appointment {"\n"} Scheduled
                                 </li>
                                 <li>Assessment {"\n"} Started</li>
-                                <li> Member {"\n"} Assessed</li>
+                                <li>Member {"\n"} Assessed</li>
                                 <li>Report {"\n"} Complete</li>
                             </ul>
                         </Card.Body>
@@ -185,6 +235,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     reasonOptions,
                                     refreshAssessment,
                                     refreshLoading,
+                                    valid: isSectionValid("schedule"),
                                 }}
                             />
                         </Col>
@@ -221,6 +272,7 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     assessmentData,
                                     refreshAssessment,
                                     refreshLoading,
+                                    valid: isSectionValid("media"),
                                 }}
                             />
                         </Col>
@@ -236,6 +288,21 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                 }}
                             />
                         </Col>
+                        {forms && forms.length ? (
+                            <Col xl={10}>
+                                <AssessmentView
+                                    {...{
+                                        forms,
+                                        assessmentName,
+                                        requestId,
+                                        getFormStatus,
+                                        openAssessment,
+                                        toggleAssessment,
+                                        valid: sectionsCompleted,
+                                    }}
+                                />
+                            </Col>
+                        ) : null}
                         <Col xl={10}>
                             <ConsiderationView
                                 {...{
@@ -246,28 +313,29 @@ const AssessmentEditForm = ({ reasonOptions, data }) => {
                                     refreshAssessment,
                                     refreshLoading,
                                     requestId,
+                                    valid: isSectionValid("considerations"),
                                 }}
                             />
                         </Col>
-                        {forms && forms.length ? (
-                            <Col xl={10}>
-                                <AssessmentView
-                                    {...{
-                                        forms,
-                                        assessmentName,
-                                        requestId,
-                                    }}
-                                />
-                            </Col>
-                        ) : null}
                         <Col xl={10}>
                             <Button
                                 className="mt-3"
-                                disabled={!sectionsCompleted}
                                 onClick={handleAssessmentSubmit}
                             >
-                                Submit
+                                {status === "Submitted" ? "Update" : "Submit"}
                             </Button>
+                            {!!status &&
+                                userIs([
+                                    "clinical_reviewer",
+                                    "reviewer_manager",
+                                ]) && (
+                                    <a
+                                        href={`/request/${id}/template/default`}
+                                        className="ms-4 mt-3 btn btn-success"
+                                    >
+                                        Narrative Report
+                                    </a>
+                                )}
                         </Col>
                     </>
                 )}

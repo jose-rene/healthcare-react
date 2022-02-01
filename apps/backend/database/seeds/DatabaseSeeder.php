@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         // request related seeders
         $this->call(RequestTypeSeeder::class);
         $this->call(RequestDateTypeSeeder::class);
+        $this->call(ActivityTypeSeeder::class);
         // clinical services user relation seeders
         $this->call(ClinicalUserRelatedSeeder::class);
         // icd10 code seeder

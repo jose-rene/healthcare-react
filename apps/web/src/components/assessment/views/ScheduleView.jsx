@@ -10,12 +10,10 @@ import Form from "components/elements/Form";
 import PageAlert from "components/elements/PageAlert";
 import FapIcon from "components/elements/FapIcon";
 
+import useApiCall from "hooks/useApiCall";
+import { fromUtcTime } from "helpers/datetime";
 import ScheduleForm from "../forms/ScheduleForm";
 import RescheduleForm from "../forms/RescheduleForm";
-
-import useApiCall from "hooks/useApiCall";
-
-import { fromUtcTime } from "helpers/datetime";
 
 const ScheduleView = ({
     openSchedule,
@@ -25,6 +23,7 @@ const ScheduleView = ({
     reasonOptions,
     refreshAssessment,
     refreshLoading,
+    valid,
 }) => {
     const { id } = useParams();
 
@@ -69,7 +68,7 @@ const ScheduleView = ({
             ...formValues,
             ...{
                 request_id: id,
-                is_scheduled: formValues.is_scheduled === "Yes" ? true : false,
+                is_scheduled: formValues.is_scheduled === "Yes",
                 timeZone,
             },
         };
@@ -87,9 +86,8 @@ const ScheduleView = ({
             ...formValues,
             ...{
                 request_id: id,
-                is_cancelled:
-                    formValues.is_cancelled === "Re-Schedule" ? false : true,
-                is_scheduled: formValues.is_scheduled === "Yes" ? true : false,
+                is_cancelled: formValues.is_cancelled !== "Re-Schedule",
+                is_scheduled: formValues.is_scheduled === "Yes",
                 timeZone,
             },
         };
@@ -105,10 +103,19 @@ const ScheduleView = ({
     return (
         <>
             <Card className="border-1 border-top-0 border-end-0 border-start-0 bg-light mb-3">
-                <Card.Header className="bg-light border-0 ps-2">
+                <Card.Header className="bg-light border-0 ps-0">
                     <div className="d-flex">
                         <div>
-                            <h5 className="ms-2">Schedule Member</h5>
+                            <h5>
+                                <FapIcon
+                                    icon="check-circle"
+                                    type="fas"
+                                    className={`text-success ms-n3 me-1${
+                                        valid ? "" : " invisible"
+                                    }`}
+                                />
+                                Schedule Member
+                            </h5>
                         </div>
                         <div className="ms-auto">
                             {!openSchedule && data?.status !== "On Hold" && (
@@ -277,7 +284,7 @@ const ScheduleView = ({
                                                               data?.appt_window
                                                                   ?.end,
                                                               timeZoneName
-                                                          )}`) ||
+                                                        )}`) ||
                                                       "n/a"}
                                             </p>
                                         </>

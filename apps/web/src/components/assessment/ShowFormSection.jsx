@@ -21,6 +21,8 @@ const ShowFormSection = ({ requestId, formSlug, onSubmit }) => {
 
     useEffect(() => {
         assetUpdate(formSlug, { ...defaultAnswers });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [defaultAnswers]);
 
     useEffect(() => {
