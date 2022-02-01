@@ -29,7 +29,11 @@ Handlebars.registerHelper("isequal", function (value, comparison) {
 });
 
 Handlebars.registerHelper("contains", function (value, comparison) {
-    return value.includes(comparison);
+    try {
+        return (value || "").includes(comparison);
+    } catch (e) {
+        return false;
+    }
 });
 
 exports.handlebarsTemplate = (templateString, object) => {
