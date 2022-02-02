@@ -6,7 +6,7 @@ import { useFormContext } from "Context/FormContext";
 import ContextCheckbox from "components/contextInputs/Checkbox";
 import Textarea from "components/inputs/Textarea";
 
-const AddActivityForm = () => {
+const AddActivityForm = ({ reply = false }) => {
     const { update } = useFormContext();
 
     const onChange = (e) => {
@@ -15,14 +15,16 @@ const AddActivityForm = () => {
 
     return (
         <Row>
+            {!reply && (
+                <Col md={12}>
+                    <ContextCheckbox
+                        label="Priority"
+                        name="priority"
+                        wrapperClass="form-check pb-3 px-0"
+                    />
+                </Col>
+            )}
             <Col md={12}>
-                <ContextCheckbox
-                    label="Priority"
-                    name="priority"
-                    wrapperClass="form-check pb-3 px-0"
-                />
-            </Col>
-            <Col md={8}>
                 <Textarea
                     label="Message"
                     name="message"

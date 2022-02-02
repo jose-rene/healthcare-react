@@ -49,6 +49,12 @@ class ActivityController extends Controller
         $modelRequest = modelRequest::firstWhere('uuid', $data['request_id']);
         $data['request_id'] = $modelRequest->id;
         $data['user_id'] = $user->id;
+        $parent = null; // activity being replied to
+        if (!empty($data['parent_id'])) {
+            $parent = Activity::firstWhere('uuid', $data['parent_id']);
+            $data['parent_id'] = $parent->id;
+        }
+        // create the activity
         $activity = Activity::create($data);
 
         return new ActivityResource($activity);

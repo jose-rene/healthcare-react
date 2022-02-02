@@ -112,7 +112,7 @@ class ActivityTest extends TestCase
         $formData = $this->getFormData();
         $activity = Activity::first();
         // add a parent id for reply
-        $formData['parent_id'] = $activity->id;
+        $formData['parent_id'] = $activity->uuid;
 
         $response = $this->json('POST', route('api.activity.store'), $formData);
         // validate data
@@ -132,7 +132,7 @@ class ActivityTest extends TestCase
             ->assertJsonStructure(['id', 'message', 'type', 'activities'])
             ->assertJsonPath('message', $activity->message)
             ->assertJsonPath('parent_id', null)
-            ->assertJsonPath('activities.0.id', $data['id']);
+            ->assertJsonPath('activities.0.parent_id', $activity->uuid);
     }
 
     /**

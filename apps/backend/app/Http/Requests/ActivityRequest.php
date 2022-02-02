@@ -25,7 +25,7 @@ class ActivityRequest extends FormRequest
     {
         return [
             'request_id'   => ['bail', 'required', 'exists:requests,uuid'],
-            'parent_id'    => ['exists:activities,id'],
+            'parent_id'    => ['exists:activities,uuid'],
             'priority'     => ['bail', 'boolean'],
             'notify_admin' => ['bail', 'boolean'],
             'message'      => ['bail', 'min:2'],
