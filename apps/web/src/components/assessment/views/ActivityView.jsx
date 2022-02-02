@@ -141,6 +141,7 @@ const ActivityView = ({
                                 expanderClosed={
                                     <FapIcon icon="folder-plus" size="1x" />
                                 }
+                                refreshAssessment={refreshAssessment}
                             />
                         </div>
                     </Collapse>
