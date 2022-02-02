@@ -41,12 +41,7 @@ export const GlobalProvider = ({ children }) => {
             setTotalMessageCount({ totalMessageCount: 0, unreadCount: 0 });
             return;
         }
-        // make sure pecking order of priority is set
-        notes.sort((m1, m2) => {
-            if (m1.priority > m2.priority) return -1;
-            if (m1.priority < m2.priority) return 1;
-            return 0;
-        });
+        // @note priority order is set on the backend
         // base levelName on unread messages
         const unreadNotes = notes.filter((item) => !item.is_read);
         const { priority: level = 1 } = unreadNotes.length

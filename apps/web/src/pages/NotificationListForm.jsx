@@ -38,98 +38,78 @@ const NotificationListForm = ({
         return (
             items &&
             items.length > 0 &&
-            items
-                .sort(function (x, y) {
-                    let sortValue = false;
+            items.map((message) => {
+                const className = mapMessageClass(message.priority);
+                bgColor = !bgColor;
 
-                    if (isRead === false) {
-                        sortValue = x.priority - y.priority;
-                    } else {
-                        if (x.priority > y.priority) sortValue = 1;
-                        if (x.priority < y.priority) sortValue = -1;
-
-                        if (x.created_at > dayjs(y.created_at)) sortValue = 1;
-                        if (x.created_at < dayjs(y.created_at)) sortValue = -1;
-                    }
-
-                    return sortValue;
-                })
-                .map((message) => {
-                    const className = mapMessageClass(message.priority);
-                    bgColor = !bgColor;
-
-                    return (
-                        isRead === message.is_read && (
-                            <ListGroup.Item className="p-0" key={message.id}>
-                                <div
-                                    className={`p-3 d-flex align-items-center justify-content-between alert-${className} ${
-                                        bgColor ? "bg-light" : "bg-white"
-                                    }`}
-                                >
-                                    <div className="dropdown-list-image mx-2">
-                                        <strong className="default me-1">
-                                            <FapIcon
-                                                icon={getIcon(message.type)}
-                                                size="2x"
-                                            />
-                                        </strong>
+                return (
+                    isRead === message.is_read && (
+                        <ListGroup.Item className="p-0" key={message.id}>
+                            <div
+                                className={`p-3 d-flex align-items-center justify-content-between alert-${className} ${
+                                    bgColor ? "bg-light" : "bg-white"
+                                }`}
+                            >
+                                <div className="dropdown-list-image mx-2">
+                                    <strong className="default me-1">
+                                        <FapIcon
+                                            icon={getIcon(message.type)}
+                                            size="2x"
+                                        />
+                                    </strong>
+                                </div>
+                                <div className="font-weight-bold message-content mx-2">
+                                    <div
+                                        className={`mb-2 ${
+                                            !message.is_read ? "fw-bolder" : ""
+                                        }`}
+                                    >
+                                        {message.message}
                                     </div>
-                                    <div className="font-weight-bold message-content mx-2">
-                                        <div
-                                            className={`mb-2 ${
-                                                !message.is_read
-                                                    ? "fw-bolder"
-                                                    : ""
-                                            }`}
-                                        >
-                                            {message.message}
-                                        </div>
-                                        {message.action && (
-                                            <Button
-                                                variant="outline-primary"
-                                                size="sm"
-                                                onClick={() => {
-                                                    markRead(message.id);
-                                                    history.push(
-                                                        message.action.url
-                                                    );
-                                                }}
-                                            >
-                                                {message.action.title}
-                                            </Button>
-                                        )}
-                                    </div>
-                                    <span className="my-0">
-                                        <div className="btn-group d-flex justify-content-end align-items-center">
-                                            <FapIcon
-                                                icon="trash-alt"
-                                                size="1x"
-                                                style={{
-                                                    cursor: "pointer",
-                                                }}
-                                                className="mx-2 text-danger"
-                                                onClick={() =>
-                                                    remove([message.id])
-                                                }
-                                            />
-                                            <Checkbox name={message.id} />
-                                        </div>
-                                        <div
-                                            className="text-right text-muted pt-1"
-                                            style={{
-                                                width: "120px",
-                                                textAlign: "right",
-                                                fontSize: "14px",
+                                    {message.action && (
+                                        <Button
+                                            variant="outline-primary"
+                                            size="sm"
+                                            onClick={() => {
+                                                markRead(message.id);
+                                                history.push(
+                                                    message.action.url
+                                                );
                                             }}
                                         >
-                                            {message.human_created_at}
-                                        </div>
-                                    </span>
+                                            {message.action.title}
+                                        </Button>
+                                    )}
                                 </div>
-                            </ListGroup.Item>
-                        )
-                    );
-                })
+                                <span className="my-0">
+                                    <div className="btn-group d-flex justify-content-end align-items-center">
+                                        <FapIcon
+                                            icon="trash-alt"
+                                            size="1x"
+                                            style={{
+                                                cursor: "pointer",
+                                            }}
+                                            className="mx-2 text-danger"
+                                            onClick={() => remove([message.id])}
+                                        />
+                                        <Checkbox name={message.id} />
+                                    </div>
+                                    <div
+                                        className="text-right text-muted pt-1"
+                                        style={{
+                                            width: "120px",
+                                            textAlign: "right",
+                                            fontSize: "14px",
+                                        }}
+                                    >
+                                        {message.human_created_at}
+                                    </div>
+                                </span>
+                            </div>
+                        </ListGroup.Item>
+                    )
+                );
+            })
         );
     };
 
