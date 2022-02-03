@@ -76,6 +76,7 @@ class RequestSectionSaveJob
             case 'auth-id':
                 // basically updates the auth_number value in the request table
                 $this->authNumberSection();
+                $this->classificationSection();
                 break;
 
             case 'request-items':

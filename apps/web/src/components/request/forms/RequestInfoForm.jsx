@@ -9,6 +9,7 @@ import {
     Form,
     ListGroup,
     ListGroupItem,
+    InputGroup,
 } from "react-bootstrap";
 import AsyncSelect from "react-select/async";
 import Select2 from "react-select";
@@ -21,6 +22,7 @@ import debounce from "lodash/debounce";
 
 const RequestInfoForm = ({
     auth_number,
+    auth_verified = false,
     requestCodes,
     openRequestInfo,
     toggleOpenRequestInfo,
@@ -33,8 +35,9 @@ const RequestInfoForm = ({
     const [data, setData] = useState({
         type_name: "diagnosis",
         codes: [],
-        auth_number: auth_number ?? "",
-        classification_id: classificationId ?? "",
+        auth_number: "",
+        auth_verified: false,
+        classification_id: "",
     });
 
     // const [auth_number, setAuthNumber] = useState("");
@@ -96,6 +99,16 @@ const RequestInfoForm = ({
         const selected = payerClassifications.find((item) => item.id === value);
         return selected ? selected.name : "n/a";
     };
+
+    useEffect(() => {
+        setData({
+            type_name: "diagnosis",
+            codes: [],
+            auth_number: auth_number ?? "",
+            auth_verified,
+            classification_id: classificationId ?? "",
+        });
+    }, [auth_number, auth_verified, classificationId]);
 
     useEffect(() => {
         if (requestCodes?.length) {
@@ -175,6 +188,20 @@ const RequestInfoForm = ({
     const handleSave = () => {
         // console.log(data);
         saveRequest(data);
+    };
+    const handleAuthSave = () => {
+        if (!data.auth_number) {
+            return;
+        }
+        saveRequest({
+            type_name: "auth-id",
+            auth_number: data.auth_number,
+            classification_id: data.classification_id,
+        })
+            .then(() => setData((prev) => ({ ...prev, auth_verified: true })))
+            .catch(() =>
+                setData((prev) => ({ ...prev, auth_verified: false }))
+            );
     };
     const filled = requestCodes.length && auth_number && classificationId;
 
@@ -260,89 +287,142 @@ const RequestInfoForm = ({
                                                 />
                                             </Col>
                                         </Row>
-                                        <Row>
-                                            <Col md="12" className="mb-3">
-                                                <FloatingLabel
-                                                    controlId="auth_number"
-                                                    label="Assessment ID"
-                                                >
-                                                    <Form.Control
-                                                        type="text"
-                                                        placeholder="Assessment ID"
-                                                        autoComplete="off"
-                                                        value={data.auth_number}
-                                                        onChange={(e) =>
-                                                            handleAuthChange(
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                    />
-                                                </FloatingLabel>
-                                            </Col>
-                                            <Col md="12">
-                                                <p className="title-info">
-                                                    Relevant Diagnosis
-                                                    (required)
-                                                </p>
-                                                <p
-                                                    className="subtitle-info"
-                                                    style={{ color: "#475866" }}
-                                                >
-                                                    Enter the first letter and
-                                                    number of the ICD-10 code or
-                                                    at least the first 2
-                                                    characters of the
-                                                    description. ICD-9 is no
-                                                    longer supported.
-                                                </p>
-                                            </Col>
-                                            {codes.map((item, index) => (
-                                                <Col
-                                                    md={12}
-                                                    className="mb-3"
-                                                    key={`diag_${index}`}
-                                                >
-                                                    <h6>
-                                                        Relelvant Diagnosis{" "}
-                                                        {index + 1}
-                                                    </h6>
-                                                    <AsyncSelect
-                                                        name={`icd10_lookup_${index}`}
-                                                        placeholder="Type in the first few letters of code or description"
-                                                        loadOptions={lookup}
-                                                        isClearable
-                                                        value={
-                                                            item.code
-                                                                ? {
-                                                                      label: item.description,
-                                                                      value: item.code,
-                                                                  }
-                                                                : null
-                                                        }
-                                                        isLoading={loading}
-                                                        styles={{
-                                                            // Fixes the overlapping problem of the component
-                                                            menu: (
-                                                                provided
-                                                            ) => ({
-                                                                ...provided,
-                                                                zIndex: 9999,
-                                                            }),
-                                                        }}
-                                                        onChange={(
-                                                            selected,
-                                                            action
-                                                        ) =>
-                                                            handleCodeChange(
-                                                                selected,
-                                                                action,
-                                                                index
-                                                            )
-                                                        }
-                                                    />
+                                        {!!classification?.value && (
+                                            <Row>
+                                                <Col md="12" className="mb-3">
+                                                    <InputGroup className="mb-3 w-100">
+                                                        {data.auth_verified && (
+                                                            <InputGroup.Text>
+                                                                <FapIcon
+                                                                    icon="check-circle"
+                                                                    type="fas"
+                                                                    className="text-success"
+                                                                />
+                                                            </InputGroup.Text>
+                                                        )}
+                                                        <FloatingLabel
+                                                            controlId="auth_number"
+                                                            label="Assessment ID*"
+                                                        >
+                                                            <Form.Control
+                                                                type="text"
+                                                                className="rounded-0"
+                                                                placeholder="Assessment ID"
+                                                                autoComplete="off"
+                                                                value={
+                                                                    data.auth_number
+                                                                }
+                                                                onChange={(e) =>
+                                                                    handleAuthChange(
+                                                                        e.target
+                                                                            .value
+                                                                    )
+                                                                }
+                                                            />
+                                                        </FloatingLabel>
+                                                        <Button
+                                                            variant="outline-success"
+                                                            id="button-addon2"
+                                                            onClick={
+                                                                handleAuthSave
+                                                            }
+                                                        >
+                                                            Verify
+                                                            <FapIcon icon="check-circle" />
+                                                        </Button>
+                                                    </InputGroup>
                                                 </Col>
-                                            ))}
-                                        </Row>
+                                                {!!classification?.value &&
+                                                    data.auth_verified && (
+                                                        <>
+                                                            <Col md="12">
+                                                                <p className="title-info">
+                                                                    Relevant
+                                                                    Diagnosis
+                                                                    (required)
+                                                                </p>
+                                                                <p
+                                                                    className="subtitle-info"
+                                                                    style={{
+                                                                        color: "#475866",
+                                                                    }}
+                                                                >
+                                                                    Enter the
+                                                                    first letter
+                                                                    and number
+                                                                    of the
+                                                                    ICD-10 code
+                                                                    or at least
+                                                                    the first 2
+                                                                    characters
+                                                                    of the
+                                                                    description.
+                                                                    ICD-9 is no
+                                                                    longer
+                                                                    supported.
+                                                                </p>
+                                                            </Col>
+                                                            {codes.map(
+                                                                (
+                                                                    item,
+                                                                    index
+                                                                ) => (
+                                                                    <Col
+                                                                        md={12}
+                                                                        className="mb-3"
+                                                                        key={`diag_${index}`}
+                                                                    >
+                                                                        <h6>
+                                                                            Relelvant
+                                                                            Diagnosis
+                                                                            {index +
+                                                                                1}
+                                                                        </h6>
+                                                                        <AsyncSelect
+                                                                            name={`icd10_lookup_${index}`}
+                                                                            placeholder="Type in the first few letters of code or description"
+                                                                            loadOptions={
+                                                                                lookup
+                                                                            }
+                                                                            isClearable
+                                                                            value={
+                                                                                item.code
+                                                                                    ? {
+                                                                                          label: item.description,
+                                                                                          value: item.code,
+                                                                                      }
+                                                                                    : null
+                                                                            }
+                                                                            isLoading={
+                                                                                loading
+                                                                            }
+                                                                            styles={{
+                                                                                // Fixes the overlapping problem of the component
+                                                                                menu: (
+                                                                                    provided
+                                                                                ) => ({
+                                                                                    ...provided,
+                                                                                    zIndex: 9999,
+                                                                                }),
+                                                                            }}
+                                                                            onChange={(
+                                                                                selected,
+                                                                                action
+                                                                            ) =>
+                                                                                handleCodeChange(
+                                                                                    selected,
+                                                                                    action,
+                                                                                    index
+                                                                                )
+                                                                            }
+                                                                        />
+                                                                    </Col>
+                                                                )
+                                                            )}
+                                                        </>
+                                                    )}
+                                            </Row>
+                                        )}
                                         <Row>
                                             <Col className="mb-3">
                                                 <Button
@@ -354,9 +434,14 @@ const RequestInfoForm = ({
                                                 >
                                                     Cancel
                                                 </Button>
-                                                <Button onClick={handleSave}>
-                                                    Save
-                                                </Button>
+                                                {!!classification?.value &&
+                                                    data.auth_verified && (
+                                                        <Button
+                                                            onClick={handleSave}
+                                                        >
+                                                            Save
+                                                        </Button>
+                                                    )}
                                             </Col>
                                         </Row>
                                     </Col>
