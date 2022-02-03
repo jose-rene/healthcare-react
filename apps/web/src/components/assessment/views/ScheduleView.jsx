@@ -9,6 +9,7 @@ import { useUser } from "Context/UserContext";
 import Form from "components/elements/Form";
 import PageAlert from "components/elements/PageAlert";
 import FapIcon from "components/elements/FapIcon";
+import ConfirmationModal from "components/elements/ConfirmationModal";
 
 import useApiCall from "hooks/useApiCall";
 import { fromUtcTime } from "helpers/datetime";
@@ -29,6 +30,9 @@ const ScheduleView = ({
 
     const { getUser } = useUser();
     const { timeZoneName, timeZone } = getUser();
+
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [form, setForm] = useState(null);
 
     const [{ loading, error: formError }, fireSubmit] = useApiCall({
         method: "post",
@@ -63,7 +67,7 @@ const ScheduleView = ({
         reason: "",
     });
 
-    const onSubmit = async (formValues) => {
+    const submitSchedule = async (formValues) => {
         const submissionValue = {
             ...formValues,
             ...{
@@ -75,9 +79,22 @@ const ScheduleView = ({
 
         try {
             await fireSubmit({ params: submissionValue });
+
+            setShowConfirmationModal(false);
             refreshAssessment("schedule");
         } catch (e) {
             console.log(`Appointment create error:`, e);
+        }
+    };
+
+    const onSubmit = (formValues) => {
+        const { called_at, appointment_date } = formValues;
+        setForm(formValues);
+
+        if (called_at === appointment_date) {
+            setShowConfirmationModal(true);
+        } else {
+            submitSchedule(formValues);
         }
     };
 
@@ -102,6 +119,13 @@ const ScheduleView = ({
 
     return (
         <>
+            <ConfirmationModal
+                showModal={showConfirmationModal}
+                content="Appointment Date and Called Date are the same, are you sure?"
+                handleAction={() => submitSchedule(form)}
+                handleCancel={() => setShowConfirmationModal(false)}
+            />
+
             <Card className="border-1 border-top-0 border-end-0 border-start-0 bg-light mb-3">
                 <Card.Header className="bg-light border-0 ps-0">
                     <div className="d-flex">
@@ -284,7 +308,7 @@ const ScheduleView = ({
                                                               data?.appt_window
                                                                   ?.end,
                                                               timeZoneName
-                                                        )}`) ||
+                                                          )}`) ||
                                                       "n/a"}
                                             </p>
                                         </>
