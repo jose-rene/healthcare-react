@@ -16,6 +16,7 @@ const RequestForm = ({ data }) => {
     const {
         id: requestId = "",
         auth_number = "",
+        auth_verified = false,
         classification_id: classificationId,
         member: memberData = null,
         codes: requestCodes = [],
@@ -142,6 +143,10 @@ const RequestForm = ({ data }) => {
             setRequestData(result);
         } catch (e) {
             console.log("Request update error:", e);
+            if (formData?.type_name && formData.type_name === "auth-id") {
+                // handle error in the calling function for auth_verified
+                throw e;
+            }
         }
     };
 
@@ -201,6 +206,7 @@ const RequestForm = ({ data }) => {
                 <RequestInfoForm
                     {...{
                         auth_number,
+                        auth_verified,
                         requestCodes,
                         openRequestInfo,
                         toggleOpenRequestInfo,
