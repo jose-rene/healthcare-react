@@ -62,6 +62,8 @@ import {
     faClock,
     faHeartRate,
     faReply,
+    faFolderOpen,
+    faFolders,
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add(
@@ -127,7 +129,9 @@ library.add(
     faCalendarAlt,
     faClock,
     faHeartRate,
-    faReply
+    faReply,
+    faFolderOpen,
+    faFolders
 );
 /*
 if (process.env.NODE_ENV === "development") {
