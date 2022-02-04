@@ -136,10 +136,10 @@ const ActivityView = ({
                             <ActivityForm
                                 items={activities}
                                 expanderOpen={
-                                    <FapIcon icon="folder-minus" size="1x" />
+                                    <FapIcon icon="folder-open" size="1x" />
                                 }
                                 expanderClosed={
-                                    <FapIcon icon="folder-plus" size="1x" />
+                                    <FapIcon icon="folders" size="1x" />
                                 }
                                 refreshAssessment={refreshAssessment}
                             />
